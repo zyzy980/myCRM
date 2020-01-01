@@ -1,0 +1,1548 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link id="CustomTheme" type="text/css" rel="stylesheet"
+	href="../../Resource/css/index/customLightBlue.css" />
+<link id="EasyuiTheme" type="text/css" rel="stylesheet"
+	href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+<link id="JqgridTheme" type="text/css" rel="stylesheet"
+	href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+<link type="text/css" rel="stylesheet"
+	href="../../Resource/js/easyUI/themes/icon.css" />
+<link type="text/css" rel="stylesheet"
+	href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+<style type="text/css">
+.splitBox{display: table;width: 100%;height:20px;}
+.splitBox .splitTitle{display: table-cell;cursor:pointer; text-align:center;width:15%;font-size: 12px;font-weight: bold; color:#fff; background-color:#C2D3E9; vertical-align: middle;}
+.splitBox .splitHr{display: table-cell;text-align: left;vertical-align: middle;}
+.splitBox .splitHr hr{height: 1px;border: none;border-top: 1px dotted #3eafe0;margin-top: 2px; margin-bottom: 2px;}
+.splitBox .splitRemark{display: table-cell;font-size: 12px;color: #3eafe0; text-align: right; width: 130px; vertical-align: middle; font-weight:bold;}
+.editTable table input{width:auto;}
+.button-groups {
+	position: absolute;
+	bottom: 0px;
+	right: 20px;
+	font-size: 12px;
+	padding: 10px;
+}
+.button-groups .button {
+    height: 28px;
+    line-height: 28px;
+    background-color: #0D9BF2;
+    color: #FFF;
+    border: 0;
+    outline: none;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 3px;
+    margin-bottom: 4px;
+    cursor: pointer;
+</style>
+    <title>#{supplier.detail.thisPage}</title>
+</head>
+<body style="overflow:hidden">
+    <div id="toolbar" class="easyui-panel" style="padding: 4px; border-width:0; border-bottom-width:1px;">
+      #{PAGE_TOOLBAR_BUTTONROLE}
+    </div>
+    <form id="addForm" class="easyui-form" method="post"  style="height: 410px" data-options="novalidate:true">
+    <input type="hidden" id="sn" name="sn" />
+    
+     <div id="tabLocation" class="easyui-tabs" data-options="tabPosition:'top',fit:true,headerWidth:80,tabWidth:80">
+    <div data-locale-title="supplier.detail.tab.title1">
+    <table class="editTable">
+    	<tr>
+    		<td class="editRequiredTitle">
+               <label data-locale="supplier.detail.field.werks"/>:
+            </td>
+            <td class="editControl" colspan="5">
+                <input type="text" data-locale-missingmessage="supplier.detail.message.valueNotEmpty" data-options="required:true,panelHeight:'150'" name="werks" validType="werksValid"
+                    id="werks" class="easyui-textbox"/>  
+            </td>
+    	</tr>
+    	<tr>
+    		<td class="editRequiredTitle">
+                <label data-locale="supplier.detail.field.lifnr"/>:
+            </td>
+            <td class="editControl">
+                <input type="text" data-locale-missingmessage="supplier.detail.message.valueNotEmpty" maxlength="10" data-options="required:true" name="lifnr" id="lifnr" 
+                class="easyui-textbox" validType="length[0,10]" invalidMessage="<label data-locale="supplier.detail.message.lengthValidBegin"/>10<label data-locale="supplier.detail.message.lengthValidEnd"/>"/>
+            </td>
+    		<td class="editRequiredTitle">
+                <label data-locale="supplier.detail.field.name"/>:
+            </td>
+            <td class="editControl">
+                <input type="text" data-locale-missingmessage="supplier.detail.message.valueNotEmpty" maxlength="35" data-options="required:true" name="name1" id="name1" 
+                class="easyui-textbox" validType="length[0,35]" invalidMessage="<label data-locale="supplier.detail.message.lengthValidBegin"/>35<label data-locale="supplier.detail.message.lengthValidEnd"/>"/>
+            </td>
+            <td class="editTitle">
+               	<label data-locale="supplier.field.abbrName"/>
+            </td>
+            <td class="editControl">
+                <input type="text" data-locale-missingmessage="supplier.detail.message.valueNotEmpty"  name="name_abbr"
+                    id="name_abbr" class="easyui-textbox" validType="length[0,20]" invalidMessage="<label data-locale="supplier.detail.message.lengthValidBegin"/>20<label data-locale="supplier.detail.message.lengthValidEnd"/>"/>  
+            </td>
+        </tr>
+        
+        <tr>
+            <td class="editRequiredTitle">
+               <label data-locale="supplier.detail.field.transMode"/>:
+            </td>
+            <td class="editControl">
+                <input type="text" data-locale-missingmessage="supplier.detail.message.valueNotEmpty" data-options="required:true,panelHeight:'150'" name="trans_mode" validType="transValid"
+                    id="trans_mode" class="easyui-textbox"/>  
+            </td>
+             <td class="editRequiredTitle">
+               <label data-locale="supplier.detail.field.supplyMethod"/>:
+            </td>
+            <td class="editControl">
+                <input type="text" data-locale-missingmessage="supplier.detail.message.valueNotEmpty" data-options="required:true,panelHeight:'150'" name="supply_method" validType="supplyValid"
+                    id="supply_method" class="easyui-textbox"/>  
+            </td>
+             <td class="editTitle">
+      			<label data-locale="supplier.detail.field.leadTime"/>:
+            </td>
+            <td class="editControl">
+                <input type="text" data-locale-missingmessage="supplier.detail.message.valueNotEmpty" maxlength="3" data-options="validType:'intOrFloat'" name="lead_time"
+                    id="lead_time" class="easyui-textbox" validType="length[0,3]" data-locale-invalidMessage="supplier.detail.message.numberValid"/>  
+            </td>
+        </tr>
+    
+        <tr>
+            <td class="editRequiredTitle">
+                <label data-locale="supplier.detail.field.dispLoc"/>:
+            </td>
+            <td class="editControl">
+                <input type="text" data-locale-missingmessage="supplier.detail.message.valueNotEmpty" maxlength="4" data-options="required:true" name="disp_loc"
+                    id="disp_loc" class="easyui-textbox" validType="length[0,4]" data-locale-invalidMessage="supplier.detail.message.lengthValidBegin"/>4<label data-locale="supplier.detail.message.lengthValidEnd"/>" />
+            </td>
+            <td class="editRequiredTitle">
+                <label data-locale="supplier.detail.field.region"/>:
+            </td>
+            <td class="editControl">
+                <input type="text" data-locale-missingmessage="supplier.detail.message.valueNotEmpty" name="region" id="region" 
+                class="easyui-textbox" validType="regionValid" data-options="required:true,panelHeight:'150'"/>
+            </td>
+            <td class="editRequiredTitle">
+                <label data-locale="supplier.detail.field.city"/>:
+            </td>
+            <td class="editControl">
+                <input type="text" data-locale-missingmessage="supplier.detail.message.valueNotEmpty" maxlength="20" data-options="required:true" name="city" id="city" 
+                class="easyui-textbox" validType="length[0,20]" data-locale-invalidMessage="supplier.detail.message.lengthValidBegin"/>20<label data-locale="supplier.detail.message.lengthValidEnd"/>"/>
+            </td>
+        </tr>
+        
+        <tr>
+           <td class="editRequiredTitle">
+               <label data-locale="supplier.detail.field.lspCode"/>:
+            </td>
+            <td class="editControl">
+                <input type="text" data-locale-missingmessage="supplier.detail.message.valueNotEmpty"  name="lsp_code" id="lsp_code" 
+                class="easyui-textbox" validType="contractorValid" data-options="required:true,panelHeight:'150'"/>
+            </td>
+            <td class="editRequiredTitle">
+                <label data-locale="supplier.detail.field.lspName"/>:
+            </td>
+            <td class="editControl">
+                <input type="text" data-locale-missingmessage="supplier.detail.message.valueNotEmpty" maxlength="35" data-options="required:true"  name="lsp_name" id="lsp_name" 
+                class="easyui-textbox" validType="length[0,35]" invalidMessage="<label data-locale="supplier.detail.message.lengthValidBegin"/>35<label data-locale="supplier.detail.message.lengthValidEnd"/>"/>
+            </td>
+            <td class="editRequiredTitle">
+                <label data-locale="supplier.detail.field.address"/>:
+            </td>
+            <td class="editControl">
+                <input type="text" data-locale-missingmessage="supplier.detail.message.valueNotEmpty" maxlength="100" data-options="required:true" name="address" id="address" 
+                class="easyui-textbox" validType="length[0,100]" invalidMessage="<label data-locale="supplier.detail.message.lengthValidBegin"/>100<label data-locale="supplier.detail.message.lengthValidEnd"/>"/>
+            </td>
+        </tr>
+         <tr>
+           <td class="editRequiredTitle">
+                <label data-locale="supplier.detail.field.transId"/>:
+            </td>
+            <td class="editControl">
+                <input type="text" data-locale-missingmessage="supplier.detail.message.valueNotEmpty" maxlength="3" data-options="required:true" name="trans_id" id="trans_id" 
+                class="easyui-textbox" validType="length[0,3]" invalidMessage="<label data-locale="supplier.detail.message.lengthValidBegin"/>3<label data-locale="supplier.detail.message.lengthValidEnd"/>"/>
+            </td>
+            <td class="editRequiredTitle">
+                <label data-locale="supplier.detail.field.z01stdtransrsce"/>:
+            </td>
+            <td class="editControl">
+                <input type="text" data-locale-missingmessage="supplier.detail.message.valueNotEmpty" name="z01stdtransrsce" id="z01stdtransrsce" 
+                class="easyui-textbox" validType="truckTypeValid" data-options="required:true,panelHeight:'150'"/>
+            </td>
+            <td class="editTitle">
+                <label data-locale="supplier.detail.field.distWerks"/>:
+            </td>
+            <td class="editControl">
+                <input type="text" data-locale-invalidMessage="supplier.detail.message.numberValid" data-options="validType:'intOrFloat'" name="dist_werks" id="dist_werks" class="easyui-textbox" />
+            </td>
+        </tr>
+        <tr>
+          <td class="editTitle">
+                <label data-locale="supplier.detail.field.distPort"/>:
+            </td>
+            <td class="editControl">
+                <input type="text" data-locale-invalidMessage="supplier.detail.message.numberValid" data-options="validType:'intOrFloat'" name="dist_port" id="dist_port" class="easyui-textbox" />
+            </td>
+          <td class="editTitle">
+                <label data-locale="supplier.detail.field.distPorttoplant"/>:
+            </td>
+            <td class="editControl">
+                <input type="text" data-locale-invalidMessage="supplier.detail.message.numberValid" data-options="validType:'intOrFloat'" name="dist_porttoplant" id="dist_porttoplant" class="easyui-textbox" />
+            </td>
+            <td class="editTitle">
+                <label data-locale="supplier.detail.field.defaultLoc"/>:
+            </td>
+            <td class="editControl">
+				<div id="divdefault_loc"></div>
+            </td>           
+        </tr>
+          <tr>
+                       <td class="editTitle"><label data-locale="supplier.detail.gps_address"/>:
+                        </td>
+                        <td class="editControl" colspan="5"> 
+                           <span class="textbox" style="width: 157px; height: 21px; color:#484848; float: left">
+                                <input type="text" class="textbox-text textbox-prompt" 
+                                autocomplete="off" id="gps_address" name="gps_address"  data-locale-placeholder="supplier.detail.selection"
+                                style="margin-left: 0px; margin-right: 0px; padding-top: 3px; 
+                                padding-bottom: 3px; color:#000000;" />
+                                </span>  
+                                <div  style="float:left;margin-left: 10px;">
+							    <a id="images" href="javascript:img();" >
+							    	<img src="../../Resource/images/left/33.png" style="width:20px;" ></img>
+							    </a>						
+						       </div>       
+                        </td>
+                         <td class="editTitle" style="color:#484848;display: none" >lo:
+                        </td>
+                       <td class="editControl" style="display: none">
+                            <input type="text" id="lo"  name="lo" class="easyui-textbox"/>
+                        </td>
+                       <td class="editTitle" style="color:#484848;display: none">la:
+                        </td>
+                        <td class="editControl" style="display: none">
+                            <input type="text" name="la" id="la" class="easyui-textbox" />
+                        </td>   
+          </tr> 
+    </table>
+    </div>
+    
+    	<div data-locale-title="supplier.detail.tab.title2">
+                <table class="editTable">
+                <tr>
+                    <td colspan="8" style="border: 0px solid #EEEEEE; padding-left: 0; padding-top: 7px;">
+                        <div class="splitBox">
+                            <div class="splitTitle">
+                             	<label data-locale="supplier.detail.field.emergency"/>
+                            </div>
+                            <div class="splitHr">
+                                <hr />
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr  style="border:0px;">
+                    <td>
+                    	<img onclick="add()" src="../../Resource/images/btn_bg_edit.png" width="25" height="25"/>
+                    </td>
+			    </tr>
+                <tr>
+                    <td>
+                      	<div id="gridControl">
+                			<table id="gridTable">
+                			</table>
+            			</div>
+                    </td>
+			    </tr>
+			    
+			     <tr>
+                    <td colspan="8" style="border: 0px solid #EEEEEE; padding-left: 0; padding-top: 7px;">
+                        <div class="splitBox">
+                            <div class="splitTitle">
+                             	<label data-locale="supplier.detail.field.loading"/>
+                            </div>
+                            <div class="splitHr">
+                                <hr />
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                      	<img onclick="add2()" src="../../Resource/images/btn_bg_edit.png" width="25" height="25"/>
+                    </td>
+			    </tr>
+                <tr>
+                    <td>
+                      	<div id="gridControl2">
+                			<table id="gridTable2">
+                			</table>
+            			</div>
+                    </td>
+			    </tr>
+            </table>     
+        </div> 
+        
+        
+          <div  data-locale-title="supplier.detail.site" style="position: absolute;">   
+           <div id="container"></div>
+             <div id="toolbarMap" class="BMapLib_Drawing BMap_noprint anchorTR" style="transform: scale(0.8); margin-left: -39px; margin-top: -5px; position: absolute; z-index: 10; text-size-adjust: none; bottom: auto; right: 5px; top: 5px; left: auto;">
+							<div class="BMapLib_Drawing_panel">
+							<a class="BMapLib_box BMapLib_hander_hover" drawingtype="1" href="javascript:void(0)" title="拖动地图" onclick="select(this)" id="initbtn"></a>
+							<a class="BMapLib_box BMapLib_marker" drawingtype="0" href="javascript:void(0)" title="画点" onclick="select(this)" id="marker"></a>
+							<a class="BMapLib_box BMapLib_circle" drawingtype="0" href="javascript:void(0)" title="画圆" onclick="select(this)" id="circle"></a>
+							<a class="BMapLib_box BMapLib_polyline" drawingtype="0" href="javascript:void(0)" title="画折线" onclick="select(this)" id="polyline"></a>
+							<a class="BMapLib_box BMapLib_polygon" drawingtype="0" href="javascript:void(0)" title="画多边形" onclick="select(this)" id="polygon"></a>
+							<a class="BMapLib_box BMapLib_rectangle BMapLib_last" drawingtype="0" href="javascript:void(0)" title="画矩形 onclick="select(this)" id="rectangle"></a>
+							</div>
+							</div>
+							<div class="button-groups">
+							    <input id="en" type="button" class="button" value="显示英文底图" />
+							    <input id="zh_en" type="button" class="button" value="显示中英文对照底图" />
+							    <input id="zh_cn" type="button" class="button" value="显示中文底图" />
+ 							</div>      
+         </div>    
+    </div>
+    </form>
+</body>
+<script type="text/javascript"
+	src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript"
+	src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript"
+	src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript"
+	src="../../Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+<script type="text/javascript"
+	src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript"
+	src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript"
+	src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript"
+	src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript"
+	src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript"
+	src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript"
+	src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript"
+	src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/regex/regex.js"></script>
+ 
+<script language="javascript" type="text/javascript">
+    var afterSave = "close";
+    var werks ="";
+    var trans_mode="";
+    var supply_method="";
+    var trunk_type = "";
+    var constractor = "";
+    var code = "";
+    var sn="";
+    var gps_address="";
+    var lo="";
+    var la="";
+    var callerId = "";
+    var callerType = "";
+    var callbackFlag = "";
+    var originalFormData = "";
+    var globalStateArray=null; // 全局状态变量
+    var savedRow1 = null;
+    var savedCol1 = null;
+    var savedRow2 = null;
+    var savedCol2 = null;
+    var flag = true;
+    var editor={};
+    var address="";
+    var map = "";
+    $(function () {
+        var parms = getUrlParms();
+        code = parms["code"];
+        sn = parms["sn"];
+        gps_address = parms["gps_address"];
+        lo = parms["lo"];
+        la = parms["la"];
+        callerId = parms["callerId"];
+        callerType = parms["callerType"];
+        callbackFlag = parms["callbackFlag"];
+        initData();
+   	 $("#city").textbox('textbox').attr("readonly","true");
+	 $("#lsp_name").textbox('textbox').attr("readonly","true");
+
+    });
+
+    $(window).load(function () {
+        hideLoading();
+    });
+    
+    var initCombValid = function(){
+    	$.extend($.fn.validatebox.defaults.rules, {
+    		werksValid: {
+  	          	validator: function(value,param){
+  	              if(value.indexOf("--")!=-1){
+  	            	  if(flag){
+  	            		return true;
+  	            	  }
+  	              	return false;
+  	              }
+  	              return true;
+  	          	},
+  	          	message: '#{supplier.detail.message.werksValid}.'
+  	        },
+  	     	regionValid:{
+  	     		validator: function(value,param){
+   	              if(value.indexOf("--")!=-1){
+   	            	  if(flag){
+   	            		return true;
+   	            	  }
+   	              	return false;
+   	              }
+   	              return true;
+   	          	},
+   	          	message: '#{supplier.detail.message.regionValid}.'
+  	      	},
+  	    	supplyValid : {
+  	    		validator: function(value,param){
+  	    			if(value.indexOf("--")!=-1){
+  	    				 if(flag){
+  	  	            		return true;
+  	  	            	  }
+  	  	              	return false;
+  	  	              }
+  	  	            return true;
+  	  	         },
+  	  	         message: '#{supplier.detail.message.supplyValid}.'
+  	    	},
+  	  		transValid : {
+  				validator: function(value,param){
+  					if(value.indexOf("--")!=-1){
+  						 if(flag){
+  	  	            		return true;
+  	  	            	  }
+  	  	              	return false;
+  	  	              }
+  	  	            return true;
+  	  	         },
+  	  	         message: '#{supplier.detail.message.transValid}.'
+  	  		},
+  	  		contractorValid : {
+				validator: function(value,param){
+					if(value.indexOf("--")!=-1){
+						 if(flag){
+	  	            		return true;
+	  	            	  }
+	  	              	return false;
+	  	              }
+	  	            return true;
+	  	         },
+	  	     	message: '#{supplier.detail.message.contractorValid}.'
+		  	},
+		  	truckTypeValid : {
+				validator: function(value,param){
+					if(value.indexOf("--")!=-1){
+						 if(flag){
+	  	            		return true;
+	  	            	  }
+	  	              	return false;
+	  	              }
+	  	            return true;
+	  	         },
+	  	     	message: '#{supplier.detail.message.truckTypeValid}.'
+		  	}
+  	  	});
+    }
+
+    var initData = function () {
+    	loadWerks();
+    	loadSupplyMethod();
+    	loadTransportMode();
+    	loadContractor();
+    	loadRegion();
+    	loadTruckType();
+    	loadList();
+    	loadList2();
+    	initGridStyle();
+    	initCombValid();
+    	//是否默认
+    	getDictionaryData({
+			dicTypeCode : Global_DicType.Global_DicType_CommonStateYesNos,
+			async : false,
+			callback : function(callbackData) {
+				initStateControl(callbackData);
+				globalStateArray = callbackData;
+			}
+		});
+    
+        if (sn != "" && sn!=undefined) {
+            loadDetail();
+        } else {
+            $("#sn").val("0");
+            originalFormData = $('#addForm').serialize();
+        }
+    }
+    
+    var initGridStyle = function(){
+		var width = $("#gridTable").css("width");
+    	var num = parseInt(width.substring(0,width.indexOf("px")))+38;
+    	$("#gview_gridTable").css("width","100%");
+    	$("#gview_gridTable2").css("width","100%");
+    	$(".ui-jqgrid-bdiv").css("width", "100%");
+    	$(".ui-jqgrid-bdiv").css("height","74px");
+    	$("#gbox_gridTable").css("width",num+"px");
+    	$("#gbox_gridTable2").css("width",num+"px");
+    	$(".ui-jqgrid-hdiv").css("width",num+"px");
+    	$(".tabs-panels").css("border-bottom","0px");
+    }
+    
+    var loadWerks = function(){
+    	$("#werks").combobox({
+    		  url : "../../jcda/Zd_Location/findLocationByKind?t=" + Math.random()+"&kind=PLANT",
+    		  method : "GET",
+    		  valueField: 'ex_code',  
+    		  textField: 'ex_code',
+    		  editable:false,
+    		  onLoadSuccess: function () { 
+    			  if(werks==""){
+    				  $(this).combobox("setValue","--#{supplier.detail.switch}--");
+    			  }
+              }
+    	});
+    }
+    
+    var loadTruckType = function(){
+    	var zd_TruckVO = {};
+    	$("#z01stdtransrsce").combobox({
+    		  url : "../../jcda/Zd_Truck/findAllTruckType?t=" + Math.random(),
+    		  method : "POST",
+    		  valueField: 'code',  
+    		  data : JSON.stringify(zd_TruckVO),
+    		  contentType:'application/json; charset=utf-8',
+    		  textField: 'name',
+    		  multiple:true,
+    		  onLoadSuccess: function () { 
+    			  if(werks==""){
+    				  $(this).combobox("setValues",["--#{supplier.detail.switch}--"]);
+    			  }
+              },
+              onSelect : function(){
+            	  var coms = $(this).combobox("getText").split(",");
+            	  
+            	  var newVals = [];
+            	  
+            	  for(var i = 0 ; i < coms.length ; i++){
+            		  if(coms[i].indexOf("--")==-1){
+            			  newVals.push(coms[i]);
+            		  }
+            	  }
+            	  $(this).combobox("setValues",newVals);
+              },
+              onUnselect : function(){
+            	  var coms = $(this).combobox("getValues");
+            	  if(coms.length<=0){
+            		  $(this).combobox("setValues",["--#{supplier.detail.switch}--"]);
+            	  }
+              },
+              onChange : function(){}
+    	});
+    }
+    
+    var loadSupplyMethod = function(){
+    	$("#supply_method").combobox({
+    		  url : "../../scts/basic/findDictionaryByType?t=" + Math.random()+"&type=supplyMethod",
+    		  method : "GET",
+    		  valueField: 'code',  
+    		  textField: 'values1',
+    		  editable:false,
+    		  onLoadSuccess: function () { //加载完成后,val[0]写死设置选中第一项
+    			  if(werks==""){
+    				  $(this).combobox("setValue","--#{supplier.detail.switch}--");
+    			  }
+              }
+    	});
+    }
+    
+    var loadRegion = function(){
+    	$("#region").combobox({
+    		  url : "../../scts/basic/findDictionaryByType?t=" + Math.random()+"&type=supplierRegion",
+    		  method : "GET",
+    		  valueField: 'code',  
+    		  textField: 'values1',
+    		  editable:false,
+    		  onChange : function(){
+      			  var val = $(this).combobox('getText');
+      			  if(val.indexOf("--")==-1){
+      				var text = $(this).combobox('getText');
+      				$("#city").textbox("setValue",text);
+      			  }
+      		  },
+    		  onLoadSuccess: function () { //加载完成后,val[0]写死设置选中第一项
+    			  if(werks==""){
+    				  $(this).combobox("setValue","--#{supplier.detail.switch}--");
+    			  }
+              },
+              formatter: function (row) {
+                  return row.code + '-' + row.values1;
+              }
+    	});
+    }
+    
+    var loadTransportMode = function(){
+    	$("#trans_mode").combobox({
+    		  url : "../../scts/basic/findDictionaryByType?t=" + Math.random()+"&type=transportType",
+    		  method : "GET",
+    		  valueField: 'code',  
+    		  textField: 'values1',
+    		  editable:false,
+    		  onLoadSuccess: function () { //加载完成后,val[0]写死设置选中第一项
+    			  if(werks==""){
+    				  $(this).combobox("setValue","--#{supplier.detail.switch}--");
+    			  }
+              },
+              formatter: function (row) {
+                  return row.code + '-' + row.values1;
+              }
+    	});
+    }
+    
+    var loadContractor = function(){
+    	$("#lsp_code").combobox({
+    		  url : "../../jcda/contractor/findAllListWithLocation?&t=" + Math.random(),
+    		  method : "GET",
+    		  valueField: 'name',  
+    		  textField: 'code',
+    		  editable:false,
+    		  onChange : function(){
+      			  var val = $(this).combobox('getText');
+      			  if(val.indexOf("--")==-1){
+      				var text = $(this).combobox('getValue');
+      				$("#lsp_name").textbox("setValue",text);
+      			  }
+      		  },
+    		  onLoadSuccess: function () { //加载完成后,val[0]写死设置选中第一项
+    			  if(werks==""){
+    				  $(this).combobox("setValue","--#{supplier.detail.switch}--");
+    			  }
+              }
+    	});
+    }
+  
+    var add = function () {
+    	loseGridFocus();
+        var ids = $("#gridTable").jqGrid('getDataIDs');
+        var rowid = Math.max.apply(Math, ids);
+        if (rowid == "-Infinity"){
+            rowid = 0;
+        }
+        var newrowid = rowid + 1;
+        var dataRow = {
+        	rowid: newrowid,
+        };
+        $("#gridTable").jqGrid("addRowData", newrowid, dataRow, "last");
+    }
+    
+    var add2 = function () {
+        loseGridFocus();
+        var ids = $("#gridTable2").jqGrid('getDataIDs');
+        var rowid = Math.max.apply(Math, ids);
+        if (rowid == "-Infinity"){
+            rowid = 0;
+        }
+        var newrowid = rowid + 1;
+        var dataRow = {
+        	rowid: newrowid,
+        };
+        $("#gridTable2").jqGrid("addRowData", newrowid, dataRow, "last");
+    }
+    
+    // 默认发货单选
+	var initStateControl = function(jsonData) {
+		var formatData = {
+			data : jsonData,
+			needChooseAll : true,
+			bindBoxName : "divdefault_loc",
+			bindControlPrefix : "default_loc",
+			isClick : true,
+		};
+		formatDefaultRadio_Local(formatData);
+	}
+    
+    var close = function () {
+        closeDialog("SupplierDetail");
+    }
+
+    var validate = function () {
+    	flag = false;
+        var validated = $("#addForm").form('enableValidation').form('validate');
+        if (!validated) {
+            errorNotification({
+                SimpleMessage: $.i18n.prop('supplier.detail.message.formValid.saveValid')
+            });
+            return false;
+        }
+        var newFormData = $('#addForm').serialize();
+        if (newFormData == originalFormData) {
+            errorNotification({
+                SimpleMessage: $.i18n.prop('supplier.detail.message.formValid.notChangeValid')
+            });
+            return false;
+        }
+        return true;
+    }
+
+    var save = function () {
+        if (!validate() || !verified()) {
+            return;
+        }
+
+        $.messager.confirm($.i18n.prop('supplier.detail.message.prompt'), '#{supplier.detail.message.savePrompt}?', function (r) {
+            if (r) {
+            /* 	showLoading("#{supplier.detail.loading}#{supplier.detail.thisPage}..."); */
+                afterSave = "close";
+                save2();
+            }
+        });
+    }
+    
+    var afterSaveOperate = function () {
+        switch (afterSave) {
+            case "edit":
+			code = $("#code").textbox("getValue");
+			refreshCallerData();
+			openDetail(code);
+			break;
+            case "close":
+                refreshCallerData();
+                close();
+                break;
+            case "clear":
+                $('form').form('clear');
+                $("#sn").val("0");
+                $("input", $("#code").next("span")).removeAttr("readonly");
+                refreshCallerData();
+                break;
+            case "copy":
+                $("#sn").val("0");
+                $("input", $("#code").next("span")).removeAttr("readonly");
+                $("#code").textbox('setValue', '');
+                refreshCallerData();
+                break;
+        }
+    }
+
+    var refreshCallerData = function () {
+        if (callerType == Global_Constant.Global_Constant_CallerType_Dialog) {
+            //此callerId此时为dialog的id
+            getDialog(callerId).refreshCallerData_zdTruckType(callbackFlag);
+        } else {
+            //此callerId此时为frame的id
+            getCurrentTab(callerId).refreshCallerData_zdTruckType(callbackFlag);
+        }
+    }
+    
+    var loadDetail = function () {
+        showLoading("#{supplier.detail.loading}#{supplier.detail.thisPage}...");
+        var supplierVO = {};
+        supplierVO.sn = sn;
+        
+        var serverUrl = "../../scts/supplier/getDetail?t="+ Math.random();
+        $.ajax({
+			type : "POST",
+			url : serverUrl,
+			data :JSON.stringify(supplierVO),
+			contentType : 'application/json;charset=utf-8', // 设置请求头信息
+			success : function(dataObj) {
+				if (isServerResultDataPass(dataObj)){
+					$("#sn").val(dataObj.resultDataFull.sn);  
+					$("#lifnr").textbox('setValue', dataObj.resultDataFull.lifnr);
+			    	$("#lifnr").textbox('textbox').attr("readonly","true");
+		            $("#name1").textbox('setValue', dataObj.resultDataFull.name1);
+		            $("#werks").combobox('setValue', dataObj.resultDataFull.werks); 
+		            $("#trans_mode").combobox('setValue', dataObj.resultDataFull.trans_mode);
+		            werks = dataObj.resultDataFull.werks;
+		            $("#supply_method").combobox('setValue', dataObj.resultDataFull.supply_method);
+		            $("#lead_time").textbox('setValue', dataObj.resultDataFull.lead_time);
+		            $("#disp_loc").textbox('setValue', dataObj.resultDataFull.disp_loc);
+			    	$("#disp_loc").textbox('textbox').attr("readonly","true");
+		            $("#region").combobox('setValue', dataObj.resultDataFull.region); 
+		            $("#city").textbox('setValue', dataObj.resultDataFull.city);
+		            $("#lsp_code").combobox('setText', dataObj.resultDataFull.lsp_code);
+		            $("#lsp_name").textbox('setValue', dataObj.resultDataFull.lsp_name);
+		            $("#name_abbr").textbox('setValue', dataObj.resultDataFull.name_abbr);
+		            $("#address").textbox('setValue', dataObj.resultDataFull.address);
+		            $("#trans_id").textbox('setValue', dataObj.resultDataFull.trans_id);
+		            var newArr =  dataObj.resultDataFull.z01stdtransrsce.split(",");
+					$("#z01stdtransrsce").combobox('setValues',newArr);
+					$("#dist_werks").textbox('setValue', dataObj.resultDataFull.dist_werks);
+					$("#dist_port").textbox('setValue', dataObj.resultDataFull.dist_port);
+					$("#dist_porttoplant").textbox('setValue', dataObj.resultDataFull.dist_porttoplant);
+					if(dataObj.resultDataFull.default_loc=='X'){
+						$("#default_loc_Y").prop("checked",true);
+					} else {
+						$("#default_loc_N").prop("checked",true);
+					}
+					$("#gps_address").val(dataObj.resultDataFull.gps_address);
+					$("#lo").textbox('setValue',dataObj.resultDataFull.lo);
+  		            $("#la").textbox('setValue',dataObj.resultDataFull.la);
+
+
+					if(dataObj.resultDataFull.lo!=null&&dataObj.resultDataFull.lo!=""){
+	                	var obj = {lat:dataObj.resultDataFull.la,lng:dataObj.resultDataFull.lo,O:dataObj.resultDataFull.lo,P:dataObj.resultDataFull.la};
+	                	map.setCenter(obj);
+	                	map.setZoom(15);
+	                }else{
+	                	map.setCity(dataObj.resultDataFull.city);
+	                }
+	               	if(dataObj.resultDataFull.fence!=null&&dataObj.resultDataFull.fence!=''){
+	               		setWeiLan(dataObj.resultDataFull.fence);
+	               	}
+
+                	originalFormData = $('#addForm').serialize();
+            } else {	
+                FailResultDataToTip(dataObj);
+            }
+            hideLoading();
+			},
+        });
+    }
+	var getFormSerializeData = function() {
+		originalFormData = $('#addForm').serialize();
+	}
+    
+    var loadList = function () {
+        $("#gridTable").jqGrid({
+            url: getUserMailURL("Emergency"),
+            datatype: "json",
+            width: "80%",
+            colNames: ['','sn', $.i18n.prop('supplier.detail.mail.userName'),$.i18n.prop('supplier.detail.mail.phone'), $.i18n.prop('supplier.detail.mail.eMail'), $.i18n.prop('supplier.detail.mail.enable')],
+            colModel: [
+                { name : 'delete',width:40 , index : 'delete' ,align:'center',formatter:function(value,row,rowIndex){return "<a style='text-decoration:underline;color:blue;' href='javascript:deleteRow("+row.rowId+",\"gridTable\")'>删除</a>";}},
+                { name: 'sn', index: 'sn', hidden: true  },
+                { name: 'mailUser', index: 'mailUser', editable: true, edittype: 'text', align: 'left', fixed: true, width: 80, search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+	                , editoptions: {
+	                    dataEvents: [{ type: 'focus', data: {}, fn: function () {
+	                        $(this).select();
+	                    }
+	                    }]
+	                }
+                },
+                { name: 'phone', index: 'phone', editable: true, edittype: 'text', align: 'left', fixed: true, width: 100, search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+                , editoptions: {
+                    dataEvents: [{ type: 'focus', data: {}, fn: function () {
+                        $(this).select();
+                    }
+                    }]
+                }
+            },
+                { name: 'mail', index: 'mail', editable: true, edittype: 'text', align: 'left', fixed: true, width: 150, search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+	                , editoptions: {
+	                    dataEvents: [{ type: 'focus', data: {}, fn: function () {
+	                        $(this).select();
+	                    }
+	                    }]
+	                }
+            	},
+            	{ name: 'enabled', index: 'enabled', align: 'center', width: 80,
+            		formatter: function (value, rec, rowIndex) { 
+            			var input = "";
+            			if(value=="Y"){
+            				input = "<input type='checkbox' onclick='$(this).val($(this).val()==\"N\"?\"Y\":\"N\" )' value='Y' checked style='display:block;position:relative;left:40%;' name='enabled'/>"
+            			} else if(value=="N"){
+            				input = "<input type='checkbox' onclick='$(this).val($(this).val()==\"N\"?\"Y\":\"N\" )' value='N' style='display:block;position:relative;left:40%;' name='enabled'/>";
+            			} else {
+            				input = "<input type='checkbox' onclick='$(this).val($(this).val()==\"N\"?\"Y\":\"N\" )' value='Y' checked style='display:block;position:relative;left:40%;' name='enabled'/>"
+            			}
+            			return input; 
+            		}	
+            	}
+            ],
+            cellEdit: true,
+            cellsubmit: 'clientArray',
+            shrinkToFit: false,
+            altRows: true,
+            altclass: 'gridSpacingClass',
+            forceFit: true,
+            cellLayout: 0,
+            scroll: false,
+            autowidth: true,
+            sortname: 'sn',
+            sortorder: "asc",
+            loadonce: false,
+            mtype: "GET",
+            viewrecords: true,
+            rownumbers: true,
+            rowNum: 100,
+            height: "20%",
+            rowList: [15, 20, 30, 50, 100],
+            pager: "#gridPager",
+            jsonReader: {
+                root: "rows",
+                total: "total",
+                page: "page",
+                records: "records",
+                repeatitems: false
+            },
+            gridComplete: function () {
+            },
+            loadComplete: function (xhr) {
+                FailResultDataToTip(xhr);
+                hideLoading();
+            },
+            onSelectRow: function () {
+            }
+        });
+        setGridHeightWidth();
+        $('#gridTable').setGridParam({
+            beforeEditCell: function (rowid, cellname, value, iRow, iCol) {
+                savedRow1 = iRow;
+                savedCol1 = iCol;
+            }
+        });
+    }
+    
+    var getUserMailURL = function(group){
+    	var url = "../../scts/supplier/findUserMailByGroup?t="+ Math.random()+"&group="+(code+"-"+group);
+		return url;    	
+    }
+    
+    var loadList2 = function () {
+    	$("#gridTable2").jqGrid({
+            url: getUserMailURL("LoadingPlan"),
+            datatype: "json",
+            width: "80%",
+            colNames: ['','sn', $.i18n.prop('supplier.detail.mail.userName'),$.i18n.prop('supplier.detail.mail.phone'), $.i18n.prop('supplier.detail.mail.eMail'), $.i18n.prop('supplier.detail.mail.enable')],
+            colModel: [
+                { name : 'delete',width:40 , index : 'delete' ,align:'center',formatter:function(value,row,rowIndex){return "<a style='text-decoration:underline;color:blue;' href='javascript:deleteRow("+row.rowId+",\"gridTable2\")'>删除</a>";}},
+                { name: 'sn', index: 'sn', hidden: true  },
+                { name: 'mailUser', index: 'mailUser', editable: true, edittype: 'text', align: 'left', fixed: true, width: 80, search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+	                , editoptions: {
+	                    dataEvents: [{ type: 'focus', data: {}, fn: function () {
+	                        $(this).select();
+	                    }
+	                    }]
+	                }
+                },
+                { name: 'phone', index: 'phone', editable: true, edittype: 'text', align: 'left', fixed: true, width: 100, search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+                , editoptions: {
+                    dataEvents: [{ type: 'focus', data: {}, fn: function () {
+                        $(this).select();
+                    }
+                    }]
+                }
+            },
+                { name: 'mail', index: 'mail', editable: true, edittype: 'text', align: 'left', fixed: true, width: 150, search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+	                , editoptions: {
+	                    dataEvents: [{ type: 'focus', data: {}, fn: function () {
+	                        $(this).select();
+	                    }
+	                    }]
+	                }
+            	},
+            	{ name: 'enabled', index: 'enabled', align: 'center', width: 80,
+            		formatter: function (value, rec, rowIndex) { 
+            			var input = "";
+            			if(value=="Y"){
+            				input = "<input type='checkbox' onclick='$(this).val($(this).val()==\"N\"?\"Y\":\"N\" )' value='Y' checked style='display:block;position:relative;left:40%;' name='enabled'/>"
+            			} else if(value=="N"){
+            				input = "<input type='checkbox' onclick='$(this).val($(this).val()==\"N\"?\"Y\":\"N\" )' value='N' style='display:block;position:relative;left:40%;' name='enabled'/>";
+            			} else {
+            				input = "<input type='checkbox' onclick='$(this).val($(this).val()==\"N\"?\"Y\":\"N\" )' value='Y' checked style='display:block;position:relative;left:40%;' name='enabled'/>"
+            			}
+            			return input; 
+            		}	
+            	}
+            ],
+            cellEdit: true,
+            cellsubmit: 'clientArray',
+            shrinkToFit: false,
+            altRows: true,
+            altclass: 'gridSpacingClass',
+            forceFit: true,
+            cellLayout: 0,
+            scroll: false,
+            autowidth: true,
+            sortname: 'sn',
+            sortorder: "asc",
+            loadonce: false,
+            mtype: "GET",
+            viewrecords: true,
+            rownumbers: true,
+            rowNum: 100,
+            height: "20%",
+            rowList: [15, 20, 30, 50, 100],
+            pager: "#gridPager",
+            jsonReader: {
+                root: "rows",
+                total: "total",
+                page: "page",
+                records: "records",
+                repeatitems: false
+            },
+            gridComplete: function () {
+            },
+            loadComplete: function (xhr) {
+                FailResultDataToTip(xhr);
+                hideLoading();
+            },
+            onSelectRow: function () {
+            }
+        });
+        setGridHeightWidth();
+        $('#gridTable2').setGridParam({
+            beforeEditCell: function (rowid, cellname, value, iRow, iCol) {
+                savedRow2 = iRow;
+                savedCol2 = iCol;
+            }
+        });
+    }
+    
+    var deleteRow = function(index,name){
+    	
+    	$.messager.confirm($.i18n.prop('supplier.detail.message.prompt'), '#{supplier.detail.message.deleteQuestion}?', function (r) {
+    		if(r){
+    			var rowData = $("#gridTable").jqGrid('getRowData',index);
+    			if(rowData.sn!='' && rowData.sn!=undefined && rowData.sn!=null){
+    				showLoading("#{supplier.detail.loading}#{supplier.detail.thisPage}...");
+                	$.ajax({
+                		url : "../../scts/supplier/deleteUserMail?t="+Math.random(),
+                		data:{sn:rowData.sn},
+                		type:"POST",
+                		success:function(data){
+                			  if (isServerResultDataPass(data)) {
+                	                correctNotification({
+                	                    SimpleMessage: data.resultDataFull.simpleMessage
+                	                });
+                	                $("#"+name).delRowData(index);
+                	    	    	
+                	    	    	if($("#"+name).jqGrid("getRowData").length<=0){
+                	    	    		if(name=="gridTable"){
+                	    	    			savedRow1 = null;
+                	    	                savedCol1 = null;
+                	    	    		}else{
+                	    	    			savedRow2 = null;
+                	    	                savedCol2 = null;
+                	    	    		}
+                	    	    	}
+                	            } else {
+                	                FailResultDataToTip(data);
+                	            }
+                	            hideLoading();
+                		}
+                	});
+    			}else {
+    				$("#"+name).delRowData(index);
+        	    	
+        	    	if($("#"+name).jqGrid("getRowData").length<=0){
+        	    		if(name=="gridTable"){
+        	    			savedRow1 = null;
+        	                savedCol1 = null;
+        	    		}else{
+        	    			savedRow2 = null;
+        	                savedCol2 = null;
+        	    		}
+        	    	}
+    			}
+    		}
+    	});
+    }
+    
+    var loseGridFocus = function () {
+        if (savedRow1 && savedCol1) {
+            $('#gridTable').jqGrid('saveCell', savedRow1, savedCol1);
+        }
+        if (savedRow2 && savedCol2) {
+            $('#gridTable2').jqGrid('saveCell', savedRow2, savedCol2);
+        }
+    }
+    
+    var verified = function () {
+    	loseGridFocus();
+        var errorMessage = "";
+        var mailUserArr = [];
+        var mailArr = [];
+        
+        var gridAllData2 = $("#gridTable2").jqGrid("getRowData");
+        for (var i = 0; i < gridAllData2.length; i++) {
+            if (gridAllData2[i]["mailUser"] == "") {
+                errorMessage += "<p>#{supplier.detail.field.loading}#{supplier.detail.message.di}" + (i + 1) + "#{supplier.detail.message.userValid}</p>";
+                break;
+            }
+
+            if (gridAllData2[i]["mail"] == "") {
+                errorMessage += "<p>#{supplier.detail.field.loading}#{supplier.detail.message.di}" + (i + 1) + "#{supplier.detail.message.mailValid}</p>";
+                break;
+            }
+            if(isInArray(mailUserArr,gridAllData2[i]["mailUser"])){
+                errorMessage += "<p>#{contractor.detail.field.usermail.loading}#{supplier.detail.message.userNotRepet}</p>";
+            	break;
+            }
+            
+            if(isInArray(mailArr,gridAllData2[i]["mail"])){
+                errorMessage += "<p>#{contractor.detail.field.usermail.loading}#{supplier.detail.message.mailNotRepet}</p>";
+            	break;
+            }
+            mailUserArr.push(gridAllData2[i]["mailUser"]);
+            mailArr.push(gridAllData2[i]["mail"]);
+        }
+        
+        var mailUserArr2 = [];
+        var mailArr2 = [];
+        var gridAllData = $("#gridTable").jqGrid("getRowData");
+        for (var i = 0; i < gridAllData.length; i++) {
+            if (gridAllData[i]["mailUser"] == "") {
+                errorMessage += "<p>#{supplier.detail.field.emergency}#{supplier.detail.message.di}" + (i + 1) + "#{supplier.detail.message.userValid}</p>";
+                break;
+            }
+
+            if (gridAllData[i]["mail"] == "") {
+                errorMessage += "<p>#{supplier.detail.field.emergency}#{supplier.detail.message.di}" + (i + 1) + "#{supplier.detail.message.mailValid}</p>";
+                break;
+            }
+            if(isInArray(mailArr2,gridAllData[i]["mail"])){
+                errorMessage += "<p>#{supplier.detail.field.emergency}#{supplier.detail.message.userNotRepet}</p>";
+            	break;
+            }
+            if(isInArray(mailUserArr2,gridAllData[i]["mailUser"])){
+                errorMessage += "<p>#{supplier.detail.field.emergency}#{supplier.detail.message.mailNotRepet}</p>";
+            	break;
+            }
+            mailUserArr2.push(gridAllData[i]["mailUser"]);
+            mailArr2.push(gridAllData[i]["mail"]);
+        }
+
+        if (errorMessage.length != "") {
+            errorNotification({
+                SimpleMessage: $.i18n.prop('supplier.detail.message.gridCheckNoPass'),
+                MoreMessage: errorMessage
+            });
+            return false;
+        }
+        
+        return true;
+    }
+    
+ var save2 =function(){	
+	 	
+    	var gridAllData2 = $("#gridTable2").jqGrid("getRowData");
+    	var loadingUsers = [];
+        for (var i = 0; i < gridAllData2.length; i++) {
+        	var user = {};
+        	user.sn = gridAllData2[i].sn;
+        	user.mailUser = gridAllData2[i].mailUser;
+        	user.phone = gridAllData2[i].phone;
+        	user.mail = gridAllData2[i].mail;
+        	user.enabled = $(gridAllData2[i].enabled).val();
+        	loadingUsers.push(user);
+        }
+        
+        var gridAllData = $("#gridTable").jqGrid("getRowData");
+        var emergencyUsers = [];
+        for (var i = 0; i < gridAllData.length; i++) {
+        	var user = {};
+        	user.sn = gridAllData[i].sn;
+        	user.mailUser = gridAllData[i].mailUser;
+        	user.phone = gridAllData[i].phone;
+        	user.mail = gridAllData[i].mail;
+        	user.enabled = $(gridAllData[i].enabled).val();
+        	emergencyUsers.push(user);
+        }
+    	
+    	zdTruckTypeVO = FormUtils.toJSONObject($("#addForm"));
+    	zdTruckTypeVO.lsp_code = $("#lsp_code").combobox("getText");
+    	if(loadingUsers.length>0){
+    		zdTruckTypeVO.loadingUsers=loadingUsers;
+    	}
+    	if(emergencyUsers.length>0){
+    		zdTruckTypeVO.emergencyUsers=emergencyUsers;
+    	}
+    	zdTruckTypeVO.z01stdtransrsce = $("#z01stdtransrsce").combobox("getValues").join(',');
+    	if(zdTruckTypeVO.gps_address==gps_address && zdTruckTypeVO.lo==lo && zdTruckTypeVO.la==la){
+    		zdTruckTypeVO = FormUtils.toJSONObject($("#addForm"));
+    	}else if(zdTruckTypeVO.gps_address!=gps_address && zdTruckTypeVO.lo==lo && zdTruckTypeVO.la==la){
+    		 errorNotification({
+                 SimpleMessage: "定位地址输入错误!请按照地址下拉提示选择定位",
+             });
+             return false;
+    	}
+    	$.ajax({
+    		url : "../../scts/supplier/save?t="
+				+ Math.random(),
+			type : 'POST',
+			data : {supplierJson:JSON.stringify(zdTruckTypeVO)},
+            success : function(dataObj) {
+				if (isServerResultDataPass(dataObj)) {
+					correctNotification(dataObj.resultDataFull);
+					hideLoading();
+					afterSaveOperate();
+				} else {
+					hideLoading();
+					FailResultDataToTip(dataObj);
+				}
+			}
+    	});
+    }
+ 	function isInArray(arr,value){
+	    for(var i = 0; i < arr.length; i++){
+	        if(value === arr[i]){
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+ 	
+    function img(){
+    	var address = $("#gps_address").val();
+    	 var href = "../View/jcda/zdAddresses.html?callerId=SupplierDetail"+"&address="+address;
+         openDialog({ title: "地址搜索", id: 'zdAddresses', width: 1000, height:530, isResize: true, href: href, closable: true, closable: true });
+    }
+    
+    var getMap = function(){
+    	var  map = new AMap.Map("container", {//传入DIVID构造地图对象
+            resizeEnable: true,//是否监控尺寸变化
+            center: [116.403322, 39.900255],//地图中心点
+            zoom: 15 //地图���示的缩放级别
+        });
+    	return map;
+    } 
+     
+    var setWeiLan = function(obj){
+    	var obj  = JSON.parse(obj);
+    	switch(obj.drawType)
+    	{
+    	case "circle"://圆圈
+          var data  = {
+    			Ch:{
+    				center:{
+    					lng:null,
+    					lat:null
+    				},
+    				radius:null
+    			}
+    	};
+    	  data.Ch.center.lng = obj.coordDatas.lng;
+    	  data.Ch.center.lat = obj.coordDatas.lat;
+    	  data.Ch.radius = obj.coordDatas.radius;
+    	  editor._circle(data);
+    	  break;
+    	case "polyline":
+    		var data = {
+    			Ch:{
+    				path:null
+    			}	
+    		};
+    		data.Ch.path = obj.coordDatas;
+    		editor._line(data);
+    	  break;
+    	case "polygon":
+    		var data = {
+    			Ch:{
+    				path:null
+    			}	
+    		};
+    		data.Ch.path = obj.coordDatas;
+    		editor._polygon(data);
+    		  break;
+    	default:
+    		 errorNotification({
+                 SimpleMessage: "未识别的电子围栏!"
+             });
+             return ;
+    	}
+    }
+    
+    var select = function(obj){
+		  $("#toolbarMap").children().children('a[drawingtype!="0"]').each(function(){
+		console.log($(this).attr("class"));
+		var str = $(this).attr("class").substring(0,$(this).attr("class").length-6);
+		if($(this).attr("class")=='BMapLib_box BMapLib_rectangle_hover BMapLib_last'){
+			str = "BMapLib_box BMapLib_rectangle BMapLib_last";
+		}
+		$(this).attr("class",str);
+		$(this).attr("drawingtype","0");
+	});	
+	 if($(obj).attr("class")=='BMapLib_box BMapLib_rectangle_hover BMapLib_last'||$(obj).attr("class")=='BMapLib_box BMapLib_rectangle BMapLib_last'){
+		$(obj).attr("class","BMapLib_box BMapLib_rectangle_hover BMapLib_last");
+		$(obj).attr("drawingtype",'1');
+	}else{
+		$(obj).attr("class",$(obj).attr("class")+"_hover");
+			$(obj).attr("drawingtype",'1');
+	}
+}
+ 	</script>
+<link rel="stylesheet"
+	href="http://cache.amap.com/lbs/static/main1119.css" />
+<!--   <script src="https://webapi.amap.com/maps?v=1.4.6&key=6202c32e3dccbecd6d7251d9f396db30&plugin=AMap.PolyEditor&plugin=AMap.Geocoder,AMap.Geocoder,AMap.CircleEditor,AMap.MouseTool,AMap.ToolBar"></script>   -->
+<script type="text/javascript"
+	src="https://webapi.amap.com/maps?v=1.4.5&key=6202c32e3dccbecd6d7251d9f396db30&plugin=AMap.PolyEditor,AMap.Geocoder,AMap.CircleEditor,AMap.MouseTool,AMap.ToolBar"></script>
+<script type="text/javascript"
+	src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
+<link rel="stylesheet"
+	href="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.css" />
+<script language="javascript" type="text/javascript">
+	map = new AMap.Map("container", { //传入DIVID构造地图对象
+		resizeEnable : false,//是否监控尺寸变化 
+		center : [ 116.403322, 39.900255 ],//地图中心点
+		zoom : 13
+	//地图显示的缩放级别
+	});
+	[ 'en', 'zh_en', 'zh_cn' ].forEach(function(btn) {
+		var button = document.getElementById(btn);
+		AMap.event.addDomListener(button, 'click', clickListener)
+	});
+
+	function clickListener() {
+		map.setLang(this.id);
+	}
+	AMap.plugin([ 'AMap.Scale' ], function() {
+		map.addControl(new AMap.Scale());
+	})
+	//在地图中添加MouseTool插件
+	var mouseTool = new AMap.MouseTool(map);
+	AMap.event.addDomListener(document.getElementById('marker'), 'click',
+			function() {
+				mouseTool.marker({
+					offset : new AMap.Pixel(-14, -11)
+				});
+			}, false);
+	AMap.event.addDomListener(document.getElementById('polyline'), 'click',
+			function() {
+				mouseTool.polyline();
+			}, false);
+	AMap.event.addDomListener(document.getElementById('polygon'), 'click',
+			function() {
+				mouseTool.polygon();
+			}, false);
+	AMap.event.addDomListener(document.getElementById('rectangle'), 'click',
+			function() {
+
+				mouseTool.rectangle();
+			}, false);
+	AMap.event.addDomListener(document.getElementById('initbtn'), 'click',
+			function() {
+				mouseTool.close(false);
+			}, false);
+	AMap.event.addDomListener(document.getElementById('circle'), 'click',
+			function() {
+				mouseTool.circle();
+			}, false);
+	AMap.event.addListener(mouseTool, "draw", function callback(e) {
+		//objArrayJson
+		//mouseTool.close(true);
+		var obj = e.obj;//obj属性就是鼠标事件完成所绘制的覆盖物对象。
+		//console.log(obj);
+		if (obj.CLASS_NAME == "AMap.Circle") {//圆   圆心经纬度 半径
+			editor._circle(obj);
+			mouseTool.circle();
+		} else if (obj.CLASS_NAME == "AMap.Polyline") {//线   N组经纬度按顺序排列
+			mouseTool.polyline();
+			editor._line(obj);
+		} else if (obj.CLASS_NAME == "AMap.Marker") {//点
+			mouseTool.marker({
+				offset : new AMap.Pixel(-14, -11)
+			});
+		} else if (obj.CLASS_NAME == "AMap.Polygon") {//多边形  N组经纬度按顺序排列   目前暂未识别矩形和多边形
+			mouseTool.polygon();
+			editor._polygon(obj);
+		} else if (obj.CLASS_NAME == "AMap.rectangle") {//矩形   四组经纬度
+			mouseTool.rectangle();
+		} else {
+			errorNotification({
+				SimpleMessage : "您画的是啥了...."
+			});
+			return;
+		}
+		console.log($("#fence").val());
+	});
+	AMap.plugin('AMap.Autocomplete', function() {//回调函数
+		var autoOptions = {
+			city : "", //城市，默认全国
+			input : "gps_address"//使用联想输入的input的id */
+		};
+		var autocomplete = new AMap.Autocomplete(autoOptions);
+
+		AMap.event.addListener(autocomplete, "select", function(data) {
+			console.log(data);
+			$("#lo").textbox('setValue', data.poi.location.lng);
+			$("#la").textbox('setValue', data.poi.location.lat);
+			if (data.poi.location == null || data.poi.location == '') {
+				errorNotification({
+					SimpleMessage : "解析经纬度失败!"
+				});
+				map.setCenter([ 116.403322, 39.900255 ]);//地图中心点
+				map.setZoom(13)
+			} else {
+				map.setCenter(data.poi.location);
+				map.setZoom(15)
+				$("#lo").val(data.poi.location.lng)
+				$("#la").val(data.poi.location.lat)
+				var marker = new AMap.Marker({
+					position : new AMap.LngLat(data.poi.location.lng,
+							data.poi.location.lat), // 经纬度对象���也可以是经纬度构成的一维数组[116.39, 39.9]
+				});
+				map.add(marker);
+			}
+		});
+	});
+
+	//在地图上绘制折线
+	//var editor={};
+	editor._line = (function(obj) {
+		var list = obj.Ch.path;
+		var lineArr = new Array();
+		for (var i = 0; i < list.length; i++) {
+			lineArr[i] = new Array();
+			lineArr[i][0] = list[i].lng;
+			lineArr[i][1] = list[i].lat;
+		}
+		map.clearMap();
+		var Polyline = new AMap.Polyline({
+			map : map,
+			path : lineArr,
+			strokeColor : "#FF33FF",//线颜色
+			strokeOpacity : 1,//线透明度
+			strokeWeight : 3,//线宽
+			strokeStyle : "solid"//线样式
+		});
+		editor._lineEditor = new AMap.PolyEditor(map, Polyline);
+		editor._lineEditor.open();
+		AMap.event.addListener(editor._lineEditor, "addnode",
+				function callback(e) {
+					//通过鼠标在折线上增加一个节点或在多边形上增加一个顶点时触发此事件
+					console.log("addnode");
+					var model = JSON.parse($("#fence").val());
+					model.drawType = "polyline";
+					model.coordDatas = e.target.Ch.path;
+					$("#fence").val(JSON.stringify(model));
+				});
+		AMap.event.addListener(editor._lineEditor, "adjust", function callback(
+				e) {
+			//鼠标调整折线上某个节点或多边形上某个顶点的位置时触发此事件
+			console.log("addnode");
+			var model = JSON.parse($("#fence").val());
+			model.drawType = "polyline";
+			model.coordDatas = e.target.Ch.path;
+			$("#fence").val(JSON.stringify(model));
+		});
+		var warningFence = {};
+		warningFence.drawType = "polyline";
+		warningFence.coordDatas = lineArr;
+		$("#fence").val(JSON.stringify(warningFence));
+
+		return Polyline;
+
+	});
+	editor._polygon = (function(obj) {
+		var list = obj.Ch.path;
+		var arr = new Array();
+		for (var i = 0; i < list.length; i++) {
+			arr[i] = new Array();
+			arr[i][0] = list[i].lng;
+			arr[i][1] = list[i].lat;
+		}
+		map.clearMap();
+		var polygon = new AMap.Polygon({
+			map : map,
+			path : arr,
+			strokeColor : "#0000ff",
+			strokeOpacity : 1,
+			strokeWeight : 3,
+			fillColor : "#f5deb3",
+			fillOpacity : 0.35
+		});
+		editor._polygonEditor = new AMap.PolyEditor(map, polygon);
+		editor._polygonEditor.open();
+
+		AMap.event.addListener(editor._polygonEditor, "addnode",
+				function callback(e) {
+					//通过鼠标在折线上增加一个节点或在多边形上增加一个顶点时触发此事件
+					console.log("addnode");
+					var model = JSON.parse($("#fence").val());
+					model.drawType = "polygon";
+					model.coordDatas = e.target.Ch.path;
+					$("#fence").val(JSON.stringify(model));
+				});
+		AMap.event.addListener(editor._polygonEditor, "adjust",
+				function callback(e) {
+					//鼠标调整折线上某个节点或多边形上某个顶点的位置时触发此事件
+					console.log("addnode");
+					var model = JSON.parse($("#fence").val());
+					model.drawType = "polygon";
+					model.coordDatas = e.target.Ch.path;
+					$("#fence").val(JSON.stringify(model));
+				});
+
+		var warningFence = {};
+		warningFence.drawType = "polygon";
+		warningFence.coordDatas = arr;
+		$("#fence").val(JSON.stringify(warningFence));
+		return polygon;
+
+	});
+	editor._circle = (function(obj) {
+		var circle = new AMap.Circle({
+			center : [ obj.Ch.center.lng, obj.Ch.center.lat ],// 圆心位置
+			radius : obj.Ch.radius, //半径
+			strokeColor : "#F33", //线颜色
+			strokeOpacity : 1, //线透明度
+			strokeWeight : 3, //线粗细度
+			fillColor : "#ee2200", //填充颜色
+			fillOpacity : 0.35
+		//填充透明度
+		});
+		map.clearMap();
+		circle.setMap(map);
+		editor._circleEditor = new AMap.CircleEditor(map, circle);
+		editor._circleEditor.open();
+
+		AMap.event.addListener(editor._circleEditor, "move", function callback(
+				e) {
+			//经纬度
+			var model = JSON.parse($("#fence").val());
+			model.coordDatas.lng = e.lnglat.lng;
+			model.coordDatas.lat = e.lnglat.lat;
+			model.drawType = "circle";
+			$("#fence").val(JSON.stringify(model));
+		});
+		//圆心
+		AMap.event.addListener(editor._circleEditor, "adjust",
+				function callback(e) {
+					console.log(e);
+					var model = JSON.parse($("#fence").val());
+					model.coordDatas.radius = e.radius;
+					model.drawType = "circle";
+					$("#fence").val(JSON.stringify(model));
+				});
+		var warningFence = {};
+		warningFence.drawType = "circle";
+		warningFence.coordDatas = {
+			radius : obj.Ch.radius,
+			lng : obj.Ch.center.lng,
+			lat : obj.Ch.center.lat
+		};
+		$("#fence").val(JSON.stringify(warningFence));
+		return circle;
+	});
+	map.setFitView();
+
+	function getcallback(poi) {
+		var str = poi.cityname + poi.adname + poi.address;
+		$("#gps_address").val(str);
+		$("#lo").textbox('setValue', poi.location.lng);
+		$("#la").textbox('setValue', poi.location.lat);
+		if (poi.location == null || poi.location == '') {
+			map.setCity(poi.cityname);
+			map.setZoom(3);
+		} else {
+			map.setCenter(poi.location);
+			map.setZoom(15)
+			$("#lo").val(poi.location.lng)
+			$("#la").val(poi.location.lat)
+		}
+		var marker = new AMap.Marker({
+			position : new AMap.LngLat(poi.location.lng, poi.location.lat), // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
+		});
+		map.add(marker);
+	}
+</script>
+</html>

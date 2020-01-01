@@ -1,0 +1,248 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<style>
+
+</style>
+<head>
+    <link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+    <link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+    <link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/moment/css/daterangepicker.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/fileUpload/css/fileUpload.css" />
+    <title>整车委托</title>
+</head>
+<body>
+<div id="toolbar" class="easyui-panel" style="padding: 4px; border-width: 0; border-bottom-width: 1px;">
+    #{PAGE_TOOLBAR_BUTTONROLE}
+</div>
+<div id="gridControl">
+    <div class="searchParamesPanel">
+        <table id="searchParamesTable">
+            <tr class="searchParamesTrShow">
+                <td class="searchParamesTdTitle"><label data-locale="sysWithin_companyName_ZH"/>:</td>
+                <td class="searchParamesTdControl">
+                    <input type="text" name="companyName" id="companyName" class="easyui-textbox"/>
+                </td>
+                <td class="searchParamesTdTitle"><label data-locale="sysWithin_companyCode"/>:</td>
+                <td class="searchParamesTdControl">
+                    <input type="text" name="withinCode" id="withinCode" class="easyui-textbox"/>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <table id="gridTable"></table>
+    <div id="gridPager"></div>
+</div>
+
+<script type="text/javascript"	src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/upload.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/file.js"></script>
+<script type="text/javascript" src="API/AMap/js/maps.js"></script>
+<script type="text/javascript" src="../../Resource/js/cookie/jquery.cookie.js"></script>
+<script language="javascript" type="text/javascript">
+
+    $(function(){
+
+        initStyle();
+        loadList();
+    });
+    hideLoading();
+
+    var oldSetGridHeightWidth = setGridHeightWidth;
+    var setGridHeightWidth = function() {
+        oldSetGridHeightWidth(5,125);
+    };
+
+    let initStyle = function() {
+        enterTriggerEvent('searchParamesTable', 'searchData');
+    }
+
+    let loadList = function(){
+        $('#gridTable').jqGrid({
+            url : getSearchGridUrl(),
+            datatype : 'json',
+            width : 'none',
+            colNames : [
+               $.i18n.prop('sn'),$.i18n.prop('sysWithin_state'),$.i18n.prop('sysWithin_companyCode'),$.i18n.prop('sysWithin_companyName_ZH'),$.i18n.prop('sysWithin_companyAddress'),$.i18n.prop('sysWithin_linkMan'),
+                $.i18n.prop('sysWithin_linkMobile'),$.i18n.prop('sysWithin_email'),$.i18n.prop('sysWithin_companyName_EN'),$.i18n.prop('sysWithin_addressShortName'),$.i18n.prop('sysWithin_province'),
+                $.i18n.prop('sysWithin_city'),$.i18n.prop('sysWithin_web'),$.i18n.prop('sysWithin_weiXin'),$.i18n.prop('sysWithin_linkQQ'),$.i18n.prop('sysWithin_birthday'),$.i18n.prop('sysWithin_guiMo'),$.i18n.prop('sysWithin_logo')
+            ],
+            colModel : [
+                { name: 'sn', index: 'sn',  key: true,align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+                { name: 'state', index: 'state', align: 'left', sorrtype: 'string', search: false, sortable: false, width: 80, hidden: true},
+                { name: 'code', index: 'code', align: 'left', sorttype: 'string', search: false, sortable: false, width: 80, hidden: false},
+                { name: 'name', index: 'name', align: 'left', sorttype: 'string', search: false, sortable: false, width: 200, hidden: false},
+                { name: 'address', index: 'address', align: 'left', sorttype: 'string', search: false, sortable: false, width: 200, hidden: false},
+                { name: 'linkMan', index: 'link_man', align: 'left', sorttype: 'string', search: false, sortable: false, width: 80, hidden: false},
+                { name: 'linkMobile', index: 'link_moblie', align: 'center', sorttype: 'string', search: false, sortable: false, width: 100, hidden: false},
+                { name: 'linkEmail', index: 'link_email', align: 'left', sorrtype: 'string', search: false, sortable: false, width: 140, hidden: false},
+                { name: 'nameEng', index: 'name_eng', align: 'left', sorttype: 'string', search: false, sortable: false, width: 120, hidden: false},
+                { name: 'shortName', index: 'shortname', align: 'left', sorttype: 'string', search: false, sortable: false, width: 100, hidden: false},
+                { name: 'province', index: 'province', align: 'left', sorttype: 'string', search: false, sortable: false, width: 100, hidden: false},
+                { name: 'city', index: 'city', align: 'left', sorttype: 'string', search: false, sortable: false, width: 100, hidden: false},
+                { name: 'web', index: 'web', align: 'left', sorttype: 'string', search: false, sortable: false, width: 100, hidden: false},
+                { name: 'weiXin', index: 'weixin',   align: 'left', sorrtype: 'string', search: false, sortable: false, width: 100, hidden: false},
+                { name: 'linkQQ', index: 'link_qq', align: 'left', sorttype: 'string', search: false, sortable: false, width: 80, hidden: false},
+                { name: 'birthday', index: 'birthday', align: 'center', sorttype: 'string', search: false, sortable: false, width: 100, hidden: false},
+                { name: 'guiMo', index: 'guimo', align: 'right', sorttype: 'string', search: false, sortable: false, width: 100, hidden: false},
+
+                { name: 'logoPath', index: 'logo_path', aling: 'center', sorttype: 'string', search: false, sortable: false, width: 100, hidden: false,
+                  /*  formatter: function(value, grid, rows)  {
+                        return "<img data-index='viewPic" + rows + "' width='15px' height='15px' src=" + 'https://www.dtod56.com/dtod_files/' + value +">";
+                    }*/
+                },
+
+            ],
+            shrinkToFit : false,
+            altRows : true,
+            autoScroll: true,
+            altclass : 'gridSpacingClass',
+            forceFit : true,
+            cellLayout : 0,
+            scroll : false,
+            autowidth : true,
+            sortname : 'create_date',
+            sortorder : 'desc',
+            loadonce : false,
+            mtype : 'POST',
+            viewrecords : true,
+            rownumbers : true,
+            multiselect : true,
+            // subGrid : true,//开启子表格支持
+            rowNum : 15,
+            height : '100%',
+            rowList : [15, 20, 30, 50],
+            pager : '#gridPager',
+            jsonReader : {
+                root : 'rows',
+                total : 'total',
+                page : 'page',
+                records : 'records',
+                repeatitems : false
+            },
+            gridComplete : function() {
+                setGridHeightWidth();
+            },
+            ondblClickRow  : function(code) {
+                //双击绑定车次信息
+                let rowData = $("#gridTable").jqGrid('getRowData', code);
+                openDetail(rowData.sn);
+            },
+        });
+
+        $('#gridTable').jqGrid('navGrid', '#gridPager',
+            { add: false, edit: false, del: false, refresh: true }, {}, {}, {},
+            { multipleSearch: true, closeOnEscape: true, closeAfterSearch: true });
+        $('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+            caption: $.i18n.prop('PlanExec_ReorderColumns'),// 设置列
+            title: 'Reorder Columns',
+            onClickButton: toggleGridColumns
+        });
+
+        $('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+            caption: $.i18n.prop('PlanExec_QuickSearch'),// 快捷搜索
+            title: 'Quick Search',
+            onClickButton: toggleGridSearchToolbar
+        });
+        $('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+            caption: $.i18n.prop('PlanExec_ExportDatas'),// 导出数据
+            title: 'Export Datas',
+            buttonicon: 'ui-icon-disk',
+            onClickButton: function() {
+                ExportToExcel.call(this, { title:$.i18n.prop('all.vehicle.depute')});
+            }
+        });
+        setGridHeightWidth();
+    }
+
+    let searchData = function() {
+        $('#gridTable').jqGrid('setGridParam', {
+            url : getSearchGridUrl(),
+            datatype : 'json',
+            mtype : "POST",
+            postData : { 'filters' : '' },
+            page : 1
+        }).trigger('reloadGrid');
+    }
+
+
+    let getSearchGridUrl = function() {
+        return '../../within/findList?t=' + Math.random() + '&customSearchFilters=' + encodeURI(getSearchFilters());
+    }
+
+    let getSearchFilters = function() {
+        let companyName = $("#companyName").textbox("getValue");
+        let companyCode = $("#withinCode").textbox("getValue");
+
+        let parmsArray = [
+            {name : 'name', value: companyName, op: 'cn'},
+            {name : 'code', value: companyCode, op: 'cn'}
+        ];
+        return formatSearchParames(parmsArray);
+    };
+
+    let remove = function() {
+        let selectRowItems = $('#gridTable').jqGrid('getGridParam', 'selarrrow');
+        if (selectRowItems.length != 1) {
+            errorNotification({ SimpleMessage : '请选择一行数据行进行操作' });// 请选择一行数据行进行操作  没有选择数据，不能进行操作
+            return;
+        }
+        let rowData = $("#gridTable").jqGrid("getRowData", selectRowItems[0]);
+        let withinCode = rowData.code;
+        $.messager.confirm('提示', '确定要删除吗?', function(r){
+            if(r) {
+                $.ajax({
+                    url: '../../within/delete?t=' + Math.random() + "&withinCode=" + withinCode,
+                    type: 'POST',
+                    success: function(dataObj) {
+                        if (isServerResultDataPass(dataObj)) {
+                            correctNotification(dataObj.resultDataFull);
+                            searchData(); // 重新加载数据
+                        } else {
+                            FailResultDataToTip(dataObj);
+                        }
+                        hideLoading();
+                    },
+                    error : function(message) {
+                        hideLoading();
+                    }
+                })
+            }
+        })
+    }
+
+    let edit = function() {
+        let selectRowItems = $('#gridTable').jqGrid('getGridParam', 'selarrrow');
+        if (selectRowItems.length != 1) {
+            errorNotification({ SimpleMessage : '请选择一行数据行进行操作' });// 请选择一行数据行进行操作  没有选择数据，不能进行操作
+            return;
+        }
+        let rowData = $("#gridTable").jqGrid("getRowData", selectRowItems[0]);
+        let sn = rowData.sn;
+
+        openDetail(sn);
+    }
+
+    let openDetail = function(sn) {
+        var href = "";
+        href = "../View/BaseInfo/SysWithinManagerDetail.html?t=" + Math.random() + "&sn=" + sn;
+        showLoading("#{supplier.loading}...");
+        openDialog({ title: $.i18n.prop('supplier.page.detail.title'), id: 'SupplierDetail', width: 1150, height: 290, isResize: true, href: href, closable: true });
+    }
+</script>
+</body>
+</html>

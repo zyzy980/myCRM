@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="UTF-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"/>
+    <link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+    <link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />    
+    <link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/moment/css/daterangepicker.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/fileUpload/css/fileUpload.css" />
+    <title>#{supplier.thisPage}</title>
+    <style type="text/css">
+        body {
+            overflow-y:scroll;
+        }
+        fieldset{
+            border: 1px solid rgb(194, 211, 233);
+            margin: 1%;
+            font-size: 15px;
+
+        }
+        legend{
+            margin-left: 2%;
+            color: red;
+        }
+        #mainbody{
+            width: 100%;
+            height: 94%;
+            overflow: auto;
+        }
+        .right-content{float:left; width:89%; padding:0.5%;}
+
+        .abnormal{ padding:15px 26px; background:#f6f9fb; border:1px solid #d0def0;margin:0.5%;}
+        .abnormal ul li{ height:30px; line-height:0px;}
+        .abnormal ul li img{ float:left; padding-top:0;}
+        .abnormal ul li p{ float:left; padding-left:10px; color:#666; font-size:14px;}
+        .abnormal ul li p span{ color:#576c8f;}
+        .abnormal-pic{ margin-top:1.5%;}
+        .abnormal-pic p{ font-size:14px; font-weight:bold; color:#576c8f; margin:0.5%;}
+        .abnormal-pic ul li{ float:left; margin:0.5%; margin-right:0.8%;}
+        .abnormal-pic ul li img{ width:120px; height:120px;}
+    </style>
+</head>
+<body>
+    <div id="toolbar" class="easyui-panel" style="padding: 4px; border-width: 0; border-bottom-width: 1px;">
+         #{PAGE_TOOLBAR_BUTTONROLE}
+    </div>
+    <div id="mainbody">
+    </div>
+</body>
+<script type="text/javascript"	src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/upload.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/file.js"></script>
+<script language="javascript" type="text/javascript">
+	var cusId = "";
+	var cusNoTextObj = [];
+	var cusNoValuObj = [];
+	$(function() {
+		cusId = parent.cusId;
+		initData();
+
+        $("#close").bind('click',function () {
+            window.parent.close();
+        })
+	});
+
+	var initData = function() {
+		loadList();
+	}
+
+	var getSearchGridUrl = function() {
+		return '../../jcda/ZdCus/getcusaddress?t=' + Math.random() + "&customSearchFilters=" + encodeURI(getSearchFilters());
+	}
+
+
+	var getSearchFilters = function() {
+		var parmsArray = [ 
+			{ name : 'a.cus_id', value : cusId,	op : 'eq'}
+		]
+		return formatSearchParames(parmsArray);
+	}
+
+	var loadList = function() {
+        $.ajax({
+            url : getSearchGridUrl(),
+            type : "POST",
+            success: function(dataObj) {
+                if(dataObj.rows) {
+                    // 如果没有查出来数据，就提示没有地址
+                    if(dataObj.rows.length == 0) {
+                        $("#mainbody").append("<h1>#{cusAddress_noAddress}</h1>");
+                        $("#mainbody").css({
+                            "text-align" : "center",
+                            "margin-top" : "15%"
+                        });
+                    }
+                    var html = "";
+                    for(var i = 0 ; i < dataObj.rows.length; i++) {
+                        var data = dataObj.rows[i];
+                        html += '<fieldset>';
+                        html += '<legend>#{cusAddress_ShippingAddress}</legend>';
+                        if(data == 0) {
+                            html += '<hr color="#d0def0" size="1"/>';
+                        }
+                        html += '<div class="container fix">';
+                        html += '   <div class="right-content">';
+                        html += '       <div class="abnormal">';
+                        html += '           <ul>';
+                        html += '               <li>';
+                        html += '                   <img src="../../Index/images/linkman.png"/><p><span>#{cusAddress_linkMan}：</span>' + data.linkman + '</p>';
+                        html += '               </li>';
+                        html += '               <li>';
+                        html += '                   <img src="../../Index/images/linktel.png"/><p><span>#{cusAddress_linkTel}：</span>' + data.linktel + '</p>';
+                        html += '               </li>';
+                        html += '               <li>';
+                        html += '                   <img src="../../Index/images/province.png"/><p><span>#{cusAddress_Province/city/district}：</span>' + data.province + data.city + data.district + '</p>';
+                        html += '               </li>';
+                        html += '               <li>';
+                        html += '                   <img src="../../Index/images/address.png" /><p><span>#{cusAddress_addressDetail}：</span>' + data.address + '</p>';
+                        html += '                   <span style="float: right;padding-top: 5px;padding-right: 100px;">';
+                        html += '                       <a href="javascript:void(0);" style="line-height: 15px; float: left;margin-right: 10px;" onclick="edit(' + data.sn +')"><img src="../../Index/images/editor.png" style="width: 15px;"/>#{cusAddress_edit}</a>';
+                        html += '                   </span>';
+                        html += '               </li>';
+                        html += '       </div>';
+                        html += '   </div>';
+                        html += '</div>';
+                        html += '</fieldset>';
+                    }
+                    $("#mainbody").append(html);
+                }
+            }
+        });
+	}
+
+	var insert = function() {
+		openDetail("");
+	}
+	
+	var edit = function(sn) {
+	    openDetail(sn);
+	}
+	
+	var openDetail = function(sn) {
+		showLoading("#{cusAddress_loading}....");
+        var href = "../View/BaseInfo/addressDetail.html?t=" + Math.random() + "&sn=" + sn + "&cusId=" + parent.cusId;
+        openDialog({ title: $.i18n.prop('cusAddress_addressDetail'), id: 'addressDetail', width: 850, height: 400, isResize: true, href: href, closable: true });
+	}
+
+</script>
+</html>

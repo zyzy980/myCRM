@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bba.tzgl.dao.Ledger_DetailDao">
+	<sql id="begin_page">
+		<if test="isPage == true">select A.* from (select rownum rn, T.* from (</if>
+	</sql>
+	<sql id="end_page">
+		<if test="isPage == true">)T where rownum &lt; ${page*rows+1}) A where A.rn >
+			${(page-1)*rows}</if>
+	</sql>
+
+	<!--查询未开票的结算批次结算-->
+	<select id="findJsProject" parameterType="com.bba.tzgl.vo.Ledger_DetailVO" resultType="com.bba.tzgl.vo.Ledger_DetailVO">
+		select distinct d.js_project,d.js_no from js_ledger_detail d left join js_ledger l on d.sheet_no=l.sheet_no
+		where d.carrier_invoice = #{carrier_invoice} and l.state = '1'
+	</select>
+</mapper>

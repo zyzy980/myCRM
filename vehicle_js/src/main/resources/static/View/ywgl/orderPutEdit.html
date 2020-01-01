@@ -1,0 +1,900 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="UTF-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"/>
+    <link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+    <link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />    
+    <link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/moment/css/daterangepicker.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/fileUpload/css/fileUpload.css" />
+    <title>#{basic.page.this}</title>
+    <style type="">
+    	.textbox-text{
+    		padding-top:3px;
+    		padding-bottom : 3px;
+    		!important;
+    	}
+    </style>
+</head>
+<body>
+    <div id="toolbar" class="easyui-panel" style="padding: 4px; border-width: 0; border-bottom-width: 1px;">
+         #{PAGE_TOOLBAR_BUTTONROLE}
+    </div>
+    <div id="gridControl">
+        <table id="gridTable">
+        </table>
+        <div id="gridPager">
+        </div>
+    </div>
+    <div id="dialogCollection" style="width:500px;height:300px;" hidden="hidden">
+    	    		<a href="javascript:saveCollection();" class="easyui-linkbutton" data-options="iconCls:'icon-save'">保存</a>
+    		<a href="javascript:cancel();" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'">关闭</a>
+    	<form id="collectionForm" class="easyui-form" method="post" data-options="novalidate:true">
+    		<table class="editTable">
+				<tr>
+					<td class="editTitle">
+						发票类型
+					</td>
+					<td> 
+						<input type="radio" name="paperType" id="commercialInvoice" value="8" checked/><label for="commercialInvoice">收款凭证</label>
+						<input type="radio" name="paperType" id="ordinarySpecialTicket" value="1"/><label for="ordinarySpecialTicket">普票</label>
+						<input type="radio" name="paperType" id="value-addedSpecialTicket" value="2"/><label for="value-addedSpecialTicket">增值税专票</label>
+					</td>
+				</tr>
+				<tr>
+					<td class="editTitle">
+						缴费方式
+					</td>
+					<td>
+						<input class="easyui-combobox" name="getType" id="getType" style="width: 153px;" data-options="editable:false,"/>
+					</td>
+				</tr>
+				<tr hidden="hidden" id="rate">
+					<td class="editTitle">
+						税率
+					</td>
+					<td>
+						<input class="easyui-textbox" name="invoiceRate" style="width: 153px;" id="invoiceRate"></input>
+					</td>
+				</tr>
+				<tr hidden="hidden" id="code">
+					<td class="editTitle">
+						发票代码
+					</td>
+					<td>
+						<input class="easyui-textbox" name="invoiceCode" style="width: 153px;" id="invoiceRate"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="editTitle">
+						凭证号码
+					</td>
+					<td>
+						<input class="easyui-textbox" name="invoiceNo" style="width: 153px;" id="invoiceNo"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="editTitle">
+						金额
+					</td>
+					<td>
+						<input class="easyui-textbox" name="getAmount" style="width: 153px;" id="getAmount" data-options="editable:false,"/>
+					</td>
+				</tr>   			
+    		</table>
+    	</form>
+    </div>
+    <div id="dialogInvoice" style="width:500px;height:300px;" hidden="hidden">
+    	<a href="javascript:saveInvoice();" class="easyui-linkbutton" data-options="iconCls:'icon-save'">保存</a>
+    	<a href="javascript:cancelInvoice();" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'">关闭</a>
+    	<form id="invoiceForm" class="easyui-form" method="post" data-options="novalidate:true">
+    		<table class="editTable">
+				<tr>
+					<td class="editTitle">
+						发票类型
+					</td>
+					<td>
+						<input type="radio" name="paperTypeInvoice" id="ordinarySpecialTicket1" value="1" checked="checked"/><label for="ordinarySpecialTicket1">普票</label>
+						<input type="radio" name="paperTypeInvoice" id="value-addedSpecialTicket1" value="2"/><label for="value-addedSpecialTicket1">增值税专票</label>
+					</td>
+				</tr>
+				<tr>
+					<td class="editTitle">
+						税率
+					</td>
+					<td>
+						<input class="easyui-textbox" name="invoiceRate" style="width: 153px;" id="invoiceRate"></input>
+					</td>
+				</tr>
+				<tr>
+					<td class="editTitle">
+						发票代码
+					</td>
+					<td>
+						<input class="easyui-textbox" name="invoiceCode" style="width: 153px;" id="invoiceRate"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="editTitle">
+						发票号码
+					</td>
+					<td>
+						<input class="easyui-textbox" name="invoiceNo" style="width: 153px;" id="invoiceNo"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="editTitle">
+						金额
+					</td>
+					<td>
+						<input class="easyui-textbox" name="getAmount" style="width: 153px;" id="amount" data-options="editable:false,"/>
+					</td>
+				</tr>   			
+    		</table>
+    	</form>
+    </div>
+</body>
+<script type="text/javascript"	src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/upload.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/file.js"></script>
+<script language="javascript" type="text/javascript">
+    var sn1="";
+    var moduleId = 0;
+    var lang = "zh";
+    var typeInnerHTML = {};
+  	var moduleidAuthority = "";
+  	var trainNo = "";
+  	var fareNameInnerHtml = "";
+  	var sumAmount = 0;
+  	var stateTextObj = {
+  			'0' : $.i18n.prop('orderPutEdit.inner.state.untreated'),
+  			'1' : $.i18n.prop('orderPutEdit.inner.state.approved'),
+  			'2' : $.i18n.prop('orderPutEdit.inner.state.haveCheck'),
+  			'5' : $.i18n.prop('orderPutEdit.inner.state.hasBeenReceiving')
+  	}
+  	
+  	var stateValueObj = {
+  			$.i18n.prop('orderPutEdit.inner.state.untreated') : '0',
+  			$.i18n.prop('orderPutEdit.inner.state.approved') : '1',
+  			$.i18n.prop('orderPutEdit.inner.state.haveCheck') : '2',
+  			$.i18n.prop('orderPutEdit.inner.state.hasBeenReceiving') : '5'
+  	}
+  	
+  	var invoiceTypeTextObj = {
+  			'0' : $.i18n.prop('orderPutEdit.inner.invoiceType.commercialInvoice'),
+  			'1' : $.i18n.prop('orderPutEdit.inner.invoiceType.ordinarySpecialTicket'),
+  			'2' : $.i18n.prop('orderPutEdit.inner.invoiceType.value-addedSpecialTicket')
+  	}
+  	
+  	var invoiceTypeValueObj = {
+  			$.i18n.prop('orderPutEdit.inner.invoiceType.commercialInvoice') : '0',
+  			$.i18n.prop('orderPutEdit.inner.invoiceType.ordinarySpecialTicket') : '1',
+  			$.i18n.prop('orderPutEdit.inner.invoiceType.value-addedSpecialTicket') : '2'
+  	}
+  	
+  	var getModeTextObj = {
+  			'0' : $.i18n.prop('orderPutEdit.inner.getMode.accordingToTheTicket'),
+  			'1' : $.i18n.prop('orderPutEdit.inner.getMode.accordingToTheTrains')
+  	}
+  	
+  	var getModeValuObj = {
+  			$.i18n.prop('orderPutEdit.inner.getMode.accordingToTheTicket') : '0',
+  			$.i18n.prop('orderPutEdit.inner.getMode.accordingToTheTrains') : '1'
+  	}
+  	
+  	var koukuanFlagTextObj = {
+  			'Y' : $.i18n.prop('orderPutEdit.inner.koukuanFlag.deductions'),
+  			'N' : $.i18n.prop('orderPutEdit.inner.koukuanFlag.noDeductions')
+  	}
+  	
+  	var koukuanFlagValueObj = {
+  			$.i18n.prop('orderPutEdit.inner.koukuanFlag.deductions') : 'Y',
+  			$.i18n.prop('orderPutEdit.inner.koukuanFlag.noDeductions') : 'N'
+  	}
+  	
+  	var invoiceNoTextObj = {
+  			'Y' : $.i18n.prop('orderPutEdit.inner.invoiceNo.haveTheInvoice'),
+  			'N' : $.i18n.prop('orderPutEdit.inner.invoiceNo.thereIsNoInvoice')
+  	}
+  	
+  	var invoiceNoValueObj = {
+  			$.i18n.prop('orderPutEdit.inner.invoiceNo.haveTheInvoice') : 'Y',
+  			$.i18n.prop('orderPutEdit.inner.invoiceNo.thereIsNoInvoice') : 'N'
+  	}
+    $(function () {
+    	loadFareName();
+        var parms = getUrlParms();
+        moduleidAuthority = parms["moduleId"];
+        lang = parms["lang"];
+        trainNo = $('#trainNo', window.parent.frames[0].document).val();
+        initScript();
+        loadGetType();
+        initData();
+    });
+
+    $(window).load(function () {
+        hideLoading();
+    });
+    var oldSetGridHeightWidth = setGridHeightWidth;
+    var setGridHeightWidth = function() {
+    	oldSetGridHeightWidth(5,160);
+		
+    };
+    
+    
+    var initScript = function () {
+    	var v = 0;
+    	$(window).resize(function() {
+    		if (v == 0) {
+    			setTimeout(function() {
+    				setGridHeightWidth();
+    				v = 0;
+    			}, 200)
+    			v = 1;
+    		}
+    		setGridHeightWidth();
+    		setToolbarHeightWidth();
+    	});	
+    } 
+    var initData = function () {
+        loadList();   
+    }
+	
+    function searchData() {
+        $("#gridTable").jqGrid('setGridParam', {
+            url: getSearchGridUrl(),
+            datatype: 'json',
+            postData: { "filters": "" },
+            page: 1
+        }).trigger("reloadGrid");
+    }
+
+    var getSearchGridUrl = function () {
+        return '../../order/findfareget?t='+Math.random() + '&customSearchFilters=' + encodeURI(getSearchFilters());;
+    }
+    
+    var getSearchFilters = function() {
+		var parmsArray = [
+		       {name : 'fn.trainno' ,value : window.parent.frames[0].trainNo, op : "cn"}         
+        ];
+        return formatSearchParames(parmsArray);
+    };
+
+    var loadList = function () {
+        $("#gridTable").jqGrid({
+            url: getSearchGridUrl(),
+            datatype: "json",
+            width: "none",
+            colNames: ["<a href='#' onclick='addTableRow(\"gridTable\")'>#{orderPutEdit.list.add}</a>",'sn',$.i18n.prop('orderPutEdit.list.withinCode'),
+                       $.i18n.prop('orderPutEdit.list.cusId') ,$.i18n.prop('orderPutEdit.list.customerName'),$.i18n.prop('orderPutEdit.list.termsOfPayment'),$.i18n.prop('orderPutEdit.list.businessNo'),
+                       $.i18n.prop('orderPutEdit.list.trainno'), $.i18n.prop('orderPutEdit.list.commissionNumber'),$.i18n.prop('orderPutEdit.list.entrustedNumber'),
+                       $.i18n.prop('orderPutEdit.list.costOfName'),$.i18n.prop('orderPutEdit.list.costOfUnitPrice'),$.i18n.prop('orderPutEdit.list.numberOfCost'),
+                       $.i18n.prop('orderPutEdit.list.otherAmount'),$.i18n.prop('orderPutEdit.list.amount'),$.i18n.prop('orderPutEdit.list.theActualAmount'),
+                       $.i18n.prop('orderPutEdit.list.theActualPayment'),$.i18n.prop('orderPutEdit.list.currency'),$.i18n.prop('orderPutEdit.list.state'),
+                       $.i18n.prop('orderPutEdit.list.invoiceType'),$.i18n.prop('orderPutEdit.list.invoiceRate'),$.i18n.prop('orderPutEdit.list.anyInvoice'),
+                       $.i18n.prop('orderPutEdit.list.theInvoiceTime'),$.i18n.prop('orderPutEdit.list.whetherTheDeductions'),$.i18n.prop('orderPutEdit.list.theBillDate'),
+                       $.i18n.prop('orderPutEdit.list.theLineNumberOfTheContractRule'),$.i18n.prop('orderPutEdit.list.theBusinessLocation'),
+                       '创建人','创建时间','创建人姓名','发票代码','是否已开立发票'],
+            colModel: [
+			{ name: 'delete', index: 'delete',  key: true,align: 'center', sorttype: 'int', sortable: false, width: 40, editable: false, hidden: false,
+				formatter:function(value,row,rowIndex){
+					return "<a style='text-decoration:underline;color:blue;' href='javascript:deleteRow("+row.rowId+",\"gridTable\")'>删除</a>";"<a style='text-decoration:underline;color:blue;' href='javascript:deleteRow("+row.rowId+",\"gridTable\")'>删除</a>";
+				}
+			},
+            { name: 'sn', index: 'fn.sn',  key: true,align: 'center', sorttype: 'int', sortable: false, width: 40, editable: true, hidden: true },
+            { name: 'withinCode', index: 'fn.within_code', align: 'center', sorttype: 'int', sortable: false, width: 70,editable: true, hidden:true},
+            { name: 'cusId', index: 'fn.cus_id', align: 'center', width: 70,editable: false, type: 'string',hidden: true},
+            { name: 'cusName', index: 'fn.cus_name', align: 'center', width: 90,editable: false, type: 'select',hidden: true},
+            { name: 'getMode', index: 'fn.get_mode', align: 'center', width: 70,editable: false, type: 'string',hidden: true,
+            	formatter : function(value,grid,rows) {
+            		return getModeTextObj[value];
+            	}
+            },
+            { name: 'ywId', index: 'fn.yw_id', align: 'center', width: 70,editable: false, type: 'string',hidden: true},
+            { name: 'trainNo', index: 'fn.trainno', align: 'center', width: 70,editable: true, type: 'string',hidden: true},
+            { name: 'cusSheetno', index: 'fn.cus_sheetno', align: 'center', width: 70,editable: false, type: 'string',hidden: true},
+            { name: 'cusTrainno', index: 'fn.cus_trainno', align: 'center', width: 70,editable: true, type: 'string',hidden: true},
+            { name: 'fareName', index: 'fn.fare_name', align: 'center', width: 70,editable: true, edittype: 'select',editoptions : {value : fareNameInnerHtml} },
+            { name: 'price', index: 'fn.price', align: 'center', width: 70,editable: true, type: 'string',
+				editrules: {
+                    number: true,
+                    custom: true,
+                    custom_func: function(value, name) {
+                        var reg = '^(([1-9]{1}\\d*)|([0]{1}))(\\.(\\d){0,2})?$';
+                        var re = new RegExp(reg);
+                        if(re.test(value)) {
+                            return [true, ''];
+                        } else {
+                            return [false, name + '错误，最长只能输入两位小数!']
+                        }
+                    }
+				}
+			},
+            { name: 'qty', index: 'fn.qty', align: 'center', width: 70,editable: true, type: 'string',
+				editrules: {
+                    integer: true,
+				}
+			},
+            { name: 'otherAmount', index: 'fn.other_amount', align: 'center', width: 70,editable: true, type: 'string',hidden: true},
+            { name: 'amount', index: 'fn.amount', align: 'center', width: 90,editable: false, type: 'string'},
+            { name: 'realAmount', index: 'fn.real_amount', align: 'center', width: 70,editable: true, type: 'string',hidden: true},
+            { name: 'factAmount', index: 'fn.fact_amount', align: 'center', width: 70,editable: true, type: 'string',hidden: true},
+            { name: 'currency', index: 'fn.currency', align: 'center', width: 70,editable: true, type: 'string',hidden: true},
+            { name: 'state', index: 'fn.state', align: 'center', width: 70,editable: false,
+            	formatter : function(value,grid,rows) {
+            		return stateTextObj[value];
+            	}
+            },
+            { name: 'invoiceType', index: 'fn.invoice_type', align: 'center', width: 70,editable: true, edittype: 'select',hidden: true,
+            	editoptions : {
+            		value : "0:#{zeroPutEdit.inner.invoice.commercialInvoice};1:#{zeroPutEdit.inner.invoice.ordinarySpecialTicket};2:#{zeroPutEdit.inner.invoice.value-addedSpecialTicket}"
+            	},
+            	formatter : function(value,grid,rows) {
+            		return invoiceTypeTextObj[value];
+            	}
+            },
+            { name: 'invoiceRate', index: 'fn.invoice_rate', align: 'center', width: 70,editable: true, type: 'string',hidden: true},
+            { name: 'invoiceNo', index: 'fn.invoice_no', align: 'center', width: 70,editable: true,edittype: 'checkbox',hidden: true,
+            	editoptions : {
+            		value : "Y:N"
+            	},
+            	formatter : function(value,grid,rows) {
+            		return invoiceNoTextObj[value];
+            	}
+            },
+            { name: 'invoiceDate', index: 'fn.invoice_date', align: 'center', width: 70,editable: true, type: 'string', hidden: true,
+            	editoptions: {
+            		dataInit: function(elem){
+            			jQuery(elem).click(function(){
+            				WdatePicker({
+            					onpicked:function(){jQuery(elem).change();},
+            					onclearing:function(){jQuery(elem).val("");}
+            				});
+            			});
+        			},attr:{title:'Select Date'},sopt:['cn']
+       			},
+       			formatter:'date',
+       			formatoptions:{srcformat:'Y-m-d',newformat:'Y-m-d'},
+            },
+            { name: 'koukuanFlag', index: 'fn.koukuan_flag', align: 'center', width: 70,editable: true,edittype : "checkbox",hidden: true,editoptions : {value : "Y:N"},
+            	formatter : function(value,grid,rows) {
+            		return koukuanFlagTextObj[value];
+            	}	
+            },
+            { name: 'billDate', index: 'fn.bill_date', align: 'center', width: 70,editable: true, type: 'string',hidden: true,
+            	editoptions: { 
+            		dataInit: function(elem){
+            			jQuery(elem).click(function(){
+            				WdatePicker({
+            					onpicked:function(){jQuery(elem).change();},
+            					onclearing:function(){jQuery(elem).val("");}
+            				});
+            			});
+        			},attr:{title:'Select Date'},sopt:['cn']
+       			},
+       			formatter:'date',
+       			formatoptions:{srcformat:'Y-m-d',newformat:'Y-m-d'},		
+            },
+            { name: 'ruleSn', index: 'fn.rule_sn', align: 'center', width: 70,editable: true, type: 'string',hidden: true},
+            { name: 'ywLocation', index: 'fn.yw_location', align: 'center', width: 70,editable: true, type: 'string',hidden:true},
+            { name: 'createBy', index: 'fn.create_by', align: 'center', width: 70, editable: false, type: 'string',hidden: true},
+			{ name: 'createDate', index: 'fn.create_date', align: 'center', width: 140, editable: false},
+			{ name: 'createByName', index: 'fn.create_by_name', align: 'center', width: 70, editable: false},
+			{ name: 'invoiceCode', index: 'fn.invoice_code', align: 'center', hidden: true},
+			{ name: 'invoiceState', index: 'fn.invoice_state', align: 'center', hidden: true}
+            ],
+             cellEdit: true,
+	         cellsubmit: 'clientArray',
+	         shrinkToFit: false,
+	         altRows: true,
+	         altclass: 'gridSpacingClass',
+	         //合计列
+	         footerrow:true,
+	         forceFit: true,
+	         cellLayout: 0,
+	         scroll: false,
+	         autowidth: true,
+	         loadonce: false,
+	         mtype: "POST",
+	         viewrecords: true,
+	         rownumbers: true,
+	         rowNum: 100,
+	         height: "100%",
+	         rowList: [15, 20, 30, 50, 100],
+	         pager: "#gridPager",
+             jsonReader: {
+                root: "rows",
+                total: "total",
+                page: "page",
+                records: "records",
+                repeatitems: false
+             },
+             gridComplete : completeMethod,
+             afterSaveCell : function(rowid, cellname, value, iRow, iCol) {
+            	 if(cellname == "price"  || cellname == "qty"){
+             		//获得对应行的
+ 	            	var sumPrice = $("#gridTable").jqGrid("getRowData",rowid).price;
+ 	            	var sumQty = $("#gridTable").jqGrid("getRowData",rowid).qty;
+ 	            	if(sumPrice != 0 && sumQty != 0) {
+                        var amount = (sumPrice * sumQty).toFixed(2);
+                        $("#gridTable").jqGrid("setRowData",rowid,{amount : amount});
+ 		        		 sumAmount = $("#gridTable").getCol('amount',false,'sum');
+ 		 	     		$("#gridTable").footerData('set', { 
+ 		 	     			fareName : '合计', 
+ 		 	     			amount: '<span style="font-size:22px;color:red">'+sumAmount+'</span>'
+ 		 	     		}); 
+ 	            	  }
+             	}
+	         }
+        });
+        $('#gridTable').setGridParam({
+            beforeEditCell: function (rowid, cellname, value, iRow, iCol) {
+            	//iRow - 单元格所在行的行号
+            	savedRow1 = iRow;
+            	//Col - 单元格处于行中的列号，iCol从0开始
+                savedCol1 = iCol;
+            }
+        });
+
+//         $("#gridTable").jqGrid('navGrid', '#gridPager', { add: false, edit: false, del: false, refresh: true }, {}, {}, {}, { multipleSearch: true, closeOnEscape: true, closeAfterSearch: true });
+//         $("#gridTable").jqGrid('navButtonAdd', '#gridPager', {
+//             caption: $.i18n.prop('inEdit.setColumn'),
+//             title: "设置列",
+//             onClickButton: toggleGridColumns
+//         });
+
+//         $("#gridTable").jqGrid('navButtonAdd', '#gridPager', {
+//             caption: $.i18n.prop('inEdit.quickQuery'),
+//             title: "快捷查询",
+//             onClickButton: toggleGridSearchToolbar
+//         });
+        
+//         $("#gridTable").jqGrid('navButtonAdd', '#gridPager', {
+//             caption: $.i18n.prop('inEdit.exportData'),
+//             title: "导出数据",
+//             buttonicon: "ui-icon-disk",
+//             onClickButton: function(){
+//             	ExportToExcel.call(this, {
+//               		 url : "../../scts/basic/export?t=" + Math.random()
+//               	}); 
+//             }
+//         });
+		
+		 var loseGridFocus = function () {
+			    if (savedRow1 && savedCol1) {
+			        $('#gridTable').jqGrid('saveCell', savedRow1, savedCol1);
+			    }
+			}
+        
+        var jdgridRender = {
+         		 root: function(obj) { return data; },
+         		 page: function(obj) { return 1; },
+         		 total: function(obj) { return data.length; },
+         		 records: function(obj) { return data.length; }
+           };
+        setGridHeightWidth();
+//         $("#gridTable").setGridParam({data: data, localReader: jdgridRender}).trigger('reloadGrid');
+//         setGridHeightWidth();
+    }
+    var completeMethod = function(){
+    	if(isNaN(parseInt($("#gridTable").getCol('amount',false,'sum')))) {
+    		sumAmount += 0;
+   		} else {
+   		 	sumAmount = $("#gridTable").getCol('amount',false,'sum');
+   		}
+   		$("#gridTable").footerData('set', { "fareName" : '合计', amount: '<span style="font-size:22px;color:red">'+sumAmount+'</span>'});
+   		$("#getAmount").textbox("setValue",sumAmount);
+   		$("#amount").textbox("setValue",sumAmount);
+   		var rowData = $("#gridTable").jqGrid("getRowData");
+   		for(var i = 0 ; i < rowData.length; i++) {
+   			var state = stateValueObj[rowData[i].state];
+   			if(state == 1) {
+   			    $("#gridTable").jqGrid('setGridParam',{
+   			        cellEdit: false
+				});
+   			    return;
+			}
+   			if(state == 5) {
+   				$("#gridTable").jqGrid('setGridParam', {
+   					cellEdit: false
+   				});
+   				return;
+   			}
+   			if(state == 0) {
+   			    $("#gridTable").jqGrid('setGridParam', {
+   			        cellEdit: true
+				});
+   			    return;
+			}
+   		}
+    }
+    
+    var addTableRow = function (name) {
+    	if(window.parent.state == 0) {
+    		errorNotification({ SimpleMessage: "车次没有审核，不能添加费用明细"});
+    		return;
+    	}
+		loseGridFocus();
+	  	  var rowData = $("#gridTable").jqGrid("getRowData"); 
+	  	  for(var i = 0 ; i < rowData.length; i++) {
+	  		  var state = stateValueObj[rowData[i].state];
+	  		  if(state != 0) {
+	  			  errorNotification({ SimpleMessage : "已处理的订单不能再添加服务"});
+	  			  return ;
+	  		  }
+	  	  }
+	    var ids = $("#"+name).jqGrid('getDataIDs');
+	    var rowid = Math.max.apply(Math, ids);
+	    if (rowid == "-Infinity"){
+	        rowid = 0;
+	    }
+	    var newrowid = rowid + 1;
+	    var dataRow = {
+	    	rowid: newrowid,
+	    };
+	    $("#"+name).jqGrid("addRowData", newrowid, dataRow, "last");
+	    var rowData = $("#"+name).jqGrid("getRowData",newrowid);
+	    $("#gridTable").jqGrid("setRowData",newrowid,{cusId: window.parent.frames[0].childCusNo,getMode:1,cusName: window.parent.frames[0].childCusName,trainNo: window.parent.frames[0].trainNo,state:0,invoiceType:0,invoiceNo:"N",koukuanFlag:"N",amount:0,qty:1});
+	    sumQty = 1;
+	    sumAmount += 0;
+	}
+    
+    var loadFareName = function(){
+    	$.ajax({
+    		url : '../../Zd_fare/list?t=' + Math.random(),
+    		type : 'GET',
+    		dataType : 'json',
+    		async: false ,
+    		success : function(dataObj){
+    			dataObj.rows.forEach(function(item){
+    				fareNameInnerHtml += item.code + ":" + item.code + ";";
+    			});
+    			fareNameInnerHtml = fareNameInnerHtml.substr(0,fareNameInnerHtml.length-1);
+    		} 
+    	});
+    }
+    
+    var save = function(){
+		parent.link();
+    	loseGridFocus();
+    	var rowData = $("#gridTable").jqGrid("getRowData");
+	  	for(var i = 0 ; i < rowData.length; i++) {
+	  		var state = stateValueObj[rowData[i].state];
+	  		if(state == 1) {
+	  			errorNotification({ SimpleMessage: "已经审核过后的数据不可以修改"});
+	  			return;
+	  		}
+	  	}
+    	for(var i = 0 ; i <rowData.length; i++) {
+    		rowData[i].getMode = getModeValuObj[rowData[i].getMode];
+	    	rowData[i].state = '0';
+	    	rowData[i].invoiceType = invoiceTypeValueObj[rowData[i].invoiceType];
+	    	rowData[i].koukuanFlag = koukuanFlagValueObj[rowData[i].koukuanFlag];
+	    	rowData[i].invoiceNo = invoiceNoValueObj[rowData[i].invoiceNo];
+	    	rowData[i].isSave = 1;
+// 	    	rowData[i].jiesuanMode = jiesuanModeValueObj[rowData[i].jiesuanMode];
+    	}
+    	var fareForm = {};
+    	fareForm.fare = rowData;
+    	$.ajax({
+    		url : '../../order/savefareget?t=' + Math.random(),
+    		type : 'POST',
+    		dataType : 'json',
+    		async: false ,
+    		data : "jsonData="+JSON.stringify(fareForm),
+    		success : function(dataObj){
+    			if (isServerResultDataPass(dataObj)) {
+					correctNotification(dataObj.resultDataFull);
+					window.parent.frames[0].loadMostly();
+					searchData();
+				} else {
+					FailResultDataToTip(dataObj);
+				}
+				hideLoading();
+    		},
+			error : function(message) {
+				hideLoading();
+			}
+    	});
+    }
+    
+    var check = function() {
+    	loseGridFocus();
+    	var rowData = $("#gridTable").jqGrid("getRowData");
+    	var fareForm = {};
+    	for(var i = 0 ;i < rowData.length; i++){
+    	    if(rowData[i].sn == "") {
+    	        errorNotification({ SimpleMessage: "请先保存后审核!"});
+    	        return;
+			}
+    		if(rowData[i].state=="未处理"){
+    			break;
+    		}
+    		if(i == rowData.length-1 && rowData[i].state!="未处理"){
+    			return;
+    		}
+    	}
+    	for(var i = 0 ;i < rowData.length; i++){
+	    	rowData[i].state = '1';
+	    	rowData[i].getMode = getModeValuObj[rowData[i].getMode];
+	    	rowData[i].invoiceType = invoiceTypeValueObj[rowData[i].invoiceType];
+	    	rowData[i].koukuanFlag = koukuanFlagValueObj[rowData[i].koukuanFlag];
+	    	rowData[i].invoiceNo = invoiceNoValueObj[rowData[i].invoiceNo];
+	    	rowData[i].isSave = 0;
+// 	    	rowData[i].jiesuanMode = jiesuanModeValueObj[rowData[i].jiesuanMode];
+    	}
+    	var fareForm = {};
+    	fareForm.fare = rowData;
+    	console.log(fareForm);
+    	$.ajax({
+    		url : '../../order/savefareget?t=' + Math.random(),
+    		type : 'POST',
+    		dataType : 'json',
+    		async: false ,
+    		data : "jsonData="+JSON.stringify(fareForm),
+    		success : function(dataObj){
+    			if (isServerResultDataPass(dataObj)) {
+					correctNotification(dataObj.resultDataFull);
+					searchData();
+				} else {
+					FailResultDataToTip(dataObj);
+				}
+				hideLoading();
+    		},
+			error : function(message) {
+				hideLoading();
+			}
+    	});
+    }
+    
+    var isCheck = function() {
+    	loseGridFocus();
+    	var rowData = $("#gridTable").jqGrid("getRowData");
+    	var fareForm = {};
+    	for(var i = 0 ;i < rowData.length; i++){
+    		var state = stateValueObj[rowData[i].state];
+    		if(state != 1) {
+    			errorNotification({ SimpleMessage: "只能反审核已经审核的数据"});
+    			return ;
+    		}
+    		/* if(rowData[i].state=="已审核"){
+    			break;
+    		}
+    		if(i == rowData.length-1 && rowData[i].state!="已审核"){
+    			return;
+    		} */
+    	}
+    	for(var i = 0 ;i < rowData.length; i++){
+	    	rowData[i].state = '0';
+	    	rowData[i].getMode = getModeValuObj[rowData[i].getMode];
+	    	rowData[i].invoiceType = invoiceTypeValueObj[rowData[i].invoiceType];
+	    	rowData[i].koukuanFlag = koukuanFlagValueObj[rowData[i].koukuanFlag];
+	    	rowData[i].invoiceNo = invoiceNoValueObj[rowData[i].invoiceNo];
+	    	rowData[i].isSave = 0;
+// 	    	rowData[i].jiesuanMode = jiesuanModeValueObj[rowData[i].jiesuanMode];
+    	}
+    	fareForm.fare = rowData;
+    	$.ajax({
+    		url : '../../order/savefareget?t=' + Math.random(),
+    		type : 'POST',
+    		dataType : 'json',
+    		async: false ,
+    		data : "jsonData="+JSON.stringify(fareForm),
+    		success : function(dataObj){
+    			if (isServerResultDataPass(dataObj)) {
+					correctNotification(dataObj.resultDataFull);
+					searchData();
+				} else {
+					FailResultDataToTip(dataObj);
+				}
+				hideLoading();
+    		},
+			error : function(message) {
+				hideLoading();
+			}
+    	});
+    }
+    
+    var collection = function(){
+    	var rowData = $("#gridTable").jqGrid("getRowData");
+   	 for(var i = 0 ; i < rowData.length; i++) {
+   		 var state = stateValueObj[rowData[i].state];
+   		 if(state != 1) {
+   			 errorNotification({ SimpleMessage : '只能给已审核的费用明细收款'});
+   			 return;
+   		 }
+   	 }
+    	$("#dialogCollection").show();
+    	$("#dialogCollection").dialog({
+			modal: true,
+			minimizable: false,
+			maximizable: false,
+			collapsible: false,
+			resizable: true,
+			title : "收款"
+    	}),dialog("open").dialog("setTitle","收款");
+    }
+    
+    $(":radio").click(function(){
+  	  var paperType = $("[name=paperType]:checked").val();
+  	  if(paperType == 8) {
+  		  $("#rate").hide();
+  		  $("#code").hide();
+  	  } else {
+  		  $("#rate").show();
+  		  $("#code").show();
+  	  }
+     });
+      
+     var loadGetType = function(){
+  	  var getType = [{'name':'请选择','code':''}]; 
+  	  getType.push({'name':'现金','code':'0'});
+  	  getType.push({'name':'微信','code':'1'});
+  	  getType.push({'name':'支付宝','code':'2'});
+  	  getType.push({'name':'银行转账','code':'3'});
+  	  $("#getType").combobox({
+  		  valueField : 'code',
+  		  textField : 'name',
+  		  loader : function(params,success,error) {
+  			  success(getType);
+  			  $("#getType").combobox("setValue","");
+  		  }
+  	  });
+     }
+     
+     var saveCollection = function(){
+  	  var rowData = $("#gridTable").jqGrid("getRowData"); 
+  	  for(var i = 0 ; i < rowData.length; i++) {
+  		  var state = stateValueObj[rowData[i].state];
+  		  if(state != 1) {
+  			  errorNotification({ SimpleMessage : "只能是已审核未收款状态的费用明细才可以进行收款"});
+  			  return ;
+  		  }
+  	  }
+  	  if(window.parent.frames[1].state == 0) {
+  		  errorNotification({ SimpleMessage : "运单必须是已经审核才可以收款"});
+  		  return ;
+  	  }
+  	  var data = FormUtils.toJSONObject($("#collectionForm"));
+  	  data.fareGet = rowData;
+  	  data.mostlyGuid = window.parent.frames[1].guid;
+  	  $.messager.confirm('提示 ','确定要保存吗?',function(r){
+  		 if(r) {
+  			 showLoading();
+  			 $.ajax({
+  				url : '../../order/collection?t=' + Math.random(),
+  				type : 'POST',
+  				data : "jsonData=" + encodeURI(JSON.stringify(data)),
+  				success : function(dataObj) {
+  					if(isServerResultDataPass(dataObj)) {
+  						correctNotification(dataObj.resultDataFull);
+  						cancel();
+  						searchData();
+  					} else {
+  						FailResultDataToTip(dataObj);
+  					}
+  					hideLoading();
+  				}
+  			 });
+  		 } 
+  	  });
+     }
+     var cancel = function(){
+  	   $("#dialogCollection").dialog("close");
+     }
+     
+     
+     var anInvoice = function(){
+    	 var rowData = $("#gridTable").jqGrid("getRowData");
+    	 for(var i = 0 ; i < rowData.length; i++) {
+    		 var state = stateValueObj[rowData[i].state];
+    		 if(state != 1) {
+    			 errorNotification({ SimpleMessage : '只能给已审核的费用明细开立发票'});
+    			 return;
+    		 }
+    	 }
+  		$("#dialogInvoice").show();
+  		$("#dialogInvoice").dialog({
+  			modal: true,
+  			minimizable: false,
+  			maximizable: false,
+  			collapsible: false,
+  			resizable: true,
+  			title : "开立发票"	
+  		}),dialog("open").dialog("setTitle","开立发票");
+     }
+     
+     var saveInvoice = function() {
+  	   var rowData = $("#gridTable").jqGrid("getRowData");
+  	   for(var i = 0 ; i < rowData.length; i++) {
+  		   if(rowData[i].invoiceState == 1) {
+  			   errorNotification({ SimpleMessage : "当前费用已经开立发票"});
+  			   return ;
+  		   }
+  	   }
+  	   var data = FormUtils.toJSONObject($("#invoiceForm"));
+  	   data.fareGet = rowData;
+  	   $.messager.confirm('提示 ','确定要保存吗?',function(r){
+  			 if(r) {
+  				 showLoading();
+  				 $.ajax({
+  					url : '../../order/invoice?t=' + Math.random(),
+  					type : 'POST',
+  					data : "jsonData=" + encodeURI(JSON.stringify(data)),
+  					success : function(dataObj) {
+  						if(isServerResultDataPass(dataObj)) {
+  							correctNotification(dataObj.resultDataFull);
+  							cancelInvoice();
+  							searchData();
+  						} else {
+  							FailResultDataToTip(dataObj);
+  						}
+  						hideLoading();
+  					}
+  				 });
+  			 } 
+  		  });
+     }
+     var cancelInvoice = function() {
+  	   $("#dialogInvoice").dialog("close");
+     }
+     
+     var deleteRow = function(index,name) {
+  	   var rowData = $("#" + name).jqGrid('getRowData',index);
+  	   var state = rowData.state = stateValueObj[rowData.state];
+  	   if(state != 0) {
+  		   errorNotification({ SimpleMessage : "只能删除未处理的费用明细"});
+  		   return ;
+  	   }
+  	   var sn = rowData.sn;
+  	   $.messager.confirm('提示','确定要删除吗?',function(r){
+  		   if(r) {
+				if(sn != null && sn != '' && sn != undefined) {
+					 $.ajax({
+		  				  url : '../../order/deletefareget?t=' + Math.random(),
+		  				  data : {sn : sn},
+		  				  type : 'POST',
+		  				  success : function(dataObj) {
+		  					  if(isServerResultDataPass(dataObj)) {
+		  							correctNotification(dataObj.resultDataFull);
+		  							searchData();
+		  						} else {
+		  							FailResultDataToTip(dataObj);
+		  						}
+		  						hideLoading();
+		  				  }
+		  			   });
+  	  	   		} else { 
+	  	  	   		$("#"+name).delRowData(index);
+	    	    	if($("#"+name).jqGrid("getRowData").length<=0){
+	   	    			savedRow1 = null;
+	   	                savedCol1 = null;
+	    	    	}
+  	  	   		}
+  		   }
+  	   });	
+     }
+     
+     var close = function(){
+    	 $.messager.confirm('提示,','确定要关闭吗?',function(r){
+    		 if(r) {
+    			 closeDialog("SupplierDetail");
+    		 }
+    	 })
+     }
+  </script>
+</html>

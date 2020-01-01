@@ -1,0 +1,409 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+   <link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+    <link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />    
+    <link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/moment/css/daterangepicker.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/fileUpload/css/fileUpload.css" />
+    <title>客户档案</title>
+</head>
+<body>
+    <div id="toolbar" class="easyui-panel" style="padding: 4px; border-width:0; border-bottom-width:1px;">
+        #{PAGE_TOOLBAR_BUTTONROLE}
+    </div>
+    <div class="searchParamesPanel">
+        <table id="searchParamesTable">
+          <tr class="searchParamesTrShow">
+                <td class="searchParamesTdTitle">
+                    编号:
+                </td>
+                <td class="searchParamesTdControl">
+                    <input type="text" name="code" id="code" class="easyui-textbox" />
+                </td>
+
+                <td width="20px;"></td>
+                <td class="searchParamesTdTitle">
+                    名称:
+                    <!--<label data-locale="customer_name"/>-->
+                </td>
+                <td class="searchParamesTdControl">
+                    <input type="text" name="name" id="name" class="easyui-textbox" />
+                </td>
+
+                <td width="20px;"></td>
+                <td class="searchParamesTdTitle">
+                    类型:
+                    <!--<label data-locale="customer_type"/>-->
+                </td>
+               <td class="searchParamesTdControl">
+                    <input type="text" name="type" id="type" class="easyui-combobox" />
+                </td>
+
+                <td width="20px;"></td>
+                <td class="searchParamesTdTitle">
+                    状态:
+                    <!--<label data-locale="customer_status"/>-->
+                </td>
+              <td class="searchParamesTdControl">
+                  <div id="status"></div>
+              </td>
+            </tr>
+        </table>
+    </div>
+    <div id="gridControl">
+        <table id="gridTable">
+        </table>
+        <div id="gridPager">
+        </div>
+    </div>
+</body>
+<script type="text/javascript"	src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/upload.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/file.js"></script>
+<script language="javascript" type="text/javascript">
+    var moduleId = 0;
+    $(function () {
+        var parms = getUrlParms();
+        moduleId = parms["moduleId"];
+        initScript();
+        initData();
+        initStyle();
+    });
+
+    $(window).load(function () {
+        hideLoading();
+    });
+
+    var initStyle = function () {
+        enterTriggerEvent("searchParamesTable", "searchData");
+    }
+    var oldSetGridHeightWidth = setGridHeightWidth;
+    var setGridHeightWidth = function() {
+        oldSetGridHeightWidth(40,170);
+        oldSetGridHeightWidth(5, 128);
+    };
+    var initScript = function () {
+        var v = 0;
+        $(window).resize(function() {
+            if (v == 0) {
+                setTimeout(function() {
+                    setGridHeightWidth();
+                    v = 0;
+                }, 200)
+                v = 1;
+            }
+            setGridHeightWidth();
+            setToolbarHeightWidth();
+        });
+    }
+    var initData = function () {
+        getDictionaryData([{
+            //加载客户类别字典
+            dicTypeCode : Global_DicType.Global_DicType_divtype,
+            ADD_ALL: true,
+            callback : function(callbackData) {
+                window.cusTypeList = {};
+                for(var i = 0; i < callbackData.length; i++){
+                    cusTypeList[callbackData[i].dicvalue] = callbackData[i].dictext;
+                }
+                $("#type").combobox({
+                    valueField: 'dicvalue',
+                    textField: 'dictext',
+                    panelHeight: 200,
+                    panelWidth: 250,
+                    editable: true,
+                    onSelect:function(record){
+                        searchData();
+                    }
+                });
+                $("#type").combobox("loadData", callbackData);
+            }
+        },{
+            //加载客户状态
+            dicTypeCode : Global_DicType.Global_DicType_CusStatus,
+            ADD_ALL: true,
+            callback : function(callbackData) {
+                window.statusList = {};
+                for(var i = 0; i < callbackData.length; i++){
+                    statusList[callbackData[i].dicvalue] = callbackData[i].dictext;
+                }
+                var formatData = { data: callbackData, needChooseAll: false, chooseAllValue: "", defaultValue: "0",
+                    bindBoxName: "status", bindControlPrefix: "status", onClick:function(){
+                        searchData();
+                    } };
+                formatDefaultRadio_Local(formatData);
+            }
+        }]);
+        loadList();
+    }
+
+    function searchData() {
+        $("#gridTable").jqGrid('setGridParam', {
+            url: getSearchGridUrl(),
+            datatype: 'json',
+            postData: { "filters": "" },
+            page: 1
+        }).trigger("reloadGrid");
+    }
+
+    function getSearchGridUrl() {
+        return '../../jcda/customer/findCustomerPageVO?t=' + Math.random() + '&customSearchFilters=' + encodeURI(getRequestParams());
+    }
+
+    function getRequestParams() {
+        var parmsArray = [
+            { name: 'code', value: $("#code").val(), op: "cn" },
+            { name: 'name',value: $("#name").val(), op: "cn" },
+            { name : 'status',value : $("#status [name=status]:checked").val(),op : "eq"},
+            { name : 'type',value : $("[id=type]").combobox('getValue'),op : "eq"}
+        ];
+        return formatSearchParames(parmsArray);
+    }
+
+    function loadList() {
+        $("#gridTable").jqGrid({
+            url: getSearchGridUrl(),
+            datatype: "json",
+            width: "none",
+            colNames: ['ID','状态','类型', '客户编号', '客户名称', '税号', '发票地址', '开户银行', '开户账号', '发票电话','省','市','地址','备注','创建人', '创建时间'],
+            colModel: [
+                { name: 'id', index: 'id', align: 'center', sorttype: 'int', search: false, sortable: false, key: true, width: 40, hidden: true },
+                { name: 'status', index : 'status', align : 'center', isSort : false, width : 60, stype : 'select', search : true, searchoptions : { sopt: ['cn', 'eq', 'ne']},
+                    formatter : function(value, grid, rows) {
+                        return window.statusList[value];
+                    }
+                },
+                { name: 'type', index : 'type', align : 'center', isSort : false, width : 100, stype : 'select', search : true, searchoptions : { sopt: ['cn', 'eq', 'ne']},
+                    formatter : function(value, grid, rows) {
+                        return window.cusTypeList[value];
+                    } },
+                { name: 'code', index: 'code', align: 'center', isSort: false, width: 100, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'name', index: 'name', align: 'center', isSort: false, width: 160, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'tax', index: 'tax', align: 'center', isSort: false, width: 160, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'in_address', index: 'in_address', align: 'center', isSort: false, width: 160, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'bank', index: 'bank', align: 'center', isSort: false, width: 160, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'bank_no', index: 'bank_no', align: 'center', isSort: false, width: 160, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'in_tel', index: 'in_tel', align: 'center', isSort: false, width: 120, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'pri', index: 'pri', align: 'center', isSort: false, width: 120, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'city', index: 'city', align: 'center', isSort: false, width: 120, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'address', index: 'address', align: 'center', isSort: false, width: 200, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'remark', index: 'remark', align: 'center', isSort: false, width: 265, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'create_by', index: 'create_by', align: 'center', isSort: false, width: 120, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'create_date', index: 'create_date', align: 'center', width: 150, isSort: false, type: 'string',  search: true, searchoptions: { sopt: ['eq', 'ne', 'lt', 'le', 'gt', 'ge'], dataEvents: [{ type: 'click', data: {}, fn: function () { WdatePicker(); } }]} }
+            ],
+            shrinkToFit: false,
+            altRows: true,
+            altclass: 'gridSpacingClass',
+            forceFit: true,
+            cellLayout: 0,
+            scroll: false,
+            autowidth: true,
+            sortname: 'id',
+            sortorder: "desc",
+            loadonce: false,
+            mtype: "POST",
+            viewrecords: true,
+            rownumbers: true,
+            multiselect: true,
+            rowNum: 15,
+            height: "100%",
+            rowList: [100, 200, 300, 500],
+            pager: "#gridPager",
+            jsonReader: {
+                root: "rows",
+                total: "total",
+                page: "page",
+                records: "records",
+                repeatitems: false
+            },
+            gridComplete: function () {
+                $(".cbox").shiftSelect();
+                afterRedRow();
+            },
+            ondblClickRow: function (id) {
+                showChildModule(id);
+            },
+            loadComplete: function (xhr) {
+                $('.gridViewPicLink').tooltip({
+                    position: 'bottom',
+                    content: $(this).attr("title"),
+                    onShow: function () {
+                        $(this).tooltip('tip').css({
+                            backgroundColor: '#FCF8E3',
+                            borderColor: '#FAEBCC'
+                        });
+                    }
+                });
+                FailResultDataToTip(xhr);
+            }
+        });
+
+        $("#gridTable").jqGrid('navGrid', '#gridPager', { add: false, edit: false, del: false, refresh: true.sear }, {}, {}, {}, { multipleSearch: true, closeOnEscape: true, closeAfterSearch: true });
+        $("#gridTable").jqGrid('navButtonAdd', '#gridPager', {
+            caption: "设置列",
+            title: "Reorder Columns",
+            onClickButton: toggleGridColumns
+        });
+
+        $("#gridTable").jqGrid('navButtonAdd', '#gridPager', {
+            caption: "快捷搜索",
+            title: "",
+            onClickButton: toggleGridSearchToolbar
+        });
+        setGridHeightWidth();
+    }
+
+    //jqGrid加载
+    function afterRedRow() {
+        var ids = $("#gridTable").jqGrid("getDataIDs");
+        for (var i = 0; i < ids.length; i++) {
+            var rowData = $("#gridTable").getRowData(ids[i]);
+            if (rowData.status == '注销') {
+                $('#gridTable #' + ids[i]).find("td").css('color', "#8B0000");//注销标注为红色
+            }
+        }
+    }
+
+    /**双击打开明细*/
+    function showChildModule(id) {
+        var rowData = $("#gridTable").jqGrid('getRowData', id);
+        openDetail(rowData.id,rowData.code);
+    };
+
+    /**新增*/
+    function add() {
+        openDetail("","");
+    }
+
+    /**修改*/
+    function edit() {
+        var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
+        if (selectRowItems.length > 1 || selectRowItems.length == 0) {
+            errorNotification({
+                SimpleMessage: $.i18n.prop('selectOneDataRowOperator')
+            });
+            return;
+        }
+        var rowData = $("#gridTable").jqGrid('getRowData', selectRowItems);
+        openDetail(rowData.id,rowData.code);
+    }
+
+    /**打开明细*/
+    var openDetail = function (id,code) {
+        showLoading();
+        var href = "../View/jcda/Cr_CusDetail.html?moduleId=" + moduleId+"&id=" + id+"&code="+code;
+        openDialog({ title: "客户明细", id: 'Cr_CusDetail', width:850, height: 600, isResize: true, href: href, closable: true });
+    }
+
+    /**注销客户*/
+    function remove() {
+        var jsonList = [];
+        var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
+        if (selectRowItems.length == 0) {
+            errorNotification({
+                SimpleMessage : $.i18n.prop("selectLeastOneDataRowOperator")
+            });
+            return;
+        }
+        for ( var i = 0; i < selectRowItems.length; i++) {
+            var rowData = $("#gridTable").jqGrid('getRowData',selectRowItems[i]);
+            if (rowData.status!='正常') {
+                errorNotification({
+                    SimpleMessage : "非‘正常’状态，无法进行此操作"
+                });
+                return;
+            } else {
+                jsonList.push({id : rowData.id,code:rowData.code});
+            }
+        }
+        $.messager.confirm($.i18n.prop("prompt"),$.i18n.prop("deleteData"), function(r) {
+            if (r) {
+                showLoading();
+                $.ajax({url : "../../jcda/customer/batchDelete?t="+ Math.random(),
+                    type : "POST",
+                    data : "jsonData=" + JSON.stringify(jsonList),
+                    success : function(dataObj) {
+                        if (isServerResultDataPass(dataObj)) {
+                            correctNotification(dataObj.resultDataFull);
+                            searchData(); // 删除时需要重新搜索
+                        } else {
+                            FailResultDataToTip(dataObj);
+                        }
+                        hideLoading();
+                    },
+                    error : function(message) {
+                        console.log(message);
+                        hideLoading();
+                    }
+                });
+            }
+        });
+    }
+
+    /**恢复客户*/
+    function recovery() {
+        var jsonList = [];
+        var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
+        if (selectRowItems.length == 0) {
+            errorNotification({
+                SimpleMessage : $.i18n.prop("selectLeastOneDataRowOperator")
+            });
+            return;
+        }
+        for ( var i = 0; i < selectRowItems.length; i++) {
+            var rowData = $("#gridTable").jqGrid('getRowData',selectRowItems[i]);
+            if (rowData.status!='注销') {
+                errorNotification({
+                    SimpleMessage : "非‘注销’状态，无法进行此操作"
+                });
+                return;
+            } else {
+                jsonList.push({id : rowData.id,code:rowData.code});
+            }
+        }
+        $.messager.confirm($.i18n.prop("prompt"),$.i18n.prop("deleteData"), function(r) {
+            if (r) {
+                showLoading();
+                $.ajax({url : "../../jcda/customer/batchRecovery?t="+ Math.random(),
+                    type : "POST",
+                    data : "jsonData=" + JSON.stringify(jsonList),
+                    success : function(dataObj) {
+                        if (isServerResultDataPass(dataObj)) {
+                            correctNotification(dataObj.resultDataFull);
+                            searchData(); // 删除时需要重新搜索
+                        } else {
+                            FailResultDataToTip(dataObj);
+                        }
+                        hideLoading();
+                    },
+                    error : function(message) {
+                        console.log(message);
+                        hideLoading();
+                    }
+                });
+            }
+        });
+    }
+
+    function refreshCallerData_ZdCus() {
+        searchData();
+    }
+
+</script>
+</html>
+  

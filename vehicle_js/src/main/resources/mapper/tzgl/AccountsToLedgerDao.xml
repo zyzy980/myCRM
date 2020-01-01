@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bba.tzgl.dao.AccountsToLedgerDao">
+	<sql id="begin_page">
+		<if test="isPage == true">select A.* from (select rownum rn, T.* from (</if>
+	</sql>
+	<sql id="end_page">
+		<if test="isPage == true">)T where rownum &lt; ${page*rows+1}) A where A.rn >
+			${(page-1)*rows}</if>
+	</sql>
+
+	<!--**********************************************商品车-按账单编号*********************************************************************************-->
+	<!-- 查询可生成台账的账单编号 -->
+	<select id="findListForGrid" resultType="com.bba.tzgl.vo.Ledger_Dz_SheetVO" parameterType="com.bba.util.JqGridParamModel">
+		<include refid="begin_page" />
+		select t.* from (
+		select sum(d.not_tax_amount) not_tax_amount,sum(d.tax_amount) tax_amount,d.bill_number,d.contract_no,j.dz_sheet,j.type,d.data_state state from js_dz_sheet_detail d
+		left join js_dz_sheet j on j.dz_sheet = d.dz_sheet
+		where (d.data_state = '5' or d.data_state = '6') and  j.type='0'
+		group by d.bill_number,d.contract_no,j.dz_sheet,j.type,d.data_state
+		) t
+		<if test="filters!=null and filters!=''">where ${filters}</if>
+		<include refid="end_page" />
+	</select>
+
+	<!-- 查询可生成台账的账单编号数量 -->
+	<select id="findListForGridCount" resultType="int" parameterType="com.bba.util.JqGridParamModel">
+		select count(*) from (
+		select sum(d.not_tax_amount) not_tax_amount,sum(d.tax_amount)
+		tax_amount,d.bill_number,d.contract_no,j.dz_sheet,j.type,d.data_state state from js_dz_sheet_detail d
+		left join js_dz_sheet j on j.dz_sheet = d.dz_sheet
+		where (d.data_state = '5' or d.data_state = '6') and  j.type='0'
+		group by d.bill_number,d.contract_no,j.dz_sheet,j.type,d.data_state
+		) t
+		<if test="filters!=null and filters!=''">where ${filters}</if>
+	</select>
+
+	<!--查询台账对上费用-->
+	<select id="selectUpLedger" parameterType="com.bba.tzgl.vo.Ledger_Dz_SheetVO" resultType="com.bba.tzgl.vo.LedgerVO">
+		select d.contract_no,sum(d.tax_amount) tax_up_total,sum(d.not_tax_amount) ntax_up_total,d.bill_number,d.tax_rate,d.cus_no,d.cus_name,count(*) counts
+		from js_dz_sheet_detail d
+		where  d.bill_number = #{bill_number} and d.dz_sheet=#{dz_sheet}
+		group by d.contract_no,d.bill_number,d.tax_rate,d.cus_no,d.cus_name
+	</select>
+
+	<!--查询台账对下的清单-->
+	<select id="selectLedgerDetailByBillNo" parameterType="com.bba.tzgl.vo.Ledger_Dz_SheetVO" resultType="com.bba.tzgl.vo.Ledger_DetailVO">
+		select carrier_no,carrier_name,sum(not_tax_amount) ntax_down_total ,sum(tax_amount) tax_down_total,tax_rate,count(*) counts from js_vin_down_amount
+		where bill_number = #{bill_number}
+		and ( (js_state='3' and contract_type='2') or (js_state='4' and contract_type<![CDATA[<>'2']]>))
+		group by carrier_no,carrier_name,tax_rate
+	</select>
+
+	<update id="updateDownData" parameterType="com.bba.settlement.vo.Js_Vin_Down_AmountVO">
+		<choose>
+			<!--js_state==5,生成台账-->
+			<when test="js_state==5">
+				update js_vin_down_amount set js_state=#{js_state},js_no=#{js_no},js_batch=#{js_batch} where bill_number=#{bill_number}
+				<![CDATA[ and js_state<>'0']]>
+			</when>
+			<!--js_state==4,撤回台账-->
+			<otherwise>
+				update js_vin_down_amount set js_state=(
+				  case contract_type when '2' then '3' else '4' end
+				),js_no=#{js_no},js_batch=#{js_batch} where bill_number=#{bill_number}
+				<![CDATA[ and js_state<>'0']]>
+			</otherwise>
+		</choose>
+	</update>
+
+	<!--**********************************************非商品车-按账单编号*********************************************************************************-->
+	<!-- 查询可生成台账的账单编号,非商品车没有合同间的补差 -->
+	<select id="findNonListForGrid" resultType="com.bba.tzgl.vo.Ledger_Dz_SheetVO" parameterType="com.bba.util.JqGridParamModel">
+		<include refid="begin_page" />
+		select t.* from (
+		select sum(d.not_tax_amount) not_tax_amount,sum(d.tax_amount) tax_amount,d.bill_number,d.contract_no,j.dz_sheet,d.js_state state,d.type from js_dz_non_sheet_detail d
+		left join js_dz_non_sheet j on j.dz_sheet = d.dz_sheet
+		where (d.js_state = '5' or d.js_state = '6')
+		group by d.bill_number,d.contract_no,j.dz_sheet,d.js_state,d.type
+		) t
+		<if test="filters!=null and filters!=''">where ${filters}</if>
+		<include refid="end_page" />
+	</select>
+
+	<!-- 查询可生成台账的账单编号数量 -->
+	<select id="findNonListForGridCount" resultType="int" parameterType="com.bba.util.JqGridParamModel">
+		select count(*) from (
+		select sum(d.not_tax_amount) not_tax_amount,sum(d.tax_amount)
+		tax_amount,d.bill_number,d.contract_no,j.dz_sheet,d.js_state state,d.type from js_dz_non_sheet_detail d
+		left join js_dz_non_sheet j on j.dz_sheet = d.dz_sheet
+		where (d.js_state = '5' or d.js_state = '6')
+		group by d.bill_number,d.contract_no,j.dz_sheet,d.js_state,d.type
+		) t
+		<if test="filters!=null and filters!=''">where ${filters}</if>
+	</select>
+
+	<!--查询台账对上费用-->
+	<select id="selectNonUpLedger" parameterType="com.bba.tzgl.vo.Ledger_Dz_SheetVO" resultType="com.bba.tzgl.vo.LedgerVO">
+		select d.contract_no,sum(d.tax_amount) tax_up_total,sum(d.not_tax_amount) ntax_up_total,d.bill_number,d.tax_rate,d.cus_no,d.cus_name
+		from js_dz_non_sheet_detail d
+		where  d.bill_number = #{bill_number} and d.dz_sheet=#{dz_sheet}
+		group by d.contract_no,d.bill_number,d.tax_rate,d.cus_no,d.cus_name
+	</select>
+
+	<!--查询台账对下的清单-->
+	<select id="selectNonLedgerDetailByBillNo" parameterType="com.bba.tzgl.vo.Ledger_Dz_SheetVO" resultType="com.bba.tzgl.vo.Ledger_DetailVO">
+		select carrier_no,carrier_name,sum(not_tax_amount) ntax_down_total ,sum(tax_amount) tax_down_total,tax_rate
+		from js_non_down_vehicle
+		where bill_number = #{bill_number}
+		and ( (js_state='3' and contract_type='2') or (js_state='4' and contract_type<![CDATA[<>'2']]>))
+		group by carrier_no,carrier_name,tax_rate
+	</select>
+
+	<!--回写非商品车对账单明细-->
+	<update id="updateDzNonDetail" parameterType="com.bba.nosettlement.vo.Js_Dz_Non_Sheet_DetailVO">
+		update js_dz_non_sheet_detail set js_no=#{js_no},js_batch=#{js_batch},js_state=#{js_state} where bill_number=#{bill_number}
+	</update>
+
+	<!--回写非商品车对上结算数据状态-->
+	<update id="updateJsNonVehicle" parameterType="com.bba.nosettlement.vo.Js_Non_VehicleVO">
+		update js_non_vehicle set js_no=#{js_no},js_batch=#{js_batch},js_state=#{js_state} where bill_number=#{bill_number}
+	</update>
+
+	<update id="updateNonDownData" parameterType="com.bba.nosettlement.vo.Js_Non_Down_VehicleVO">
+		update js_non_down_vehicle set js_state=#{js_state},js_no=#{js_no},js_batch=#{js_batch} where bill_number=#{bill_number}
+  		<![CDATA[ and js_state<>'0']]>
+	</update>
+
+	<!--**********************************************补差台账*********************************************************************************-->
+	<!-- 对上查询补差表数据 -->
+	<select id="getCompensationListForGrid" resultType="com.bba.tzgl.vo.Js_CompensationVO" parameterType="com.bba.util.JqGridParamModel">
+	<include refid="begin_page" />
+	select t.* from (
+	select vehicle_project,sum(tax_up_total) tax_up_total ,sum(ntax_up_total) ntax_up_total,sum(tax_amount) tax_amount,after_contract_no,
+	js_no,js_batch,dz_sheet,bill_number,cus_no,cus_name,state,tax_rate
+	from js_compensation where type ='1'
+	group by js_no,js_batch,dz_sheet,bill_number,cus_no,cus_name,vehicle_project,state,tax_rate,after_contract_no
+	) t
+	<if test="filters!=null and filters!=''">where ${filters}</if>
+	<include refid="end_page" />
+</select>
+
+	<!-- 对上查询补差表数量 -->
+	<select id="getCompensationListForGridCount" resultType="int" parameterType="com.bba.util.JqGridParamModel">
+		select count(*) from (
+        select vehicle_project,sum(tax_up_total) tax_up_total ,sum(ntax_up_total) ntax_up_total,sum(tax_amount) tax_amount,after_contract_no,
+        js_no,js_batch,dz_sheet,bill_number,cus_no,cus_name,state,tax_rate
+        from js_compensation where type ='1'
+        group by js_no,js_batch,dz_sheet,bill_number,cus_no,cus_name,vehicle_project,state,tax_rate,after_contract_no
+		) t
+		<if test="filters!=null and filters!=''">where ${filters}</if>
+	</select>
+
+	<!-- 对下查询补差表数据 -->
+	<select id="getDownCompensationListForGrid" resultType="com.bba.tzgl.vo.Js_CompensationVO" parameterType="com.bba.util.JqGridParamModel">
+		<include refid="begin_page" />
+		select t.* from (
+        select vehicle_project,sum(tax_down_total) tax_down_total,sum(ntax_down_total) ntax_down_total,type,after_contract_no,
+        js_no,js_batch,dz_sheet,bill_number,carrier_no,carrier_name,state,tax_rate from js_compensation where (type ='2' or type='3')
+        group by js_no,js_batch,dz_sheet,bill_number,carrier_no,carrier_name,vehicle_project,state,tax_rate,type,after_contract_no
+		) t
+		<if test="filters!=null and filters!=''">where ${filters}</if>
+		<include refid="end_page" />
+	</select>
+
+	<!-- 对下查询补差表数量 -->
+	<select id="getDownCompensationListForGridCount" resultType="int" parameterType="com.bba.util.JqGridParamModel">
+		select count(*) from (
+        select vehicle_project,sum(tax_down_total) tax_down_total,sum(ntax_down_total) ntax_down_total,type,after_contract_no,
+        js_no,js_batch,dz_sheet,bill_number,carrier_no,carrier_name,state,tax_rate from js_compensation where (type ='2' or type='3')
+        group by js_no,js_batch,dz_sheet,bill_number,carrier_no,carrier_name,vehicle_project,state,tax_rate,type,after_contract_no
+		) t
+		<if test="filters!=null and filters!=''">where ${filters}</if>
+	</select>
+
+
+	<!--**********************************************商品车-按统计表*********************************************************************************-->
+	<!-- 商品车查询可生成台账的统计表账单编号 -->
+	<select id="getStatisticsListForGrid" resultType="com.bba.tzgl.vo.Ledger_Dz_SheetVO" parameterType="com.bba.util.JqGridParamModel">
+		<include refid="begin_page" />
+		select t.* from (
+		select sum(real_tax_amount) tax_amount,sum(real_ntax_amount) not_tax_amount,bill_number,up_js_state state from tr_statistical_import
+		group by bill_number,up_js_state
+		) t
+		<if test="filters!=null and filters!=''">where ${filters}</if>
+		<include refid="end_page" />
+	</select>
+
+	<!-- 商品车查询可生成台账的统计表账单编号数量 -->
+	<select id="getStatisticsListForGridCount" resultType="int" parameterType="com.bba.util.JqGridParamModel">
+		select count(*) from (
+		select sum(real_tax_amount) tax_amount,sum(real_ntax_amount) not_tax_amount,bill_number,up_js_state state from tr_statistical_import
+		group by bill_number,up_js_state
+		) t
+		<if test="filters!=null and filters!=''">where ${filters}</if>
+	</select>
+
+	<!--查询商品车统计表对上-->
+	<select id="selectStatisticsUpLedger" parameterType="com.bba.tzgl.vo.Ledger_Dz_SheetVO" resultType="com.bba.tzgl.vo.LedgerVO">
+		select d.contract_no,sum(d.real_tax_amount) tax_up_total,sum(d.real_ntax_amount) ntax_up_total,d.bill_number,d.cus_no
+		from tr_statistical_import d
+		where  d.bill_number = #{bill_number}
+		group by d.contract_no,d.bill_number,d.cus_no
+	</select>
+
+	<!--查询商品车统计表对下-->
+	<select id="selectStatisticsLedgerDetailByBillNo" parameterType="com.bba.tzgl.vo.Ledger_Dz_SheetVO" resultType="com.bba.tzgl.vo.Ledger_DetailVO">
+		select carrier_no,sum(real_cost) tax_down_total ,sum(tax__real_cost) ntax_down_total,bill_number  from tr_statistical_import
+		group by carrier_no,bill_number
+	</select>
+
+	<!--**********************************************非商品车-按统计表*********************************************************************************-->
+	<!-- 非商品车查询可生成台账的统计表账单编号 -->
+	<select id="getNonStatisticsListForGrid" resultType="com.bba.tzgl.vo.Ledger_Dz_SheetVO" parameterType="com.bba.util.JqGridParamModel">
+		<include refid="begin_page" />
+		select t.* from (
+		select sum(real_tax_amount) tax_amount,sum(real_ntax_amount) not_tax_amount,bill_number,up_js_state state from tr_non_statistical_import
+		group by bill_number,up_js_state
+		) t
+		<if test="filters!=null and filters!=''">where ${filters}</if>
+		<include refid="end_page" />
+	</select>
+
+	<!-- 非商品车查询可生成台账的统计表账单编号数量 -->
+	<select id="getNonStatisticsListForGridCount" resultType="int" parameterType="com.bba.util.JqGridParamModel">
+		select count(*) from (
+		select sum(real_tax_amount) tax_amount,sum(real_ntax_amount) not_tax_amount,bill_number,up_js_state state from tr_non_statistical_import
+		group by bill_number,up_js_state
+		) t
+		<if test="filters!=null and filters!=''">where ${filters}</if>
+	</select>
+
+	<!--查询非商品车统计表对上-->
+	<select id="selectNonStatisticsUpLedger" parameterType="com.bba.tzgl.vo.Ledger_Dz_SheetVO" resultType="com.bba.tzgl.vo.LedgerVO">
+		select d.contract_no,sum(d.real_tax_amount) tax_up_total,sum(d.real_ntax_amount) ntax_up_total,d.bill_number,d.cus_no
+		from tr_non_statistical_import d
+		where  d.bill_number = #{bill_number}
+		group by d.contract_no,d.bill_number,d.cus_no
+	</select>
+
+	<!--查询非商品车统计表对下-->
+	<select id="selectNonStatisticsLedgerDetailByBillNo" parameterType="com.bba.tzgl.vo.Ledger_Dz_SheetVO" resultType="com.bba.tzgl.vo.Ledger_DetailVO">
+		select carrier_no,sum(real_cost) tax_down_total ,sum(tax__real_cost) ntax_down_total,bill_number from tr_non_statistical_import
+		group by carrier_no,bill_number
+	</select>
+
+	<!--***************************************************************开票后操作***************************************************************************-->
+	<update id="updateUpNonJsVehicle" parameterType="com.bba.nosettlement.vo.Js_Non_VehicleVO">
+		update js_non_vehicle set js_state=#{js_state},invoice_no=#{invoice_no},invoice_date=#{invoice_date} where js_batch=#{js_batch} and js_no=#{js_no}
+	</update>
+</mapper>

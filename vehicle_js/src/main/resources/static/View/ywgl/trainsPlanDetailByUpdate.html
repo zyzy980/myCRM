@@ -1,0 +1,880 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link id="CustomTheme" type="text/css" rel="stylesheet"
+	href="../../Resource/css/index/customLightBlue.css" />
+<link id="EasyuiTheme" type="text/css" rel="stylesheet"
+	href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+<link id="JqgridTheme" type="text/css" rel="stylesheet"
+	href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+<link type="text/css" rel="stylesheet"
+	href="../../Resource/js/easyUI/themes/icon.css" />
+<link type="text/css" rel="stylesheet"
+	href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+<link type="text/css" rel="stylesheet" href="../../View/ywgl/css/trainsPlan.css" />
+    <title>#{supplier.detail.thisPage}</title>
+<style>
+	.countLabel .searchParamesTable .searchParamesTrShow td{
+		border: 1px solid #c5dbec;
+		border-top:0px;
+		display : block;
+		float : left;
+		width : 185px;
+		height: 35px;
+		font-family : 微软雅黑
+		!important; 
+	}
+	.stopDrop{
+		cursor : not-allowed;
+	}
+</style>
+</head>
+<body style="overflow:hidden">
+	<div id="toolbar" class="easyui-panel" style="padding: 4px; border-width: 0; border-bottom-width: 1px;">
+		#{PAGE_TOOLBAR_BUTTONROLE}
+	</div>
+	<input type="hidden" id="sn" name="sn" />
+	<form id="detailForm" class="easyui-form" method="post"
+		data-options="novalidate:true">
+		<div style="width: 1250px; height: 283px; overflow: hidden;">
+			<div style="width: 190px; height: 281px; float: left;border:1px solid #c5dbec;overflow-y:auto">
+				<div class="view-title">
+					<img src="../../View/ywgl/images/from.png" alt="" width="20" height="20"/> &nbsp;&nbsp;<span><label data-locale="source"/></span>
+				</div>
+				<ul id="mostlyLeftId"></ul>
+			</div>
+			<div style="width: 1020px; height: 310px; float: left;">
+				<table id="searchParamesTable">
+					<tr class="searchParamesTrShow">
+						<td class="searchParamesTdTitle"><label data-locale="timeAndStop"/>：</td>
+						<td><input name="beginTime" id="beginTime"
+							class="easyui-datebox" data-options="editable:false"
+							style="width: 114px;" /></td>
+						<td class="searchParamesTdTitle" style="text-align: center">-</td>
+						<td><input name="endTime" id="endTime" class="easyui-datebox"
+							data-options="editable:false" style="width: 114px;" /></td>
+						<td class="searchParamesTdTitle"><label data-locale="startAddress"/>：</td>
+						<td><input type="text" name="beginLocalAddress"
+							id="tipinputbegin" class="easyui-combobox" style="width: 114px;" />
+						</td>
+						<td class="searchParamesTdTitle"><label data-locale="StopAddress"/>：</td>
+						<td><input type="text" name="endLocalAddress"
+							id="tipinputend" class="easyui-combobox" style="width: 114px;" />
+						</td>
+						<td class="searchParamesTdTitle"><label data-locale="businessAddress"/>:</td>
+						<td><input type="text" class="easyui-combobox"
+							name="ywLocation" id="ywLocation" style="width: 114px;"
+							data-options="value:'<label data-locale="all"/>',editable:false" /></td>
+					</tr>
+					<tr>
+						<td class="searchParamesTdTitle"><label data-locale="orderNumber"/>：</td>
+						<td><input type="text" name="ywId" id="ywId"
+							class="easyui-textbox" style="width: 114px;" /></td>
+						<td class="searchParamesTdTitle"><label data-locale="costomer"/>：</td>
+						<td><input type="text" name="cusNo" id="cusNo"
+							class="easyui-textbox"
+							data-options="value:'<label data-locale="all"/>',editable:false"
+							style="width: 114px;" /></td>
+						<td class="searchParamesTdTitle"><label data-locale="state"/>：</td>
+						<td><input type="text" name="searchState" id="searchState"
+							class="easyui-combobox"
+							data-options="value:'<label data-locale="all"/>',editable:false"
+							style="width: 114px;" /></td>
+					</tr>
+				</table>
+				<!-- 获取表格数据 -->
+				<div id="gridControl">
+					<table id="gridTable" style="width:942px;"></table>
+					<div class="countLabel">
+						<table class="searchParamesTable" style="height: 100%">
+							<tbody style="height: 100%">
+								<tr class="searchParamesTrShow" style="height: 100%">
+									<td>
+									<div style="float: left">
+											<img src="../../View/ywgl/images/01.png" alt="" />&nbsp;&nbsp;
+										</div>
+										<label><label data-locale="chooseRow"/>：</label><br />
+									<span id="chooseRow1">0</span></td>
+									<td>
+									<div style="float: left">
+											<img src="../../View/ywgl/images/02.png" alt="" />&nbsp;&nbsp;
+										</div>
+										<label><label data-locale="chooseVol"/>：</label><br />
+									<span id="chooseVol1">0</span></td>
+									<td>
+									<div style="float: left">
+											<img src="../../View/ywgl/images/03.png" alt="" />&nbsp;&nbsp;
+										</div>
+										<label><label data-locale="chooseGwt"/>：</label><br />
+									<span id="chooseGwt1">0</span></td>
+									<td>
+									<div style="float: left">
+											<img src="../../View/ywgl/images/04.png" alt="" />&nbsp;&nbsp;
+										</div>
+										<label><label data-locale="chooseQty"/>：</label><br />
+									<span id="chooseQty1">0</span></td>
+									<td>
+									<div style="float: left">
+											<img src="../../View/ywgl/images/05.png" alt="" />&nbsp;&nbsp;
+										</div>
+										<label><label data-locale="chooseCus"/>：</label><br />
+									<span id="chooseCus">0</span></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div style="width: 1250px; height: 290px; overflow: hidden;">
+			<div
+				style="width: 190px; height: 234px; float: left;border:1px solid #c5dbec;margin-top:25px;">
+				<div class="view-title">
+					<img src="../../View/ywgl/images/to.png" alt="" width="20" height="20"/> &nbsp;&nbsp;<span><label data-locale="destination"/></span>
+				</div>
+				<ul id="mostlyLeft2Id"></ul>
+			</div>
+			<div style="width: 1020px; height: 310px; float: left;">
+					<img src="../../View/ywgl/images/up2.png" id="moveTop" alt="" width="20" height="24" style="border:1px solid #c5dbec;"/>&nbsp;
+					<img src="../../View/ywgl/images/down2.png" alt="" id="moveDown"  width="20" height="24" style="border:1px solid #c5dbec;"/>
+
+				<!-- 获取表格数据 -->
+				<table id="gridTable2" style="width: 942px;"></table>
+				<div class="countLabel">
+					<table class="searchParamesTable" style="height: 100%">
+						<tbody style="height: 100%">
+							<tr class="searchParamesTrShow" style="height: 100%">
+								<td>
+								<div style="float: left">
+										<img src="../../View/ywgl/images/01.png" alt="" />&nbsp;&nbsp;
+									</div>
+									<label><label data-locale="chooseRow"/>：</label><br />
+								<span id="chooseRow">0</span></td>
+								<td>
+								<div style="float: left">
+										<img src="../../View/ywgl/images/02.png" alt="" />&nbsp;&nbsp;
+									</div>
+									<label><label data-locale="chooseVol"/>：</label><br />
+								<span id="chooseVol">0</span></td>
+								<td>
+								<div style="float: left">
+										<img src="../../View/ywgl/images/03.png" alt="" />&nbsp;&nbsp;
+									</div>
+									<label><label data-locale="chooseGwt"/>：</label><br />
+								<span id="chooseGwt">0</span></td>
+								<td>
+								<div style="float: left">
+										<img src="../../View/ywgl/images/04.png" alt="" />&nbsp;&nbsp;
+									</div>
+									<label><label data-locale="chooseQty"/>：</label><br />
+								<span id="chooseQty">0</span></td>
+								<td>
+								<div style="float: left">
+										<img src="../../View/ywgl/images/05.png" alt="" />&nbsp;&nbsp;
+									</div>
+									<label><label data-locale="chooseCus"/>：</label><br />
+								<span id="chooseCus">0</span></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</form>
+<script type="text/javascript"	src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/cookie/jquery.cookie.js"></script>
+<script language="javascript" type="text/javascript">
+
+	var detailRowNumber = null;
+	var child = [];
+	var mostlyGuid=null;
+	var detailGuid=null;
+    var moduleId = 0;
+    var valve = 0;//用于判断增加还是修改的阀门值。0代表修改操作，1代表增加操作。
+    var savedRow1 = null;
+    var savedCol1 = null;
+    var savedChildRow1=null;
+    var savedChildCol1=null;
+    var trainNo = null;
+    var index = 0;
+    //需要的数据
+    var rows = 0;
+	var vol = 0;
+	var gwt = 0;
+	var qty = 0;
+	var rows1 = 0;
+	var vol1 = 0;
+	var gwt1 = 0;
+	var qty1 = 0;
+	var identi = null;
+    $(function() {
+        var parms = getUrlParms();
+        var sn = parms["sn"];
+        trainNo = parms["trainNo"];
+        var jsonList = [];
+        var orderDetailGuid = null;
+        loadState();
+        loadAddress();
+        getTreeValue();
+        initScript();
+        //获取mostly表数据
+        initData();
+       	initStyle();
+    });
+
+    $(window).load(function() { hideLoading(); });
+
+	var time = function(date){
+		$("[name=planBeginDate]").val(date);
+	}
+	
+    var initStyle = function() {
+    	$(':radio').click(function() { searchData(); });
+        enterTriggerEvent('searchParamesTable', 'searchData');
+    };
+    var oldSetGridHeightWidth = setGridHeightWidth;
+    var setGridHeightWidth = function() {
+    	oldSetGridHeightWidth(40,170);
+    	oldSetGridHeightWidth(5, 128);
+    	$(".ui-jqgrid-bdiv").css("height","450px");
+    };
+    var initScript = function() {
+    	var v = 0;
+    	$(window).resize(function() {
+    		if (v == 0) {
+    			setTimeout(function() { setGridHeightWidth(); v = 0; }, 200)
+    			v = 1;
+    		}
+    		setGridHeightWidth();
+    		setToolbarHeightWidth();
+    	});	
+    };
+
+	// 查询数据
+    function searchData() {
+        $('#gridTable').jqGrid('setGridParam', {
+        	url : getSearchGridUrl(),
+        	datatype : 'json',
+        	postData : { 'filters' : '' },
+        	page : 1
+        }).trigger('reloadGrid');
+    }
+    
+    function searchData2 () {
+    	 $('#gridTable2').jqGrid('setGridParam', {
+         	url : getSearchGridUrl(),
+         	datatype : 'json',
+         	postData : { 'filters' : '' },
+         	page : 1
+         }).trigger('reloadGrid');
+    }
+
+	// 获取查询访问路径
+    var getSearchGridUrl = function() {
+        return '../../order/findOrderDetial?t=' + Math.random() + '&customSearchFilters=' + encodeURI(getSearchFilters());
+    };
+
+ 	// 获取查询条件
+    var getSearchFilters = function() {
+		var parmsArray = [
+		{ 
+		  name: 'o.mostly_guid', value: mostlyGuid, op: "eq" }
+        ];
+        return formatSearchParames(parmsArray);
+    };
+	
+	// 加载订单列表数据
+	var loadList = function() {
+		 $('#gridTable').jqGrid({
+	            url : getSearchGridUrl(),
+	            datatype : 'json',
+	            width : 'none',
+	            colNames : [
+	            	$.i18n.prop('sn'),$.i18n.prop('guid'),$.i18n.prop('withinCode'),$.i18n.prop('createBy'),$.i18n.prop('createDate'),
+		         	$.i18n.prop('updateBy'),$.i18n.prop('updateDate'),$.i18n.prop('goodsName'),$.i18n.prop('mostlyGuid'),
+		         	$.i18n.prop('unit'),$.i18n.prop('vol'), $.i18n.prop('gwt'), $.i18n.prop('qty')
+	            ],
+	            colModel : [
+		            { name : 'sn', index: 'o.sn', align: 'center', sorttype: 'string', search: false, sortable: false, width: 40 , hidden: true },
+		            { name : 'guid', index: 'o.guid',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+		            { name : 'withinCode', index: 'o.within_Code',  align : 'center', sorttype: 'string', sortable : false,hidden: true},
+		         	{ name : 'createBy', index: 'o.create_By', align : 'center', sorttype: 'string',sortable : false,hidden: true},
+		         	{ name : 'createDate', index: 'o.CREATE_DATE',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+		         	{ name : 'updateBy', index: 'o.UPDATE_BY',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+		         	{ name : 'updateDate', index : 'o.UPDATE_DATE', align : 'center', isSort : false,search : true, type : 'string',hidden: true},
+		         	{ name : 'goodsName', index : 'o.goods_name', editable: true, align: 'center',  width: 100},
+		         	{ name : 'mostlyGuid', index : 'o.MOSTLY_GUID', align : 'center', isSort : false,search : true, type : 'string', hidden: true },
+		         	{ name : 'unit', index : 'o.UNIT', editable: true, align: 'center',  width: 80},
+		         	{ name : 'vol', index : 'o.VOL', editable: true,  align: 'center',  width: 80},
+			        { name : 'gwt', index : 'o.GWT', editable: true,  align: 'center',  width: 80},
+			        { name : 'qty', index : 'o.qty', editable: true,  align: 'center', width: 80}
+	            	
+	            ],
+	            shrinkToFit: false,
+	            altRows: true,
+	            altclass: 'gridSpacingClass',
+	            forceFit: true,
+	            cellLayout: 0,
+	            scroll: false,
+	            autowidth: true,
+	            sortname: 'sn',
+	            sortorder: "desc",
+	            loadonce: false,
+	            mtype: "POST",
+	            viewrecords: true,
+	            rownumbers: true,
+	            multiselect: true,
+	            rowNum: 15,
+	            height: "100%",
+	            rowList: [100, 200, 300, 500],
+	            pager: "#gridPager",
+	            jsonReader: {
+	                root: "rows",
+	                total: "total",
+	                page: "page",
+	                records: "records",
+	                repeatitems: false
+	            },
+	            gridComplete: function () {
+	                $(".cbox").shiftSelect();
+	            },
+	            ondblClickRow: function (code) {
+	            	moveDown(code);
+	            },
+// 	            afterInsertRow : function(){
+// 	            	$(this).find("tr").attr("draggable",true).off("dragend").bind("dragend",toDown);
+// 	            },
+	            loadComplete: function (xhr) {
+// 	            	$(this).find("tr").attr("draggable",true).off("dragend").bind("dragend",toDown);
+	            	$("#gbox_gridTable").css("width","942px");
+	            	$("#gview_gridTable").css("width","942px");
+	            	$("#gview_gridTable").find(".ui-jqgrid-bdiv").css("width","942px");
+	            	$("#gview_gridTable").find(".ui-jqgrid-hdiv").css("width","942px");
+	            	$("#gview_gridTable").find(".ui-jqgrid-bdiv").css("height","170px");
+	            	var data =  $('#gridTable').jqGrid('getRowData');
+	            	for(var i = 0 ; i < data.length; i++ ){
+	            		rows1 += parseInt(1);
+	            		vol1 += parseInt(data[i].vol);
+	            		gwt1 += parseInt(data[i].gwt);
+	            		qty1 += parseInt(data[i].qty);
+	            	}
+	            	$("#chooseRow1").html(rows1);
+	            	$("#chooseVol1").html(vol1);
+	            	$("#chooseGwt1").html(gwt1);
+	            	$("#chooseQty1").html(qty1);
+	            }
+	        });
+	        setGridHeightWidth();
+	}
+	
+	//第二个表格
+	var loadList2 = function() {
+	 $('#gridTable2').jqGrid({
+		 	url : '../../order/findOrderDetial?t=' + Math.random() + '&customSearchFilters=' + encodeURI(getSearchFilters()),
+            url : getSearchGridUrl(),
+            datatype : 'json',
+            width : 'none',
+            colNames : [
+            	$.i18n.prop('sn'),$.i18n.prop('guid'),$.i18n.prop('withinCode'),$.i18n.prop('createBy'),$.i18n.prop('createDate'),
+	         	$.i18n.prop('updateBy'),$.i18n.prop('updateDate'),$.i18n.prop('goodsName'),$.i18n.prop('mostlyGuid'),
+	         	$.i18n.prop('unit'),$.i18n.prop('vol'), $.i18n.prop('gwt'), $.i18n.prop('qty'),''
+            ],
+            colModel : [
+	            { name : 'sn', index: 'o.sn', align: 'center', sorttype: 'string', search: false, sortable: false, width: 40 , hidden: true },
+	            { name : 'guid', index: 'o.guid',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+	            { name : 'withinCode', index: 'o.within_Code',  align : 'center', sorttype: 'string', sortable : false,hidden: true},
+	         	{ name : 'createBy', index: 'o.create_By', align : 'center', sorttype: 'string',sortable : false,hidden: true},
+	         	{ name : 'createDate', index: 'o.CREATE_DATE',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+	         	{ name : 'updateBy', index: 'o.UPDATE_BY',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+	         	{ name : 'updateDate', index : 'o.UPDATE_DATE', align : 'center', isSort : false,search : true, type : 'string',hidden: true},
+	         	{ name : 'goodsName', index : 'o.goods_name', editable: true, align: 'center',  width: 100},
+	         	{ name : 'mostlyGuid', index : 'o.MOSTLY_GUID', align : 'center', isSort : false,search : true, type : 'string', hidden: true },
+	         	{ name : 'unit', index : 'o.UNIT', editable: true, align: 'center',  width: 80},
+	         	{ name : 'vol', index : 'o.VOL', editable: true,  align: 'center',  width: 80},
+		        { name : 'gwt', index : 'o.GWT', editable: true,  align: 'center',  width: 80},
+		        { name : 'qty', index : 'o.qty', editable: true,  align: 'center', width: 80},
+		        { name : 'identify', index : 'o.mostly_guid',hidden: true}
+            ],
+            shrinkToFit: false,
+            altRows: true,
+            altclass: 'gridSpacingClass',
+            forceFit: true,
+            cellLayout: 0,
+            scroll: false,
+            autowidth: true,
+            sortname: 'sn',
+            sortorder: "desc",
+            loadonce: false,
+            mtype: "POST",
+            viewrecords: true,
+            rownumbers: true,
+            multiselect: true,
+            rowNum: 15,
+            height: "100%",
+            rowList: [100, 200, 300, 500],
+            pager: "#gridPager",
+            jsonReader: {
+                root: "rows",
+                total: "total",
+                page: "page",
+                records: "records",
+                repeatitems: false
+            },
+            gridComplete: function () {
+                $(".cbox").shiftSelect();
+            },
+            ondblClickRow: function (code) {
+            	moveTop(code);
+            },
+//             afterInsertRow : function(){
+//             	$(this).find("tr").attr("draggable",true).off("dragend").bind("dragend",toTop);
+//             },
+            loadComplete: function (xhr) {
+//             	$(this).find("tr").attr("draggable",true).off("dragend").bind("dragend",toTop);
+                $("#gbox_gridTable2").css("width","942px");
+            	$("#gview_gridTable2").css("width","942px");
+            	$("#gview_gridTable2").find(".ui-jqgrid-bdiv").css("width","942px");
+            	$("#gview_gridTable2").find(".ui-jqgrid-hdiv").css("width","942px");
+            	$("#gview_gridTable2").find(".ui-jqgrid-bdiv").css("height","170px");
+            	
+            	var data =  $('#gridTable2').jqGrid('getRowData');
+            	for(var i = 0 ; i < data.length; i++ ){
+	            	identi = data[0].identify;
+            		rows += parseInt(1);
+            		vol += parseInt(data[i].vol);
+            		gwt += parseInt(data[i].gwt);
+            		qty += parseInt(data[i].qty);
+            	}
+            	$("#chooseRow").html(rows);
+            	$("#chooseVol").html(vol);
+            	$("#chooseGwt").html(gwt);
+            	$("#chooseQty").html(qty);
+            }
+        });
+  		setGridHeightWidth();
+	}
+    
+	var initData = function() {
+		loadList();
+		loadList2();
+
+    };
+    
+    var moveDown = function(code) {
+    	var rowData = $("#gridTable").jqGrid('getRowData', code);
+    	
+    	rows += parseInt(1);
+		vol += parseInt(rowData.vol);
+		gwt += parseInt(rowData.gwt);
+		qty += parseInt(rowData.qty);
+		
+		rows1 -= parseInt(1);
+		vol1 -= parseInt(rowData.vol);
+		gwt1 -= parseInt(rowData.gwt);
+		qty1 -= parseInt(rowData.qty);
+		
+		$("#chooseRow").html(rows);
+		$("#chooseVol").html(vol);
+		$("#chooseGwt").html(gwt);
+		$("#chooseQty").html(qty);
+		
+		$("#chooseRow1").html(rows1);
+		$("#chooseVol1").html(vol1);
+		$("#chooseGwt1").html(gwt1);
+		$("#chooseQty1").html(qty1);
+    	$("#gridTable").jqGrid("delRowData",code);
+    	$("#gridTable2").jqGrid("addRowData", code + 1 ,rowData);
+    }
+    
+    var moveTop = function(code) {
+    	var rowData = $("#gridTable2").jqGrid('getRowData', code);
+    	
+    	rows1 += parseInt(1);
+		vol1 += parseInt(rowData.vol);
+		gwt1 += parseInt(rowData.gwt);
+		qty1 += parseInt(rowData.qty);
+		
+		rows -= parseInt(1);
+		vol -= parseInt(rowData.vol);
+		gwt -= parseInt(rowData.gwt);
+		qty -= parseInt(rowData.qty);
+		
+		$("#chooseRow1").html(rows1);
+		$("#chooseVol1").html(vol1);
+		$("#chooseGwt1").html(gwt1);
+		$("#chooseQty1").html(qty1);
+		
+		$("#chooseRow").html(rows);
+		$("#chooseVol").html(vol);
+		$("#chooseGwt").html(gwt);
+		$("#chooseQty").html(qty);
+    	$("#gridTable2").jqGrid("delRowData",code);
+    	$("#gridTable").jqGrid("addRowData", code + 1 ,rowData);
+    }
+  
+    //车型下拉信息
+    $("#trainType").combobox({
+		valueField : "code",
+		textField : "name",
+		method : "GET",
+		loader:function(param,success,error){  
+            $.ajax({  
+                url:"../../dictionary/findTruckType",
+                dataType: 'json',  
+                method:"GET",
+                success: function(data){
+                	success(data.resultDataFull); 
+                } 
+            }); 
+        }
+	});
+    
+    //从cookie获取当前业务地点
+// 	var ywlocation = $.cookie("OSUN_whcenter");
+    $("#cusNo").combobox({
+		valueField : "code",
+		textField : "name",
+		method : "GET",
+		loader:function(param,success,error){  
+			$.ajax({  
+				url:"../../bussiness/planExec/findCusWithCurrentWithinCode?t=" + Math.random(),
+				dataType: 'json',  
+				method:"GET",
+				async : false,
+				success: function(data){
+					data.unshift({code:'','name':$.i18n.prop('all')});
+					success(data); 
+				} 
+			}); 
+		}
+	});
+  
+	function MouseOver(name){
+		var rowData = $("#gridTable").jqGrid('getRowData', name);
+		detailRowNumber =name;
+		detailGuid = rowData.guid;
+        $("#orderDetailChild").show();
+        $(".ui-jqgrid-bdiv").css("height","230px");
+        listChild();
+  
+	}
+	
+	//切换选项卡
+    var selectDetail = function(guid){
+    	loadDetailMostly(guid);
+    }
+
+	 var getTreeValue=function (){
+		$('#mostlyLeftId').tree({
+			url: '../../train/getTrainNo?trainNo='+"",
+			loadFilter : function(data){
+				return data;
+			},
+			onClick: function(node){
+				mostlyGuid = node.id;
+				searchData();
+			}
+		}); 
+		 
+		$('#mostlyLeft2Id').tree({
+			url: '../../train/getTrainNo?trainNo='+trainNo,
+			loadFilter : function(data){
+				return data;
+			},
+			onClick : function(node){
+				mostlyGuid = node.id;
+				searchData2();
+			}
+		});
+	 }
+	 
+	 var searchTree = function(){
+			$('#mostlyLeftId').tree({
+				url: '../../train/getTrainNo?trainNo='+"",
+				loadFilter : function(data){
+					return data;
+				},
+				onClick: function(node){
+					mostlyGuid = node.id;
+					searchData();
+				}
+			}); 
+	 }
+		
+		
+		$("#moveDown").click(function(){
+			var selectRowItems = $('#gridTable').jqGrid('getGridParam', 'selarrrow');
+			var rowData = [];
+			var list = [];
+			selectRowItems.forEach(function(item){
+				list.push(item);
+			})
+			for(var i=0;i<list.length;i++) {
+				rowData.push($('#gridTable').jqGrid('getRowData', list[i]));
+				rows += parseInt(1);
+				vol += parseInt(rowData[i].vol);
+				gwt += parseInt(rowData[i].gwt);
+				qty += parseInt(rowData[i].qty);
+				
+				rows1 -= parseInt(1);
+				vol1 -= parseInt(rowData[i].vol);
+				gwt1 -= parseInt(rowData[i].gwt);
+				qty1 -= parseInt(rowData[i].qty);
+				$("#gridTable").jqGrid("delRowData",list[i]);
+				$("#gridTable2").jqGrid("addRowData", i + 1,rowData);
+			}
+			$("#chooseRow").html(rows);
+			$("#chooseVol").html(vol);
+			$("#chooseGwt").html(gwt);
+			$("#chooseQty").html(qty);
+			
+			$("#chooseRow1").html(rows1);
+			$("#chooseVol1").html(vol1);
+			$("#chooseGwt1").html(gwt1);
+			$("#chooseQty1").html(qty1);
+		});
+		
+		$("#moveTop").click(function(){
+			var selectRowItems = $('#gridTable2').jqGrid('getGridParam', 'selarrrow');
+			var rowData = [];
+			var list = [];
+			selectRowItems.forEach(function(item){
+				list.push(item);
+			})
+			for(var i=0;i<list.length;i++) {
+				rowData.push($('#gridTable2').jqGrid('getRowData',list[i]));
+				rows1 += parseInt(1);
+				vol1 += parseInt(rowData[i].vol);
+				gwt1 += parseInt(rowData[i].gwt);
+				qty1 += parseInt(rowData[i].qty);
+				
+				rows -= parseInt(1);
+				vol -= parseInt(rowData[i].vol);
+				gwt -= parseInt(rowData[i].gwt);
+				qty -= parseInt(rowData[i].qty);
+				
+				$("#gridTable2").jqGrid("delRowData",list[i]);
+				$("#gridTable").jqGrid("addRowData",i + 1,rowData);
+			}
+			$("#chooseRow1").html(rows1);
+			$("#chooseVol1").html(vol1);
+			$("#chooseGwt1").html(gwt1);
+			$("#chooseQty1").html(qty1);
+			$("#chooseRow").html(rows);
+			$("#chooseVol").html(vol);
+			$("#chooseGwt").html(gwt);
+			$("#chooseQty").html(qty);
+		});
+	 
+	var gridReplace = function(oldGgrid,newGrid,element){
+    	var selectRowItems = $("#"+oldGgrid).jqGrid("getGridParam", "selarrrow");
+    	
+    	var rowDataList = [];
+    	
+    	if(selectRowItems.length<=0){
+    		var rowData = generalRowData(element.target.cells);
+    		rowDataList.push(rowData);
+    	} else {
+    		for ( var i = 0; i < selectRowItems.length; i++) {
+        		var rowData = $("#"+oldGgrid).jqGrid('getRowData',selectRowItems[i]);
+        		rowDataList.push(rowData);
+        	}
+    	}
+    	
+    	var ids = $("#"+newGrid).jqGrid('getDataIDs');
+        var rowid = Math.max.apply(Math, ids);
+        if (rowid == "-Infinity"){
+            rowid = 0;
+        }
+        
+        for ( var i = 0; i < rowDataList.length; i++) {
+        	var newrowid = rowid + (i+1);
+            var dataRow = rowDataList[i];
+            dataRow.rowid=newrowid,
+            $("#"+newGrid).jqGrid("addRowData", newrowid, dataRow, "last");
+            $("#"+oldGgrid).delRowData(rowDataList[i].rowid);
+
+    	}
+	}
+	
+// 	var toTop = function(element){
+		
+// 		var e =  window.event;
+		
+// 		var div = document.getElementById("gview_gridTable");  
+		
+// 		var panelHeight = $(".panel").css("height").split("px")[0];
+// 		var searchTable = $("#searchParamesTable").css("height").split("px")[0];
+		
+// 		var topHeightMin = parseInt(panelHeight)+parseInt(searchTable);
+// 		var topHeightMax = topHeightMin+div.offsetHeight;
+		
+//         var widthCount = document.body.clientWidth-div.offsetWidth;
+		
+// 		if(e.clientY>topHeightMin && e.clientY<topHeightMax && e.clientX-widthCount>0){
+// 			gridReplace("gridTable2","gridTable",element);
+// 		}
+// 	}
+	
+// 	var toDown = function(element){
+		
+// 		var e =  window.event;
+		
+// 		var div = document.getElementById("gview_gridTable2");  
+//         var topCount = document.body.clientHeight-div.offsetHeight;
+//         var widthCount = document.body.clientWidth-div.offsetWidth;
+// 		console.log(e.clientX+" " +e.clientY);
+		
+// 		if((e.clientY+70)-topCount>0 && e.clientX-widthCount>0){
+// 			gridReplace("gridTable","gridTable2",element);
+// 		}
+// 	}
+	
+	var topHover = function(){
+		
+	}
+	
+	var downHover = function(){
+		
+	}
+	
+	var generalRowData = function(cells){
+		var rowData = {};
+		for(var i = 0 ; i < cells.length ; i++){
+			var id=$(cells[i].outerHTML).attr("aria-describedby");
+			id=id.substring(id.indexOf("_")+1,id.length);
+			rowData[id] = cells[i].outerText;
+		}
+		return rowData;
+	}
+	
+	document.addEventListener("dragenter", function(event) {
+		/* var e =  window.event;
+		
+		var div = document.getElementById("gview_gridTable");  
+		
+		var panelHeight = $(".panel").css("height").split("px")[0];
+		var searchTable = $("#searchParamesTable").css("height").split("px")[0];
+		var topHeightMin = parseInt(panelHeight)+parseInt(searchTable);
+		var topHeightMax = topHeightMin+div.offsetHeight;
+        var widthCount = document.body.clientWidth-div.offsetWidth;
+        
+        var div2 = document.getElementById("gview_gridTable2");  
+        var topCount = document.body.clientHeight-div2.offsetHeight;
+		
+		if(e.clientY>topHeightMin && e.clientY<topHeightMax && e.clientX-widthCount>0){
+			$("body").removeClass("stopDrop");
+		} else if((e.clientY+70)-topCount>0 && e.clientX-widthCount>0){
+			$("body").removeClass("stopDrop");
+		} else {
+			$("body").addClass("stopDrop");
+		} */
+	});
+	
+	document.addEventListener("dragover", function(event) {
+	    event.preventDefault();
+	});
+	
+	var save = function(){
+		var rowData = $("#gridTable2").jqGrid("getRowData");
+		if(rowData.length == 0 ) {
+			errorNotification({ SimpleMessage : '没有数据，不能保存'});
+			return ;
+		}
+		$.messager.confirm('提示', '确定要保存吗?', function(r) { // 提示, 确定保存数据项吗
+			if (r) {
+				$.ajax({
+					url : '../../train/updatetrain?t='+Math.random() + "&identify=" + identi,
+					type : 'POST',
+					data :"jsonData="+JSON.stringify(rowData),
+					success : function(dataObj) {
+						if (isServerResultDataPass(dataObj)) {
+							correctNotification(dataObj.resultDataFull);
+						} else {
+							FailResultDataToTip(dataObj);
+						}
+						hideLoading();
+					},
+					error : function(message) {
+						hideLoading();
+					}
+				});
+			}
+		});
+	}
+	
+	$("#beginTime").datebox({
+		onSelect : function(beginDate) {
+			$("#endTime").datebox().datebox("calendar").calendar({
+				validator : function(endDate) {
+					return beginDate <= endDate;
+				}
+			});
+		}
+	});
+	
+	function loadState() {
+		var state = [{'name':$.i18n.prop('all'),'code':''}];
+		state.push({'name':'开立中','code':'0'});
+		state.push({'name':'审核','code':'1'});
+		state.push({'name':'已派遣','code':'2'});
+		state.push({'name':'运输中','code':'3'});
+		state.push({'name':'运输完成','code':'4'});
+		state.push({'name':'注销','code':'5'});
+		state.push({'name':'中途取消','code':'6'});
+		$("#searchState").combobox({
+			editable:false,
+			valueField:'code',
+			textField:'name',
+			data:state,
+			onChange:searchData,
+			async : true
+		});
+		stateInnerHtml = {'':$.i18n.prop('all')};
+		state.forEach(function(item){
+			stateInnerHtml[item.code] = item.name;
+		})
+	}
+	
+	var loadAddress = function(){
+    	$("#tipinputbegin,#tipinputend").combobox({
+    		valueField : 'code',
+    		textField : 'name',
+    		loader : function(param,success,error) {
+    			$.ajax({
+    				url : '../../order/getlocation?t='+Math.random(),
+    				dataType : 'json',
+    				method : 'POST',
+    				async : false,
+    				success : function(data){
+    					var supArr = [];
+    					supArr.unshift({code : '', name : $.i18n.prop('all')});
+    					cityInnerHtml = {'' : $.i18n.prop('all')};
+    					data.resultDataFull.forEach(function(item){
+	    					supArr.push({code : item.city,name : (item.cityZjm + "-" + item.city)});
+	    					cityInnerHtml[item.city] = item.cityZjm + "-" + item.city;
+    					});
+    					success(supArr);
+    					$("#tipinputbegin,#tipinputend").combobox('setValue',"");
+    				}
+    			});
+    		},
+    		onChange : searchData
+    	});
+    }
+</script>
+</body>
+</html>

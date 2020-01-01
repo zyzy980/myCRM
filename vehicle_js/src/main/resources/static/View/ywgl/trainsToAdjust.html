@@ -1,0 +1,577 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link id="CustomTheme" type="text/css" rel="stylesheet"
+	href="../../Resource/css/index/customLightBlue.css" />
+<link id="EasyuiTheme" type="text/css" rel="stylesheet"
+	href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+<link id="JqgridTheme" type="text/css" rel="stylesheet"
+	href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+<link type="text/css" rel="stylesheet"
+	href="../../Resource/js/easyUI/themes/icon.css" />
+<link type="text/css" rel="stylesheet"
+	href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+<link type="text/css" rel="stylesheet" href="../../View/ywgl/css/trainsPlan.css" />
+<link type="text/css" rel="stylesheet" href="css/tyle.css"/>
+    <title>#{supplier.detail.thisPage}</title>
+<style>
+	.countLabel .searchParamesTable .searchParamesTrShow td{
+		border: 1px solid #c5dbec;
+		border-top:0px;
+		display : block;
+		float : left;
+		width : 185px;
+		height: 35px;
+		font-family : 微软雅黑
+		!important; 
+	}
+	.stopDrop{
+		cursor : not-allowed;
+	}
+</style>
+</head>
+<body style="overflow:hidden">
+<!--<div id="toolbar" class="easyui-panel" style="padding: 4px; border-width: 0; border-bottom-width: 1px;">-->
+	<!--#{PAGE_TOOLBAR_BUTTONROLE}-->
+<!--</div>-->
+	<div>
+		<a href="javascript:save();" class="easyui-linkbutton" data-options="iconCls:'icon-save'"><label data-locale="trainsAdjust_save"/></a>
+	</div>
+	<div>
+		<table id="gridTable"></table> 
+	</div>
+	<div id="in_city" style="display: none"></div>
+<script type="text/javascript"	src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/cookie/jquery.cookie.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.contextmenu.r2.js"></script>
+<script language="javascript" type="text/javascript">
+
+	var trainnoList = [];
+	var gridTableData = [];
+	var cusNoTextObj = [];
+    var cusNoValueObj = [];
+    var savedRow1 = null;
+    var savedCol1 = null;
+	
+	 var stateTextObj = {
+	    		'0' : $.i18n.prop('search.state.noTransport'),
+	    		'1' : $.i18n.prop('search.state.approved'),
+	    		'2' : $.i18n.prop('search.state.haveSent'),
+	    		'3' : $.i18n.prop('search.state.inTheTransport'),
+	    		'4' : $.i18n.prop('search.state.transportationTo'),
+	    		'5' : $.i18n.prop('search.state.transportationToComplete'),
+	    		'6' : $.i18n.prop('search.state.cancel')
+	    }
+	    
+	    var stateValueObj = {
+	    		$.i18n.prop('search.state.noTransport') : '0',
+	    		$.i18n.prop('search.state.approved') : '1',
+	    		$.i18n.prop('search.state.haveSent') : '2',
+	    		$.i18n.prop('search.state.inTheTransport') : '3',
+	    		$.i18n.prop('search.state.transportationTo') : '4',
+	    		$.i18n.prop('search.state.transportationToComplete') : '5',
+	    		$.i18n.prop('search.state.cancel') : '6'
+	    }
+	    
+	    var trasportTextObj = []
+	    
+	    var trasportValueObj = []
+	    
+	    var getStateTextObj = {
+	 		   '0' : '未处理',
+	 		   '1' : '已结算',
+	 		   '5' : '已收款'
+	    }
+	    
+	    var getStateValueObj = {
+	 		   '未处理' : '0',
+	 		   '已结算' : '1',
+	 		   '已收款' : '5'
+	    }
+	    
+	    var payStateTextObj = {
+	 		   '0' : '未处理',
+	 		   '1' : '已结算',
+	 		   '5' : '已付款'
+	    }
+	    
+	    var payStateValueObj = {
+	 		   '未处理' : '0',
+	 		   '已结算' : '1',
+	 		   '已付款' : '5'
+	    } 
+	 	var trainTypeInnerHTML = [];
+    $(function() {
+    	var params = getUrlParms();
+    	trainnoList = getCurrentTab().tempMap;
+    	FAtable =  getCurrentTab().FAtable; 
+		loadCusNo();
+        loadTransportType();
+		loadTrainType();
+        initScript();
+        //获取mostly表数据
+        initData();
+       	initStyle();
+        //loadCitySelector();
+    });
+    
+    $(window).load(function() { hideLoading(); });
+
+	var time = function(date){
+		$("[name=planBeginDate]").val(date);
+	}
+	
+    var initStyle = function() {
+        enterTriggerEvent('searchParamesTable', 'searchData2');
+    };
+    var oldSetGridHeightWidth = setGridHeightWidth;
+    var setGridHeightWidth = function() {
+    	oldSetGridHeightWidth(5, 25, "gridTable");
+    };
+    var initScript = function() {
+    	var v = 0;
+    	$(window).resize(function() {
+    		setGridHeightWidth();
+    		setToolbarHeightWidth();
+    	});	
+    };
+
+	// 查询数据
+    function searchData() {
+        $('#gridTable').jqGrid('setGridParam', {
+        	datatype : 'local',
+        	data : gridTableData,
+        	page : 1
+        }).trigger('reloadGrid');
+        commonDrag();
+        setGridHeightWidth();
+    }
+	
+	// 加载订单列表数据
+	var loadList = function() {
+		 $('#gridTable').jqGrid({
+			 	data : gridTableData,
+// 	            url : getSearchGridUrl(),
+	            datatype : 'local',
+			 	async: false,
+	            width : 'none',
+	            colNames : [
+	        				'状态','客户',$.i18n.prop('guid'),'创建人','创建时间','更新人','内码',
+	        				'更新时间',$.i18n.prop('trainsAdjust_trainno'),'运单号',$.i18n.prop('trainsAdjust_cusName'),'业务类型','客户业务号',
+	        				'委托时间', '发运日期', '计划交付日期','交付日期', 
+	        				$.i18n.prop('trainsAdjust_beginCity'),$.i18n.prop('trainsAdjust_endCity'),'下个城市代码','承运商代码',
+	        				'承运商名称',$.i18n.prop('trainsAdjust_beginDate'),'体积','重量','件数','委托类型',$.i18n.prop('trainsAdjust_mode'),$.i18n.prop('trainsAdjust_modules'),
+	        				'实际运输方式','是否异常','是否延期',$.i18n.prop('currentLocalLng'),$.i18n.prop('currentLocalLat'),
+	        				$.i18n.prop('currentLocalDate'),$.i18n.prop('currentLocalAddr'),'收款状态','付款状态','分段运输类型',
+	        				'收款模式','付款模式',$.i18n.prop('shoukuan'),$.i18n.prop('fukuan'),$.i18n.prop('ywLocation'),
+	        				$.i18n.prop('existDetailChild'),$.i18n.prop('existMultipleTruck'),'','','','',''
+	                    ],
+	                    colModel : [
+							{ name: 'STATE', index: 'm.state',align: 'center', type: 'string', search: false, sortable: false, width: 40, hidden: true,
+								formatter : function(value,grid,rows){
+									return stateTextObj[value];
+								} 
+							},
+							{ name: 'SN', index: 'm.sn',align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+							{ name: 'GUID', index: 'm.guid',  align: 'center', type: 'string', search: false, sortable: false, width: 40, hidden: true },
+							{ name : 'CREATE_BY', index: 'm.create_by',  align : 'center', type: 'string', sortable : false, hidden: true },
+							{ name : 'CREATE_DATE', index: 'm.create_date', align : 'center', type: 'string',sortable : false,hidden: true },
+							{ name : 'UPDATE_BY', index: 'z.update_by', align : 'center', type: 'string',sortable : false,hidden:true},
+							{ name: 'WITHIN_CODE', index: 'm.WITHIN_CODE',  align: 'center', type: 'string', search: false, sortable: false, width: 40, hidden: true },
+							{ name: 'UPDATE_DATE', index: 'm.update_date',  align: 'center', type: 'string', search: false, sortable: false, width: 40, hidden: true },
+							{ name: 'TRAINNO', index: 'TRAINNO', align: 'center', type:'string',search: false,width: 100},
+							{ name : 'YW_ID', index : 'm.yw_id', align : 'center', isSort : false,search : false,sortable: false, type : 'string', hidden: true},
+							{ name : 'CUS_NO', index : 'm.cus_no', align : 'center', isSort : false,search : false,sortable: false,width: 120, type : 'string',
+								formatter : function(value,grid,rows) {
+									return cusNoTextObj[value];
+								}
+							},
+							{ name : 'BUSINESS_TYPE', index : 'm.business_type', align : 'center', isSort : false,search : false,sortable: false,width: 40, type : 'string', hidden: true},
+							{ name: 'BUSINESS_YW_ID', index: 'm.business_yw_id',  align: 'center', type: 'string', search: false,width: 80, sortable: false, hidden: true},
+							{ name: 'BUSINESS_DATE', index: 'm.business_date',  align: 'center', type: 'string', search: false, sortable: false, width: 105,hidden: true},
+							{ name : 'SHIPMENT_DATA', index : 'm.shipment_data', align : 'center', width : 80,sortable: false, stype : 'select', search : true,hidden: true},
+							{ name : 'PLANJIAOFU_DATA', index : 'm.planjiaofu_data', align : 'center', width : 100, search : false,sortable: false,type : 'string', hidden: true },
+							{ name: 'JIAOFU_DATA', index: 'm.jiaofu_data',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+							{ name : 'BEGIN_LOCAL', index : 'm.begin_local', align : 'center', width: 300,stype : 'select',sortable: false,search: false, editable: true,},
+							{ name: 'END_LOCAL_SITE', index: 'm.end_local_site', align: 'center', sorttype: 'string',width: 300, search: false, sortable: false, editable: true},
+							{ name: 'NEXT_LOCAL_CODE', index: 'm.next_local_code',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+							{ name: 'CONTRACTOR_CODE', index: 'm.contractor_code',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+							{ name: 'CONTRACTOR_NAME', index: 'm.contractor_name',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+							{ name : 'PLANSHIPMENT_DATA', index : 'm.planshipment_data', align : 'center', width : 100, search : false,sortable: false,type : 'string' },
+							{ name: 'VOL', index: 'm.vol', align: 'center', sorttype: 'string', search: false, sortable: false, width: 90, hidden: true},
+	        				{ name: 'GWT', index: 'm.gwt',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 90, hidden: true},
+	        				{ name: 'QTY', index: 'm.qty',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 90, hidden: true},
+							{ name: 'WEITUO_TYPE', index: 'm.weituo_type',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+							{ name: 'TRANSPORT_TYPE_PLAN', index: 'm.transport_type_plan',  align: 'center', sorttype: 'string', search: false, sortable: false,width: 100,
+								formatter : function(value,grid,rows) {
+									return trasportTextObj[value];
+								}
+							},
+							{ name: 'TRAIN_TYPE', index: '', align: 'center', search: false, sortable: false, width: 100, edittype: 'select', editable: true,
+								editoptions : {
+									value : trainTypeInnerHTML
+								}	
+							},
+							{ name: 'TRANSPORT_TYPE_ACTUAL', index: 'm.transport_type_actual', align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+							{ name: 'CURRENT_LOCAL_ADDR', index: 'm.current_local_addr',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+							{ name: 'IS_DELAY', index: 'm.is_delay', align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+							{ name: 'CURRENT_LOCAL_LNG', index: 'm.current_local_lng',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+							{ name: 'CURRENT_LOCAL_LAT', index: 'm.current_local_lat',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+							{ name: 'CURRENT_LOCAL_DATE', index: 'm.current_local_date',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+							{ name: 'IS_ABNORMAL', index: 'm.isabnormal',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+							{ name: 'GET_STATE', index: 'm.get_state',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 60, hidden: true,
+								formatter : function(value,grid,rows) {
+									return getStateTextObj[value];
+								}
+							},
+							{ name: 'PAY_STATE', index: 'm.pay_state',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 60, hidden: true,
+								formatter : function(value,grid,rows) {
+									return payStateTextObj[value];
+								}
+							},
+							{ name: 'GET_MODE', index: 'm.get_mode',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+							{ name: 'ROUTE_TYPE', index: 'm.route_type',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+							{ name: 'PAY_MODE', index: 'm.pay_mode',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+							{ name: 'SHOUKUAN', index: 'm.shoukuan',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+							{ name: 'FUKUAN', index: 'm.fukuan',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+							{ name: 'YW_LOCATION', index: 'm.yw_location',  align: 'center', sorttype: 'string', search: false, sortable: false,hidden: true},
+							{ name: 'EXIST_DETAILCHILD', index: 'm.exist_detail_child',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+							{ name: 'EXIST_MULTIPLE_TRUCK', index: 'm.exist_multiple_truck',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+							{ name: 'YW_LOCATION' , index: 'm.yw_locatoin', hidden: true},
+							{ name: 'isDelete' , index: '', hidden: true},
+							{ name: 'TRAINNOGUID', index:'', hidden: true},
+							{ name: 'BEGIN_LOCAL_CODE', index: '', hidden: true},
+							{ name: 'END_LOCAL_CODE', index: '', hidden: true}
+	                    ],
+	            shrinkToFit: false,
+	            editable: true,
+	            cellEdit: true,
+		        cellsubmit: 'clientArray',
+	            altRows: true,
+	            altclass: 'gridSpacingClass',
+	            forceFit: true,
+	            cellLayout: 0,
+	            scroll: false,
+	            autowidth: true,
+	            sortname: 'sn',
+	            sortorder: "desc",
+	            loadonce: false,
+	            mtype: "POST",
+	            viewrecords: true,
+	            rownumbers: true,
+	            grouping: true,
+	            rowNum: 15,
+	            rowList: [100, 200, 300, 500],
+	            pager: "#gridPager",
+	            jsonReader: {
+	                root: "rows",
+	                total: "total",
+	                page: "page",
+	                records: "records",
+	                repeatitems: false
+	            },
+	            gridComplete: function(){
+	            	changeCellEditable();
+	            }
+	        });
+		 	$('#gridTable').setGridParam({
+	            beforeEditCell: function (rowid, cellname, value, iRow, iCol) {
+	                savedRow1 = iRow;
+	                savedCol1 = iCol;
+	                setTimeout(function(){
+	                	//loadCitySelector();
+	                	//$(".edit-cell input").click();
+	                },0);
+	                
+
+	            }
+	        });
+	        setGridHeightWidth();
+	}
+	
+	var loseGridFocus = function () {
+	    if (savedRow1 && savedCol1) {
+	        $('#gridTable').jqGrid('saveCell', savedRow1, savedCol1);
+	    }
+	}
+	
+	var changeCellEditable = function(){
+		var ids = $("#gridTable").jqGrid("getDataIDs");
+		if(ids.length > 0) {
+			ids.forEach(function(item){
+				var rowData = $("#gridTable").jqGrid("getRowData",item)
+				if(rowData.BEGIN_LOCAL != "") {
+					$("#gridTable").jqGrid("setCell",item,'BEGIN_LOCAL','','not-editable-cell');
+				}
+				if(rowData.END_LOCAL_SITE != "") {
+					$("#gridTable").jqGrid("setCell",item,'END_LOCAL_SITE','','not-editable-cell');
+				}
+			})
+		}
+	 
+	}
+	
+	var groupingCheckBox = function(){
+		$("#gridTable").on("change","input[type=checkbox]" , function(e) {
+			var currentB = $(this);
+			var grid  = $("#gridTable");
+			var isChecked = this.checked;
+			if(currentB.is(".groupHeader")) {
+				var checkboxes = currentB.closest('tr').nextUntil('tr' + gridTable + 'ghead_0').find('.cbox[type=checkbox]');
+			}
+		})
+	}
+	
+	var initData = function() {
+		var trainList = trainnoList;
+		var BEGIN_LOCALMap = {};
+		var END_LOCAL_SITEMap = {};
+
+		var map = {};
+		for(var k in trainnoList) {
+			var list = trainnoList[k];
+			var beginList = [];
+			var endList = [];
+			for(var i = 0 ; i < list.length; i++) {
+				if(!BEGIN_LOCALMap[list[i].BEGIN_LOCAL]){
+					BEGIN_LOCALMap[list[i].BEGIN_LOCAL] = "1";
+					beginList.push(list[i]);
+				}
+				if(!END_LOCAL_SITEMap[list[i].END_LOCAL_SITE]){
+					END_LOCAL_SITEMap[list[i].END_LOCAL_SITE] = "1";
+					endList.push(list[i]);
+				}
+			}
+			map[k] = {
+				beginList : beginList,
+				endList : endList
+			};
+		} 
+		 
+		 for(var k in trainnoList) {
+				var list = JSON.parse(JSON.stringify(trainnoList[k]));
+				for(var i = 0 ; i < list.length - 1; i++) {
+					for(var j = i + 1 ; j < list.length; j++) {
+						if(list[i].BEGIN_LOCAL != list[j].BEGIN_LOCAL){
+							list[0].BEGIN_LOCAL = "";
+							list[0].BEGIN_LOCAL_CODE = "";
+						} 
+						if(list[i].END_LOCAL_SITE != list[j].END_LOCAL_SITE) {
+							list[0].END_LOCAL_SITE = "";
+							list[0].END_LOCAL_CODE = "";
+						}
+					} 
+				}				
+				gridTableData.push(list[0]);
+			}
+		 
+		
+		loadList();
+		$("#gridTable").setColProp('BEGIN_LOCAL', { editoptions : {
+    		value : formatGridCombobox_ServerSelect(FAtable,true, "BEGIN_LOCAL", "BEGIN_LOCAL"),
+    		dataInit: function (elem) {
+    			var row = Number(this.id.substring(0, this.id.indexOf("_"))) - 1;
+    			var rowid = $("#gridTable > tbody > tr[id]").eq(row).attr("id");
+    			var rowData = $("#gridTable").jqGrid("getRowData", rowid);
+    			var newArray = map[rowData.TRAINNO].beginList;
+          	  $(elem).combobox({
+          		  data : newArray,
+          		  valueField: 'BEGIN_LOCAL_CODE',
+ 				  textField: 'BEGIN_LOCAL',
+ 				  panelWidth: 300
+          	  });
+                setTimeout(function () {
+                    $(elem).combobox({
+    					onSelect : function(record){ 
+    						this.value = record.BEGIN_LOCAL;
+    						$("#gridTable").jqGrid("setRowData",rowid, {BEGIN_LOCAL_CODE: record.BEGIN_LOCAL_CODE});
+    					},
+    					onChange:function(record){
+    					},
+    					width : 300,
+    					formatter: function (row) {		
+    						return '<table style=\"width:100%;\"><tr><td  style=\"text-align:left;width:100%;\"><span >' + row.BEGIN_LOCAL + '</span></td></tr></table>';
+    					}
+                      });
+                      $(elem).combobox('showPanel');  
+                      $("[name=BEGIN_LOCAL]").prev().select();
+                    
+                 }, 50);
+             }	
+    	}}); 
+		 $("#gridTable").setColProp('END_LOCAL_SITE', { editoptions : {
+    		value : formatGridCombobox_ServerSelect(FAtable,true, "END_LOCAL_SITE", "END_LOCAL_SITE"),
+    		dataInit: function (elem) {
+    			 var row = Number(this.id.substring(0, this.id.indexOf("_"))) - 1;
+    			var rowid = $("#gridTable > tbody > tr[id]").eq(row).attr("id");
+    			var rowData = $("#gridTable").jqGrid("getRowData", rowid);
+    			var newArray = map[rowData.TRAINNO].endList;
+          	  $(elem).combobox({
+          		  data : newArray,
+          		  valueField: 'END_LOCAL_CODE',
+ 				  textField: 'END_LOCAL_SITE',
+ 				  panelWidth: 300
+          	  });
+                setTimeout(function () {
+                    $(elem).combobox({
+    					onSelect: function(record){ 
+    						this.value = record.END_LOCAL_SITE;
+    						$("#gridTable").jqGrid("setRowData", rowid, {END_LOCAL_CODE: record.END_LOCAL_CODE});
+    					},
+    					onChange:function(record){
+    					},
+    					width : 300,
+    					formatter: function (row) {					
+    						return '<table style=\"width:100%;\"><tr><td  style=\"text-align:left;width:100%;\"><span >' + row.END_LOCAL_SITE + '</span></td></tr></table>';
+    					}
+                      });
+                      $(elem).combobox('showPanel');  
+                      $("[name=END_LOCAL_SITE]").prev().select();
+                    
+                 }, 50);
+             }	
+    	}}); 
+		 
+		 
+		 
+    };
+	 
+ 	var loadCitySelector = function() {
+		var city = $(".city_a_le1 a"); //城市
+    	var beginCity = $("[aria-describedby=gridTable_BEGIN_LOCAL] input[name=BEGIN_LOCAL]");
+    	var endCity = $("[aria-describedby=gridTable_END_LOCAL_SITE] input[name=END_LOCAL_SITE]");
+    	inCity.width = "345";//城市选择框 宽
+    	inCity.height = "auto"; //城市选择框高
+    	inCity.id = "#in_city";  //城市选择框  父级ID
+        inCity.Children = '.city_a_le1';  //城市名box
+        // 初始化 城市HTML模板
+        $(inCity.id).prepend(inCity._template.join(''));
+        
+        inCity.Hot(city);
+     	//城市 导航
+        var apay = $(".screen a");
+
+        var placeThis; //当前选择标签
+        apay.click(function(obj){  //城市导航
+            inCity.payment($(this));
+        })
+
+        inCity.place(beginCity); //出发地
+        inCity.destination(endCity);  //目的地
+        inCity.cityClick(city); //显示赋值城市
+	}
+ 	
+ 	var loadCusNo = function(){
+ 		$.ajax({  
+            url:"../../bussiness/planExec/findCusWithCurrentWithinCode?t=" + Math.random(),
+            dataType: 'json',  
+            method:"GET",
+            async : false,
+            success: function(data){
+            	data.unshift({code : '', name:$.i18n.prop('all')});
+            	data.forEach(function(item){
+					cusNoTextObj[item.code] = item.name;
+					cusNoValueObj[item.name] = item.code;
+				});
+            } 
+        });    
+ 	}
+ 	
+ 	var save = function() {
+ 		loseGridFocus();
+ 		var rowData = $("#gridTable").jqGrid("getRowData");
+ 		for(var i = 0 ; i < rowData.length; i++) {
+ 			var trainno = rowData[i].TRAINNO;
+ 			var beginCity = rowData[i].BEGIN_LOCAL;
+ 			var endCity = rowData[i].END_LOCAL_SITE;
+ 			var beginLocalCode = rowData[i].BEGIN_LOCAL_CODE;
+ 			var endLocalCode = rowData[i].END_LOCAL_CODE;
+ 			var trainType = rowData[i].TRAIN_TYPE;
+ 			trainnoList[trainno][0].BEGIN_LOCAL = beginCity;
+ 			trainnoList[trainno][0].END_LOCAL_SITE = endCity;
+ 			trainnoList[trainno][0].BEGIN_LOCAL_CODE = beginLocalCode;
+ 			trainnoList[trainno][0].END_LOCAL_CODE = endLocalCode;
+
+ 			if(beginCity == "") {
+                errorNotification({ SimpleMessage: $.i18n.prop('trainsAdjust_beginCityCannotBeEmpty')});
+                return;
+			}
+ 			if(endCity == "") {
+ 			    errorNotification({ SimpleMessage: $.i18n.prop('trainsAdjust_endCityCannotBeEmpty')});
+			}
+ 			if(trainType == "") {
+ 			    errorNotification({ SimpleMessage: $.i18n.prop('trainsAdjust_modelsCannotBeEmpty')});
+			}
+ 		}
+		$.messager.confirm($.i18n.prop('trainsAdjust_tip'), '#{trainsAdjust_sureSave}?', function(r) {// 提示, 确定保存数据项吗
+			if (r) {
+				$.ajax({
+					url : '../../train/addtrain?t='+Math.random(),
+					type : 'POST',
+					data :"jsonData=" + encodeURI(JSON.stringify(trainnoList)),
+					success : function(dataObj) {
+						hideLoading();
+						if (isServerResultDataPass(dataObj)) {
+							correctNotification(dataObj.resultDataFull);
+							getCurrentTab().gridTableData = [];
+							getCurrentTab().searchData();
+							getCurrentTab().searchData2();
+							closeDialog("trainsToAdjust");
+						} else {
+							FailResultDataToTip(dataObj);
+						}
+					},
+					error : function(message) {
+						hideLoading();
+					}
+				});
+			}
+		});
+ 	}
+ 	
+ 	var loadTrainType = function() {
+ 		 $.ajax({
+             url:"../../bussiness/planExec/findTruckTypeWithCurrentWithinCode?t=" + Math.random(),
+             dataType: 'json',
+             method:"GET",
+             async : false,
+             success: function(data){
+            	 data.forEach(function(item){
+            		 trainTypeInnerHTML[item.code] = item.name;
+            	 })
+             }
+         });
+ 	}
+
+    //加载运输方式
+    function loadTransportType(){
+        $.ajax({
+            url : "../../jcda/ZdCus/queryDictionary?t=" + Math.random()+"&kind=transportType",
+            method : "GET",
+            async : false,
+            success : function(dataObj) {
+                let data = dataObj.resultDataFull;
+                transportTypeInnerHtml = {'':$.i18n.prop('all')};
+                data.forEach(function(item){
+                    trasportTextObj[item.dicValue] = item.dicText;
+                });
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

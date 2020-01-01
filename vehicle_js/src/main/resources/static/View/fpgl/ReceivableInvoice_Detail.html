@@ -1,0 +1,444 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+<link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+<link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+<link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+<link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+<title>发票明细</title>
+</head>
+<body style="overflow:hidden">
+    <div id="toolbar" class="easyui-panel" style="padding: 4px; border-width:0; border-bottom-width:1px;">
+		#{PAGE_TOOLBAR_BUTTONROLE}
+    </div>
+    <form id="addForm" class="easyui-form" method="post" enctype="multipart/form-data">
+		<input type="hidden" id="id" name="id" />
+		<input type="hidden" id="project" name="project" />
+		<table class="editTable">
+			<tr>
+				<td class="editTitle"><label data-locale="SHEET_NO"/></td>
+				<td class="editControl">
+					<input type="text" name="sheet_no" id="sheet_no" class="easyui-textbox" readonly="readonly" style="width: 180px;"/>
+				</td>
+				<td class="editTitle"><label data-locale="DOC_NUMBER"/></td>
+				<td class="editControl">
+					<input type="text" name="doc_number" id="doc_number" class="easyui-textbox" style="width: 180px;"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle"><label data-locale="INVOICE_NO"/></td>
+				<td class="editControl">
+					<input type="text" name="invoice_no" id="invoice_no" class="easyui-textbox" style="width: 180px;"/>
+				</td>
+				<td class="editTitle">
+					<label data-locale="INVOICE_DATE"/>
+				</td>
+				<td class="editControl">
+					<input type="text" name="invoice_date" id="invoice_date" class="easyui-datetimebox" style="width: 180px;"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle"><label data-locale="JS_NO"/></td>
+				<td class="editControl">
+					<input type="text" name="js_no" id="js_no" class="easyui-combobox" data-options="required:true" style="width: 180px;"/>
+				</td>
+				<td class="editTitle"><label data-locale="JS_PROJECT"/></td>
+				<td class="editControl">
+					<input type="text" name="js_project" id="js_project" class="easyui-textbox" readonly="readonly" style="width: 180px;"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle"><label data-locale="CUS_NO"/></td>
+				<td class="editControl">
+					<input type="text" name="cus_no" id="cus_no" class="easyui-combobox" data-options="required:true" style="width: 180px;"/>
+				</td>
+				<td class="editTitle"><label data-locale="CUS_TAX_NO"/></td>
+				<td class="editControl">
+					<input type="text" name="cus_tax_no" id="cus_tax_no" class="easyui-textbox" readonly="readonly" style="width: 180px;"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle"><label data-locale="CUS_ADDRESS_TEL"/></td>
+				<td class="editControl">
+					<input type="text" name="cus_address_tel" id="cus_address_tel" class="easyui-textbox" readonly="readonly" style="width: 250px;"/>
+				</td>
+				<td class="editTitle"><label data-locale="CUS_BANK"/></td>
+				<td class="editControl">
+					<input type="text" name="cus_bank" id="cus_bank" class="easyui-textbox" readonly="readonly"  style="width: 250px;"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle"><label data-locale="GOODS_NAME"/></td>
+				<td class="editControl">
+					<input type="text" name="goods_name" id="goods_name" class="easyui-textbox" style="width: 180px;"/>
+				</td>
+				<td class="editTitle"><label data-locale="INVOICE_REMARK"/></td>
+				<td class="editControl">
+					<input type="text" name="invoice_remark" id="invoice_remark" class="easyui-textbox"  style="width: 180px;"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle"><label data-locale="UNIT"/></td>
+				<td class="editControl">
+					<input type="text" name="unit" id="unit" class="easyui-textbox" style="width: 180px;"/>
+				</td>
+				<td class="editTitle"><label data-locale="SPEC"/></td>
+				<td class="editControl">
+					<input type="text" name="spec" id="spec" class="easyui-textbox" style="width: 180px;"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle"><label data-locale="PRICE"/></td>
+				<td class="editControl">
+					<input  name="price" id="price" class="easyui-numberbox"  style="width: 180px;"/>
+				</td>
+				<td class="editTitle"><label data-locale="QTY"/></td>
+				<td class="editControl">
+					<input  name="qty" id="qty" class="easyui-numberbox" style="width: 180px;"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle"><label data-locale="TAX_RATE"/></td>
+				<td class="editControl">
+					<input type="text" name="tax_rate" id="tax_rate" data-options="required:true,min:1,max:100" class="easyui-numberbox" style="width: 180px;"/>
+				</td>
+				<td class="editTitle"><label data-locale="AMOUNT"/></td>
+				<td class="editControl">
+					<input  name="amount" id="amount" class="easyui-numberbox"  data-options="required:true,min:0,precision:2" style="width: 180px;"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle"><label data-locale="INVOICE_BY"/></td>
+				<td class="editControl">
+					<input type="text" name="invoice_by" id="invoice_by" class="easyui-textbox" style="width: 180px;"/>
+				</td>
+				<td class="editTitle"><label data-locale="RECHECK_BY"/></td>
+				<td class="editControl">
+					<input type="text" name="recheck_by" id="recheck_by" class="easyui-textbox" style="width: 180px;"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle"><label data-locale="PAYEE"/></td>
+				<td class="editControl">
+					<input type="text" name="payee" id="payee" class="easyui-textbox"  style="width: 180px;"/>
+				</td>
+				<td class="editTitle"><label data-locale="TAX_TYPE_CODE"/></td>
+				<td class="editControl">
+					<input type="text" name="tax_type_code" id="tax_type_code" class="easyui-textbox"  style="width: 180px;"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle"><label data-locale="CREATE_BY"/></td>
+				<td class="editControl">
+					<input type="text" name="create_by" id="create_by" class="easyui-textbox" readonly="readonly" style="width: 250px;"/>
+				</td>
+				<td class="editTitle"><label data-locale="STATE"/></td>
+				<td class="editControl">
+					<input type="text" name="state" id="state" class="easyui-textbox" readonly="readonly" style="width: 250px;"/>
+				</td>
+			</tr>
+		</table>
+</form>
+<div id="gridControl">
+	<table id="gridTable"></table>
+</div>
+<div id="gridPager">
+</div>
+</body>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/regex/regex.js"></script>
+<script language="javascript" type="text/javascript">
+    var afterSave = "close";
+    var sheet_no = "";
+    var callerId = "";
+    var callerType = "";
+    var callbackFlag = "";
+    $(function () {
+        var parms = getUrlParms();
+        sheet_no = parms["sheet_no"];
+        callerId = parms["callerId"];
+        callerType = parms["callerType"];
+        callbackFlag = parms["callbackFlag"];
+        initScript();
+        initData();
+        initStyle();
+    });
+
+    $(window).load(function () {
+        hideLoading();
+    });
+
+    function initStyle() {
+   /*     $("#tax_total,#tax_rate").textbox({
+			onChange : function (e) {
+                var tax_rate = $("#tax_rate").textbox("getValue");
+                var tax_total = $("#tax_total").textbox("getValue");
+			    //根据税率和含税金额，算出不含税金额及税金 公式：含税合计=不含税金额*(1+税率)
+				//不含税金额 = 含税合计/(1+税率)
+				if (tax_rate!="" && tax_total!="") {
+				    var ntax_total = (tax_total/(1+(tax_rate/100))).toFixed(2);
+				    var tax_amount = (tax_total/(1+(tax_rate/100))*(tax_rate/100)).toFixed(2);
+                    $("#ntax_total").textbox("setValue",ntax_total);
+                    $("#tax_amount").textbox("setValue",tax_amount);
+				}
+            }
+		})*/
+    }
+
+    function initScript() {
+    }
+
+    function initData() {
+        getCusJsProject();
+        getDictionaryData([{
+            //初始化发票状态数据字典
+            dicTypeCode : Global_DicType.Invoice_State,
+            ADD_ALL: true,
+            callback : function(callbackData) {
+                window.Invoice_StateMap = {};
+                for(var i = 0; i < callbackData.length; i++){
+                    Invoice_StateMap[callbackData[i].dicvalue] = callbackData[i].dictext;
+                }
+            }
+        }]);
+        getBaseData([{
+            //初始化承运商档案
+            dicTypeCode : Global_BaseDataKey.CR_CUSTOMER,
+            callback : function(callbackData) {
+                $("#cus_no").combobox({
+                    valueField: 'code',
+                    textField: 'name',
+                    panelWidth: 250,
+                    panelHeight: 150,
+                    editable: true,
+					onSelect : function (e) {
+						getCusDetail(e.code);
+                    }
+                });
+                $("#cus_no").combobox("loadData", callbackData);
+                if (sheet_no != "") {
+                    loadDetail();
+                } else {
+                    $("#id").val(0)
+                }
+            }
+        }]);
+    }
+
+    //实时后台抓取客户信息
+    function getCusDetail(cus_no) {
+        var cr_cusVO = {};
+        cr_cusVO.code=cus_no;
+        $.ajax({
+            url : "../../jcda/customer/getDetail?t=" + Math.random(),
+            data : JSON.stringify(cr_cusVO),
+            type : "POST",
+            contentType : 'application/json;charset=utf-8',
+            success : function(dataObj) {
+                if (isServerResultDataPass(dataObj)) {
+                    var cusvo = dataObj.resultDataFull;
+                    $("#cus_tax_no").textbox('setValue',cusvo.tax);
+                    $("#cus_address_tel").textbox('setValue',cusvo.in_address +" " + cusvo.in_tel);
+                    $("#cus_bank").textbox('setValue',cusvo.bank + " " + cusvo.bank_no);
+				}
+            }
+        });
+    }
+
+
+    // 获取结算项目下拉
+	function getCusJsProject() {
+        $.ajax({
+            url : "../../tzgl/LedgerController/findCusJsProject?t=" + Math.random(),
+            data : {},
+            type : 'GET',
+            async : true,
+            contentType : 'application/json;charset=utf-8',
+            success : function(datas) {
+                var opts = [];
+                if (datas && datas.length > 0) {
+                    for (var i = 0; i < datas.length; i++) {
+                        opts.push({ Value : datas[i].js_no, Text : datas[i].js_project });
+                    }
+                }
+                $('#js_no').combobox({
+					data : opts, valueField : 'Value', textField : 'Value', panelHeight : 150, editable : false,
+                	onSelect : function (e) {
+                        if (e.Text)
+                            $("#js_project").textbox('setValue', e.Text);
+                    }
+                });
+            }
+        });
+    };
+
+    function cancel(){
+        $.messager.confirm('提示', '确认对该发票进行注销操作吗?', function (r) {
+            if (r) {
+                showLoading();
+                var requestParam = {};
+                requestParam.sheet_no = $("#sheet_no").textbox("getValue");
+                $.ajax({
+                    url :"../../fpgl/ReceivableInvoiceController/cancel?t=" + Math.random(),
+                    data: requestParam,
+                    success : function(dataObj){
+                        if (isServerResultDataPass(dataObj)) {
+                            correctNotification(dataObj.resultDataFull);
+                            hideLoading();
+                            loadDetail();
+                        } else {
+                            FailResultDataToTip(dataObj);
+                            hideLoading();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    /**关闭*/
+    function close() {
+        closeDialog("ReceivableInvoice_Detail");
+    }
+    /**验证*/
+    function validate() {
+        var validated = $("#addForm").form('enableValidation').form('validate');
+        if (!validated) {
+            errorNotification({
+                SimpleMessage: "保存操作中部分数据验证不通过"
+            });
+            return false;
+        }
+        return true;
+    }
+
+    /**保存*/
+    function save() {
+        if (!validate()) {
+            return;
+        }
+        // 判断jqgrid行
+        $.messager.confirm('提示', '确定保存吗?', function (r) {
+            if (r) {
+                showLoading();
+                afterSave = "close";
+                saveChild();
+            }
+        });
+    }
+
+    function saveChild() {
+        var requestParam={};
+        requestParam = FormUtils.toJSONObject($("#addForm"));
+        requestParam.cus_name = $("#cus_no").combobox("getText");
+        requestParam.tax_rate = $("#tax_rate").textbox("getValue")/100;
+        $.ajax({
+            url : "../../fpgl/ReceivableInvoiceController/saveDetail?t="+ Math.random(),
+            type: "POST",
+            contentType: "application/json",
+            data : JSON.stringify(requestParam),
+            success : function(dataObj) {
+                if (isServerResultDataPass(dataObj)) {
+                    correctNotification(dataObj.resultDataFull);
+                    hideLoading();
+                    afterSaveOperate();
+                } else {
+                    hideLoading();
+                    FailResultDataToTip(dataObj);
+                }
+            }
+        });
+    }
+
+    function afterSaveOperate() {
+        switch (afterSave) {
+            case "close":
+                refreshCallerData();
+                close();
+                break;
+            case "clear":
+                $('form').form('clear');
+                $("#id").val("0");
+                $("input", $("#txtCODE").next("span")).removeAttr("readonly");
+                $("#gridTable").jqGrid("clearGridData");
+                refreshCallerData();
+                break;
+            case "copy":
+                $("#id").val("0");
+                $("input", $("#txtCODE").next("span")).removeAttr("readonly");
+                $("#txtCODE").textbox('setValue', '');
+                refreshCallerData();
+                break;
+        }
+    }
+
+    function refreshCallerData() {
+        if (callerType == Global_Constant.Global_Constant_CallerType_Dialog) {
+            //此callerId此时为dialog的id
+            getDialog(callerId).refreshCallerData(callbackFlag);
+        }
+        else {
+            //此callerId此时为frame的id
+            getCurrentTab(callerId).refreshCallerData(callbackFlag);
+        }
+    }
+
+    function loadDetail() {
+        $.ajax({
+            type : "POST",
+            url : "../../fpgl/ReceivableInvoiceController/getDetail?t="+ Math.random(),
+            data: "sheet_no="+sheet_no,
+            success : function(dataObj) {
+                if (isServerResultDataPass(dataObj)) {
+                    myDisabled($("#cus_no"));
+                    myDisabled($("#js_project"))
+                    $("#id").val(dataObj.resultDataFull.id);
+                    $("#project").val(dataObj.resultDataFull.project);
+                    $("#sheet_no").textbox('setValue', dataObj.resultDataFull.sheet_no);
+                    $("#doc_number").textbox('setValue', dataObj.resultDataFull.doc_number);
+                    $("#cus_no").combobox('setValue', dataObj.resultDataFull.cus_no);
+                    $("#js_no").combobox('setValue', dataObj.resultDataFull.js_no);
+                    $("#js_project").textbox('setValue', dataObj.resultDataFull.js_project);
+                    $("#invoice_no").textbox("setValue", dataObj.resultDataFull.invoice_no);
+                    $("#invoice_date").textbox("setValue", dataObj.resultDataFull.invoice_date);
+                    $("#cus_address_tel").textbox('setValue', dataObj.resultDataFull.cus_address_tel);
+                    $("#cus_bank").textbox('setValue', dataObj.resultDataFull.cus_bank);
+                    $("#invoice_remark").textbox('setValue', dataObj.resultDataFull.invoice_remark);
+                    $("#goods_name").textbox('setValue', dataObj.resultDataFull.goods_name);
+                    $("#unit").textbox('setValue', dataObj.resultDataFull.unit);
+                    $("#spec").textbox('setValue', dataObj.resultDataFull.spec);
+                    $("#price").numberbox('setValue', dataObj.resultDataFull.price);
+                    $("#qty").numberbox('setValue', dataObj.resultDataFull.qty);
+                    $("#amount").numberbox('setValue', dataObj.resultDataFull.amount);
+                    $("#tax_rate").numberbox('setValue', dataObj.resultDataFull.tax_rate*100);
+                    $("#invoice_by").textbox('setValue', dataObj.resultDataFull.invoice_by);
+                    $("#recheck_by").textbox('setValue', dataObj.resultDataFull.recheck_by);
+                    $("#payee").textbox('setValue', dataObj.resultDataFull.payee);
+                    $("#tax_type_code").textbox('setValue', dataObj.resultDataFull.tax_type_code);
+                    $("#cus_tax_no").textbox('setValue', dataObj.resultDataFull.cus_tax_no);
+                    $("#create_by").textbox("setValue", dataObj.resultDataFull.create_by+" "+dataObj.resultDataFull.create_date);
+                    $("#state").textbox("setValue", window.Invoice_StateMap[dataObj.resultDataFull.state]);
+                } else {
+                    FailResultDataToTip(dataObj);
+                }
+                hideLoading();
+            },
+        });
+    }
+
+</script>
+</html>

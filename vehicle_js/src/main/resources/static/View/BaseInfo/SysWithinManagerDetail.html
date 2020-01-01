@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link id="CustomTheme" type="text/css" rel="stylesheet"	href="../../Resource/css/index/customLightBlue.css" />
+    <link id="EasyuiTheme" type="text/css" rel="stylesheet"	href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+    <link id="JqgridTheme" type="text/css" rel="stylesheet"	href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/fileUpload/css/fileUpload.css" />
+    <link type="text/css" rel="stylesheet" href="../../View/ywgl/css/planExec.css" />
+    <style type="text/css">
+
+    </style>
+    <title>#{supplier.detail.thisPage}</title>
+</head>
+<body style="overflow:hidden;">
+<div id="orderDetailChild">
+    <div id="childBtn" style="border-top:1px dotted #c5dbec;border-left:1px dotted #c5dbec;border-right:1px dotted #c5dbec;width:99.5%">
+        <!--<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add'" width="15" height="15" onclick="addChild('detailChildTableId')"><label data-locale="addRow"/></a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="saveChildTable()"><label data-locale="saveDetail"/></a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="removn()"><label data-locale="closeTable"/></a>-->
+    </div>
+    <table id="detailChildTableId"></table>
+
+</div>
+<div id="toolbar" class="easyui-panel" style="padding: 4px; border-width:0; border-bottom-width:1px;">
+    #{PAGE_TOOLBAR_BUTTONROLE}
+</div>
+<input type="hidden" id="sn" name="sn" />
+<form id="addForm" class="easyui-form" method="post" data-options="novalidate:true">
+    <table class="editTable">
+        <tr>
+            <td class="editTitle" >
+                <label data-locale="sysWithinDetail_withinCode"/>:
+            </td>
+            <td class="editControl">
+                <input class="easyui-textbox" id="code" name="code" readonly="readonly" style="width: 153px;"/>
+            </td>
+            <td class="editTitle" >
+                <label data-locale="sysWithinDetail_companyNameZH"/>:
+            </td>
+            <td class="editControl" >
+                <input class="easyui-textbox" id="name"  name="name" autocomplete="off"  style="width: 153px;" />
+            </td>
+            <td class="editTitle">
+                <label data-locale="sysWithinDetail_companyNameEN"/>:
+            </td>
+            <td class="editControl">
+                <input class="easyui-textbox" id="nameEng" name="nameEng" style="width:153px;"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="editTitle">
+                <label data-locale="sysWithinDetail_companyAddress"/>:
+            </td>
+            <td class="editControl" colspan="3">
+                <input class="easyui-textbox" id="address" name="address" style="width: 80%;"/>
+            </td>
+            <td class="editTitle">
+                <label data-locale="sysWithinDetail.cpmpanyShortName"/>:
+            </td>
+            <td class="editControl">
+                <input class="easyui-textbox" id="shortName" name="shortName" style="width: 153px;"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="editTitle">
+                <label data-locale="sysWithinDetail.companyLinkMan"/>:
+            </td>
+            <td class="editControl">
+                <input class="easyui-textbox" id="linkMan" name="linkMan" style="width: 153px;"/>
+            </td>
+            <td class="editTitle">
+                <label data-locale="sysWithinDetail.companyLinkTel"/>:
+            </td>
+            <td class="editControl">
+                <input class="easyui-textbox" id="linkMobile" name="linkMobile" style="width: 153px;"/>
+            </td>
+            <td class="editTitle">
+                <label data-locale="sysWithinDetail.companyEmail"/>:
+            </td>
+            <td class="editControl">
+                <input class="easyui-textbox" id="linkEmail" name="linkEmail" style="width: 153px;"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="editTitle">
+                <label data-locale="sysWithinDetail.companyQQ"/>
+            </td>
+            <td class="editControl">
+                <input class="easyui-textbox" id="linkQQ" name="linkQQ" style="width: 153px;"/>
+            </td>
+            <td class="editTitle">
+                <label data-locale="sysWithinDetail.companyWeb"/>
+            </td>
+            <td class="editControl">
+                <input class="easyui-textbox" id="web" name="web" style="width: 153px;"/>
+            </td>
+        </tr>
+    </table>
+</form>
+<script type="text/javascript" src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/upload.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/file.js"></script>
+<script type="text/javascript" src="../../Resource/js/cookie/jquery.cookie.js"></script>
+<script language="javascript" type="text/javascript">
+    let sn = "";
+    $(function(){
+        let parms = getUrlParms();
+        sn = parms["sn"];
+
+        if(sn != undefined && sn != "" && sn != null) {
+            loadDetail();
+        }
+    });
+
+    hideLoading();
+
+    let loadDetail = function() {
+        $.ajax({
+           url: "../../within/query?t=" + Math.random(),
+           type: 'POST',
+           data: "sn=" + sn,
+           success: function(dataObj){
+               if (isServerResultDataPass(dataObj)) {
+                   let data = dataObj.resultDataFull;
+                   $("#code").textbox("setValue", data.code);
+                   $("#name").textbox("setValue", data.name);
+                   $("#nameEng").textbox("setValue", data.nameEng);
+                   $("#address").textbox("setValue", data.address);
+                   $("#shortName").textbox("setValue", data.shortName);
+                   $("#linkMan").textbox("setValue", data.linkMan);
+                   $("#linkMobile").textbox("setValue", data.linkMobile);
+                   $("#linkEmail").textbox("setValue", data.linkEmail);
+                   $("#linkQQ").textbox("setValue", data.linkQQ);
+                   $("#web").textbox("setValue", data.web);
+               } else {
+                   FailResultDataToTip(dataObj);
+               }
+               hideLoading();
+           },
+            error : function(message) {
+                hideLoading();
+            }
+        });
+    }
+
+    var save = function() {
+        var withinVO = FormUtils.toJSONObject($("#addForm"));
+        withinVO.sn = sn;
+        $.messager.confirm($.i18n.prop('planExec_Prompt'), '#{business.message.saveQuestion}?', function(r) {// 提示, 确定保存数据项吗
+            if (r) {
+                showLoading();
+                $.ajax({
+                    url : "../../within/save?t=" + Math.random(),
+                    type : 'POST',
+                    data :"jsonData="+JSON.stringify(withinVO),
+                    success : function(dataObj) {
+                        hideLoading();
+                        if (isServerResultDataPass(dataObj)) {
+                            correctNotification({ SimpleMessage : $.i18n.prop('prompt.success')});
+                            //刷新父页面
+                            close();
+                        } else {
+                            FailResultDataToTip(dataObj);
+                        }
+                    },
+                    error : function(message) {
+                        hideLoading();
+                    }
+                });
+            }
+        });
+    }
+
+
+</script>
+</body>
+</html>

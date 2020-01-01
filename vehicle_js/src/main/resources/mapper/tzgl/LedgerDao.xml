@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bba.tzgl.dao.LedgerDao">
+	<sql id="begin_page">
+		<if test="isPage == true">select A.* from (select rownum rn, T.* from (</if>
+	</sql>
+	<sql id="end_page">
+		<if test="isPage == true">)T where rownum &lt; ${page*rows+1}) A where A.rn >
+			${(page-1)*rows}</if>
+	</sql>
+
+	<!--台账字段-->
+	<sql id="ledger_data">
+		select
+		d.id,d.sheet_no,d.ledger_no,d.ledger_type,d.state,d.contract_no,d.js_project,d.js_no,d.ntax_up_total,d.tax_up_total,d.tax_amount,d.invoice_no,d.tax_down_total
+		,d.ntax_down_total,d.tax_rate,d.not_tax_profit,d.remark,d.create_by,d.cus_no,d.cus_name,d.check_by,d.create_date,d.check_date,d.cus_invoice,d.bill_number,invoice_company
+		from js_ledger d
+	</sql>
+
+	<!-- 查询台账列表 -->
+	<select id="findListForGrid" resultType="com.bba.tzgl.vo.LedgerVO" parameterType="com.bba.util.JqGridParamModel">
+		<include refid="begin_page" />
+		select t.* from (
+		<include refid="ledger_data" />
+		) t
+		<if test="filters!=null and filters!=''">where ${filters}</if>
+		<include refid="end_page" />
+	</select>
+
+	<!-- 查询台账数量 -->
+	<select id="findListForGridCount" resultType="int" parameterType="com.bba.util.JqGridParamModel">
+		select count(*) from (
+		<include refid="ledger_data" />
+		) t
+		<if test="filters!=null and filters!=''">where ${filters}</if>
+	</select>
+
+	<!--查询未开票的结算批次结算-->
+	<select id="findCusJsProject" parameterType="com.bba.tzgl.vo.LedgerVO" resultType="com.bba.tzgl.vo.LedgerVO">
+		select distinct js_project,js_no from js_ledger where cus_invoice = #{cus_invoice} and state ='1'
+	</select>
+
+	<select id="getToponeJsno" resultType="java.lang.String">
+		select max(js_no) js_no from js_ledger
+	</select>
+
+	<select id="selectOneByConditions" parameterType="com.bba.tzgl.vo.LedgerVO" resultType="com.bba.tzgl.vo.LedgerVO">
+		select * from js_ledger where rownum=1  and js_no=#{js_no} and js_project=#{js_project} and ( state='1' or state='0' )
+	</select>
+</mapper>

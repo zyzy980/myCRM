@@ -1,0 +1,250 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link id="CustomTheme" type="text/css" rel="stylesheet"
+	href="../../Resource/css/index/customLightBlue.css" />
+<link id="EasyuiTheme" type="text/css" rel="stylesheet"
+	href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+<link id="JqgridTheme" type="text/css" rel="stylesheet"
+	href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+<link type="text/css" rel="stylesheet"
+	href="../../Resource/js/easyUI/themes/icon.css" />
+<link type="text/css" rel="stylesheet"
+	href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+ <link type="text/css" rel="stylesheet" href="../../Resource/js/fileUpload/css/fileUpload.css" />
+ <link type="text/css" rel="stylesheet" href="../../View/ywgl/css/planExec.css" />
+ <link type="text/css" rel="stylesheet" href="../../View/ywgl/css/print.css"/>
+<style type="text/css">
+
+</style>
+    <title>#{supplier.detail.thisPage}</title>
+</head>
+<body style="overflow:hidden">
+    <div id="toolbar" class="easyui-panel" style="padding: 4px; border-width:0; border-bottom-width:1px;">
+      #{PAGE_TOOLBAR_BUTTONROLE}
+    </div>
+    <div>
+    	<div style="text-align: center;">
+    		<div style="font-size:16px;">深圳市微科创源科技有限公司</div>
+    		<div style="font-size:14px;">货物承运单</div>
+    	</div>
+    </div>
+    <div class="container">
+    	<!-- 收发信息 -->
+    	<div class="part1 fix">
+    		<div class="part-left heigth1"><p>收发信息</p></div>
+    		<div class="part-right">
+    			<table cellpadding="0" cellspacing="10" width="89%"  class="order-table" style="padding-left:40px;">
+    				<tbody>
+    					<tr>
+    						<td align="right" style="width:60px;" class="filltitle">发货单位：</td>
+    						<td colspan="3"><span id="beginCompany"></span></spn></td>
+    						<td align="right" style="width:60px;" class="filltitle">收货单位：</td>
+    						<td colspan="3"><span id="endCompany"></span></td>
+    					</tr>
+    					<tr>
+    						<td align="right" style="width:60px;" class="filltitle">地址：</td>
+    						<td colspan="3"><span id="beginAddress"></span></td>
+    						<td align="right" style="width:60px;" class="filltitle">地址：</td>
+    						<td colspan="3"><span id="endAddress"></span></td>
+    					</tr>
+    					<tr>
+    						<td align="right" style="width:60px;" class="filltitle">联系人：</td>
+    						<td colspan="1"><span id="beginLinkMan"></span></td>
+    						<td align="right" style="width:60px;" class="filltitle">电话：</td>
+    						<td colspan="1"><span id="beginLinkTel"></span></td>
+    						<td align="right" style="width:60px;" class="filltitle">联系人：</td>
+    						<td colspan="1"><span id="endLinkMan"></span></td>
+    						<td align="right" style="width:60px;" class="filltitle">���话：</td>
+    						<td colspan="1"><span id="endLinkTel"></span></td>
+    					</tr>
+    				</tbody>
+    			</table>
+    		</div>
+    	</div>
+    	<!-- 结束 -->
+    	<!-- 货物信息 -->
+    	<div class="part1 fix" style="border-top:none;">
+    		<div class="part-left height2" style="height:155px;"><p>货物信息</p></div>
+    		<div class="part-right">
+	    		<table cellpadding="0" cellspacing="10" width="89%"  class="order-table td_center" id="tableInfo" style="padding-left:40px;">
+	    			<tr>
+	    				<td>货物名称</td>
+	    				<td>数量</td>
+	    				<td>重量/KG</td>
+	    				<td>体积/m³</td>
+	    			</tr>
+	    			<tr>
+	    				<td></td>
+	    				<td></td>
+	    				<td></td>
+	    				<td></td>
+	    			</tr>
+	    			<tr>
+	    				<td></td>
+	    				<td></td>
+	    				<td></td>
+	    				<td></td>
+	    			</tr>
+	    			<tr>
+	    				<td></td>
+	    				<td></td>
+	    				<td></td>
+	    				<td></td>
+	    			</tr>
+	    			<tr>
+	    				<td></td>
+	    				<td></td>
+	    				<td></td>
+	    				<td></td>
+	    			</tr>
+	    			<tr>
+	    				<td></td>
+	    				<td></td>
+	    				<td></td>
+	    				<td></td>
+	    			</tr>
+	    		</table>
+    		</div>
+    	</div>
+    	<!-- 结束 -->
+    	<!-- 备注--责任及风险 -->
+    	<div class="part1 fix" style="border-top:none;height:112px;" >
+    		<div style="float:left;width:50%">
+	    		<div class="part-left height2" style="height:112px;"><p>备注</p></div>
+	    		<textarea rows="8" cols="7" style="width:95%;border: 1px solid #C2D3E9;resize:none;"></textarea>
+    		</div>
+    		<div style="float:left;width:37%">
+    			<div class="part-left height2" style="height:112px;"><p>责任及风险</p></div>
+    			<span style="line-height: 26px;font-size:16px;">托运人请务必真实填写本托运单据上所列之各项信息内容，敬请认真仔细阅读本单背页所列之七月条款，签署后表示托运人理解和同意所有服务条款。</span>
+    		</div>
+    	</div>
+    	<!-- 结束 -->
+    	<div class="part1 fix" style="border-top:none;">
+    		
+    	</div>
+    	<!-- 签章 -->
+    	<div class="part1 fix" style="border-top:none">
+    		<div style="float:left;width:320px;height:100px;margin:1px;border: 1px solid #C2D3E9;">
+    			<div>
+    				<div class="signature signature_font">托运人签章：</div>
+    				<div class="signature_time signature_font">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日</div>
+    			</div>
+    		</div>
+    		<div style="float:left;width:320px;height:100px;margin:1px;border: 1px solid #C2D3E9;">
+    			<div>
+    				<div class="signature signature_font">承运人签章：</div>
+    				<div class="signature_time signature_font">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日</div>
+    			</div>
+    		</div>
+    		<div style="float:left;width:320px;height:100px;margin:1px;border: 1px solid #C2D3E9;">
+    			<div>
+    				<div class="signature signature_font">收货人签章：</div>
+    				<div class="signature_time signature_font">年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;月&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日</div>
+    			</div>
+    		</div>
+    		
+    	</div>
+    </div>
+</body>
+<script type="text/javascript"	src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/upload.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/file.js"></script>
+<script type="text/javascript" src="../../Resource/js/cookie/jquery.cookie.js"></script>
+<script language="javascript" type="text/javascript">
+	var guid = null;
+	var unitTextObj = [];
+	
+	$(function(){
+		var parms = getUrlParms();
+		guid = parms["guid"];
+		loadUnit();
+		loadList();
+		if(guid != null && guid != '' && guid != undefined) {
+			loadPrintMsg(guid);
+		}
+	});
+	
+	
+	//加载列表
+	var loadList = function() {
+		$.ajax({
+			url : '../../order/getprinttableinfo?t=' + Math.random() + '&guid=' + guid,
+			type : 'POST',
+			async : false,
+			success : function(dataObj) {
+				var data = dataObj.resultDataFull;
+				for(var i = 0 ; i < data.length; i++) {
+					var tr = $("#tableInfo tr").eq(i+1);
+					tr.find("td:eq(0)").text(data[i].goodsName);
+					tr.find("td:eq(1)").text(data[i].qty);
+					tr.find("td:eq(2)").text(data[i].gwt);
+					tr.find("td:eq(3)").text(data[i].vol);
+				}
+			}
+		})
+	}
+    
+    var loadUnit = function() {
+		$.ajax({
+			url : '../../bussiness/planExec/getunit?t=' + Math.random(),
+			type : 'POST',
+			async : false,
+			success : function(dataObj) {
+				dataObj.resultDataFull.forEach(function(item){
+					unitTextObj[item.UNITCODE] = item.UNITNAME;
+				});
+			}
+		});
+	}
+	
+	//加载运单数据
+	var loadPrintMsg = function(guid) {
+		$.ajax({
+    		url : '../../order/getprintinfo?t='+ Math.random()+'&guid='+guid,
+    		type : 'POST',
+    		data :"",
+    		success : function(dataObj) {
+    			if (isServerResultDataPass(dataObj)) {
+    				var mostlyJson = dataObj.resultDataFull;
+    				$("#beginCompany").text(mostlyJson.NAME);
+    				$("#beginAddress").text(mostlyJson.BEGINLOCALADDRESS);
+    				$("#beginLinkMan").text(mostlyJson.BEGINLINKMAN);
+    				$("#beginLinkTel").text(mostlyJson.BEGINLINKTEL);
+    				$("#endCompany").text(mostlyJson.ENDLINKMAN);
+    				$("#endAddress").text(mostlyJson.ENDLOCALADDRESS);
+    				$("#endLinkMan").text(mostlyJson.ENDLINKMAN);
+    				$("#endLinkTel").text(mostlyJson.ENDLINKTEL);
+    			} else {
+    				FailResultDataToTip(dataObj);
+    			}
+    			hideLoading();
+    		},
+    		error : function(message) {
+    			hideLoading();
+    		}
+    	});		
+	}
+	
+	var printInfo = function(){
+		$("#printInfo").hide();
+		print();
+		$("#printInfo").show();
+	}
+	
+</script>
+</body>
+</html>

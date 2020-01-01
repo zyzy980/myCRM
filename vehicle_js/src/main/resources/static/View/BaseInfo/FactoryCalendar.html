@@ -1,0 +1,464 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="UTF-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"/>
+    <link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+    <link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />    
+    <link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/moment/css/daterangepicker.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/fileUpload/css/fileUpload.css" />
+    <title>#{calendar.thisPage}</title>
+</head>
+<body>
+    <div id="toolbar" class="easyui-panel" style="padding: 4px; border-width: 0; border-bottom-width: 1px;">
+         #{PAGE_TOOLBAR_BUTTONROLE}
+    </div>
+    <div class="searchParamesPanel">
+        <table id="searchParamesTable">
+            <tr class="searchParamesTrShow">
+             	<td class="searchParamesTdTitle">
+                    	<label data-locale="calendar.field.werks"/>:
+                </td>
+                <td class="searchParamesTdControl">
+                    <input name="werks" id="werks" class="easyui-combobox" data-options="editable:false,panelHeight:'auto'"/>
+                </td>
+                <td class="searchParamesTdTitle">
+                   	<label data-locale="calendar.field.year"/>:
+                </td>
+                <td class="searchParamesTdControl">
+                    <input name="jahr" id="jahr" class="easyui-combobox" data-options="editable:false,panelHeight:'auto'"/>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="gridControl">
+        <table id="gridTable">
+        </table>
+        <div id="gridPager">
+        </div>
+    </div>
+     <div id="fileUpload" style="position: absolute; left: 50%; top: 50%; width: 600px;
+        height: 400px; margin-left: -300px; margin-top: -200px; display: none;">
+    </div>
+</body>
+<script type="text/javascript"	src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../View/BaseInfo/js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/upload.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/file.js"></script>
+<script language="javascript" type="text/javascript">
+    var sn1="";
+    var moduleId = 0;
+    var plantInnerHTML = {'' : '--#{epLocation.field.all}--'};
+    var yearInnerHTML = {'' : '--#{epLocation.field.all}--'};
+    var moduleidAuthority = "";
+    $(function () {
+        var parms = getUrlParms();
+        moduleId = parms["moduleId"];
+        moduleidAuthority = parms["moduleId"];
+        initWerks();
+        initYear();
+        initScript();
+    });
+
+    $(window).load(function () {
+        hideLoading();
+    });
+
+    var oldSetGridHeightWidth = setGridHeightWidth;
+    var setGridHeightWidth = function() {
+    	oldSetGridHeightWidth(40,170);
+    	oldSetGridHeightWidth(5, 128);
+    };
+    
+    var initWerks = function(){
+    	$("#werks").combobox({
+  		  valueField: 'ex_code',  
+  		  textField: 'name',
+  		  loader:function(param,success,error){  
+              $.ajax({  
+                  url:"../../jcda/Zd_Location/findLocationByKind?t=" + Math.random()+"&kind=PLANT",
+                  dataType: 'json',  
+                  method:"GET",
+                  async : false,
+                  success: function(data){
+                	data.forEach(function(item){
+                  		plantInnerHTML[item.ex_code] = item.name;
+                    });
+                  	data.unshift({ex_code:'',name:'--#{calendar.search.all}--'});
+                  	success(data); //loader的success
+                  } 
+              }); 
+          },
+  		  onLoadSuccess: function () { 
+          	$(this).combobox("setValue", "--#{calendar.search.all}--");
+          },
+          onChange : function(){
+        	  searchData();
+          }
+  		});
+    }
+    
+    var initYear = function(){
+    	var year = new Date().getFullYear();
+    	$("#jahr").combobox({
+  		  valueField: 'jahr',  
+  		  textField: 'jahr',
+  		  loader:function(param,success,error){  
+              $.ajax({  
+                  url:"../../scts/calendar/findYear?t=" + Math.random(),
+                  dataType: 'json',  
+                  method:"GET",
+                  async : false,
+                  success : function(data){
+                	  data.forEach(function(item){
+                		  yearInnerHTML[item.jahr] = item.jahr;
+                      });
+                	  success(data);
+                  }
+              }); 
+          },
+          onLoadSuccess: function () { 
+        	  
+        	  var data = $(this).combobox('getData');
+        	  
+    			for(var i=0 ;i<data.length;i++){
+    				if(data[i].jahr==year){
+    					$(this).combobox("setValue",data[i].jahr);
+    					initData();
+    					break;
+    				}
+    			}
+            },
+          onChange : function(){
+        	  searchData();
+          }
+  		});
+    }
+    
+    var initScript = function () {
+    	showLog({id:"toolbar",operateModuleGlobal:"工厂日历档案",moduleId:moduleidAuthority});
+    	var v = 0;
+    	$(window).resize(function() {
+    		if (v == 0) {
+    			setTimeout(function() {
+    				setGridHeightWidth();
+    				v = 0;
+    			}, 200)
+    			v = 1;
+    		}
+    		setGridHeightWidth();
+    		setToolbarHeightWidth();
+    	});	
+    } 
+    var initData = function () {
+
+        loadList();   
+    }
+    
+	var initload_typeControl = function(jsonData) {
+		var formatData = {
+			data : jsonData,
+			needChooseAll : true,
+			chooseAllValue : "",
+			defaultValue : "1",
+			bindBoxName : "load_type",
+			bindControlPrefix : "load_type"
+		};
+		formatDefaultRadio_Local(formatData);
+	}
+	var initunload_typeControl = function(jsonData) {
+		var formatData = {
+			data : jsonData,
+			needChooseAll : true,
+			chooseAllValue : "",
+			defaultValue : "1",
+			bindBoxName : "unload_type",
+			bindControlPrefix : "unload_type"
+		};
+		formatDefaultRadio_Local(formatData);
+	}
+	
+	
+    function searchData() {
+        $("#gridTable").jqGrid('setGridParam', {
+            url: getSearchGridUrl(),
+            datatype: 'json',
+            postData: { "filters": "" },
+            page: 1
+        }).trigger("reloadGrid");
+    }
+
+    var getSearchGridUrl = function () {
+        return '../../scts/calendar/findCalendar?t=' + Math.random() + '&customSearchFilters=' + encodeURI(getSearchFilters());
+    }
+
+    var getSearchFilters = function () {
+    	var jahr = $("#jahr").combobox("getValue");
+    	var werks = $("#werks").combobox("getValue");
+        var parmsArray = [
+          { name: 'jahr', value: jahr.indexOf("--")!=-1?"":jahr, op: "eq" },
+          { name: 'werks', value: werks.indexOf("--")!=-1?"":werks, op: "eq" }
+        ];
+
+        return formatSearchParames(parmsArray);
+    }
+    
+	var showCalendar = function(id,val){
+		
+		if($("#"+id).css("display")=="block"){
+			$("#"+id).css("display","none");
+			return;
+		}
+		
+		
+		
+		var dayArr = val.toString().split("");
+		var year = $("#jahr").combobox("getValue");
+		var month = id.split("_")[1];
+		
+		var ids = getOtherMonth(month);
+		
+		$(ids).css("display","none");
+		
+		$("#"+id).css("display","block");
+		$("#"+id).calendar({
+		    year : year,
+		    month : month
+		});
+		
+		var $calendarDay = $("#"+id).find(".calendar-day"); 
+		for(var i = 0,j=0 ; j<dayArr.length ;i++){
+			if(!$($calendarDay[i]).hasClass("calendar-other-month")){
+				if(dayArr[j]==1){
+					$($calendarDay[i]).css("background","#B0E2FF");
+				}
+				j++;
+			}
+		} 
+		$(".calendar-day").unbind();
+		$(".calendar-other-month").css("visibility","hidden");
+		$(".calendar-dtable").find(".calendar-saturday").removeClass("calendar-saturday");
+		$(".calendar-dtable").find(".calendar-sunday").removeClass("calendar-sunday");
+		$(".calendar-header").css("display","none");
+	}
+
+    var loadList = function () {
+        $("#gridTable").jqGrid({
+            url: getSearchGridUrl(),
+            datatype: "json",
+            width: "none",
+            colNames: [$.i18n.prop('calendar.field.sn'),$.i18n.prop('calendar.field.withinCode'), 
+                       $.i18n.prop('calendar.field.werks'),$.i18n.prop('calendar.field.year'),$.i18n.prop('calendar.field.m1'),$.i18n.prop('calendar.field.m2'),
+                       $.i18n.prop('calendar.field.m3'),$.i18n.prop('calendar.field.m4'),$.i18n.prop('calendar.field.m5'),$.i18n.prop('calendar.field.m6'),
+                       $.i18n.prop('calendar.field.m7'),$.i18n.prop('calendar.field.m8'),$.i18n.prop('calendar.field.m9'),$.i18n.prop('calendar.field.m10'),
+                       $.i18n.prop('calendar.field.m11'),$.i18n.prop('calendar.field.m12')],
+            colModel: [
+            { name: 'sn', index: 'sn',  key: true,align: 'center', sorttype: 'int', search: false, sortable: false, width: 40, hidden: true },
+            { name: 'within_code', index: 'within_code', align: 'center', sorttype: 'int', search: false, sortable: false, width: 40, hidden: true },
+            { 
+            	name: 'werks', index: 'werks', align: 'center', width: 100, type: 'string', search: true,
+            	stype:'select',searchoptions : { value : plantInnerHTML , sopt : ["eq"] }	
+             },
+            { 
+            	name: 'jahr', index: 'jahr', align: 'center', width: 120, type: 'string', search: true,
+            	stype:'select',searchoptions : { value : yearInnerHTML , sopt : ["eq"] }	
+            },
+            { 
+            	name: 'mon01', index: 'mon01', align: 'center', width: 60, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']},
+            	formatter:function(value,row,rowIndex){
+            		var calendarPic = "<img src='../../Resource/images/calendar22.png' width='20'height='20' onclick='showCalendar(\"m_1\",\""+value+"\")'/>";
+            		calendarPic+="<div id='m_1' style='position:fixed;display:none;z-index:999;'></div>"
+            		return calendarPic;
+            	}
+            },
+            { 
+            	name: 'mon02', index: 'mon02', align: 'center', width: 60, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']},
+            	formatter:function(value,row,rowIndex){
+        			var calendarPic = "<img src='../../Resource/images/calendar22.png' width='20'height='20' onclick='showCalendar(\"m_2\",\""+value+"\")'/>";
+        			calendarPic+="<div id='m_2' style='position:fixed;display:none;z-index:999;'></div>"
+        			return calendarPic;
+        		}
+            },
+            { 
+            	name: 'mon03', index: 'mon03', align: 'center', width: 60, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']},
+            	formatter:function(value,row,rowIndex){
+            		var calendarPic = "<img src='../../Resource/images/calendar22.png' width='20'height='20' onclick='showCalendar(\"m_3\",\""+value+"\")'/>";
+            		calendarPic+="<div id='m_3' style='position:fixed;display:none;z-index:999;'></div>"
+            		return calendarPic;
+            	}
+            },
+            { 
+            	name: 'mon04', index: 'mon04', align: 'center', width: 60, type: 'string', search: true,searchoptions : { sopt : ['cn', 'eq', 'ne']},
+            	formatter:function(value,row,rowIndex){
+        			var calendarPic = "<img src='../../Resource/images/calendar22.png' width='20'height='20' onclick='showCalendar(\"m_4\",\""+value+"\")'/>";
+        			calendarPic+="<div id='m_4' style='position:fixed;display:none;z-index:999;'></div>"
+        			return calendarPic;
+        		}
+            },
+            { 
+            	name: 'mon05', index: 'mon05', align: 'center', isSort: false,width: 60, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} ,
+            	formatter:function(value,row,rowIndex){
+        			var calendarPic = "<img src='../../Resource/images/calendar22.png' width='20'height='20' onclick='showCalendar(\"m_5\",\""+value+"\")'/>";
+        			calendarPic+="<div id='m_5' style='position:fixed;display:none;z-index:999;'></div>"
+        			return calendarPic;
+        		}
+            },
+            { 
+            	name: 'mon06', index: 'mon06', align: 'center', width: 60,type: 'string', search: true, searchoptions : { sopt : ['cn', 'eq', 'ne']},
+            	formatter:function(value,row,rowIndex){
+        			var calendarPic = "<img src='../../Resource/images/calendar22.png' width='20'height='20' onclick='showCalendar(\"m_6\",\""+value+"\")'/>";
+        			calendarPic+="<div id='m_6' style='position:fixed;display:none;z-index:999;'></div>"
+        			return calendarPic;
+        		}
+            },
+            { 
+            	name: 'mon07', index: 'mon07', align: 'center', width: 60, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']},
+            	formatter:function(value,row,rowIndex){
+        			var calendarPic = "<img src='../../Resource/images/calendar22.png' width='20'height='20' onclick='showCalendar(\"m_7\",\""+value+"\")'/>";
+        			calendarPic+="<div id='m_7' style='position:fixed;display:none;z-index:999;'></div>"
+        			return calendarPic;
+        		}
+            },
+            { 
+            	name: 'mon08', index: 'mon08', align: 'center', width: 60, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']},
+            	formatter:function(value,row,rowIndex){
+        			var calendarPic = "<img src='../../Resource/images/calendar22.png' width='20'height='20' onclick='showCalendar(\"m_8\",\""+value+"\")'/>";
+        			calendarPic+="<div id='m_8' style='position:fixed;display:none;z-index:999;'></div>"
+        			return calendarPic;
+        		}
+            },
+            { 
+            	name: 'mon09', index: 'mon09', align: 'center', width: 60, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} ,
+            	formatter:function(value,row,rowIndex){
+        			var calendarPic = "<img src='../../Resource/images/calendar22.png' width='20'height='20' onclick='showCalendar(\"m_9\",\""+value+"\")'/>";
+        			calendarPic+="<div id='m_9' style='position:fixed;display:none;z-index:999;'></div>"
+        			return calendarPic;
+        		}
+            },
+            { 
+            	name: 'mon10', index: 'mon10', align: 'center', width: 60, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']},
+            	formatter:function(value,row,rowIndex){
+        			var calendarPic = "<img src='../../Resource/images/calendar22.png' width='20'height='20' onclick='showCalendar(\"m_10\",\""+value+"\")'/>";
+        			calendarPic+="<div id='m_10' style='position:fixed;display:none;z-index:999;'></div>"
+        			return calendarPic;
+        		}
+            },
+            { 
+            	name: 'mon11', index: 'mon11', align: 'center', width: 60, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']},
+            	formatter:function(value,row,rowIndex){
+        			var calendarPic = "<img src='../../Resource/images/calendar22.png' width='20'height='20' onclick='showCalendar(\"m_11\",\""+value+"\")'/>";
+        			calendarPic+="<div id='m_11' style='position:fixed;display:none;z-index:999;'></div>"
+        			return calendarPic;
+        		}
+            },
+            { 
+            	name: 'mon12', index: 'mon12', align: 'center', width: 60, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']},
+            	formatter:function(value,row,rowIndex){
+            		var calendarPic = "<img src='../../Resource/images/calendar22.png' width='20'height='20' onclick='showCalendar(\"m_12\",\""+value+"\")'/>";
+            		calendarPic+="<div id='m_12' style='position:fixed;display:none;z-index:999;'></div>"
+            		return calendarPic;
+            	}
+            }
+            ],
+            shrinkToFit: false,
+            altRows: true,
+            altclass: 'gridSpacingClass',
+            forceFit: true,
+            cellLayout: 0,
+            scroll: false,
+            autowidth: true,
+            sortname: 'sn',
+            sortorder: "asc", 
+            loadonce: false,
+            mtype: "POST",
+            viewrecords: true,
+            rownumbers: true,
+            rowNum: 15,
+            height: "100%",
+            rowList: [15, 20, 30, 50],
+            pager: "#gridPager",
+            jsonReader: {
+                root: "rows",
+                total: "total",
+                page: "page",
+                records: "records",
+                repeatitems: false
+            },
+            gridComplete: function () {
+                $(".cbox").shiftSelect();
+            },
+            loadComplete: function (xhr) {
+                $('.gridViewPicLink').tooltip({
+                    position: 'bottom',
+                    content: $(this).attr("title"),
+                    onShow: function () {
+                        $(this).tooltip('tip').css({
+                            backgroundColor: '#FCF8E3',
+                            borderColor: '#FAEBCC'
+                        });
+                    }
+                });
+                FailResultDataToTip(xhr);
+            }
+        });
+
+        $("#gridTable").jqGrid('navGrid', '#gridPager', { add: false, edit: false, del: false, refresh: true }, {}, {}, {}, { multipleSearch: true, closeOnEscape: true, closeAfterSearch: true });
+        $("#gridTable").jqGrid('navButtonAdd', '#gridPager', {
+            caption: $.i18n.prop('calendar.caption.reorderCol'),
+            title: $.i18n.prop('calendar.caption.reorderCol'),
+            onClickButton: toggleGridColumns
+        });
+
+        $("#gridTable").jqGrid('navButtonAdd', '#gridPager', {
+            caption: $.i18n.prop('calendar.caption.quickSearch'),
+            title: $.i18n.prop('calendar.caption.quickSearch'),
+            onClickButton: toggleGridSearchToolbar
+        });
+        
+        $("#gridTable").jqGrid('navButtonAdd', '#gridPager', {
+            caption: $.i18n.prop('calendar.caption.export'),
+            title: $.i18n.prop('calendar.caption.export'),
+            buttonicon: "ui-icon-disk",
+            onClickButton: function(){
+           	 ExportToExcel.call(this, {
+           		 url : "../../scts/calendar/export?t=" + Math.random()
+           	 }); 
+            }
+        });
+        setGridHeightWidth();
+    }
+    
+    var getOtherMonth = function(month){
+    	
+    	var ids = "";
+    	
+    	var j = 0;
+    	
+    	for(var i = 1 ; i<=12 ; i++){
+    		if(i==month){
+    			continue;
+    		}
+    		if(j==0){
+    			ids+=("#m_"+i);
+    			j++;
+    		} else {
+    			ids+=(",#m_"+i);
+    		}
+    	}
+    	return ids;
+    }
+  </script>
+</html>

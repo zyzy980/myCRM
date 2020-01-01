@@ -1,0 +1,228 @@
+/*标签初始化*/
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, form, fieldset, img, button, textarea {
+	margin: 0;
+	padding: 0;
+	border: none;
+}
+dl, dt, dd, ul, ol, li, p {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+em, cite, th, h1, h2, h3, h4, h5, h6 {
+	font-style: normal;
+	font-weight: normal;
+}
+input, img {
+	vertical-align: middle;
+	display: block;
+	margin: 0;
+	padding: 0;
+	border: none;
+}
+html, body {
+	height: 100%;
+}
+body {
+	font-family: "微软雅黑", Arial, Helvetica, sans-serif;
+}
+h1, h2, h3, h4 {
+	font-family: "微软雅黑", Arial, Helvetica, sans-serif;
+}
+a {
+	text-decoration: none;
+	cursor: pointer;
+}
+input:focus, textarea:focus {
+	outline: none;
+}
+.clearfix {
+	clear: both;
+}
+/*---浮动处理---*/
+.fix {
+*zoom:1;
+}
+.fix:after {
+	display: block;
+	content: "clear";
+	height: 0;
+	clear: both;
+	overflow: hidden;
+	visibility: hidden;
+}
+/*---页面样式---*/
+body {
+	background: #ebebeb;
+}
+.container {
+	width: 1000px;
+	margin: 0 auto;
+	background: #fff;
+	border: 1px solid #e0e3e7;
+}
+.location {
+	border: 1px solid #e0e3e7;
+	margin: 20px;
+}
+.search {
+	margin: 20px 0;
+	height: 40px;
+	padding-left: 30px;
+}
+.register-box {
+	float: left;
+	margin-right: 10px;
+}
+.register-box label {
+	height: 38px;
+	line-height: 38px;
+	padding-left: 10px;
+	display: inline-block;
+	font-size: 14px;
+	color: #666;
+}
+.register-box input {
+	float: right;
+	width: 250px;
+	height: 38px;
+	line-height: 38px;
+	padding-left: 15px;
+	font-size: 14px;
+	color: #333;
+	border: 1px solid #e0e3e7;
+	border-radius: 3px;
+	margin-left: 8px;
+	font-family: "Microsoft YaHei", "Hiragino Sans GB";
+}
+.submit_btn {
+	float: left;
+	width: 86px;
+	height: 40px;
+	text-align: center;
+	line-height: 40px;
+	color: #fff;
+	background: #7eabc6;
+	border: 0;
+	font-size: 14px;
+	font-weight: 600;
+	border-radius: 3px;
+	margin-left: 5px;
+}
+.tab-kuwei {
+	width: 100%;
+	font-size: 14px;
+	font-family: "微软雅黑";
+	background-color: #dedede;
+	border-top: 1px solid #e0e3e7;
+}
+.tab-kuwei tr:hover {
+	background-color: #fafafa;
+}
+.tab-kuwei th {
+	margin: 0;
+	background-color: #f7f9fb;
+	font-size: 14px;
+	height: 44px;
+	color: #1286c1;
+	font-weight: bold;
+}
+.tab-kuwei tr {
+	margin: 0;
+	color: #666;
+	font-size: 14px;
+	height: 54px;
+	background-color: #fff;
+}
+.tab-kuwei td a {
+	text-decoration: underline;
+	color: #3B89F3;
+}
+.tab-kuwei tr td {
+	border-top: 1px solid #e0e3e7;
+}
+.all-title {
+	font-size: 18px;
+	color: #333;
+}
+.panel, .panel2, .panel3 {
+	display: none;
+}
+.kuwei-title {
+	height: 50px;
+	line-height: 50px;
+	padding: 0 20px;
+}
+.numerical {
+	border: 1px solid #e0e3e7;
+	margin: 20px;
+	height: 104px;
+}
+.numerical ul li {
+	float: left;
+	width: 14.15%;
+	height: 55px;
+	border-right: 1px solid #e0e3e7;
+	margin-top: 25px;
+	text-align: center;
+}
+.numerical ul li p {
+	font-size: 14px;
+	color: #999;
+}
+.numerical ul li span {
+	font-size: 18px;
+	color: #707189;
+	font-weight: bold;
+	padding-top: 10px;
+	display: block;
+}
+.progressbar {
+	width: 100%;
+	margin-top: 5px;
+	margin-bottom: 35px;
+	position: relative;
+	background-color: #EEEEEE;
+	box-shadow: inset 0px 1px 1px rgba(0,0,0,.1);
+}
+.proggress {
+	height: 8px;
+	width: 10px;
+	background-color: #3498db;
+}
+.percentCount {
+	float: right;
+	margin-top: 10px;
+	clear: both;
+	font-weight: bold;
+	font-family: Arial;
+}
+.task {
+	margin: 20px;
+}
+.task ul li {
+	width: 15.5%;
+	height: 130px;
+	border: 1px solid #e0e3e7;
+	border-radius: 2px;
+	text-align: center;
+	float: left;
+	margin-right: 1.2%;
+	margin-bottom: 1.2%;
+}
+.task ul li img {
+	margin: 0 auto;
+	margin-top: 22px;
+	width: 30px;
+	height: 28px;
+}
+.task ul li p {
+	font-size: 16px;
+	color: #707189;
+	padding-top: 12px;
+	padding-bottom: 5px;
+}
+.task ul li span a {
+	font-size: 12px;
+	color: #1286c1;
+}

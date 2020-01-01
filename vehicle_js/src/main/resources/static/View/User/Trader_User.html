@@ -1,0 +1,488 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+    <link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />    
+    <link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+  	<link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/fileUpload/css/fileUpload.css?s=0.1803" />
+    <title>#{SysUsersManage_title}</title>
+</head>
+<body>
+    <div id="toolbar" class="easyui-panel" style="padding: 4px; border-width: 0; border-bottom-width: 1px;">
+        #{PAGE_TOOLBAR_BUTTONROLE}
+    </div>
+    <div class="searchParamesPanel">
+        <table id="searchParamesTable">
+            <tr class="searchParamesTrShow">
+                <td class="searchParamesTdControl">
+                    <input type="text" id="common_sheet_title" class="easyui-textbox" style="width: 180px" />
+                </td>
+                <td width="20px;"></td>
+                <td class="searchParamesTdTitle">
+                    <label data-locale="SysUsersManage_state"/>:
+                </td>
+                <td class="searchParamesTdControl">
+                    <div id="divStatus"></div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="gridControl">
+        <table id="gridTable">
+        </table>
+        <div id="gridPager">
+        </div>
+    </div>
+     <div id="fileUpload" style="position: absolute; left: 50%; top: 50%; width: 600px;
+        height: 400px; margin-left: -300px; margin-top: -200px; display: none;">
+    </div>
+    <form id="formExportFile" target="_blank"  method="post" style="display: none">
+    </form>
+</body>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/upload.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/file.js"></script>
+<script type="text/javascript" src="../../Resource/js/cookie/jquery.cookie.js"></script>
+<script language="javascript" type="text/javascript">
+    var moduleId = 0;
+    $(function () {
+        var parms = getUrlParms();
+        moduleId = parms["moduleId"];
+        initScript();
+        initData();
+        initStyle();
+    });
+
+    $(window).load(function () {
+        hideLoading();
+    });
+
+    var initStyle = function () {
+        $("#common_sheet_title").textbox({prompt:$.i18n.prop('usernameAndUserid') });
+        enterTriggerEvent("searchParamesTable", "searchData");
+    }
+
+    var initScript = function () {
+        $(window).resize(function () {
+            setGridHeightWidth();
+            setToolbarHeightWidth();
+        });
+    }
+
+    var initData = function () {
+        getDictionaryData([{
+            dicTypeCode: Global_DicType.Global_DicType_User_Userlevel,
+            callback: function (callbackData) {
+                window.userlevelList = {};
+                for(var i = 0; i < callbackData.length; i++){
+                    userlevelList[callbackData[i].dicvalue] = callbackData[i].dictext;
+                }
+            }
+        },{
+            dicTypeCode: Global_DicType.Global_DicType_BaseState,
+            ADD_ALL: true,
+            callback: function (callbackData) {
+                window.stateList = {};
+                for(var i = 0; i < callbackData.length; i++){
+                    stateList[callbackData[i].dicvalue] = callbackData[i].dictext;
+                }
+                var formatData = { data: callbackData, needChooseAll: false, chooseAllValue: "", defaultValue: "1",
+                    bindBoxName: "divStatus", bindControlPrefix: "status", onClick:function(){
+                        searchData();
+                    } };
+                formatDefaultRadio_Local(formatData);
+            }
+        }]);
+        loadList();
+    }
+    function searchData() {
+        $("#gridTable").jqGrid('setGridParam', {
+            url: getSearchGridUrl(),
+            datatype: 'json',
+            postData: { "filters": "" },
+            page: 1
+        }).trigger("reloadGrid");
+    }
+
+    var getSearchGridUrl = function () {
+        return "../../sysInfo/user/getListForGrid?"+Math.random()+"&customSearchFilters=" + encodeURI(getSearchFilters());
+    }
+
+    var getSearchFilters = function () {
+
+        var parmsArray = [
+            [
+                { name : 'userid',value : $('#common_sheet_title').textbox('getValue'), op: 'cn'},
+                { name : 'realname',value : $('#common_sheet_title').textbox('getValue'), op: 'cn'}
+            ],
+          { name: 'status', value: $("#divStatus [name=status]:checked").val(), op: "eq" }
+        ];
+
+        return formatSearchParames(parmsArray);
+    }
+
+    var add = function () {
+        openDetail("");
+    }
+	
+	var showChildModule = function(code) {
+		var rowData = $("#gridTable").jqGrid('getRowData', code);
+		openDetail(rowData.userId);
+	};
+	
+    var edit = function () {
+        var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
+        if (selectRowItems.length > 1 || selectRowItems.length == 0) {
+            errorNotification({
+                SimpleMessage: $.i18n.prop('SysUsersManage_selectgridrow')
+            });
+            return;
+        }
+        var rowData = $("#gridTable").jqGrid('getRowData', selectRowItems);
+        openDetail(rowData.userId);
+    }
+
+    var openDetail = function (userId) {
+        showLoading();
+        var href = "../View/User/Crm_UserDetail.html?userId=" +userId;
+        openDialog({ title: $.i18n.prop('SysUsersManage_userdetail'), id: 'SysUsersDetail', width: 700, height: 500, isResize: true, href: href, closable: true });
+    }
+
+    var ownRole = function () {
+        var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
+        if (selectRowItems.length > 1 || selectRowItems.length == 0) {
+            errorNotification({
+                SimpleMessage: $.i18n.prop('SysUsersManage_selectgridrow')
+            });
+            return;
+        }
+
+        var rowData = $("#gridTable").jqGrid('getRowData', selectRowItems);
+        showLoading();
+        var id = encodeURI(rowData.userId);
+        var href = "../View/SysInfo/SysUserDetailRoles.html?userId=" + id;
+        openDialog({ title: $.i18n.prop('SysUsersManage_userrole'), id: 'SysUserDetailRoles', width: 320, height: 430, isResize: true, href: href, closable: true });
+    }
+    
+
+    var remove = function () {
+    	var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
+    	if (selectRowItems.length == 0) {
+    		errorNotification({
+    			SimpleMessage :  $.i18n.prop('SysUsersManage_selectgridrows') 
+    		});
+    		return;
+    	}
+        //首先定义一个数组  
+		var ids = [];
+    	for (var i = 0; i < selectRowItems.length; i++) {
+    		var rowData = $("#gridTable").jqGrid('getRowData', selectRowItems[i]);
+    		ids.push(rowData.id);
+    	}
+    	$.messager.confirm( $.i18n.prop('SysUsersManage_alert'), $.i18n.prop('SysUsersManage_deleteselectrow') , function(r) {
+    		if (r) {
+    			showLoading();
+    			$.ajax({
+    				url :  "../../sysInfo/user/delete?t=" + Math.random(),
+    				data : JSON.stringify(ids),
+    				type : "POST",
+    				contentType : 'application/json;charset=utf-8',
+    				success : function(dataObj) {
+    					if (isServerResultDataPass(dataObj)) {
+    	        			correctNotification({ SimpleMessage:  $.i18n.prop('success') });
+    	        			searchData();
+    	                } else {
+    	                    FailResultDataToTip(dataObj);
+    	                }
+    	        		hideLoading();    
+    				}
+    			});
+    		}
+    	});
+        
+    }
+
+    function loadList() {
+        $("#gridTable").jqGrid({
+            url: getSearchGridUrl(),
+            datatype: "json",
+            width: "none",
+            colNames: [
+                $.i18n.prop('SysUsersManage_code'),
+                $.i18n.prop('SysUsersManage_view'),
+                $.i18n.prop('SysUsersManage_state'),
+                $.i18n.prop('SysUsersManage_usercode'),
+                $.i18n.prop('SysUsersManage_username'),
+                $.i18n.prop('SysUsersManage_Superior_user'),
+                $.i18n.prop('SysUsersManage_Subordinate_user'),
+                $.i18n.prop('SysUsersManage_tel'),
+                $.i18n.prop('SysUsersManage_role'),
+                $.i18n.prop('SysUsersManage_create_date'),
+                $.i18n.prop('SysUsersManage_remark')
+            ],
+            colModel: [
+            { name: 'id', index: 'id', align: 'center', sorttype: 'int', search: false, sortable: false, width: 60, key: true, hidden: true },
+            {
+                name: 'ViewDetail',
+                index: 'ViewDetail',
+                align: 'center',
+                fixed: true,
+                width: 25,
+                search: false,
+                sortable: false,
+                formatter: function (value, grid, rows) {
+                    var detail = getUserDetail(rows);
+                    return "<a href=\"javascript:void(0)\" class=\"gridViewPicLink\"  title=\"" + detail + "\"></a>";
+                }
+            },
+                { name: 'status', index : 'status', align : 'center', isSort : false, width : 60, type: 'string', search : true, searchoptions : { sopt: ['cn', 'eq', 'ne']},
+                    formatter : function(value, grid, rows) {
+                        return window.stateList[value];
+                    }},
+                { name: 'userId', index: 'userId', align: 'center', sortable: true, width: 120, key: true, search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']},hidden: true },
+                { name: 'realName', index: 'realName', align: 'center', fixed: true, width: 200, search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'superior_user', index: 'superior_user', align: 'center', fixed: true, width: 200, search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'subordinate_user', index: 'subordinate_user', align: 'center', fixed: true, width: 200, search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'mobileNo', index: 'mobileNo', align: 'center', fixed: true, width: 150, search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'userRoles', index: 'userRoles', align: 'center', fixed: true, width: 220, searchoptions: {sopt: [ 'cn',  'eq', 'ne']}},
+                { name: 'create_date', index: '_d_create_date', align: 'center', width: 140, search: true, type: 'string',
+                    searchoptions: { sopt: ['ge'], dataEvents: [ { type: 'click', data: {}, fn: function() { WdatePicker(); } } ] } },
+                { name: 'remark', index: 'remark', align: 'center', fixed: true, hidden:true,width: 100, search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+                }
+            ],
+            shrinkToFit: false,
+            altRows: true,
+            altclass: 'gridSpacingClass',
+            forceFit: true,
+            cellLayout: 0,
+            scroll: false,
+            autowidth: true,
+            sortname: 'id',
+            sortorder: "desc",
+            loadonce: false,
+            mtype: "POST",
+            viewrecords: true,
+            rownumbers: true,
+            multiselect: true,
+            rowNum: 15,
+            height: "100%",
+            rowList: [15, 20, 30, 50],
+            pager: "#gridPager",
+            jsonReader: {
+                root: "rows",
+                total: "total",
+                page: "page",
+                records: "records",
+                repeatitems: false
+            },
+            gridComplete: function () {
+                $(".cbox").shiftSelect();
+                afterRedRow();
+
+            },
+        	// /双击时编辑
+			ondblClickRow : function(code) {
+				showChildModule(code);
+			},
+			onCellSelect : function(rowid, iCol, cellcontent, e) {
+				checkboxJqgrid(rowid, iCol, cellcontent, e);
+			},
+            loadComplete: function (xhr) {
+                $('.gridViewPicLink').tooltip({
+                    position: 'bottom',
+                    content: $(this).attr("title"),
+                    onShow: function () {
+                        $(this).tooltip('tip').css({
+                            backgroundColor: '#FCF8E3',
+                            borderColor: '#FAEBCC'
+                        });
+                    }
+                });
+                FailResultDataToTip(xhr);
+            },
+        });
+        $("#gridTable").jqGrid('navGrid', '#gridPager', { add: false, edit: false, del: false, refresh: true }, {}, {}, {}, { multipleSearch: true, closeOnEscape: true, closeAfterSearch: true });
+        $("#gridTable").jqGrid('navButtonAdd', '#gridPager', {
+            caption: $.i18n.prop('SysUsersManage_setcolumn'),
+            title: "Reorder Columns",
+            onClickButton: toggleGridColumns
+        });
+        $("#gridTable").jqGrid('navButtonAdd', '#gridPager', {
+            caption: $.i18n.prop('SysUsersManage_search'),
+            title: "",
+            onClickButton: toggleGridSearchToolbar
+        });
+        setGridHeightWidth();
+    }
+
+    var getUserDetail = function (rows) {
+        var detailStr = "<table class=\'gridDetailTable\'>";
+        detailStr += "<tr><td class=\'gridDetailTitle\'>用户编号</td><td class=\'gridDetailContent\'>" + formatStr(rows.userId) + "</td><td class=\'gridDetailTitle\'>用户名</td><td>" + formatStr(rows.realName) + "</td><td class=\'gridDetailTitle\'>密码</td><td class=\'gridDetailContent\'>" + "******" + "</td></tr>";
+        detailStr += "<tr><td class=\'gridDetailTitle\'>性别</td><td class=\'gridDetailContent\'>" + formatStr(rows.sex) + "</td><td class=\'gridDetailTitle\'>手机</td><td class=\'gridDetailContent\'>" + formatStr(rows.phone) + "</td><td class=\'gridDetailTitle\'>生日</td><td class=\'gridDetailContent\'>" + formatStr(rows.birthday) + "</td></tr>";
+        detailStr += "<tr><td class=\'gridDetailTitle\'>微信</td><td class=\'gridDetailContent\'>" + formatStr(rows.wechat) + "</td><td class=\'gridDetailTitle\'>邮件</td><td class=\'gridDetailContent\'>" + formatStr(rows.mail) + "</td><td class=\'gridDetailTitle\'>电话</td><td class=\'gridDetailContent\'>" + formatStr(rows.tel) + "</td></tr>";
+        detailStr += "<tr><td class=\'gridDetailTitle\'>地址</td><td class=\'gridDetailContent\'>" + formatStr(rows.address) + "</td><td class=\'gridDetailTitle\'>传真</td><td class=\'gridDetailContent\'>" + formatStr(rows.fax) + "</td><td class=\'gridDetailTitle\'>角色</td><td class=\'gridDetailContent\'>" + formatStr(rows.userLevel) + "</td></tr>";
+        detailStr += "</table>";
+        return detailStr;
+    }
+    
+    var afterRedRow = function () {
+        var ids = $("#gridTable").jqGrid("getDataIDs");
+        for (var i = 0; i < ids.length; i++) {
+            var rowData = $("#gridTable").getRowData(ids[i]);
+            if (rowData.status == '0' || rowData.status == $.i18n.prop('SysUsersManage_invalid')) {
+                $('#gridTable #' + ids[i]).find("td").css('color', "red");
+            }
+        }
+    }
+
+    var setState0 = function () {
+        setState('0');
+    }
+
+    var setState1 = function () {
+        setState('1');
+    }
+    
+    var setState = function (kind) {
+        var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
+        if (selectRowItems.length <= 0) {
+            errorNotification({ SimpleMessage: $.i18n.prop('SysUsersManage_selectgridrows') });
+            return;
+        }
+
+        var messKind = '';
+        if (kind == '0')
+            messKind = $.i18n.prop('SysUsersManage_invalid');
+        else
+        	 messKind = $.i18n.prop('SysUsersManage_valid');
+        var error = '';
+        var idArray = [];
+        for (var i = 0, ilen = selectRowItems.length; i < ilen; i++) {
+            var rowData = $("#gridTable").jqGrid('getRowData', selectRowItems[i]);
+            idArray.push(rowData.id);
+            var level = '0';
+            if (rowData.userId == 'admin')
+            	error=$.i18n.prop('SysUsersManage_none')+messKind+"“admin”#{SysUsersManage_user}";
+        }
+        if (error != '')
+        {
+            errorNotification({ SimpleMessage: error });
+            return;
+        }
+ 
+        messKind = $.i18n.prop('SysUsersManage_determine')+messKind+$.i18n.prop('SysUsersManage_determineuser');
+        $.messager.confirm($.i18n.prop('SysUsersManage_alert'), messKind, function (r) {
+            if (r) {
+            	var url="../../sysInfo/user/userstate?t="+Math.random();
+                showLoading();
+                $.getJSON(url, {kind: kind, idJson: JSON.stringify(idArray)},
+                    function (data) {
+                        if (isServerResultDataPass(data)) {
+                            searchData();
+                            correctNotification({
+                                SimpleMessage: data.resultDataFull.simpleMessage
+                            });
+                        } else {
+                            FailResultDataToTip(data);
+                        }
+                        hideLoading();
+                    });
+            }
+        });
+
+    }
+
+    var importData = function () {
+    	/*
+    	var options={Code:"XTGL",fileTypeFilter:['jpg'],downModuleFileUrl:"../../Resource/excel/users.xlsx",callBackFun:null};
+    	UpLoadFile(options);
+    	return;
+    	*/
+    	
+        var url = "../../sysInfo/user/importExcel?t=" + Math.random();
+        $("#fileUpload").zyUpload({
+            itemWidth: "60px", // 文件项的宽度
+            itemHeight: "60px", // 文件项的高度
+            url: url,
+            multiple: false, // 是否可以多个文件上传
+            dragDrop: true, // 是否可以拖动上传文件
+            del: true, // 是否可以删除文件
+            finishDel: false, // 是否在上传文件完成后删除预览
+            close: true,
+            fileTypeFilter: ['xls', 'xlsx'],
+            remark: "<p>只能上传xls/xlsx格式文件</p>",
+            isDownModuleFile: true,
+            downModuleFileUrl: "../../sysInfo/user/exportUserExcel?t=" + Math.random(),//"../../Resource/excel/用户信息-导入模板.xlsx",
+            /* 外部获得的回调接口 */
+            onSelect: function (files, allFiles) { // 选择文件的回调方法
+            },
+            onDelete: function (file, surplusFiles) { // 删除一个文件的回调方法
+            },
+            onSuccess: function (file) { // 文件上传成功的回调方法
+            },
+            onFailure: function (file) { // 文件上传失败的回调方法
+            },
+            onComplete: function (responseInfo) { // 上传完成的回调方法
+            	hideLoading();
+                var dataObj = JSON.parse(responseInfo);
+                if (isServerResultDataPass(dataObj)) {
+                	 searchData();
+                	 hideLoading();
+                     correctNotification(dataObj.resultDataFull);
+                } else {
+                    FailResultDataToTip(dataObj);
+                }
+                $("#fileUpload").empty();
+                $("#fileUpload").hide();
+            }
+        });
+    }
+
+
+    $("#is_cus").click(function(){
+        if(this.checked) {
+            $("#is_cus").val("Y");
+            searchData();
+        } else {
+            $("#is_cus").val("N");
+            searchData();
+        }
+    });
+
+    $("#is_contractor").click(function(){
+        if(this.checked) {
+            $("#is_contractor").val("Y");
+            searchData();
+        } else {
+            $("#is_contractor").val("N");
+            searchData();
+        }
+    });
+
+    $("#is_op").click(function(){
+        if(this.checked) {
+            $("#is_op").val("Y");
+            searchData();
+        } else {
+            $("#is_op").val("N");
+            searchData();
+        }
+    });
+
+
+</script>
+</html>

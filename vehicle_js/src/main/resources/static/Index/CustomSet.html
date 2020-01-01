@@ -1,0 +1,338 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link rel="shortcut icon" href="../Resource/images/favicon.ico" />
+    <link id="CustomThemeStylelink" type="text/css" rel="stylesheet" href="../Resource/css/index/customLightBlue.css" />
+    <link id="EasyuiThemeStylelink" type="text/css" rel="stylesheet" href="../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+    <link type="text/css" rel="stylesheet" href="../Resource/js/easyUI/themes/icon.css" />
+</head>
+<body>
+    <div id="toolbar" class="easyui-panel" style="padding: 4px;">
+        <a href="javascript:reset();" id="reset" class="easyui-linkbutton" plain="true" iconcls="icon-reload">
+            重置</a> <a href="javascript:save();" id="save" class="easyui-linkbutton" plain="true"
+                iconcls="icon-save">保����������������</a><a href="javascript:close();" id="close" class="easyui-linkbutton"
+                    style="display: inline-block;" plain="true" iconcls="icon-cancel"> 关闭</a>
+    </div>
+    <form id="addForm" class="easyui-form" method="post" data-options="novalidate:true" enctype="multipart/form-data" >
+    <input type="hidden" id="hdPic" name="hdPic" value="Resource/images/index/defaultUserHeadPic.png" />
+    <table class="editTable" style="margin-left:auto;margin-right:auto;">
+        <tr>
+            <td class="editTitle">
+                默认主题:
+            </td>
+            <td class="editControl"  style="width:276px;">
+                <div class="themeBox">
+                    <span id="Black" class="themeEachActive" style="background-color: #3D3D3D"></span>
+                    <span id="Blue" class="themeEach" style="background-color: #056DAF"></span><span
+                        id="Gray" class="themeEach" style="background-color: #D9D9D9"></span><span id="LightBlue"
+                            class="themeEach" style="background-color: #F0F9FD"></span><span id="Green" class="themeEach"
+                                style="background-color: #8ECC3D"></span>
+                </div>
+                <input type="hidden" id="theme" name="theme" value="Black" />
+            </td>
+        </tr>
+        <tr>
+            <td class="editTitle" style="display: none;">
+                默认业务地点:
+            </td>
+            <td class="editControl" style="display: none;">
+                <input type="text" name="whcenter" id="defaultYwLocation" class="easyui-combobox" />
+            </td>
+        </tr>
+        <tr>
+            <td class="editTitle">
+                整页展示:
+            </td>
+            <td class="editControl">
+                <input id="isMaxDisplayYes" name="isMaxDisplay" type="radio" value="1" checked="checked" /><label
+                    for="isMaxDisplayYes">是</label>
+                <input id="isMaxDisplayNo" name="isMaxDisplay" type="radio" value="0" /><label for="isMaxDisplayNo">否</label>
+            </td>
+        </tr>
+        
+        <tr>
+            <td class="editTitle">
+               缓存管理:
+            </td>
+            <td class="editControl">
+                <a href="javascript:reflushCache();" class="a-upload">重新加载缓存</a>
+            </td>
+        </tr>
+        
+    </table>
+    </form>
+    <form id="formUpload" method="post" enctype="multipart/form-data" style="width:100%;padding:0;margin:0;">
+    <table class="editTable"  style="margin-left:auto;margin-right:auto;">
+        <tr>
+            <td class="editTitle">
+                用户头像:
+            </td>
+            <td style="width: 276px;">
+                <a href="javascript:;" class="a-upload">
+                    <input name="userHeaderPic" id="userHeaderPic" type="file" size="100" />
+                    上传头像 </a>&nbsp;&nbsp;<a href="javascript:savePic();" class="a-upload">���� </a>
+            </td>
+        </tr>
+        <tr>
+            <td class="editTitle">
+                预览:
+            </td>
+            <td class="editControl">
+                <div>
+                    <img id="viewPic" name="viewPic" style="display: block; max-width: 130px; width: 130px;"
+                        src="../Resource/images/index/defaultUserHeadPic.png" />
+                </div>
+            </td>
+        </tr>
+    </table>
+    </form>
+</body>
+<script type="text/javascript" src="../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../Resource/js/cookie/jquery.cookie.js"></script>
+<script type="text/javascript" src="../Resource/js/uploadPreview/uploadPreview.js"></script>
+<script type="text/javascript">
+    $(function () {
+        initScript();
+        initData();
+        initStyle();
+    });
+
+    $(window).load(function () {
+        hideLoading();
+    });
+
+    var initStyle = function () {
+        // 待补充
+    }
+
+    var initScript = function () {
+        loadform();
+        $(".themeBox span").click(function () {
+            $(".themeBox span").attr("class", "themeEach");
+            $(this).attr("class", "themeEachActive");
+            $("#theme").val($(this).attr("id"));
+        });
+
+        jQuery("#userHeaderPic").uploadPreview({
+            imgPreview: "#viewPic",
+            imgType: ["bmp", "gif", "png", "jpg"],
+            callback: function () {
+                return false;
+            }
+        });
+    }
+    var getAuthorityByName = function (moduleName, bindControlId) {	
+        var serverUrl = "../sysInfo/authorith/findAuthorityListById?" + Math.random();
+        $.ajax({
+        	url:serverUrl,
+        	type:"POST",
+        	data:{moduleName:moduleName},
+        	success:function(dataObj){
+        		 if (isServerResultDataPass(dataObj)) {
+        	            AuthorityData = dataObj.resultDataFull;
+        	            for (var i = 0; i < dataObj.resultDataFull.length; i++) {
+        	                $("#" + bindControlId + " a").each(function () {
+        	                    if ($(this).attr("id") == dataObj.resultDataFull[i].buttonUse) {
+        	                        $(this).css("display", "inline-block");
+        	                        return false;
+        	                    }
+        	                    return true;
+        	                });
+        	            }
+        	     }else{
+        	    	 FailResultDataToTip(dataObj);
+        	     }
+        	}
+        });
+    }
+    var initData = function () {
+
+        loadCustomDetail();
+        loadYwLocation();
+    }
+   
+
+    var loadYwLocation = function () {
+         getData_YwLocation({
+    		callback: function (resultJson) {
+    		 
+    			if(resultJson==null)
+    				return;
+    			for(var i = 0; i < resultJson.length; i++){
+    				 resultJson[i] = {Value : resultJson[i].whcenter, Text : resultJson[i].whcenter_name};
+    			}
+    			
+            	resultJson.unshift({Text:"--所有--",Value:""});
+                $('#defaultYwLocation').combobox({
+                    data: resultJson,
+                    valueField: 'Value',
+                    textField: 'Text',
+                    panelHeight: 150,
+                    editable: true,
+                    formatter: function (row) {
+                    	if(row.Value == ""){
+       	                	return '<table style=\"width:100%;\"><tr><td style=\"text-align:left;width:80%;\"><span>--所有--</span></td><td style=\"text-align:right;width:20%;\"></td></tr></table>';
+                    	}else{
+                    		return '<table style=\"width:100%;\"><tr><td style=\"text-align:left;width:80%;\"><span>'+row.Text + '</span></td><td style=\"text-align:right;width:20%;\"></td></tr></table>';
+                    	}
+                   	}
+                	,onSelect : function(row)
+                   	{
+                    }
+                   	,onLoadSuccess: function (e) {
+                    }
+                });
+    		}
+        }); 
+        
+    }
+
+    var close = function () {
+        closeDialog("UserCustomSet");
+    }
+
+    var reset = function () {
+        showLoading();
+        loadCustomDetail();
+    }
+
+    var save = function () {
+    	 $.messager.confirm('提示', '确定保存吗?', function (r) {
+             if (r) {
+            	 showLoading();
+        			$("#addForm").submit();
+       	      }
+       });
+    }
+
+    var loadCustomDetail = function () {
+    	
+        var serverUrl = "../sysInfo/custom/getUserCustom?"+Math.random();
+        $.ajax({
+        	type :"POST",
+        	url : serverUrl,
+        	success : function (dataObj) {
+                if (isServerResultDataPass(dataObj)) {
+                    $(".themeBox span").attr("class", "themeEach");
+                    $(".themeBox span").each(function (k, v) {
+                        if (dataObj.resultDataFull.theme == $(this).attr("id")) {
+                            $(this).attr("class", "themeEachActive");
+                            $("#theme").val($(this).attr("id"));
+                        }
+                    });
+
+                    if (dataObj.resultDataFull.userHeadPic != "" && dataObj.resultDataFull.userHeadPic != null) {
+                        $("#viewPic").attr("src", dataObj.resultDataFull.userHeadPic);
+                        $("#hdPic").attr("src", dataObj.resultDataFull.userHeadPic);
+                    }
+                    $('#defaultYwLocation').combobox('setValue', dataObj.resultDataFull.whcenter || "");
+                    $("[name='isMaxDisplay']").each(function () {
+                        if ($(this).attr("value") == dataObj.resultDataFull.isMaxDisplay) {
+                            $(this).prop("checked", true);
+                        }
+                    });
+                    hideLoading();
+                } else {
+                    FailResultDataToTip(dataObj);
+                }
+            }
+        });
+    }
+
+    var loadform = function () {
+	    $('#addForm').form({
+	        url: "../sysInfo/custom/saveCustomDetail?" + Math.random(),
+	        onSubmit: function () {
+	        },
+	        success: function (dataObj) {
+	            if (isServerResultDataPass(dataObj)) {
+	             
+	                var theme = "";
+	                $(".themeBox span").each(function () {
+	                    if ($(this).attr("class") == "themeEachActive") {
+	                        theme = $(this).attr("id");
+	                        return false;
+	                    }
+	                });
+	
+	                $.cookie('abisTheme', theme, { path: '/' });
+	                $.cookie('abisisMaxDisplay', $("#isMaxDisplay").prop("checked"), { path: '/' });
+	                window.top.location = "/vehicle_js/Index/Main.html";
+	            
+	                close();
+	            } else {
+	                hideLoading();
+	                FailResultDataToTip(dataObj);
+	            }
+	        }
+	    });
+    	 
+    }
+
+    var savePic = function () {
+        showLoading();
+        $('#formUpload').form('submit', {
+            url: '../sysInfo/custom/saveUserHeaderPic?'+Math.random(),
+            success: function (result) {
+                var dataObj = eval('(' + result + ')');
+                if (isServerResultDataPass(dataObj)) {
+                    correctNotification({simpleMessage: dataObj.resultDataFull.simpleMessage});
+               
+                    var top =  $(window.top.frames["maniFrame"].contentWindow.frames["topFrame"].document);
+                    top.find(".userInfoHeadPic img").attr("src",dataObj.resultDataFull.moreMessage);
+                    $.cookie('abisUserHeadPic', dataObj.resultDataFull.moreMessage, { path: '/' });
+                } else {
+                    FailResultDataToTip(dataObj);
+                }
+                hideLoading();
+            }
+        });
+    }
+
+    var reflushCache=function()
+    {
+    	$.messager.confirm('提示', '确定重新加载缓存吗?', function (r) {
+            if (r) {
+		    	var url="../sysInfo/custom/reflushCache?t="+Math.random();
+		    	showLoading();
+		    	$.ajax({
+		    	    url:url,
+		    	    type:'get', //GET
+		    	    cache:false,//不缓存
+		    	    data:null, //JSON.stringify(data),
+		    	    timeout:200000,  //超时时间
+		    	    dataType:'text', //返回的数据格式：json/xml/html/script/jsonp/text
+		    	    contentType: 'application/json', //'text/plain;charset=utf-8',
+		    	    success:function(dataObj)
+		    	    {
+		    	    	console.log("dataObj");
+		    	    	console.log(dataObj);
+		    	    	 
+			    	    //var dataObj = eval('(' + result + ')');
+			            if (isServerResultDataPass(dataObj)) {
+			                     correctNotification({simpleMessage: "更新成功"});
+			            } else {
+			                     FailResultDataToTip(dataObj);
+			            }
+		    	    	 
+		                hideLoading();
+		    	    },
+		    	    error:function(xhr,textStatus)
+		    	    {
+		    	    	errorNotification({SimpleMessage: "网络出错"});
+		    	    }
+		    	});
+            }
+    	});
+    }
+</script>
+</html>

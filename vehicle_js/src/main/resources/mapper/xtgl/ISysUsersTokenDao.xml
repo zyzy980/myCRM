@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace：必须与对应的接口全类名一致 id:必须与对应接口的某个对应的方法名一致 -->
+<mapper namespace="com.bba.xtgl.dao.ISysUsersTokenDao">
+	
+	<select id="getSysUsersTokenVO" parameterType="com.bba.xtgl.vo.SysUsersTokenVO" resultType="com.bba.xtgl.vo.SysUsersTokenVO">
+	select ID,USERID,TOKEN,IPADDR,BROWSER,CREATE_DATE,within_code,whcenter FROM SYS_USERS_TOKEN	WHERE within_code=#{within_code} and USERID=#{userid} and TOKEN=#{token} and IPADDR=#{ipaddr} and BROWSER=#{browser}
+	</select>
+	
+	<select id="getSysUsersTokenCount"  parameterType="com.bba.xtgl.vo.SysUsersTokenVO" resultType="java.lang.Integer">
+	select count(1) from SYS_USERS_TOKEN WHERE within_code=#{within_code} and USERID=#{userid} and TOKEN=#{token} and IPADDR=#{ipaddr} and BROWSER=#{browser}
+	</select>
+	
+	<insert id="insert" parameterType="com.bba.xtgl.vo.SysUsersTokenVO">
+	insert into SYS_USERS_TOKEN(USERID,TOKEN,IPADDR,BROWSER,CREATE_DATE,within_code,whcenter)
+	values(#{userid},#{token},#{ipaddr},#{browser},sysdate,#{within_code},#{whcenter})
+	</insert>
+	
+	
+	<delete id="delete" parameterType="com.bba.xtgl.vo.SysUsersTokenVO">
+	delete SYS_USERS_TOKEN where within_code=#{within_code} and USERID=#{userid}
+	</delete>
+	
+	
+	<select id="getUserById"  resultType="com.bba.xtgl.vo.SysUserVO">
+		select u.id,
+			u.userId,
+			u.realName,
+			u.within_code,
+			u.password,
+			u.status,
+			u.dept_id,
+			u.mobileNo,
+			u.position,
+			u.sex,
+			u.idcard,
+			u.tel,
+			u.mail,
+			u.fax,
+			u.userloginIp,
+			u.userloginTime,
+			u.address,
+			u.birthday,
+			u.headimg,
+			u.province,
+			u.company_id,
+			u.city,
+			u.sensitive_authority,
+			u.partner,
+			u.remark,
+			u.is_op isOp,u.is_contractor isContractor,u.is_th_driver isThDriver,u.is_ps_driver isPsDriver,u.is_cus isCus,
+			u.contractor_code contractorCode,
+			u.cus_code cusCode,
+			u.create_by,
+			to_char(u.create_date,'yyyy-mm-dd HH24:mi:ss')as create_date,
+			u.update_by,
+			to_char(u.create_date,'yyyy-mm-dd HH24:mi:ss')as create_date,
+			u.valid_date as validDate,
+		  	sw.logo_path as logoPath
+		from sys_users u
+		left join sys_within sw on u.within_code = sw.code
+		where u.within_code=#{within_code} and u.userId = #{userid}
+	</select>
+</mapper>

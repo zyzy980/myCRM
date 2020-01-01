@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace：必须与对应的接口全类名一致 id:必须与对应接口的某个对应的方法名一致 -->
+<mapper namespace="com.bba.xtgl.dao.ISys_within_setDao">
+
+	<select id="findDataList" parameterType="com.bba.xtgl.vo.Sys_within_setVO" resultType="com.bba.xtgl.vo.Sys_within_setVO">
+		select * from sys_within_set where code=#{code}
+	</select>
+
+	<insert id="batchInsert">
+		insert into sys_within_set(code,sel_tihuo,vision,end_date,amount)
+		<foreach item="vo" index="index" collection="list" separator="union all">
+			select
+		       #{vo.code,jdbcType=VARCHAR}, #{vo.sel_tihuo,jdbcType=VARCHAR}, #{vo.vision,jdbcType=VARCHAR}, #{vo.end_date,jdbcType=VARCHAR}, #{vo.amount,jdbcType=VARCHAR}
+			from dual
+		</foreach>
+	</insert>
+
+	<!--根据条件查询所有内码设置-->
+	<select id="searchWithin" resultType="com.bba.xtgl.vo.Sys_within_setVO" parameterType="java.lang.String">
+		select *
+		from sys_within_set
+		where CODE = #{code}
+	</select>
+
+	<!--修改-->
+	<update id="updateWithinSet" parameterType="com.bba.xtgl.vo.Sys_within_setVO">
+		update sys_within_set
+		<trim prefix="set" suffixOverrides=",">
+			<if test="sel_tihuo != null">sel_tihuo=#{sel_tihuo,jdbcType=VARCHAR},</if>
+			<if test="is_driver_check != null">is_driver_check=#{is_driver_check,jdbcType=VARCHAR},</if>
+			<if test="is_truck_check != null">is_truck_check=#{is_truck_check,jdbcType=VARCHAR},</if>
+			<if test="gps_offline_time != null">gps_offline_time=#{gps_offline_time,jdbcType=VARCHAR},</if>
+			<if test="is_km_address != null">is_km_address=#{is_km_address,jdbcType=VARCHAR},</if>
+			<if test="gps_avgspeed != null">gps_avgspeed=#{gps_avgspeed,jdbcType=VARCHAR},</if>
+			<if test="gps_overspeed != null">gps_overspeed=#{gps_overspeed,jdbcType=VARCHAR},</if>
+			<if test="api_error_send_sms != null">api_error_send_sms=#{api_error_send_sms,jdbcType=VARCHAR},</if>
+			<if test="api_error_send_email != null">api_error_send_email=#{api_error_send_email,jdbcType=VARCHAR},</if>
+			<if test="is_must_fence_check_arrival != null">is_must_fence_check_arrival=#{is_must_fence_check_arrival,jdbcType=VARCHAR},</if>
+			<if test="is_must_phone_jiaofu != null">is_must_phone_jiaofu=#{is_must_phone_jiaofu,jdbcType=VARCHAR},</if>
+			<if test="show_bill_mode != null">show_bill_mode = #{show_bill_mode},</if>
+			<if test="tihuojiaofu_mode != null">tihuojiaofu_mode = #{tihuojiaofu_mode},</if>
+			<if test="is_auto_generate_yd != null">is_auto_generate_yd = #{is_auto_generate_yd},</if>
+			<if test="is_error_notice != null">is_error_notice = #{is_error_notice},</if>
+			<if test="is_jiaofu_notice != null">is_jiaofu_notice = #{is_jiaofu_notice},</if>
+			<if test="is_must_phone_p_site_fh != null">is_must_phone_p_site_fh = #{is_must_phone_p_site_fh},</if>
+			<if test="is_must_phone_q_site_fh != null">is_must_phone_q_site_fh = #{is_must_phone_q_site_fh},</if>
+		</trim>
+		WHERE SN = #{sn,jdbcType=VARCHAR}
+		and code = #{code,jdbcType=VARCHAR}
+	</update>
+
+</mapper>

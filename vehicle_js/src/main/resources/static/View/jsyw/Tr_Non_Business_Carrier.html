@@ -1,0 +1,870 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+<link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+<link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+<link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+<link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+<title>非商品车业务数据承运商档案</title>
+</head>
+<body style="overflow:hidden">
+<div id="toolbar" class="easyui-panel" style="padding: 4px; border-width:0; border-bottom-width:1px;">
+	<a href="javascript:add();" id="add" class="easyui-linkbutton" style="display: inline-block;" plain="true" iconcls="icon-add">新增行</a>
+	<a href="javascript:remove();" id="delete" class="easyui-linkbutton" style="display: inline-block;" plain="true" iconcls="icon-remove">删除行</a>
+	<a href="javascript:save();" id="save" class="easyui-linkbutton" style="display: inline-block;" plain="true" iconcls="icon-save">保存</a>
+	<a href="javascript:close();" id="close" class="easyui-linkbutton" style="display:inline-block;" plain="true" iconcls="icon-cancel"> 关闭</a>
+</div>
+	<form id="addForm" class="easyui-form" method="post" data-options="novalidate:true">
+		<input type="hidden" id="id" name="id"/>
+		<table class="editTable">
+			<tr>
+				<td class="editRequiredTitle">
+					<label data-locale="ATTRIBUTE"/>
+				</td>
+				<td class="editControl">
+					<input type="text" name="attribute" id="attribute" style="width: 157px;" class="easyui-combobox" validType="length[0,20]" data-options="required:true"/>
+				</td>
+				<td class="editRequiredTitle">
+					<label data-locale="TYPE"/>
+				</td>
+				<td class="editControl">
+					<input type="text" name="type" id="type" style="width: 157px;" class="easyui-combobox" validType="length[0,20]" data-options="required:true"/>
+				</td>
+				<td class="editRequiredTitle">
+					<label data-locale="SERVICE_TYPE"/>
+				</td>
+				<td class="editControl">
+					<input type="text" name="service_type" id="service_type" style="width: 157px;" maxlength="35" data-options="required:true" class="easyui-textbox"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editRequiredTitle">
+					<label data-locale="HANDOVER_NO"/>
+				</td>
+				<td class="editControl">
+					<input type="text" name="handover_no" id="handover_no" style="width: 157px;" maxlength="35" data-options="required:true" class="easyui-textbox"/>
+				</td>
+				<td class="editRequiredTitle">
+					<label data-locale="DEMAND_SECTOR"/>
+				</td>
+				<td class="editControl">
+					<input type="text" name="demand_sector" id="demand_sector" style="width: 157px;" maxlength="35" data-options="required:true" class="easyui-textbox"/>
+				</td>
+				<td class="editRequiredTitle">
+					<label data-locale="APPLICANT"/>
+				</td>
+				<td class="editControl">
+					<input type="text" name="applicant" id="applicant" style="width: 157px;" maxlength="35" data-options="required:true" class="easyui-textbox"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle">
+					<label data-locale="VIN"/>
+				</td>
+				<td class="editControl">
+					<input type="text" name="vin" id="vin" style="width: 157px;"  class="easyui-textbox"/>
+				</td>
+				<td class="editRequiredTitle">
+					<label data-locale="CAR_TYPE"/>
+				</td>
+				<td class="editControl">
+					<input name="car_type" id="car_type" style="width: 157px;" class="easyui-combobox" validType="length[0,20]" data-options="required:true"/>
+				</td>
+				<td class="editRequiredTitle">
+					<label data-locale="PEIZAI_INFO"/>
+				</td>
+				<td class="editControl">
+					<input type="text" name="peizai_info" id="peizai_info" style="width: 157px;" maxlength="35" data-options="required:true" class="easyui-textbox"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editRequiredTitle">
+					<label data-locale="SECRECY_FLAG"/>
+				</td>
+				<td class="editControl"><div id="divSecrecy_flag"></div></td>
+				<td class="editRequiredTitle">
+					<label data-locale="LICENSE_PLATE_FLAG"/>
+				</td>
+				<td class="editControl"><div id="divLicense_plate_flag"></div></td>
+				<td class="editTitle">
+					<label data-locale="UPLOAD_FILES"/>
+				</td>
+				<td class="editControl" id="fileDiv">
+					<div id="divContract_img" style="float: left; width: 70%;"></div>
+					<div class="panel easyui-fluid" style="display: block; width: 30%;float: right">
+						<div id="toolbar1" class="easyui-panel"
+							 style="padding: 0px; border-width: 0; border-bottom-width: 0px;float: left;">
+							<a href="javascript:updateFile();" id="updateFile" class="easyui-linkbutton" style="display: inline-block;" plain="true" iconcls="icon-up"></a>
+							<a href="javascript:downFile();" id="downFile" class="easyui-linkbutton" style="display: inline-block;" plain="true" iconcls="icon-down"></a>
+						</div>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td class="editRequiredTitle">
+					<label data-locale="TRANS_MODE"/>
+				</td>
+				<td class="editControl">
+					<input name="trans_mode" id="trans_mode" style="width: 157px;" class="easyui-combobox" validType="length[0,20]" data-options="required:true"/>
+				</td>
+				<td class="editRequiredTitle">
+					<label data-locale="TRANS_FANGAN"/>
+				</td>
+				<td class="editControl">
+					<input name="trans_fangan" id="trans_fangan" style="width: 157px;" class="easyui-combobox" validType="length[0,20]" data-options="required:true"/>
+				</td>
+				<td class="editTitle">
+					<label data-locale="CAR_NO"/>
+				</td>
+				<td class="editControl">
+					<input type="text" name="car_no" id="car_no" style="width: 157px;" maxlength="35" class="easyui-textbox"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editRequiredTitle">
+					<label data-locale="BEGIN_DATE"/>
+				</td>
+				<td class="editControl">
+					<input type="text" name="begin_date" id="begin_date" class="easyui-datetimebox" style="width: 157px;" data-options="editable:false"/>
+				</td>
+				<td class="editRequiredTitle">
+					<label data-locale="RECEIPT_DATE"/>
+				</td>
+				<td class="editControl">
+					<input type="text" name="receipt_date" id="receipt_date" class="easyui-datetimebox" style="width: 157px;" data-options="editable:false"/>
+				</td>
+				<td class="editTitle">
+					<label data-locale="RECEIPT_SHEET_DATE"/>
+				</td>
+				<td class="editControl">
+					<input type="text" name="receipt_sheet_date" id="receipt_sheet_date" class="easyui-datetimebox" style="width: 157px;" data-options="editable:false"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editRequiredTitle">
+					<label data-locale="CUS_NO"/>
+				</td>
+				<td class="editControl">
+					<input type="text" name="cus_no" id="cus_no" style="width: 157px;" maxlength="35" data-options="required:true" class="easyui-textbox"/>
+				</td>
+				<td class="editRequiredTitle">
+					<label data-locale="CUS_NAME"/>
+				</td>
+				<td class="editControl">
+					<input type="text" name="cus_name" id="cus_name" readonly="readonly" style="width: 157px;" maxlength="35" data-options="required:true" class="easyui-textbox"/>
+				</td>
+				<td class="editRequiredTitle">
+					<label data-locale="JS_JIAGE"/>
+				</td>
+				<td class="editControl">
+					<input type="text" name="js_jiage" id="js_jiage" style="width: 157px;" maxlength="35" data-options="required:true" class="easyui-textbox"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editRequiredTitle">
+					<label data-locale="BEGIN_CITY"/>
+				</td>
+				<td class="editControl">
+					<input name="begin_city" id="begin_city" style="width: 157px;" class="easyui-combobox" validType="length[0,20]" data-options="required:true"/>
+				</td>
+				<td class="editRequiredTitle">
+					<label data-locale="END_CITY"/>
+				</td>
+				<td class="editControl">
+					<input name="end_city" id="end_city" style="width: 157px;" class="easyui-combobox" validType="length[0,20]" data-options="required:true"/>
+				</td>
+				<td class="editRequiredTitle">
+					<label data-locale="UP_JS_QTY"/>
+				</td>
+				<td class="editControl">
+					<input type="text" name="up_js_qty" id="up_js_qty" style="width: 157px;" maxlength="35" data-options="required:true" class="easyui-textbox"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle">
+					<label data-locale="BEGIN_ADDRESS"/>
+				</td>
+				<td class="editControl">
+					<input type="text" name="begin_address" id="begin_address" style="width: 157px;" maxlength="35" class="easyui-textbox"/>
+				</td>
+				<td class="editTitle">
+					<label data-locale="BEGIN_LINK"/>
+				</td>
+				<td class="editControl">
+					<input type="text" name="begin_link" id="begin_link" style="width: 157px;" maxlength="35" class="easyui-textbox"/>
+				</td>
+				<td class="editTitle">
+					<label data-locale="BEGIN_LINK_TEL"/>
+				</td>
+				<td class="editControl">
+					<input type="text" name="begin_link_tel" id="begin_link_tel" style="width: 157px;" maxlength="35" class="easyui-textbox"/>
+				</td>
+
+			</tr>
+			<tr>
+				<td class="editTitle">
+					<label data-locale="END_ADDRESS"/>
+				</td>
+				<td class="editControl">
+					<input type="text" name="end_address" id="end_address" style="width: 157px;" maxlength="35" class="easyui-textbox"/>
+				</td>
+				<td class="editTitle">
+					<label data-locale="END_LINK"/>
+				</td>
+				<td class="editControl">
+					<input type="text" name="end_link" id="end_link" style="width: 157px;" maxlength="35" class="easyui-textbox"/>
+				</td>
+				<td class="editTitle">
+					<label data-locale="END_LINK_TEL"/>
+				</td>
+				<td class="editControl">
+					<input type="text" name="end_link_tel" id="end_link_tel" style="width: 157px;" maxlength="35" class="easyui-textbox"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle" align="right" rowspan="2">
+					<label data-locale="REMARK"/>
+				</td>
+				<td class="editControl" colspan="5">
+					<textarea id="remark" name="remark" rows="2" cols="5" style="width: 100%"></textarea>
+				</td>
+			</tr>
+		</table>
+	</form>
+<div id="gridControl">
+	<table id="gridTable"></table>
+</div>
+<div id="gridPager">
+</div>
+</body>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/regex/regex.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/upload.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/file.js"></script>
+<script language="javascript" type="text/javascript">
+    $(function () {
+        var parms = getUrlParms();
+        id = parms["id"];
+        initScript();
+        initStyle();
+        loadList();
+        initData();
+    });
+
+    $(window).load(function (){hideLoading();});
+
+    function initStyle() {}
+
+    function initScript() {}
+
+    function initData() {
+        /**获取基础档案明细下拉*/
+        getBaseData([{
+            //初始化承运商基础信息
+            dicTypeCode : Global_BaseDataKey.ZD_CARRIER,
+            callback : function(callbackData) {
+                $("#gridTable").setColProp('carrier_no', { edittype: 'select', editoptions : {
+                        value : formatGridCombobox_ServerSelect(callbackData, true, "code", "code"),
+                        dataInit: ComboboxUtils.jqGrid_DefaulDataInit({
+                            data : callbackData,
+                            valueField : "code",
+                            textField : "code",
+                            onSelect:function(record){
+                                var rowid = $(this).parents("tr").attr("id");
+                                $("#gridTable").setRowData(rowid, {
+                                    carrier_name:record.name
+                                });
+                            },
+                        })
+                    }
+                });
+            }
+        },{
+            //初始化客户基础信息,同步处理
+            dicTypeCode : Global_BaseDataKey.CR_CUSTOMER,
+            callback : function(callbackData) {
+                $("#cus_no").combobox({
+                    valueField: 'code',
+                    textField: 'code',
+                    panelHeight: 200,
+                    editable: true,
+                    onSelect : function(e) {
+                        if (e.name)
+                            $("#cus_name").textbox('setValue', e.name);
+                    }
+                });
+                $("#cus_no").combobox("loadData", callbackData);
+                if (id!="") {
+                    loadDetail();
+                }else {
+                    $("#id").val("0");
+                }
+            }
+        }]);
+        getDictionaryData([{
+            //初始化运输方式数据字典
+            dicTypeCode : Global_DicType.TRANS_MODE,
+            callback : function(callbackData) {
+                $("#gridTable").setColProp('trans_mode', { edittype: 'select', editoptions : {
+                        value : formatGridCombobox_ServerSelect(callbackData, true, "dictext", "dictext"),
+                        dataInit: ComboboxUtils.jqGrid_DefaulDataInit({
+                            data : callbackData,
+                            valueField : "dictext",
+                            textField : "dictext",
+                            onSelect : function(row){
+                            }
+                        })
+                    }
+                });
+                $("#trans_mode").combobox({
+                    valueField: 'dictext',
+                    textField: 'dictext',
+                    panelHeight: 200,
+                    panelWidth: 250,
+                    editable: true
+                });
+                $("#trans_mode").combobox("loadData", callbackData);
+            }
+        },{
+            //初始化运输方式数据字典
+            dicTypeCode : Global_DicType.TRANS_FANGAN,
+            callback : function(callbackData) {
+                $("#gridTable").setColProp('trans_fangan', { edittype: 'select', editoptions : {
+                        value : formatGridCombobox_ServerSelect(callbackData, true, "dictext", "dictext"),
+                        dataInit: ComboboxUtils.jqGrid_DefaulDataInit({
+                            data : callbackData,
+                            valueField : "dictext",
+                            textField : "dictext",
+                            onSelect : function(row){
+                            }
+                        })
+                    }
+                });
+                $("#trans_fangan").combobox({
+                    valueField: 'dictext',
+                    textField: 'dictext',
+                    panelHeight: 200,
+                    panelWidth: 250,
+                    editable: true
+                });
+                $("#trans_fangan").combobox("loadData", callbackData);
+            }
+        },{
+            //初始化地点档案数据字典，用于起运地及目的地
+            dicTypeCode : Global_DicType.CITY_ARCHIVE,
+            callback : function(callbackData) {
+                $("#gridTable").setColProp('begin_city', { edittype: 'select', editoptions : {
+                        value : formatGridCombobox_ServerSelect(callbackData, true, "dictext", "dictext"),
+                        dataInit: ComboboxUtils.jqGrid_DefaulDataInit({
+                            data : callbackData,
+                            valueField : "dictext",
+                            textField : "dictext",
+                            onSelect : function(row){
+                            }
+                        })
+                    }});
+                $("#gridTable").setColProp('end_city', { edittype: 'select', editoptions : {
+                        value : formatGridCombobox_ServerSelect(callbackData, true, "dictext", "dictext"),
+                        dataInit: ComboboxUtils.jqGrid_DefaulDataInit({
+                            data : callbackData,
+                            valueField : "dictext",
+                            textField : "dictext",
+                            onSelect : function(row){
+                            }
+                        })
+                    }
+                });
+                $("#begin_city,#end_city").combobox({
+                    valueField: 'dictext',
+                    textField: 'dictext',
+                    panelHeight: 200,
+                    panelWidth: 250,
+                    editable: true
+                });
+                $("#begin_city,#end_city").combobox("loadData", callbackData);
+            }
+        },{
+            //初始化小车车型数据字典
+            dicTypeCode : Global_DicType.CAR_TYPE,
+            callback : function(callbackData) {
+                $("#car_type").combobox({
+                    valueField: 'dictext',
+                    textField: 'dictext',
+                    panelHeight: 200,
+                    panelWidth: 250,
+                    editable: true
+                });
+                $("#car_type").combobox("loadData", callbackData);
+            }
+        },{
+            //初始化车辆项目数据字典
+            dicTypeCode : Global_DicType.Vehicle_Project,
+            callback : function(callbackData) {
+                $("#vehicle_project").combobox({
+                    valueField: 'dicvalue',
+                    textField: 'dictext',
+                    panelHeight: 200,
+                    panelWidth: 250,
+                    editable: true
+                });
+                $("#vehicle_project").combobox("loadData", callbackData);
+            }
+        },{
+            //初始化类型数据字典
+            dicTypeCode : Global_DicType.Non_Type,
+            callback : function(callbackData) {
+                $("#type").combobox({
+                    valueField: 'dicvalue',
+                    textField: 'dictext',
+                    panelHeight: 100,
+                    panelWidth: 200,
+                    editable: true
+                });
+                $("#type").combobox("loadData", callbackData);
+            }
+        },{
+            //初始化属性数据字典
+            dicTypeCode : Global_DicType.Non_Attribute,
+            callback : function(callbackData) {
+                $("#attribute").combobox({
+                    valueField: 'dicvalue',
+                    textField: 'dictext',
+                    panelHeight: 100,
+                    panelWidth: 200,
+                    editable: true
+                });
+                $("#attribute").combobox("loadData", callbackData);
+            }
+        },{
+            dicTypeCode: Global_DicType.Business_JsState,
+            callback: function (callbackData) {
+                window.stateList = {};
+                for(var i = 0; i < callbackData.length; i++){
+                    stateList[callbackData[i].dicvalue] = callbackData[i].dictext;
+                }
+                var formatData = { data: callbackData, needChooseAll: false, defaultValue: "N",
+                    bindBoxName: "divLicense_plate_flag", bindControlPrefix: "license_plate_flag", onClick:function(){
+                    } };
+                var formatData_2 = { data: callbackData, needChooseAll: false, defaultValue: "N",
+                    bindBoxName: "divSecrecy_flag", bindControlPrefix: "secrecy_flag", onClick:function(){
+                    } };
+                formatDefaultRadio_Local(formatData);
+                formatDefaultRadio_Local(formatData_2);
+            }
+        }]);
+    }
+
+    /**新增行明细*/
+    var add = function (vo) {
+        loseGridFocus();
+        $("#gridTable").common_add({
+            data : vo/*,
+            isFirstClick : true*/
+        });
+    };
+
+    //删除行
+    var remove = function() {
+        loseGridFocus();
+        var $gridObject = $("#gridTable");
+        var selectRowItems = $gridObject.jqGrid("getGridParam", "selarrrow");
+        if (selectRowItems.length == 0) {
+            errorNotification({
+                SimpleMessage : "请至少选择一行数据行进行操作"
+            });
+            return;
+        }
+        $.messager.confirm('提示', '确定删除选中的数据项吗?', function(r) {
+            if (r) {
+                for (var i = selectRowItems.length-1; i >= 0;i--) {
+                    $gridObject.jqGrid("delRowData", selectRowItems[i]);
+                }
+            }
+        });
+    };
+
+    function close() {
+        closeDialog("Tr_Non_Business_Carrier");
+    }
+
+    function reset() {
+        loseGridFocus();
+        var newFormData = $('#addForm').serialize();
+        var newgidArry = $("#gridTable").jqGrid("getRowData");
+        var newgridData = JSON.stringify(newgidArry);
+        if (newFormData != originalFormData || newgridData != originalgridData) {
+            $.messager.confirm('提示', '您已经修改部分数据，确定放弃修改并且重置吗?', function (r) {
+                if (r) {
+                    if (id != "") {
+                        loadDetail();
+                    } else {
+                        $('form').form('clear');
+                        initRadioCheckboxData();
+                    }
+                }
+            });
+        }
+    }
+
+    /**验证*/
+    function validate() {
+        var validated = $("#addForm").form('enableValidation').form('validate');
+        if (!validated) {
+            errorNotification({
+                SimpleMessage: "保存操作中部分数据验证不通过"
+            });
+            return false;
+        }
+        loseGridFocus();
+        var errorMessage = "";
+        var gridAllData = $("#gridTable").jqGrid("getRowData");
+        if (gridAllData.length==0) {
+            errorNotification({
+                SimpleMessage: "至少保留一个承运商"
+            });
+            return false;
+		}
+        for (var i = 0; i < gridAllData.length; i++) {
+            var regNotEmpty = new RegExp(regexEnum.notempty);
+
+            if (!regNotEmpty.test(gridAllData[i]["carrier_no"])) {
+                errorMessage += "<p>第" + (i + 1) + "行 承运商编号 不能为空</p>";
+            }
+            if (!regNotEmpty.test(gridAllData[i]["trans_mode"])) {
+                errorMessage += "<p>第" + (i + 1) + "行 运输方式 不能为空</p>";
+            }
+
+        }
+        if (errorMessage.length != "") {
+            errorNotification({
+                SimpleMessage: "验证不通过",
+                MoreMessage: errorMessage
+            });
+            return false;
+        }
+        return true;
+    }
+
+    /**保存*/
+    function save() {
+        if (!validate()) {
+            return;
+        }
+        // 判断jqgrid行
+        $.messager.confirm('提示', '确定保存吗?', function (r) {
+            if (r) {
+                showLoading();
+                afterSave = "close";
+                saveChild();
+            }
+        });
+    }
+
+    function saveChild() {
+        loseGridFocus();
+        var requestParam={};
+        var gridAllData = $("#gridTable").jqGrid("getRowData");
+ /*       for (var i = 0; i < gridAllData.length; i++) {
+            var curRowData = gridAllData[i];
+            if(curRowData.operator == "add"){
+                curRowData.sn = "";
+            }
+            delete curRowData.operator;
+        }*/
+        requestParam.tr_non_businessVO=FormUtils.toJSONObject('form');
+        requestParam.tr_non_Business_CarrierVOList=gridAllData;
+        var file = null;
+        if ($("#file").length) {
+            file = $("#file")[0].files[0];
+        }
+        var formData = new FormData();
+        formData.append("contract_file", file);
+        formData.append("jsonData", JSON.stringify(requestParam));
+        $.ajax({
+            url : "../../jsyw/non_business/saveDetail?t="+ Math.random(),
+            dataType:"json",
+            type : "POST",
+            processData: false,
+            contentType: false,
+            data : formData,
+            success : function(dataObj) {
+                if (isServerResultDataPass(dataObj)) {
+                    correctNotification(dataObj.resultDataFull);
+                    hideLoading();
+                    afterSaveOperate();
+                } else {
+                    hideLoading();
+                    FailResultDataToTip(dataObj);
+                }
+            }
+        });
+    }
+
+    function saveAndAddClear() {
+        if (!validate()) {
+            return;
+        }
+
+        $.messager.confirm('提示', '确定保存吗?', function (r) {
+            if (r) {
+                showLoading();
+                afterSave = "clear";
+                $("#addForm").submit();
+            }
+        });
+    }
+
+    var saveAndAddCopy = function () {
+        if (!validate()) {
+            return;
+        }
+
+        $.messager.confirm('提示', '确定保存吗?', function (r) {
+            if (r) {
+                showLoading();
+                afterSave = "copy";
+                $("#addForm").submit();
+            }
+        });
+    }
+
+    function afterSaveOperate() {
+        switch (afterSave) {
+            case "close":
+                refreshCallerData();
+                close();
+                break;
+            case "clear":
+                $('form').form('clear');
+                $("#id").val("0");
+                $("input", $("#txtCODE").next("span")).removeAttr("readonly");
+                $("#gridTable").jqGrid("clearGridData");
+                refreshCallerData();
+                break;
+            case "copy":
+                $("#id").val("0");
+                $("input", $("#txtCODE").next("span")).removeAttr("readonly");
+                $("#txtCODE").textbox('setValue', '');
+                refreshCallerData();
+                break;
+        }
+    }
+
+    function refreshCallerData() {
+        getCurrentTab().searchData();
+    }
+
+   var loadDetail =function () {
+        //showLoading();
+        var requestParam = {};
+        requestParam.id = id;
+        $.ajax({
+            type : "POST",
+            url : "../../jsyw/non_business/getDetail?t="+ Math.random(),
+            data : JSON.stringify(requestParam),
+            contentType : 'application/json;charset=utf-8', // 设置请求头信息
+            success : function(dataObj) {
+                if (isServerResultDataPass(dataObj)) {
+                    var tr_businessVO = dataObj.resultDataFull.tr_non_businessVO;
+                    var tr_Business_CarrierVOList = dataObj.resultDataFull.tr_non_Business_CarrierVOList;
+                    myDisabled($("#trans_mode,#vin,#attribute,#type,#car_type,#cus_no"))
+                    $("#id").val(tr_businessVO.id);
+                    $("#vin").textbox('setValue', tr_businessVO.vin);
+                    $("#attribute").combobox('setValue', tr_businessVO.attribute);
+                    $("#type").combobox('setValue', tr_businessVO.type);
+                    $("#demand_sector").textbox('setValue', tr_businessVO.demand_sector);
+                    $("#applicant").textbox('setValue', tr_businessVO.applicant);
+                    $("#handover_no").textbox('setValue', tr_businessVO.handover_no);
+                    $("#service_type").textbox('setValue', tr_businessVO.service_type);
+                    $("#car_type").textbox('setValue', tr_businessVO.car_type);
+                    $("#peizai_info").textbox('setValue', tr_businessVO.peizai_info);
+                    $("[name='license_plate_flag'][value='" + tr_businessVO.license_plate_flag + "']").prop("checked", true);
+                    $("[name='secrecy_flag'][value='" + tr_businessVO.secrecy_flag + "']").prop("checked", true);
+                    $("#trans_mode").combobox('setValue', tr_businessVO.trans_mode);
+                    $("#trans_fangan").combobox('setValue', tr_businessVO.trans_fangan);
+                    $("#begin_city").combobox('setValue', tr_businessVO.begin_city);
+                    $("#end_city").combobox('setValue', tr_businessVO.end_city);
+                    $("#begin_address").textbox('setValue', tr_businessVO.begin_address);
+                    $("#begin_link").textbox('setValue', tr_businessVO.begin_link);
+                    $("#begin_link_tel").textbox('setValue', tr_businessVO.begin_link_tel);
+                    $("#end_address").textbox('setValue', tr_businessVO.end_address);
+                    $("#end_link").textbox('setValue', tr_businessVO.end_link);
+                    $("#end_link_tel").textbox('setValue', tr_businessVO.end_link_tel);
+                    $("#cus_no").combobox('setValue', tr_businessVO.cus_no);
+                    $("#cus_name").textbox('setValue', tr_businessVO.cus_name);
+                    $("#car_no").textbox('setValue',tr_businessVO.car_no);
+                    $("#js_jiage").textbox('setValue', tr_businessVO.js_jiage);
+                    $("#up_js_qty").textbox('setValue', tr_businessVO.up_js_qty);
+                    /*$("#vehicle_project").combobox('setValue', tr_businessVO.vehicle_project);*/
+                    if (tr_businessVO.upload_files) {
+                        $("#divContract_img").attr("data_path", tr_businessVO.upload_files);
+                        tr_businessVO.upload_files = tr_businessVO.upload_files.substring(tr_businessVO.upload_files.lastIndexOf("/") + 1);
+                    }
+                    $("#divContract_img").text(tr_businessVO.upload_files || "");
+                    $("#begin_date").textbox("setValue", tr_businessVO.begin_date);
+                    $("#receipt_date").textbox("setValue", tr_businessVO.receipt_date);
+                    $("#receipt_sheet_date").textbox("setValue", tr_businessVO.receipt_sheet_date);
+                   /* $("#data_state").textbox('setValue', tr_businessVO.data_state);
+                    $("#carrier_no").combobox('setValue', tr_businessVO.carrier_no);
+                    $("#carrier_name").textbox('setValue', tr_businessVO.carrier_name);*/
+                    $("#remark").val(tr_businessVO.remark);
+                    $("#gridTable")[0].addJSONData({
+                        rows: tr_Business_CarrierVOList,
+                        total: "1",
+                        page: "1",
+                        records: tr_Business_CarrierVOList.length
+                    });
+                    if(requestParam.msg){
+                        correctNotification(requestParam.msg);
+                    }
+                } else {
+                    FailResultDataToTip(dataObj);
+                }
+                //hideLoading();
+            },
+        });
+    }
+
+    function loadList() {
+        $("#gridTable").jqGrid({
+            url: '',
+            datatype: "json",
+            width: "none",
+            colNames: [
+                /*'operator',*/
+                'id',
+                'M_ID',
+                $.i18n.prop('CARRIER_NO'),
+                $.i18n.prop('CARRIER_NAME'),
+                $.i18n.prop('TRANS_MODE'),
+                $.i18n.prop('TRANS_FANGAN'),
+                $.i18n.prop('BEGIN_CITY'),
+                $.i18n.prop('END_CITY'),
+                $.i18n.prop('DOWN_JS_QTY'),
+                /* $.i18n.prop('CAR_TYPE'),*/
+                $.i18n.prop('BUSINESS_ORDER'),
+                $.i18n.prop('REMARK'),
+                $.i18n.prop('CREATE_BY'),
+                $.i18n.prop('CREATE_DATE')
+			],
+            colModel: [
+                /*{ name: 'operator', index: 'operator', hidden: true, sortable : false, search: false },*/
+                { name: 'id', index: 'id', hidden: true, sortable : false, search: false, key: true },
+                { name: 'm_id', index: 'm_id', hidden: true, sortable : false, search: false, key: true },
+                { name: 'carrier_no', index: 'carrier_no', sortable : false, align: 'center', width: 80, search: true, searchoptions: { sopt : [ 'cn', 'eq', 'ne' ] }, editable:true, editrules:{} },
+                { name: 'carrier_name', index: 'carrier_name', sortable : false, align: 'center', width: 150, search: true, searchoptions: { sopt : [ 'cn', 'eq', 'ne' ] }, editable:false },
+                { name: 'trans_mode', index: 'trans_mode', sortable : false, align: 'center', width: 120, search: true, searchoptions: { sopt : [ 'cn', 'eq', 'ne' ] }, editable:true, editrules:{} },
+                { name: 'trans_fangan', index: 'trans_fangan', sortable : false, align: 'center', width: 120, search: true, searchoptions: { sopt : [ 'cn', 'eq', 'ne' ] }, editable:true, editrules:{} },
+                { name: 'begin_city', index: 'begin_city', sortable : false, align: 'left', width: 100, search: true, searchoptions: { sopt : [ 'cn', 'eq', 'ne' ] }, editable:true, editrules:{} },
+                { name: 'end_city', index: 'end_city', sortable : false, align: 'left', width: 100, search: true, searchoptions: { sopt : [ 'cn', 'eq', 'ne' ] }, editable:true, editrules:{} },
+                { name: 'down_js_qty', index: 'down_js_qty', sortable : false, align: 'left', width: 100, search: true, searchoptions: { sopt : [ 'cn', 'eq', 'ne' ] }, editable:true, editrules:{} },
+                /* { name: 'car_type', index: 'car_type', sortable : false, align: 'left', width: 100, search: true, searchoptions: { sopt : [ 'cn', 'eq', 'ne' ] }, editable:true, editrules:{} },*/
+                { name: 'business_order', index: 'business_order', sortable : false, align: 'center', width: 70, search: true, searchoptions: { sopt : [ 'cn', 'eq', 'ne' ] }, editable:true, editrules:{} },
+                { name: 'remark', index: 'remark', sortable : false, align: 'center', width: 100, search: true, searchoptions: { sopt : [ 'cn', 'eq', 'ne' ] }, editable:true, editrules:{} },
+                { name: 'create_by', index: 'create_by', editable: false, align: 'center', isSort: false, width: 70, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'create_date', index: 'create_date', editable: false, align: 'center', width: 150, isSort: false, type: 'string', search: true, searchoptions: { sopt: ['eq', 'ne', 'lt', 'le', 'gt', 'ge'], dataEvents: [{ type: 'click', data: {}, fn: function () { WdatePicker(); } }]} }
+            ],
+            cellEdit: true,
+            cellsubmit: 'clientArray',
+            shrinkToFit: false,
+            altRows: true,
+            altclass: 'gridSpacingClass',
+            forceFit: true,
+            cellLayout: 0,
+            scroll: false,
+            autowidth: true,
+            sortname: 'id',
+            sortorder: "asc",
+            loadonce: false,
+            mtype: "POST",
+            viewrecords: true,
+            rownumbers: true,
+            multiselect: true,
+            rowNum: 15,
+            height: 378,
+            rowList: [15, 20, 30, 50],
+            pager: "#gridPager",
+            jsonReader: {
+                root: "rows",
+                total: "total",
+                page: "page",
+                records: "records",
+                repeatitems: false
+            },
+            gridComplete: function () {
+                $(".cbox").shiftSelect();
+            },
+            loadComplete: function (xhr) {
+                var gidArry = $("#gridTable").jqGrid("getRowData");
+                originalgridData = JSON.stringify(gidArry);
+                FailResultDataToTip(xhr);
+                hideLoading();
+            },
+            onSelectRow: function (id) {
+            },
+            beforeRequest: function () {
+                $("#gridTable").jqGrid("clearGridData");
+            }
+        });
+        $("#gridTable").jqGrid('navGrid', '#gridPager', { add: false, edit: false, del: false, refresh: true }, {}, {}, {}, { multipleSearch: true, closeOnEscape: true, closeAfterSearch: true });
+        $("#gridTable").jqGrid('navButtonAdd', '#gridPager', {
+            caption: "设置列",
+            title: "Reorder Columns",
+            onClickButton: toggleGridColumns
+        });
+        $("#gridTable").jqGrid('navButtonAdd', '#gridPager', {
+            caption: "快捷搜索",
+            title: "",
+            onClickButton: toggleGridSearchToolbar
+        });
+
+        $('#gridTable').setGridParam({
+            beforeEditCell: function (rowid, cellname, value, iRow, iCol) {
+                savedRow = iRow;
+                savedCol = iCol;
+            }
+        });
+        setGridHeightWidth();
+    }
+
+    function updateFile() {
+        $("#file").remove();
+        $("body").append('<input id="file" type="file" name="file" style="display: none;"  />');
+        $("#file").bind("change", function () {
+            var end_with = "";
+         /*   var lastIndex = file.files[0].name.lastIndexOf(".");
+            if (lastIndex > -1) {
+                end_with = file.files[0].name.substring(lastIndex);
+            } else {
+                end_with = "";
+            }*/
+            $("#divContract_img").text(file.files[0].name);
+        }).click();
+    }
+
+    function downFile() {
+        var data_path = $("#divContract_img").attr("data_path");
+        if (data_path) {
+            location.href = "../../jsyw/business/downloadFile?t=" + Math.random() + "&dataPath=" + data_path;
+        } else {
+            errorNotification({
+                SimpleMessage: "没有文件可以进行下载操作"
+            });
+        }
+    }
+
+</script>
+</html>

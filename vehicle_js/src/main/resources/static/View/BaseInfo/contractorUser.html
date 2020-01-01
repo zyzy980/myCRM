@@ -1,0 +1,287 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+
+    <title>用户明细</title>
+    <style>
+        .seledDe
+        alerNameItem
+        {
+            background-color: rgb(132, 198, 242);
+            font-size: 12px;
+            padding: 3px;
+            display: inline-block;
+            margin-top: 2px;
+            margin-left: 2px;
+            color: White;
+        }
+
+        .seledDealerNameItem a
+        {
+            text-decoration: none;
+            outline: none;
+            width: 20px;
+            display: inline-block;
+            background-color: rgb(132, 198, 242);
+            background-image: url('../../Resource/images/index/closeseled.gif');
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .seledDealerNameItem a:hover
+        {
+            background-color: #315aaa;
+        }
+        body{
+            font-family: '微软雅黑';
+            font-size: 12px;
+            color: #484848;
+        }
+        .l-btn-icon {
+            display: inline-block;
+            width: 35px;
+            height: 30px;
+            line-height: 30px;
+            position: absolute;
+            top: 10%;
+            margin-top: -6px;
+            font-size: 1px;
+        }
+        .l-btn-icon-left .l-btn-icon {
+            left: -6px;
+        }
+    </style>
+</head>
+<body>
+<div id="toolbar" class="easyui-panel" style="padding: 4px; border-width: 0; border-bottom-width: 1px;">
+    #{PAGE_TOOLBAR_BUTTONROLE}
+</div>
+
+<form id="addForm" class="easyui-form" method="post" style="height: 400px;" data-options="novalidate:true">
+    <input type="hidden" value="" id="id" name="id" />
+    <input type="hidden" value="" id="whcenter" name="whcenter" />
+    <!-- <input type="hidden" value="" id="partner_name" name="partner_name" /> -->
+    <!-- <div id="tabYwOrder" class="easyui-tabs" data-options="tabPosition:'top',fit:true,headerWidth:80,tabWidth:110">
+     <div title="主要信息" style="padding: 10px;"> -->
+    <table class="editTable">
+        <tr>
+            <td class="editTitle" style="width:85px;color:red;">
+                <label data-locale="contractorUser_userCode"/>:
+            </td>
+            <td class="editControl">
+                <input type="text" data-locale-missingmessage="contractorUser_userCodeCannotBeEmpty" data-options="required:true" name="userId"
+                       id="txtUserId" class="easyui-textbox" />
+            </td>
+            <td class="editTitle" style="width:85px;color:red;">
+                <label data-locale="contractorUser_userName"/>:
+            </td>
+            <td class="editControl">
+                <input type="text" data-locale-missingmessage="contractorUser_userNameCannotBeEmpty" data-options="required:true" name="realName"
+                       id="txtUserName" class="easyui-textbox" />
+            </td>
+        </tr>
+        <tr>
+            <td class="editTitle" style="color: red;">
+                <label data-locale="contractorUser_password"/>:
+            </td>
+            <td class="editControl">
+                <input type="password" data-locale-missingmessage="contractorUser_passwordCannotBeEmpty" data-options="required:true"
+                       id="password" name="password" class="easyui-textbox" value="" />
+            </td>
+
+            <td class="editTitle">
+                <label data-locale="contractorUser_phone"/>:
+            </td>
+            <td class="editControl">
+                <input type="text" name="mobileNo" id="txtMobileNo" class="easyui-textbox" />
+            </td>
+
+        </tr>
+        <tr style="display: none;">
+            <td class="editTitle">
+                <label data-locale="contractorUser_dep"/>:
+            </td>
+            <td class="editControl">
+                <input type="text" name="dept_id" id="txtDept" class="easyui-textbox" />
+            </td>
+            <td class="editTitle">
+                <label data-locale="contractorUser_position"/>:
+            </td>
+            <td class="editControl">
+                <input type="text" name="position" id="txtPosition" class="easyui-textbox" />
+            </td>
+        </tr>
+        <tr>
+            <td class="editTitle">
+                <label data-locale="sex"/>:
+            </td>
+            <td class="editControl">
+                <input id="SexMan" name="sex" type="radio" value="男" checked="checked" /><label for="SexMan"><label data-locale="contractorUser_male"/></label>
+                &nbsp;&nbsp;&nbsp;
+                <input id="SexWoman" name="sex" type="radio" value="女" /><label for="SexWoman"><label data-locale="contractorUser_female"/></label>
+            </td>
+
+            <td class="editTitle">
+                <label data-locale="contractorUser_birthday"/>:
+            </td>
+            <td class="editControl">
+                <input type="text" name="birthday" id="txtBirthday" data-options="editable:false"
+                       class="easyui-datebox" />
+            </td>
+        </tr>
+        <tr>
+            <td class="editTitle">
+                <label data-locale="contractorUser_wechat"/>:
+            </td>
+            <td class="editControl">
+                <input type="text" name="wechar" id="wechar" class="easyui-textbox" />
+            </td>
+            <td class="editTitle">
+                <label data-locale="contractorUser_mobile"/>:
+            </td>
+            <td class="editControl">
+                <input type="text" name="tel" id="txtTel" class="easyui-textbox" />
+            </td>
+        </tr>
+        <tr>
+            <td class="editTitle">
+                <label data-locale="contractorUser_email"/>:
+            </td>
+            <td class="editControl">
+                <input type="text" name="mail" id="txtMail" class="easyui-textbox" />
+            </td>
+            <td class="editTitle">
+                <label data-locale="contractorUser_fax"/>:
+            </td>
+            <td class="editControl">
+                <input type="text" name="fax" id="txtFax" class="easyui-textbox" />
+            </td>
+        </tr>
+        <tr style="display: none;">
+            <td class="editTitle">
+                <label data-locale="id card"/>:
+            </td>
+            <td class="editControl">
+                <input type="text" name="idcard" id="txtIdcard" class="easyui-textbox" />
+            </td>
+        </tr>
+
+
+        <tr>
+
+            <td class="editTitle">
+                <label data-locale="contractorUser_querySensitiveData"/>:
+            </td>
+            <td class="editControl">
+                <input type="radio" name="sensitive_authority" id="sensitive_authority_y" value="Y"/>&nbsp;<label for="sensitive_authority_y"><label data-locale="contractorUser_yes"/></label>
+                &nbsp;&nbsp;&nbsp;
+                <input type="radio" name="sensitive_authority" id="sensitive_authority_n" value="N" checked />&nbsp;<label for="sensitive_authority_n"><label data-locale="contractorUser_no"/></label>
+            </td>
+
+        </tr>
+        <td class="editTitle">
+            <label data-locale="contractorUser_address"/>:
+        </td>
+        <td class="editControl" colspan="3">
+            <input type="text" name="address" id="address" class="easyui-textbox" style="width: 564px;" />
+        </td>
+        </tr>
+        <tr>
+            <td class="editTitle">
+                <label data-locale="contnractorUser_remark"/>:
+            </td>
+            <td class="editControl" colspan="4">
+                <input type="text" name="remark" id="txtRemark" style="height: 60px; width: 564px;"
+                       data-options="multiline:true" class="easyui-textbox" />
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/upload.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/file.js"></script>
+<!-- <script type="text/javascript" src="../../Resource/js/locationChoose/location.js"></script> -->
+<script type="text/javascript" src="../../Resource/js/cookie/jquery.cookie.js"></script>
+<script type="text/javascript" src="../../Resource/js/jsLinq/linq.js"></script>
+<script language="javascript" type="text/javascript">
+    var code = '';
+    var userCode = 0;
+
+    $(function () {
+        var parms = getUrlParms();
+        code = parms['contractorCode'];
+        userCode = parms["userCode"];
+
+
+        if(userCode == null && userCode == undefined) {
+            $("#id").val(0);
+        }
+
+        $("#close").bind('click',function () {
+            window.parent.close();
+        })
+
+    });
+
+    hideLoading();
+
+    var close = function () {
+        closeDialog("contractorUser");
+    }
+
+    var save = function() {
+        var validated = $("#addForm").form('enableValidation').form('validate');
+        if (!validated) {
+            errorNotification({SimpleMessage: $.i18n.prop('contractorUser_allEmpty')});
+            return;
+        }
+        var userInfo = FormUtils.toJSONObject($("#addForm"));
+        userInfo.isContractor = "Y";
+        userInfo.contractor = code;
+        $.messager.confirm($.i18n.prop('contractorUser_tip'), '#{contractorUser_save}?', function (r) {
+            if(r) {
+                $.ajax({
+                    url: '../../sysInfo/user/addUserDetail?t=' + Math.random(),
+                    type: 'POST',
+                    async: false,
+                    data: "jsonData=" + JSON.stringify(userInfo),
+                    success : function(dataObj) {
+                        hideLoading();
+                        if (isServerResultDataPass(dataObj)) {
+                            correctNotification({ SimpleMessage : $.i18n.prop('contractorUser_saveSuccess')});
+                            //刷新父页面
+                            getCurrentTab().searchData();
+                            close();
+                        } else {
+                            FailResultDataToTip(dataObj);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+
+
+
+</script>
+</html>

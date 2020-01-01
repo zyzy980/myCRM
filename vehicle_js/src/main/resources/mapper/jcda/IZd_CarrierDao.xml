@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace：必须与对应的接口全类名一致 id:必须与对应接口的某个对应的方法名一致 -->
+<mapper namespace="com.bba.jcda.dao.IZd_CarrierDao">
+	<sql id="begin_page">
+		<if test="isPage == true">select A.* from (select rownum rn, T.* from (</if>
+	</sql>
+	<sql id="end_page">
+		<if test="isPage == true">)T where rownum &lt; ${page*rows+1}) A where A.rn >
+			${(page-1)*rows}</if>
+	</sql>
+
+	<!-- 客户-->
+	<sql id="cus_data">
+		 c.type
+		,c.code
+		,c.name
+		,c.tax
+		,c.in_address
+		,c.bank
+		,c.bank_no
+		,c.in_tel
+		,c.status
+		,c.pri
+		,c.city
+		,c.address
+		,c.remark
+		,c.create_by
+		,c.tax_rate
+		,c.create_date
+		,c.id
+		from ZD_CARRIER c
+	</sql>
+
+	<!-- 查询承运商列表 -->
+	<select id="findListForGrid" resultType="com.bba.jcda.vo.Zd_CarrierVO" parameterType="com.bba.util.JqGridParamModel">
+		<include refid="begin_page" />
+		select
+		<include refid="cus_data" />
+		<if test="filters!=null and filters!=''">where ${filters}</if>
+		<include refid="end_page" />
+	</select>
+
+	<!-- 查询客户列表数量 -->
+	<select id="findListForGridCount" resultType="int" parameterType="com.bba.util.JqGridParamModel">
+		select count(*) from (
+		select
+		<include refid="cus_data" />
+		) t
+		<if test="filters!=null and filters!=''">where ${filters}</if>
+	</select>
+
+	<!--查询详情 -->
+	<select id="getDetail" resultType="com.bba.jcda.vo.Zd_CarrierVO" parameterType="com.bba.jcda.vo.Zd_CarrierVO">
+	  	select <include refid="cus_data" /> where 1=1
+		<if test="id!=null and id!='' and id!=0">and id=#{id}</if>
+		<if test="code!=null and code!=''">and code=#{code}</if>
+	</select>
+
+
+	<insert id="insertData" useGeneratedKeys="true" keyProperty="id" parameterType="com.bba.jcda.vo.Zd_CarrierVO">
+		insert into ZD_CARRIER (type,code,name,tax,in_address,bank,bank_no,in_tel,status,pri,city,address,remark,tax_rate,create_by
+		) VALUES (
+			#{type,jdbcType=VARCHAR},#{code,jdbcType=VARCHAR}
+			,#{name,jdbcType=VARCHAR},#{tax,jdbcType=VARCHAR}
+			,#{in_address,jdbcType=VARCHAR},#{bank,jdbcType=VARCHAR}
+			,#{bank_no,jdbcType=VARCHAR},#{in_tel,jdbcType=VARCHAR}
+			,#{status,jdbcType=VARCHAR},#{pri,jdbcType=VARCHAR}
+			,#{city,jdbcType=VARCHAR},#{address,jdbcType=VARCHAR}
+			,#{remark,jdbcType=VARCHAR}
+			,#{tax_rate,jdbcType=VARCHAR},#{create_by,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<!--修改承运商-->
+	<update id="updateData" parameterType="com.bba.jcda.vo.Zd_CarrierVO">
+		update ZD_CARRIER set
+		<trim prefixOverrides=",">
+			<if test="type!=null">,type=#{type}</if>
+			<if test="name!=null">,name=#{name}</if>
+			<if test="tax!=null">,tax=#{tax}</if>
+			<if test="in_address!=null">,in_address=#{in_address}</if>
+			<if test="bank!=null">,bank=#{bank}</if>
+			<if test="bank_no!=null">,bank_no=#{bank_no}</if>
+			<if test="in_tel!=null">,in_tel=#{in_tel}</if>
+			<if test="status!=null">,status=#{status}</if>
+			<if test="pri!=null">,pri=#{pri}</if>
+			<if test="city!=null">,city=#{city}</if>
+			<if test="tax_rate!=null">,tax_rate=#{tax_rate}</if>
+			<if test="address!=null">,address=#{address}</if>
+			<if test="remark!=null">,remark=#{remark}</if>
+		</trim>
+		where id=#{id}
+	</update>
+
+	<!--注销承运商-->
+	<delete id="batchDelete" parameterType="java.util.List">
+		update ZD_CARRIER set status='1'
+		<foreach item="vo" collection="list" open="where" separator="or">
+			id=#{vo.id}
+		</foreach>
+	</delete>
+
+	<!--恢复承运商-->
+	<delete id="batchUpdate" parameterType="java.util.List">
+		update ZD_CARRIER set status='0'
+		<foreach item="vo" collection="list" open="where" separator="or">
+			id=#{vo.id}
+		</foreach>
+	</delete>
+
+	<select id="selectHtList" parameterType="com.bba.jcda.vo.Zd_CarrierVO" resultType="com.bba.ht.vo.Ht_CarrierVO" >
+		select carrier_no from HT_CARRIER where carrier_no = #{code} and (state='0' or state='1')
+	</select>
+</mapper>

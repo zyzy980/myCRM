@@ -1,0 +1,831 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title>仓储中心</title>
+	<link type="text/css" rel="stylesheet" href="../../Resource/css/userWhcenter/gloab.css" />
+	<link type="text/css" rel="stylesheet" href="../../Resource/css/userWhcenter/index.css" />
+	<link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+	<link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+	<link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+	<link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+	<link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+	<link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+</head>
+<body>
+<style>
+body{ background-color:#666;}
+.modal-window{
+	position:relative;
+	margin:40px auto;
+	border-radius: 10px;
+	background:#fff;
+	width:1000px;
+	min-height:400px;
+	box-shadow:0px 0px 3px #aaa;
+	}
+.informationform{
+	margin:0px;
+	padding:15px 80px 10px 10px;
+}
+.ui-pg-selbox{
+	width:50px;
+}
+.l-btn-icon {
+    display: inline-block;
+    width: 35px;
+    height: 30px;
+    line-height: 30px;
+    position: absolute;
+    top: 10%;
+    margin-top: -6px;
+    font-size: 1px;
+}
+.l-btn-icon-left .l-btn-icon {
+    left: -6px;
+}
+</style>
+<div class="modal-window"> <span class="mp-e2e-dialog-close iconfont" id="close"><img src="../../Resource/css/view/img/close.png" /></span>
+  <div class="login-box">
+    <div class="main bgf">
+      <div class="reg-box-pan display-inline">
+        <div class="step">
+          <ul>
+            <li class="step-title on"> <span class="num"><em class="f-r5"></em><i>1</i></span> <span class="line_bg lbg-r"></span>
+              <p class="lbg-txt">新增仓储中心资料</p>
+            </li>
+            <li class="step-title"> <span class="num"><em class="f-r5"></em><i>2</i></span> <span class="line_bg lbg-l"></span> <span class="line_bg lbg-r"></span>
+              <p class="lbg-txt">建立库区、库位档案</p>
+            </li>
+            <li class="step-title"> <span class="num"><em class="f-r5"></em><i>3</i></span> <span class="line_bg lbg-l"></span> <span class="line_bg lbg-r"></span>
+              <p class="lbg-txt">货物档案信息</p>
+            </li>
+            <li class="step-title"> <span class="num"><em class="f-r5"></em><i>4</i></span> <span class="line_bg lbg-l"></span> <span class="line_bg lbg-r"></span>
+              <p class="lbg-txt">确定信息</p>
+            </li>
+            <li class="step-title"> <span class="num"><em class="f-r5"></em><i>5</i></span> <span class="line_bg lbg-l"></span>
+              <p class="lbg-txt">完成</p>
+            </li>
+          </ul>
+        </div>
+        <div class="reg-box" id="verifyCheck" style="margin-top:10px;">
+          <div class="part1">
+            <div class="content-title">
+              <p>新增仓储中心资料</p>
+            </div>
+            <div class="content" style="height:300px;">
+           		<form id="addForm" class="easyui-form" method="post" data-options="novalidate:true">
+					<table class="editTable">
+						<tr>
+							<td class="editRequiredTitle">仓储编号:</td>
+							<td class="editControl"><input id="code" type="text" name="code" class="easyui-textbox" missingmessage="编号不能为空" data-options="required:true"  style="border:1px solid #95b8e7;"/></td>
+							<td class="editTitle">状态:</td>
+							<td class="editControl"><div id="divState">
+								<label style="width: 80px;"><input type="radio" name="state" value="Y" id="state_Y"/>
+	                            <i>✓</i><em class="xk" style="height: 20px; width: 50px;">启用</em> </label>
+	                            <label style="width: 80px;"><input type="radio" name="state" value="N" id="state_N"/>
+	                            <i>✓</i><em class="xk" style="height: 20px;width: 50px;">未启用</em> </label>
+							</div></td>
+						</tr>
+						<tr>
+							<td class="editRequiredTitle">名称:</td>
+							<td class="editControl"><input id="name" type="text" missingmessage="名称不能为空" name="name" class="easyui-textbox" data-options="required:true" style="border:1px solid #95b8e7;" /></td>
+							<td class="editTitle">城市:</td>
+							<td class="editControl"><input type="text" name="city" id="city" class="easyui-textbox" style="border:1px solid #95b8e7;"/></td>
+						</tr>
+						<tr>
+							<td class="editTitle">简称:</td>
+							<td class="editControl"><input type="text" name="shortname" id="shortname" class="easyui-textbox" style="border:1px solid #95b8e7;" /></td>
+							<td class="editTitle">联系人:</td>
+							<td class="editControl"><input type="text" name="default_link" id="default_link" class="easyui-textbox" style="border:1px solid #95b8e7;" /></td>
+						</tr>
+						<tr>
+							<td class="editTitle">经度:</td>
+							<td class="editControl"><input type="text" name="la" id="la" class="easyui-validatebox" style="border:1px solid #95b8e7;" /></td>
+							<td class="editTitle">联系电话:</td>
+							<td class="editControl"><input type="text" name="default_tel" id="default_tel" class="easyui-textbox" style="border:1px solid #95b8e7;" /></td>
+						</tr>
+						<tr>
+							<td class="editTitle">纬度:</td>
+							<td class="editControl"><input type="text" name="lo" id="lo" class="easyui-validatebox" style="border:1px solid #95b8e7;"/></td>
+							<td class="editRequiredTitle">地址:</td>
+							<td class="editControl" colspan="3"><input type="text" missingmessage="地址不能为空" name="address" id="address" data-options="required:true" class="easyui-textbox" style="width: 100%;border:1px solid #95b8e7;" /></td>
+						</tr>
+						<tr>
+							<td class="editTitle">备注:</td>
+							<td class="editControl" colspan="3"><textarea name="remark" id="remark"style="width: 100%; height: 78px;font-size: 14px;border:1px solid #95b8e7;"></textarea></td>
+						</tr>
+					</table>
+				</form>
+            </div>
+            <a href="javascript:;" style="margin-left: 410px;">
+            <span class="btn-primary  btn-next" id="btn_part1">下一步</span>
+            </a>
+           </div>
+          <!--part1-->
+          
+          <div class="part2" style="display:none">
+            <div class="content-title">
+              <p>建立库区、库位档案</p>
+            </div>
+            <div class="content">
+              <div class="archives">
+                <label id="copy_whcenter">
+                  <input type="radio" name="areaLoc" value="copy" style="display: none;"/>
+                  <i>✓</i><em class="xk">复制来源仓储中心</em>
+                  <select class="form-style" id="whcenterSelect">
+                  </select>
+                </label>
+              </div>
+              <div class="archives">
+                <label>
+                  <input type="radio" name="areaLoc" value="automatic" style="display: none;"/>
+                  <i>✓</i><em class="xk">系统自动创建库区信息（S 收货区、K 存放区、D 冻结区、C 出库区）</em> </label>
+              </div>
+              <div class="archives">
+                <label>
+                  <input type="radio" name="areaLoc" value="manual" style="display: none;"/>
+                  <i>✓</i><em class="xk">创建完毕后，手工到库位档案里面录入信息</em></label>
+              </div>
+            </div>
+            <a style="display: inline-block;margin-left: 350px;" href="javascript:;">
+           		<span class="btn-primary  btn-next" id="back1">返回</span>
+           		<span class="btn-primary  btn-next" id="btn_part2">下一步</span>
+            </a>
+             </div>
+            
+          <!--part2-->
+          
+          <div class="part3" style="display:none">
+            <div class="content-title">
+              <p>货物档案信息</p>
+            </div>
+            <div class="copy"> <em class="xk">复制来源仓储中心</em>
+              <select class="form-style" id="whcenterSelect_2">
+              </select>
+              <span class="note">（只能复制货物属性 PUBLIC）</span> </div>
+             <div style="display: table-cell; overflow: hidden; padding: 0px;">
+	              <div style="display: table-cell; overflow: hidden; padding: 0px;">
+		              <div style="border-width: 0; border-bottom-width: 1px;text-align: center;">
+		        				<strong style="color: #87CEEB;">可操作的货物</strong>
+		        	  </div>
+		              <div id="gridControl" style="margin-left: 25px">
+						<table id="gridTable">
+						</table>
+						<div id="gridPager"></div>
+					  </div>
+				  </div>
+				  <div style="display: table-cell; overflow: hidden; padding: 5px;height:300px; width: 50px; text-align: center;">
+	        			<br /><br /><br /><br /><br /><br />
+	        			<a href="javascript:addGoods();" id="add" class="easyui-linkbutton" style="display: nony;" plain="true" iconcls="icon-rightMove"></a>
+	        			<br /><br />
+	        			<a href="javascript:remove();" id="remove" class="easyui-linkbutton" style="display: nony;" plain="true" iconcls="icon-leftMove"></a>
+	        		</div>
+	        		<div style="display: table-cell; overflow: hidden;">
+	        			<div style="border-width: 0; border-bottom-width: 1px;text-align: center;">
+	        				<strong style="color:#87CEEB;">已选择的货物</strong>
+	        			</div>
+	        			<div id="gridControl_select">
+							<table id="gridTable_select">
+							</table>
+							<div id="gridPager_select"></div>
+						</div>
+	        		</div>
+			 </div>
+            <a style="display: inline-block;" href="javascript:;">
+            	<span class="pass" id="pass">跳过</span>
+           		<span class="btn-primary  btn-next" id="back2">返回</span>
+           		<span class="btn-primary  btn-next" id="btn-next">下一步</span>
+            </a>
+            </div>
+          <!--结束-->
+          
+          <div class="part4" style="display:none">
+            <div class="content-title">
+              <p>确定信息</p>
+            </div>
+            <div class="part4-content" style="padding:25px;">
+              <div class="storage-center clearfix"> <span class="center-title">新建立的仓储中心</span>
+              		<span id="newWhcenter" style="border: 1px solid #e3e3e3; padding: 5px 10px 5px 10px;"></span>
+              <!--   <ul>
+                  <li id="newWhcenter"></li>
+                </ul> -->
+              </div>
+              <div class="storage-center clearfix" style="margin-top:20px;"> <span class="center-title">库区的建立方式</span>
+                	<span id="areaLocType" style="border: 1px solid #e3e3e3; padding: 5px 10px 5px 10px;"></span>
+              <!--   <ul>
+                  <li id="areaLocType"></li>
+                </ul> -->
+              </div>
+              <div class="storage-center clearfix" style="margin-top:20px;"> <span class="center-title" id="goodsType">货物的建立方式</span>
+	           		<div id="gridControl_copy" style="margin: 25px 25px 10px;">
+						<table id="gridTable_copy">
+						</table>
+						<div id="gridPager_copy"></div>
+				    </div>
+              </div>
+              <a style="display: inline-block;margin-left: 300px;" href="javascript:;">
+           		<span class="btn-primary  btn-next" id="back3">返回</span>
+           		<span class="btn-primary  btn-next" id="btn_part4">确定</span>
+              </a>
+              </div>
+          </div>
+          <div class="part5" style="display:none">
+            <div class="content-title">
+              <p>完成</p>
+            </div>
+            <div class="content" style="text-align:center; padding:80px 50px 100px; "> <img src="../../Resource/css/view/img/complete.png" />
+              <p class="complete-text">仓储中心设置完成</p>
+            </div>
+            <a href="javascript:;" style="margin-left: 410px;">
+            <span class="btn-primary  btn-next" id="btn_part5">完成</span>
+          	</a>
+          	 </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script src="../../Resource/js/register.js"></script>
+<script type="text/javascript" src="../../Resource/js/jsLinq/linq.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/regex/regex.js"></script>
+<script language="javascript" type="text/javascript">
+var idList = [];//货物id
+var tempWz_WhcenterVO = {};//临时仓储中心数据
+$(function(){	
+	initData();
+	initScript();
+	//第一页的确定按钮
+	$("#btn_part1").click(function(){						
+		if(!verifyCheck._click()) return;
+		if (!validate()) {
+			return;
+		}
+		if(!isExistWhcenter()) {
+			return;
+		}
+		$(".part1").hide();
+		$(".part2").show();
+		$(".step li").eq(1).addClass("on");
+	});
+	
+	//第二页返回
+	$("#back1").click(function(){			
+		if(!verifyCheck._click()) return;
+		$(".part2").hide();
+		$(".part1").show();
+		$(".step li").eq(1).removeClass("on");	
+	});	
+	
+	//第二页的确定按钮
+	$("#btn_part2").click(function(){			
+		if(!verifyCheck._click()) return;
+		if (isSelect()) {
+			errorNotification({
+				SimpleMessage : "请选择库区、库位档案建立的方式"
+			});
+			return;
+		}
+		$(".part2").hide();
+		$(".part3").show();
+		$(".step li").eq(2).addClass("on");	
+	});	
+	
+	//第三页返回
+	$("#back2").click(function(){			
+		if(!verifyCheck._click()) return;
+		$(".part3").hide();
+		$(".part2").show();
+		$(".step li").eq(2).removeClass("on");	
+	});
+	
+	//第三页的确定按钮
+	$("#btn-next").click(function(){			
+		if(!verifyCheck._click()) return;
+		$(".part3").hide();
+		$(".part4").show();	
+		$(".step li").eq(3).addClass("on");
+		confirmData();
+	});	
+	$("#pass").click(function(){	
+		if(!verifyCheck._click()) return;
+		$(".part3").hide();
+		$(".part4").show();	
+		$(".step li").eq(3).addClass("on");
+		confirmData();
+	});	
+	
+	//第四页返回
+	$("#back3").click(function(){			
+		if(!verifyCheck._click()) return;
+		$(".part4").hide();
+		$(".part3").show();
+		$(".step li").eq(3).removeClass("on");	
+	});
+	
+	//第四页的确定按钮
+	$("#btn_part4").click(function(){	
+		save();
+	});	
+	
+	
+	//第五页的确定按钮
+	$("#btn_part5").click(function(){			
+		/* if(!verifyCheck._click()) return;
+		$(".part5").hide();
+		$(".part6").show();
+		$(".step li").eq(5).addClass("on"); */
+		closeDialog("SysUserWhcenter_add");
+	});
+	
+	//关闭
+	$("#close").click(function(){
+		closeDialog("SysUserWhcenter_add");
+	});
+	
+    $("select#whcenterSelect_2").change(function(){
+    	var gridAllData = $("#gridTable_select").jqGrid("getRowData");
+    	if (gridAllData.length > 0) {
+   		   $.messager.confirm('提示', '切换仓储中心会清空已选择的货物,是否继续?', function (r) {
+   	   	        if (r) {	
+   	   	      		jQuery("#gridTable_select").jqGrid("clearGridData");
+   	   	        }
+   	   	    });
+    	}
+		searchData();
+	});
+	
+});
+
+//获取来源仓储中心下拉框
+$.ajax({
+	url : "../../bzbhInfo/wz_whcenter/findAllWhcenter",
+	data : '',
+	async : false,
+	type : "POST",
+	success:function(dataObj){
+		if (dataObj.length > 0){
+			var a = 1;
+			Enumerable.From(dataObj).Where(function(i) {
+				return true;
+			}).ToArray().forEach(function(i) {
+			$("#whcenterSelect").append('<option value="'+i.code+'">'+i.code+'--'+i.name+'</option>');
+			$("#whcenterSelect_2").append('<option value="'+i.code+'">'+i.code+'--'+i.name+'</option>');
+			});
+        }else{
+        	$("#copy_whcenter").find("input:radio").attr("disabled","disabled");
+            FailResultDataToTip(dataObj);
+        }
+        
+	}
+});
+
+$(window).load(function() {
+	showLoading();
+	hideLoading(); // 隐藏加载的圈圈
+});
+
+var initData = function() {
+	$("#state_Y").click();
+	loadList();
+	loadTemporaryList();
+	loadSelectList();
+
+}
+
+var initScript = function() {
+}
+var oldSetGridHeightWidth = setGridHeightWidth;
+var setGridHeightWidth = function() {
+		 oldSetGridHeightWidth(745,400);
+}
+
+var autoWidthHeight=function(){
+	oldSetGridHeightWidth(745,400,"gridTable_select");
+}
+
+var isExistWhcenter = function () {
+	var wz_WhcenterVO = {};
+	var isExist = true;
+	wz_WhcenterVO.code = $("#code").textbox('getValue');
+	$.ajax({
+		url : "../../bzbhInfo/wz_whcenter/isExistWhcenter?t=" + Math.random(),
+		contentType : 'application/json;charset=utf-8', // 设置请求头信息
+		data : JSON.stringify(wz_WhcenterVO),
+		async : false,
+		type : "POST",
+		success:function(dataObj){
+			if (dataObj=="") {
+				return true;
+	        }else{
+	        	isExist = false;
+	        	FailResultDataToTip(dataObj);
+	        }
+		}
+	});
+	return isExist;
+}
+
+
+var validate = function() {
+	var validated = $("#addForm").form('enableValidation').form('validate');
+	if (!validated) {
+		errorNotification({
+			SimpleMessage : "保存操作中部分数据验证不通过"
+		});
+		return false;
+	}
+	return true;
+}
+
+var isSelect = function(){
+	  var radios = document.getElementsByName("areaLoc");
+	  for ( var i = 0; i < radios.length; i++) {
+	  if (radios[i].checked==true) {
+		  return false;
+	   		}
+	  }
+	  return true;
+	 }
+
+var getSearchGridUrl = function(index) {
+	return '../../bzbhInfo/Wz_Ownergoods/getWhcenterGoodsGrid?customSearchFilters=' + getSearchFilters(index);
+}
+
+var getSearchFilters = function (index) {
+	var parmsArray = [
+						{name : 'state',value : 'Y',op : "eq"},
+						{name : 'whcenter',value : $("#whcenterSelect_2 option:selected").val(),op : "eq"},
+						{name : 'attribute',value :'PUBLIC',op : "eq"},
+				];
+	if(index == 1) {
+		if(idList.length > 0) {
+			parmsArray.push({
+				name : 'id' , value : idList , op : "in"
+			});
+		}
+	}
+     return formatSearchParames(parmsArray);
+};
+
+//可选择的货物
+var loadList = function() {
+	$("#gridTable").jqGrid({
+				url : getSearchGridUrl(0),
+				datatype : "json",
+				width : "none",
+				colNames : [ '仓储中心', '货主编号', '货物编号', '货物名称', 'id' ],
+				colModel : [ 
+							 { name:  'whcenter', index: 'whcenter',align: 'center', sorttype: 'string',search: false, sortable: true, width: 50,hidden : true },
+							 { name : 'owner_code', index : 'owner_code', editable : false, edittype : 'text', align : 'center', sorttype : 'int', search : false, sortable : true, width : 20, hidden : true },
+							 { name : 'goods_no', index : 'goods_no', editable : false, edittype : 'text', align : 'center', sorttype : 'int', search : true, sortable : true, width : 150, searchoptions : { sopt : [ 'cn', 'eq', 'ne' ] }},
+				             { name : 'goods_name', index : 'goods_name', editable : false, edittype : 'text', align : 'center', sorttype : 'int', search : true, sortable : true, width : 200, searchoptions : { sopt : [ 'cn', 'eq', 'ne' ] } },
+				             { name : 'id', index : 'id', align : 'center',hidden : true, width : 20, type : 'string', search : true, searchoptions : { sopt : [ 'cn', 'eq', 'ne' ] } }
+				             ],
+							cellsubmit : 'clientArray',
+							shrinkToFit : false,
+							altRows : true,
+							altclass : 'gridSpacingClass',
+							forceFit : true,
+							cellLayout : 0,
+							scroll : false,
+							autowidth : true,
+							sortname : "id",
+							sortorder : "asc",
+							loadonce : false,
+							mtype : "POST",
+							viewrecords : true,
+							rownumbers : true,
+							multiselect : true,
+							rowNum : 15,
+							rowList : [ 15, 20, 30, 50 ],
+							pager : "#gridPager",
+							jsonReader : {
+								root : "rows",
+								total : "total",
+								page : "page",
+								records : "records",
+								repeatitems : false
+							},
+		gridComplete: function () {
+            $(".cbox").shiftSelect();
+        },
+    	onCellSelect:function(rowid,iCol,cellcontent,e){
+	    	   checkboxJqgrid(rowid,iCol,cellcontent,e);
+	        },
+        loadComplete: function (xhr) {
+        	FailResultDataToTip(xhr);
+        }
+	});
+	/* $("#gridTable").jqGrid('navGrid', '#gridPager', { add: false, edit: false, del: false, refresh: true }, {}, {}, {}, { multipleSearch: true, closeOnEscape: true, closeAfterSearch: true });
+    $("#gridTable").jqGrid('navButtonAdd', '#gridPager', {
+        caption: "设置列",
+        title: "Reorder Columns",
+        onClickButton: toggleGridColumns
+    }); 
+	$('#gridTable').setGridParam({
+		beforeEditCell : function(rowid, cellname, value, iRow, iCol) {
+			savedRow = iRow;
+			savedCol = iCol;
+		}
+	});
+    $("#gridTable").jqGrid('navButtonAdd', '#gridPager', {
+        caption: "快捷搜索",
+        title: "",
+        onClickButton: toggleGridSearchToolbar
+    }); */
+    setGridHeightWidth();
+};
+
+//暂时选中的货物信息
+var loadTemporaryList = function() {
+	$("#gridTable_select").jqGrid({
+				url : '',
+				datatype : "json",
+				width : "none",
+				colNames : [ '仓储中心', '货主编号', '货物编号', '货物名称', 'id', 'operator' ],
+				colModel : [ 
+							 { name:  'whcenter', index: 'whcenter',align: 'center', sorttype: 'string',search: false, sortable: true, width: 50,hidden : true },
+							 { name : 'owner_code', index : 'owner_code', editable : false, edittype : 'text', align : 'center', sorttype : 'int', search : false, sortable : true, width : 20, hidden : true },
+							 { name : 'goods_no', index : 'goods_no', editable : false, edittype : 'text', align : 'center', sorttype : 'int', search : true, sortable : true, width : 150, searchoptions : { sopt : [ 'cn', 'eq', 'ne' ] } },
+				             { name : 'goods_name', index : 'goods_name', editable : false, edittype : 'text', align : 'center', sorttype : 'int', search : true, sortable : true, width : 200, searchoptions : { sopt : [ 'cn', 'eq', 'ne' ] } },
+				             { name : 'id', index : 'id', align : 'center',hidden : true, width : 20, type : 'string', search : true, searchoptions : { sopt : [ 'cn', 'eq', 'ne' ] } },
+				             { name: 'operator', index: 'operator', hidden: true, search: false,}
+				             ],
+							cellsubmit : 'clientArray',
+							shrinkToFit : false,
+							altRows : true,
+							altclass : 'gridSpacingClass',
+							forceFit : true,
+							cellLayout : 0,
+							scroll : false,
+							autowidth : true,
+							sortname : "id",
+							sortorder : "asc",
+							loadonce : false,
+							mtype : "POST",
+							viewrecords : true,
+							rownumbers : true,
+							multiselect : true,
+							rowNum : 15,
+							rowList : [ 15, 20, 30, 50 ],
+							pager : "#gridPager_select",
+							jsonReader : {
+								root : "rows",
+								total : "total",
+								page : "page",
+								records : "records",
+								repeatitems : false
+							},
+		gridComplete: function () {
+            $(".cbox").shiftSelect();
+        },
+    	onCellSelect:function(rowid,iCol,cellcontent,e){
+	    	   checkboxJqgrid(rowid,iCol,cellcontent,e);
+	        },
+        loadComplete: function (xhr) {
+        	FailResultDataToTip(xhr);
+        }
+	});
+    autoWidthHeight();
+};
+
+//选择货物临时货物
+var addGoods = function () {
+	var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow"); //获取一行的值
+	if (!selectRowItems.length > 0) {
+	    errorNotification({
+	        SimpleMessage: "请至少选择一行数据行进行操作"
+	    });
+	    return;
+	}
+    $.messager.confirm('提示', '确认选择的内容吗？', function (r) {
+        if (r) {	
+        	
+        	var Goods_Array = [];        	
+        	for(var i=0;i<selectRowItems.length;i++){
+        		var rowData = $("#gridTable").jqGrid('getRowData', selectRowItems[i]);
+        		Goods_Array.push(rowData);
+        	}
+        	refreshCallerData_ForGoods(Goods_Array);
+        }
+    });
+}
+//判断重复
+function contains(arr, obj) {  
+    var i = arr.length;  
+    while (i--) {  
+        if (arr[i].goods_no === obj.goods_no && arr[i].owner_code === obj.owner_code) {  
+            return false;  
+        }  
+    }  
+    return true;  
+}  
+
+var refreshCallerData_ForGoods = function(Goods_Array){
+		for(var i = 0; i < Goods_Array.length;i++) {
+			var gridAllData = $("#gridTable_select").jqGrid("getRowData");
+			if (gridAllData.length > 0) {
+    			if (!contains(gridAllData, Goods_Array[i])) {
+        			continue;
+        		} 
+			}
+			
+			var ids = $("#gridTable_select").jqGrid('getDataIDs');
+		    var rowid = Math.max.apply(Math, ids);
+		    if (rowid == "-Infinity")
+		        rowid = 0;
+		    var newrowid = rowid + 1;
+		    var dataRow = {
+		   		operator:"add",
+		   		id : Goods_Array[i].id,
+		   		whcenter : Goods_Array[i].whcenter,
+		   		owner_code : Goods_Array[i].owner_code,
+		   		goods_no : Goods_Array[i].goods_no,
+		   		goods_name : Goods_Array[i].goods_name
+		    };
+		    console.log(dataRow);
+		    $("#gridTable_select").jqGrid("addRowData", newrowid, dataRow, "last");
+		}
+}
+
+//删除
+var remove = function () {
+	var selectRowItems = $("#gridTable_select").jqGrid("getGridParam", "selarrrow");
+    if (!selectRowItems.length > 0) {
+        errorNotification({
+            SimpleMessage: "请至少选择一行数据行进行操作"
+        });
+        return;
+    }
+    var rowData = $("#gridTable_select").jqGrid("getRowData", selectRowItems[0]);
+       	 for (var i = selectRowItems.length-1; i >= 0;i--) {
+                 var rowData = $("#gridTable_select").jqGrid("getRowData", selectRowItems[i]);
+                 $("#gridTable_select").jqGrid("delRowData", selectRowItems[i]);
+             }
+}
+
+
+function searchData() {
+	$("#gridTable").jqGrid('setGridParam', {
+		url : getSearchGridUrl(),// 跳到查询的中间处理页传递参数和
+		datatype : 'json',
+		page : 1
+	}).trigger("reloadGrid"); // trigger() 方法触��被选元素的指定事件类型。
+}
+
+function searchData_copy() {
+	$("#gridTable_copy").jqGrid('setGridParam', {
+		url : getSearchGridUrl(1),// 跳到查询的中间处理页传递参数和
+		datatype : 'json',
+		page : 1
+	}).trigger("reloadGrid"); // trigger() 方法触发被选元素的指定事件类型。
+}
+
+//确认信息
+var confirmData = function () {
+	//仓储中心
+	if($("#code").textbox("getValue")!="") {
+		$("#newWhcenter").html('编号：'+$("#code").textbox("getValue")+'，名称：'+$("#name").textbox("getValue"));
+	}
+	//库区库位方式
+	var type  = $("[class=archives]").find("[name=areaLoc]:checked").val();
+	if (type == 'copy') {
+		$("#areaLocType").html('复制来源仓储中心');
+	} else if (type == 'automatic') {
+		$("#areaLocType").html('系统自动创建库区信息（S 收货区、K 存放区、D 冻结区、C 出库区）');
+	} else {
+		$("#areaLocType").html('创建完毕后，手工到库位档案里面录入信息');
+	}
+	
+	idList = [];
+	var gridAllData = $("#gridTable_select").jqGrid("getRowData");
+	if (gridAllData.length > 0) {
+		for (var i = 0; i < gridAllData.length; i++) {
+			idList.push(gridAllData[i].id);
+		}
+	}
+	if (idList.length > 0) {
+		$("#goodsType").html('货物的建立方式');
+		$("#gridControl_copy").css('display','block');
+		tempWz_WhcenterVO.tempNO = 'Y';
+		searchData_copy();
+	} else { //跳过
+		jQuery("#gridTable_copy").jqGrid("clearGridData");
+		$("#goodsType").html('货物的建立方式（未设置）');
+		$("#gridControl_copy").css('display','none');
+		tempWz_WhcenterVO.tempNO = 'N';
+	}
+}
+
+
+//选中的货物信息
+var loadSelectList = function() {
+	$("#gridTable_copy").jqGrid({
+				url : '',
+				datatype : "json",
+				width : "none",
+				colNames : [ '货主编号', '货主名称',  '货物编号', '货物名称', 'id' ],
+				colModel : [ 
+				             { name : 'owner_code', index : 'owner_code', editable : false, edittype : 'text', align : 'center', sorttype : 'int', search : true, sortable : true, width : 200, searchoptions : { sopt : [ 'cn', 'eq', 'ne' ] } },
+				             { name : 'name', index : 'name', editable : false, edittype : 'text', align : 'center', sorttype : 'int', search : true, sortable : true, width : 230, searchoptions : { sopt : [ 'cn', 'eq', 'ne' ] } },
+				             { name : 'goods_no', index : 'goods_no', editable : false, edittype : 'text', align : 'center', sorttype : 'int', search : true, sortable : true, width : 200, searchoptions : { sopt : [ 'cn', 'eq', 'ne' ] } },
+				             { name : 'goods_name', index : 'goods_name', editable : false, edittype : 'text', align : 'center', sorttype : 'int', search : true, sortable : true, width : 230, searchoptions : { sopt : [ 'cn', 'eq', 'ne' ] } },
+				             { name : 'id', index : 'id', align : 'center',hidden : true, width : 120, type : 'string', search : true, searchoptions : { sopt : [ 'cn', 'eq', 'ne' ] } }
+				             ],
+							cellsubmit : 'clientArray',
+							shrinkToFit : false,
+							altRows : true,
+							altclass : 'gridSpacingClass',
+							forceFit : true,
+							cellLayout : 0,
+							scroll : false,
+							autowidth : true,
+							sortname : "id",
+							sortorder : "asc",
+							loadonce : false,
+							mtype : "POST",
+							viewrecords : true,
+							rownumbers : true,
+							multiselect : true,
+							rowNum : 15,
+							rowList : [ 15, 20, 30, 50 ],
+							pager : "#gridPager_copy",
+							jsonReader : {
+								root : "rows",
+								total : "total",
+								page : "page",
+								records : "records",
+								repeatitems : false
+							},
+		gridComplete: function () {
+            $(".cbox").shiftSelect();
+        },
+    	onCellSelect:function(rowid,iCol,cellcontent,e){
+	    	   checkboxJqgrid(rowid,iCol,cellcontent,e);
+	        },
+        loadComplete: function (xhr) {
+        	FailResultDataToTip(xhr);
+        }
+	});
+    //autoWidthHeight();
+};
+
+//创建完成
+function loadform() {
+	$('#addForm').form({
+		url : "../../bzbhInfo/wz_whcenter/createNewWhcenter?tempWz_WhcenterVO="+JSON.stringify(tempWz_WhcenterVO)+ '&t=' + Math.random(),
+		onSubmit : function() {
+		},
+		success : function(data) {
+			var dataObj = eval('(' + data + ')');
+			if (isServerResultDataPass(dataObj)) {
+				correctNotification(dataObj.resultDataFull);
+				showLoading();
+				hideLoading();
+			} else {
+				showLoading();
+				hideLoading();
+				FailResultDataToTip(dataObj);
+			}
+		}
+	});
+}
+
+var save = function() {
+	$.messager.confirm('提示', '确定保存吗?', function(r) {
+		if (r) {
+			showLoading();
+			var type  = $("[class=archives]").find("[name=areaLoc]:checked").val();
+			tempWz_WhcenterVO.whcenter = $("#code").textbox("getValue");
+			tempWz_WhcenterVO.FromWH = (type=='copy' ? $("#whcenterSelect option:selected").val() : 'N' );
+			tempWz_WhcenterVO.AutoLoca = (type=='automatic' ? 'Y' : 'N' );
+			tempWz_WhcenterVO.ids = idList;
+			$("#addForm").submit();  
+			loadform();
+			hideLoading();
+			if(!verifyCheck._click()) return;
+			$(".part4").hide();
+			$(".part5").show();	
+			$(".step li").eq(4).addClass("on");
+		} 
+	});
+};
+
+</script>
+</body>
+</html>

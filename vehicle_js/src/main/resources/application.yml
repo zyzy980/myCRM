@@ -1,0 +1,13 @@
+spring:
+    profiles:
+        #dev----开发
+        #wkcytest----微科质量测试
+        #cmscltest----CMSCL测试
+        #pro----生产
+        active: pro
+swagger:
+    production: false
+    basic:
+        enable: true
+        username: admin
+        password: 1

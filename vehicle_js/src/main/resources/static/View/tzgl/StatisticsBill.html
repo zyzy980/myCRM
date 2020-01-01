@@ -1,0 +1,314 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+    <link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />    
+    <link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/moment/css/daterangepicker.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/fileUpload/css/fileUpload.css" />
+    <title>可生成台账的统计表</title>
+</head>
+<body>
+    <div id="toolbar" class="easyui-panel" style="padding: 4px; border-width:0; border-bottom-width:1px;">
+        #{PAGE_TOOLBAR_BUTTONROLE}
+    </div>
+    <div class="searchParamesPanel">
+        <table id="searchParamesTable">
+            <tr class="searchParamesTrShow">
+                <td class="searchParamesTdControl">
+                    <input type="text" id="common_sheet_title" class="easyui-textbox" style="width: 180px" />
+                </td>
+                <td class="searchParamesTdControl">
+                    <div id="divVehicle_Project"></div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="gridControl">
+        <table id="gridTable">
+        </table>
+        <div id="gridPager">
+        </div>
+    </div>
+    <div id="fileUpload" style="position: absolute; left: 50%; top: 50%;
+	 width: 600px; height: 400px; margin-left: -300px; margin-top: -200px; display: none;"></div>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/moment/js/moment.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/moment/js/jquery.daterangepicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/upload.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/file.js"></script>
+<script language="javascript" type="text/javascript">
+    $(function () {
+        initScript();
+        initData();
+        initStyle();
+    });
+
+    $(window).load(function () {
+        hideLoading();
+    });
+
+    var initStyle = function () {
+        $("#common_sheet_title").textbox({
+            prompt: "账单编号"
+        });
+        enterTriggerEvent("searchParamesTable", "searchData");
+    }
+
+    var initScript = function() {
+        $(window).resize(function() {
+            setGridHeightWidth();
+            setToolbarHeightWidth();
+        });
+    };
+
+    var initData = function () {
+        getDictionaryData([{
+            //初始化数据字典
+            dicTypeCode : Global_DicType.Dz_State,
+            ADD_ALL: true,
+            callback : function(callbackData) {
+                window.stateMap = {};
+                for(var i = 0; i < callbackData.length; i++){
+                    stateMap[callbackData[i].dicvalue] = callbackData[i].dictext;
+                }
+                $("#state").combobox({
+                    valueField: 'dicvalue',
+                    textField: 'dictext',
+                    panelHeight: 80,
+                    editable: true,
+                    onSelect:function(record){
+                        searchData();
+                    }
+                });
+                $("#state").combobox("loadData", callbackData);
+            }
+        },{
+            //车辆项目
+            dicTypeCode : Global_DicType.Vehicle_Project,
+            callback : function(callbackData) {
+                window.Vehicle_ProjectList = {};
+                for(var i = 0; i < callbackData.length; i++){
+                    Vehicle_ProjectList[callbackData[i].dicvalue] = callbackData[i].dictext;
+                }
+                var formatData = { data: callbackData, needChooseAll: false, chooseAllValue: "", defaultValue: "1",
+                    bindBoxName: "divVehicle_Project", bindControlPrefix: "vehicle_project", onClick:function(){
+                        searchData();
+                    } };
+                formatDefaultRadio_Local(formatData);
+            }
+        }]);
+
+        loadList();
+    }
+
+    function searchData() {
+        $("#gridTable").jqGrid('setGridParam', {
+            url: getSearchGridUrl(),
+            datatype: 'json',
+            postData: { "filters": "" },
+            page: 1
+        }).trigger("reloadGrid");
+    }
+
+    // 获取查询URL
+    var getSearchGridUrl = function() {
+        var customSearchFilters = encodeURI(getSearchFilters());
+        return '../../tzgl/AccountsToLedger/getStatisticsListForGrid?' + Math.random() + '&customSearchFilters=' + customSearchFilters
+            +"&project="+$("[name=vehicle_project]:checked").val();
+    };
+
+    function getSearchFilters() {
+        var parmsArray = [
+            { name : 'bill_number',value : $("#common_sheet_title").textbox('getValue'),op : "cn"}
+        ];
+        return formatSearchParames(parmsArray);
+    }
+
+    function loadList() {
+        $("#gridTable").jqGrid({
+            url: getSearchGridUrl(),
+            datatype: "json",
+            width: "none",
+            colNames: [
+                $.i18n.prop('STATE'),
+                $.i18n.prop('PROJECT'),
+                $.i18n.prop('BILL_NUMBER'),
+                $.i18n.prop('NOT_TAX_AMOUNT'),
+                $.i18n.prop('TAX_AMOUNT')
+            ],
+            colModel: [
+                { name: 'state', index : 'state', align : 'center', isSort : false, width : 60, type: 'string', search : true, searchoptions : { sopt: ['cn', 'eq', 'ne']},
+                    formatter : function(value, grid, rows) {
+                     return window.stateMap[value];
+                }},
+                { name: 'project', index : 'project', align : 'center', sortable : false, width : 60, type: 'string', search : true, searchoptions : { sopt: ['cn', 'eq', 'ne']},
+                    formatter : function(value, grid, rows) {
+                        return window.Vehicle_ProjectList[value];
+                }},
+                { name: 'bill_number', index : 'bill_number', align : 'center', issort : false, width : 200, type: 'string', search : true, searchoptions : { sopt: ['cn', 'eq', 'ne']},key:true},
+                { name: 'not_tax_amount', index: 'not_tax_amount', align: 'center', width: 100, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'tax_amount', index: 'tax_amount', align: 'center', width: 100, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} }
+
+            ],
+            shrinkToFit: false,
+            altRows: true,
+            altclass: 'gridSpacingClass',
+            forceFit: true,
+            cellLayout: 0,
+            scroll: false,
+            autowidth: true,
+            sortname: 'bill_number',
+            sortorder: "desc",
+            loadonce: false,
+            mtype: "POST",
+            viewrecords: true,
+            rownumbers: true,
+            multiselect: true,
+            rowNum: 15,
+            height: "100%",
+            rowList: [100, 200, 300, 500],
+            pager: "#gridPager",
+            jsonReader: {
+                root: "rows",
+                total: "total",
+                page: "page",
+                records: "records",
+                repeatitems: false
+            },
+            gridComplete: function () {
+                $(".cbox").shiftSelect();
+                afterRedRow();
+            },
+            ondblClickRow: function (id) {
+                showChildModule(id);
+            },
+            loadComplete: function (xhr) {
+                $('.gridViewPicLink').tooltip({
+                    position: 'bottom',
+                    content: $(this).attr("title"),
+                    onShow: function () {
+                        $(this).tooltip('tip').css({
+                            backgroundColor: '#FCF8E3',
+                            borderColor: '#FAEBCC'
+                        });
+                    }
+                });
+                FailResultDataToTip(xhr);
+            }
+        });
+        $('#gridTable').jqGrid('navGrid', '#gridPager',{
+            add : false,
+            edit : false,
+            del : false,
+            refresh : true
+        }, {}, {}, {}, {
+            multipleSearch : true,
+            closeOnEscape : true,
+            closeAfterSearch : true
+        });
+        $('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+            caption : $.i18n.prop('TOGGLE_GRID_COLUMNS'),
+            title : 'Set Columns',
+            onClickButton : toggleGridColumns
+        });
+        $('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+            caption : $.i18n.prop('TOGGLE_GRID_SEARCH_TOOLBAR'),
+            title : 'Quick Search',
+            onClickButton : toggleGridSearchToolbar
+        });
+        $('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+            caption: $.i18n.prop('EXPORT_TO_EXCEL'),// 导出数据
+            title: '可生成台账的账单编号',
+            buttonicon: 'ui-icon-disk',
+            onClickButton: function () {
+                ExportToExcel.call(this, {
+                    FiledData: [{
+                        data_dictionary: Global_DicType.Business_State,
+                        filed: "state"
+                    }]
+                });
+            }
+        });
+        setGridHeightWidth();
+    }
+
+    //jqGrid加载
+    function afterRedRow() {
+        var ids = $("#gridTable").jqGrid("getDataIDs");
+        for (var i = 0; i < ids.length; i++) {
+            var rowData = $("#gridTable").getRowData(ids[i]);
+            //补差台账标注颜色
+            if (rowData.type != '正常') {
+                $('#gridTable #' + ids[i]).find("td").css('color', "#8B0000");
+            }
+
+            //补差台账标注颜色
+            if (rowData.state == '生成台账') {
+                $('#gridTable #' + ids[i]).find("td").css('color', "#298b0b");
+            }
+        }
+    }
+
+    /**生成台账
+     *
+     * */
+    function createLedger() {
+        var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
+        if (selectRowItems.length==0) {
+            errorNotification({
+                SimpleMessage : $.i18n.prop("selectLeastOneDataRowOperator")
+            });
+            return;
+        }
+        var list=[];
+        var rowData = null;
+        for (var i = 0; i < selectRowItems.length; i++) {
+            rowData = $("#gridTable").jqGrid('getRowData', selectRowItems[i]);
+            if(true) {
+                list.push({"bill_number":rowData.bill_number,"project":rowData.project});
+            } else {
+                errorNotification({SimpleMessage: $.i18n.prop("CHECKDATA")});
+                return;
+            }
+        }
+        $.messager.confirm($.i18n.prop("prompt"), $.i18n.prop("sureTodo"), function (r) {
+            if (r) {
+                showLoading();
+                $.ajax({
+                    url : "../../tzgl/AccountsToLedger/createStatisticsLedger?project="+$("[name=vehicle_project]:checked").val(),
+                    data:JSON.stringify(list),
+                    type:"POST",
+                    contentType:'application/json; charset=utf-8',
+                    success:function(dataObj){
+                        if (isServerResultDataPass(dataObj)) {
+                            correctNotification({ SimpleMessage:dataObj.resultDataFull.simpleMessage });
+                            searchData();
+                        } else {
+                            FailResultDataToTip(dataObj);
+                        }
+                        hideLoading();
+                    }
+                });
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

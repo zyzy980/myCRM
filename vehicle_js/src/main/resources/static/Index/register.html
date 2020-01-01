@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1.0" />
+    <title>NIUTMS</title>
+    <link rel="shortcut icon" href="/vehicle_js/Index/images/favicon.ico"/>
+    <link rel="stylesheet" type="text/css" href="/vehicle_js/Index/bootstrap.min.css" />
+    <link href="/vehicle_js/Index/css/style.css" rel="stylesheet"/>
+    <style>
+        .login-logo{ float:left; margin-left:30px; padding-top:20px;}
+        .login-trig{ float:right; position:relative; right:30px; top:20px;}
+        .login-trig a{ font-size:14px; color:#666666; margin-left:20px;}
+
+        .login-trig a:hover, a:focus {
+            color: #23527c;
+            text-decoration: underline;
+        }
+        .verification{
+            padding-top: 1px;
+        }
+
+        .verification img{
+            width:100%;
+            height:100%;
+        }
+
+        .box {
+            background: url('images/bg-11.jpg') no-repeat;
+            margin: 0 auto;
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background-size: 100%;
+        }
+
+        .form-control {
+            height: 35px;
+        }
+
+        .login-box {
+            top: 40%;
+        }
+
+        .login-content {
+            height: 550px;
+        }
+    </style>
+</head>
+
+<body style=" overflow-y:hidden; ">
+<div class="box">
+
+    <!--header-->
+    <!--<div class="header">-->
+        <!--<div class="container2"> <img class="logo" src="/vehicle_js/Index/images/233.png" /></div>-->
+        <!--<div class="login-top">-->
+            <!--<div class="login-trig">-->
+                <!--<a data-locale-href="COMPANY_WEBSITE" target="_blank"><label data-locale="LOGIN_WEB"/></a>-->
+                <!--<a id="zh_en" target="_self" href="/vehicle_js/Index/Login.html?lang=en">English</a>-->
+                <!--<a><label data-locale="LOGIN_ABOUT"/></a>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--header-->
+
+    <div class="login-detail container">
+
+        <!--login-box开始-->
+        <div class="login-box">
+            <div class="login-content ">
+                <div class="form"><!--
+          <form action="#" method="post"> -->
+                    <p class="right-title" style="text-align: center;">注册试用用户</p>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="userId" id="userId" placeholder="请输入用户名">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" name="password" id="password" placeholder="请输入密码">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" validType="phone" name="mobile" id="mobile" placeholder="请输入电话号码">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="withinCode" id="withinCode" placeholder="请输入内码">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="withinCodeName" id="withinCodeName" placeholder="请输入客户名称">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="ywLocationOne" id="ywLocationOne" placeholder="请输入业务地点(必填)">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="ywLocationTwo" id="ywLocationTwo" placeholder="请输入业务地点(选填)">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="ywLocationThree" id="ywLocationThree" placeholder="请输入业务地点(选填)">
+                    </div>
+                    <button type="submit" class="login-btn">确定注册</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/vehicle_js/Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="/vehicle_js/Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="/vehicle_js/Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="/vehicle_js/Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="/vehicle_js/Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="/vehicle_js/Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+<script type="text/javascript" src="/vehicle_js/Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="/vehicle_js/Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="/vehicle_js/Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $('.login-btn').click(function(){
+            validateData();
+        });
+    });
+
+    var validateData = function() {
+        var ywLocation = $("#ywLocationOne").val();
+        if(ywLocation == "") {
+            alert('第一个业务地点必填');
+            return;
+        }
+        register();
+    }
+    var register = function() {
+        var url = '/vehicle_js/sysInfo/user/register';
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: {
+                userName: $("#userId").val(),
+                password: $("#password").val(),
+                withinCode: $("#withinCode").val(),
+                withinCodeName: $("#withinCodeName").val(),
+                ywLocationOne: $("#ywLocationOne").val(),
+                ywLocationTwo: $("#ywLocationTwo").val(),
+                ywLocationThree: $("#ywLocationThree").val(),
+                mobile: $("#mobile").val()
+            },
+            success: function(dataObj){
+                alert(dataObj.resultDataFull.simpleMessage);
+            }
+        });
+    }
+</script>
+</body>
+</html>

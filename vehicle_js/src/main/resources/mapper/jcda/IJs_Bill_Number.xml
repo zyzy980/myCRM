@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bba.jcda.dao.IJs_Bill_NumberDao">
+	<sql id="begin_page">
+		<if test="isPage == true">select A.* from (select rownum rn, T.* from (</if>
+	</sql>
+	<sql id="end_page">
+		<if test="isPage == true">)T where rownum &lt; ${page*rows+1}) A where A.rn >
+			${(page-1)*rows}</if>
+	</sql>
+
+	<sql id="sql_data">
+		select d.id
+			  ,d.bill_number
+			  ,d.create_by
+			  ,d.create_date
+		from js_bill_number d
+	</sql>
+
+	<!-- 查询台账列表 -->
+	<select id="findListForGrid" resultType="com.bba.jcda.vo.Js_Bill_NumberVO" parameterType="com.bba.util.JqGridParamModel">
+		<include refid="begin_page" />
+		select t.* from (
+		<include refid="sql_data" />
+		) t
+		<if test="filters!=null and filters!=''">where ${filters}</if>
+		<include refid="end_page" />
+	</select>
+
+	<!-- 查询台账数量 -->
+	<select id="findListForGridCount" resultType="int" parameterType="com.bba.util.JqGridParamModel">
+		select count(*) from (
+		<include refid="sql_data" />
+		) t
+		<if test="filters!=null and filters!=''">where ${filters}</if>
+	</select>
+</mapper>

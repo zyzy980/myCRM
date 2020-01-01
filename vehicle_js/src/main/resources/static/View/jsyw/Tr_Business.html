@@ -1,0 +1,778 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+    <link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />    
+    <link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/moment/css/daterangepicker.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/fileUpload/css/fileUpload.css" />
+    <title>业务数据</title>
+</head>
+<body>
+    <div id="toolbar" class="easyui-panel" style="padding: 4px; border-width:0; border-bottom-width:1px;">
+        #{PAGE_TOOLBAR_BUTTONROLE}
+    </div>
+    <div class="searchParamesPanel">
+        <table id="searchParamesTable">
+            <tr class="searchParamesTrShow">
+                <td class="searchParamesTdTitle">起运时间:</td>
+                <td class="searchParamesTdControl">
+                    <input type="text" name="begin_date_start" id="begin_date_start" class="easyui-datebox" editable="false" style="width: 100px"/>
+                </td>
+                <td class="searchParamesTdTitle">-</td>
+                <td class="searchParamesTdControl">
+                    <input type="text" name="begin_date_end" id="begin_date_end" class="easyui-datebox" style="width: 100px" />
+                </td>
+                <td width="20px;"></td>
+                <td class="searchParamesTdTitle">起运地</td>
+                <td class="searchParamesTdControl">
+                    <input type="text" name="begin_city" id="begin_city" class="easyui-combobox" style="width: 100px" />
+                </td>
+                <td width="20px;"></td>
+                <td class="searchParamesTdTitle">承运商:</td>
+                <td class="searchParamesTdControl">
+                    <input type="text" name="carrier_no" id="carrier_no" class="easyui-combobox"/>
+                </td>
+                <td width="20px;"></td>
+                <td class="searchParamesTdTitle">状态:</td>
+                <td class="searchParamesTdControl">
+                    <input type="text" name="data_state" id="data_state" class="easyui-combobox"/>
+                </td>
+            </tr>
+            <tr class="searchParamesTrShow">
+                <td class="searchParamesTdTitle">收车时间:</td>
+                <td class="searchParamesTdControl">
+                    <input type="text" name="end_date_start" id="end_date_start" class="easyui-datebox" style="width: 100px" />
+                </td>
+                <td class="searchParamesTdTitle">-</td>
+                <td class="searchParamesTdControl">
+                    <input type="text" name="end_date_end" id="end_date_end" class="easyui-datebox" style="width: 100px" />
+                </td>
+                <td width="20px;"></td>
+                <td class="searchParamesTdTitle">目的地</td>
+                <td class="searchParamesTdControl">
+                    <input type="text" name="end_city" id="end_city" class="easyui-combobox" style="width: 100px" />
+                </td>
+                <td width="20px;"></td>
+                <td class="searchParamesTdTitle">运输方式:</td>
+                <td class="searchParamesTdControl">
+                    <input type="text" name="trans_mode" id="trans_mode" class="easyui-combobox"/>
+                </td>
+                <td width="20px;"></td>
+                <td class="searchParamesTdTitle">单查:</td>
+                <td class="searchParamesTdControl">
+                    <input type="text" id="common_sheet_title" class="easyui-textbox" style="width: 125px" />
+                </td>
+                <td width="20px;"></td>
+                <td class="searchParamesTdTitle mass">质损类型:</td>
+                <td class="searchParamesTdControl mass">
+                    <div id="divMass_loss_type"></div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="gridControl">
+        <table id="gridTable">
+        </table>
+        <div id="gridPager">
+        </div>
+    </div>
+    <div id="fileUpload" style="position: absolute; left: 50%; top: 50%;
+	 width: 600px; height: 400px; margin-left: -300px; margin-top: -200px; display: none;"></div>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/moment/js/moment.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/moment/js/jquery.daterangepicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/upload.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/file.js"></script>
+<script language="javascript" type="text/javascript">
+    $(function () {
+        var parms = getUrlParms();
+        initScript();
+        initData();
+        initStyle();
+    });
+
+    $(window).load(function () {
+        hideLoading();
+    });
+
+    var initStyle = function () {
+        $("#common_sheet_title").textbox({
+            prompt: 'VIN/运单号/省份'
+        });
+        enterTriggerEvent("searchParamesTable", "searchData");
+        var user = getSession().resultDataFull;
+        if (user.userLevel=='1') {
+            $(".mass").hide();
+        }
+    }
+
+    var initScript = function() {
+        $(window).resize(function() {
+            setGridHeightWidth();
+            setToolbarHeightWidth();
+        });
+    };
+
+    var initData = function () {
+        getDictionaryData([{
+            //加载运输方式字典
+            dicTypeCode : Global_DicType.TRANS_MODE,
+            ADD_ALL: true,
+            callback : function(callbackData) {
+                window.TransModeList = {};
+                for(var i = 0; i < callbackData.length; i++){
+                    TransModeList[callbackData[i].dicvalue] = callbackData[i].dictext;
+                }
+                $("#trans_mode").combobox({
+                    valueField: 'dicvalue',
+                    textField: 'dictext',
+                    panelHeight: 200,
+                    panelWidth: 250,
+                    editable: true,
+                    onSelect:function(record){
+                        searchData();
+                    }
+                });
+                $("#trans_mode").combobox("loadData", callbackData);
+            }
+        },{
+            //起运地 - 数据字典
+            dicTypeCode: Global_DicType.CITY_ARCHIVE,
+            ADD_ALL: true,
+            callback: function (callbackData) {
+                window.BEGIN_ADDRESSMap = {};
+                window.END_ADDRESSMap = {};
+                for (var i = 0; i < callbackData.length; i++) {
+                    BEGIN_ADDRESSMap[callbackData[i].dicvalue] = callbackData[i].dictext;
+                    END_ADDRESSMap[callbackData[i].dicvalue] = callbackData[i].dictext;
+                }
+                $("#begin_city,#end_city").combobox({
+                    valueField: 'dicvalue',
+                    textField: 'dictext',
+                    panelHeight: 200,
+                    editable: true,
+                    onSelect:function(){
+                        searchData();
+                    }
+                });
+                $("#begin_city,#end_city").combobox("loadData", callbackData);
+            }
+        },{
+            //加载业务数据状态
+            dicTypeCode : Global_DicType.Business_State,
+            ADD_ALL: true,
+            callback : function(callbackData) {
+                window.Business_StateList = {};
+                for(var i = 0; i < callbackData.length; i++){
+                    Business_StateList[callbackData[i].dicvalue] = callbackData[i].dictext;
+                }
+                $("#data_state").combobox({
+                    valueField: 'dicvalue',
+                    textField: 'dictext',
+                    panelHeight: 130,
+                    editable: true,
+                    onSelect:function(record){
+                        searchData();
+                    }
+                });
+                $("#data_state").combobox("loadData", callbackData);
+            }
+        },{
+            //加载结算标识状态
+            dicTypeCode : Global_DicType.Business_JsState,
+                ADD_ALL: true,
+                callback : function(callbackData) {
+                window.Business_JsStateList = {};
+                for(var i = 0; i < callbackData.length; i++){
+                    Business_JsStateList[callbackData[i].dicvalue] = callbackData[i].dictext;
+                }
+            }
+        },{
+            //加载车辆项目状态
+            dicTypeCode : Global_DicType.Vehicle_Project,
+            ADD_ALL: true,
+            callback : function(callbackData) {
+                window.Vehicle_ProjectList = {};
+                for(var i = 0; i < callbackData.length; i++){
+                    Vehicle_ProjectList[callbackData[i].dicvalue] = callbackData[i].dictext;
+                }
+            }
+        },{
+            //加载数据来源状态
+            dicTypeCode : Global_DicType.Data_From,
+            ADD_ALL: true,
+            callback : function(callbackData) {
+                window.Data_FromList = {};
+                for(var i = 0; i < callbackData.length; i++){
+                    Data_FromList[callbackData[i].dicvalue] = callbackData[i].dictext;
+                }
+            }
+        },{
+                dicTypeCode: Global_DicType.Mass_loss_State,
+                ADD_ALL: true,
+                callback: function (callbackData) {
+                    window.Mass_loss_StateList = {};
+                    for(var i = 0; i < callbackData.length; i++){
+                        Mass_loss_StateList[callbackData[i].dicvalue] = callbackData[i].dictext;
+                    }
+                    var formatData = { data: callbackData, needChooseAll: false, chooseAllValue: "", defaultValue: "0",
+                        bindBoxName: "divMass_loss_type", bindControlPrefix: "mass_loss_type", onClick:function(){
+                            searchData();
+                        } };
+                    formatDefaultRadio_Local(formatData);
+                }
+            }]);
+
+        /**获取基础档案明细下拉*/
+        getBaseData([{
+            //初始化承运商基础信息
+            dicTypeCode : Global_BaseDataKey.ZD_CARRIER,
+            callback : function(callbackData) {
+                $("#carrier_no").combobox({
+                    valueField: 'code',
+                    textField: 'name',
+                    panelHeight: 200,
+                    panelWidth: 250,
+                    editable: true,
+                    onSelect:function(record){
+                        searchData();
+                    }
+                });
+                callbackData.unshift({code: "", name: "所有"});
+                $("#carrier_no").combobox("loadData", callbackData);
+            }
+        }]);
+        loadList();
+    }
+
+    function searchData() {
+        $("#gridTable").jqGrid('setGridParam', {
+            url: getSearchGridUrl(),
+            datatype: 'json',
+            postData: { "filters": "" },
+            page: 1
+        }).trigger("reloadGrid");
+    }
+
+    function getSearchGridUrl() {
+        var customSearchFilters = encodeURI(getSearchFilters());
+        return '../../jsyw/business/findBusinessPageVO?t=' + Math.random() + '&customSearchFilters=' + customSearchFilters;
+    }
+
+    function getSearchFilters() {
+        var end_date_end=$('#end_date_end').datebox('getValue');
+        if(end_date_end!="")
+            end_date_end=addDate(end_date_end,1);
+        var begin_date_end=$('#begin_date_end').datebox('getValue');
+        if(begin_date_end!="")
+            begin_date_end=addDate(begin_date_end,1);
+        var parmsArray = [
+            [
+                { name: 'end_province', value: $('#common_sheet_title').textbox('getValue'), op: 'cn' },
+                { name: 'vdr_no', value: $('#common_sheet_title').textbox('getValue'), op: 'cn' },
+                { name: 'vin', value: $('#common_sheet_title').textbox('getValue'), op: 'cn' }
+            ],
+            { name: 'receipt_datetime', value: $('#end_date_start').datebox('getValue'), op: 'ge'},
+            { name: 'receipt_datetime', value: end_date_end, op: 'le'},
+            { name: 'begin_datetime', value: $('#begin_date_start').datebox('getValue'), op: 'ge'},
+            { name: 'begin_datetime', value: begin_date_end, op: 'le'},
+            { name: 'begin_city', value: $('#begin_city').combobox('getValue'), op: 'eq'},
+            { name: 'end_city', value: $('#end_city').combobox('getValue'), op: 'eq'},
+            { name : 'data_state',value : $("[id=data_state]").combobox('getValue'),op : "eq"},
+            { name : 'trans_mode',value : $("[id=trans_mode]").combobox('getValue'),op : "eq"},
+            { name : 'carrier_no',value : $("[id=carrier_no]").combobox('getValue'),op : "eq"},
+            { name: 'mass_loss_type', value: $("#divMass_loss_type [name=mass_loss_type]:checked").val(), op: "eq" },
+        ];
+        return formatSearchParames(parmsArray);
+    }
+
+    function loadList() {
+        $("#gridTable").jqGrid({
+            url: getSearchGridUrl(),
+            datatype: "json",
+            width: "none",
+            colNames: [
+                $.i18n.prop('ID'),
+                $.i18n.prop('DATA_STATE'),
+                $.i18n.prop('VEHICLE_PROJECT'),
+                $.i18n.prop('VDR_NO'),
+                $.i18n.prop('VIN'),
+                $.i18n.prop('AIC'),
+                $.i18n.prop('TRANS_MODE'),
+                $.i18n.prop('BEGIN_DATETIME'),
+                $.i18n.prop('RECEIPT_DATETIME'),
+                $.i18n.prop('RECEIPT_DATE'),
+                $.i18n.prop('BEGIN_CITY'),
+                $.i18n.prop('END_CITY'),
+                $.i18n.prop('END_PROVINCE'),
+                $.i18n.prop('CUS_NO'),
+                $.i18n.prop('CUS_NAME'),
+                $.i18n.prop('CARRIER_NO'),
+                $.i18n.prop('CARRIER_NAME'),
+                $.i18n.prop('DEALER_NO'),
+                $.i18n.prop('DEALER_NAME'),
+                $.i18n.prop('CAR_TYPE'),
+                $.i18n.prop('DATA_FROM'),
+                $.i18n.prop('MASS_LOSS_TYPE'),
+                $.i18n.prop('UP_JS_FLAG'),
+                $.i18n.prop('DOWN_JS_FLAG'),
+                $.i18n.prop('YF_FLAG'),
+                //$.i18n.prop('UPLOAD_FILES'),
+                $.i18n.prop('REMARK'),
+                $.i18n.prop('CHECK_BY'),
+                $.i18n.prop('CHECK_DATE'),
+                $.i18n.prop('OPERATOR'),
+                $.i18n.prop('CREATE_BY'),
+                $.i18n.prop('CREATE_DATE')
+            ],
+            colModel: [
+                { name: 'id', index: 'id', align: 'center', sorttype: 'int', search: false, sortable: false, key: true, width: 40, hidden: true },
+                { name: 'data_state', index : 'data_state', align : 'center', isSort : false, width : 60, type: 'string', search : true, searchoptions : { sopt: ['cn', 'eq', 'ne']},
+                    formatter : function(value, grid, rows) {
+                     return window.Business_StateList[value];
+                }},
+                { name: 'vehicle_project', index: 'vehicle_project', align: 'center', width: 100, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']},
+                    formatter : function(value, grid, rows) {
+                        return window.Vehicle_ProjectList[value];
+                }},
+                { name: 'vdr_no', index : 'vdr_no', align : 'center', issort : false, width : 120, type: 'string', search : true, searchoptions : { sopt: ['cn', 'eq', 'ne']}},
+                { name: 'vin', index: 'vin', align: 'center', issort: false, width: 160, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'aic', index: 'aic', align: 'center', issort: false, width: 120, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'trans_mode', index: 'trans_mode', align: 'center', width: 120, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'begin_datetime', index: 'begin_datetime', align: 'center', width: 150, type: 'string',  search: true, searchoptions: { sopt: ['cn'], dataEvents: [{ type: 'click', data: {}, fn: function () { WdatePicker(); } }]} },
+                { name: 'receipt_datetime', index: 'receipt_datetime', align: 'center', width: 150, type: 'string',  search: true, searchoptions: { sopt: ['cn'], dataEvents: [{ type: 'click', data: {}, fn: function () { WdatePicker(); } }]} },
+                { name: 'receipt_date', index: 'receipt_date', align: 'center', width: 150, type: 'string',  search: true, searchoptions: { sopt: ['cn'], dataEvents: [{ type: 'click', data: {}, fn: function () { WdatePicker(); } }]} },
+                { name: 'begin_city', index: 'begin_city', align: 'center',  width: 80, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'end_city', index: 'end_city', align: 'center', width: 80, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'end_province', index: 'end_province', align: 'center',  width: 80, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'cus_no', index: 'cus_no', align: 'center', width: 100, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'cus_name', index: 'cus_name', align: 'center', width: 160, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'carrier_no', index: 'carrier_no', align: 'center', width: 100, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'carrier_name', index: 'carrier_name', align: 'center', width: 160, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'dealer_no', index: 'dealer_no', align: 'center', width: 100, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'dealer_name', index: 'dealer_name', align: 'center', width: 160, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'car_type', index: 'car_type', align: 'center', width: 80, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'data_from', index: 'data_from', align: 'center', width: 80, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']},
+                    formatter : function(value, grid, rows) {
+                        return window.Data_FromList[value];
+                }},
+                { name: 'mass_loss_type', index: 'mass_loss_type', align: 'center', width: 100, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']},
+                    formatter : function(value, grid, rows) {
+                        return window.Mass_loss_StateList[value];
+                }},
+                { name: 'up_js_flag', index: 'up_js_flag', align: 'center', width: 80, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']},
+                    formatter : function(value, grid, rows) {
+                        return window.Business_JsStateList[value];
+                },hidden:true},
+                { name: 'down_js_flag', index: 'down_js_flag', align: 'center', width: 80, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']},
+                    formatter : function(value, grid, rows) {
+                        return window.Business_JsStateList[value];
+                },hidden:true},
+                { name: 'yf_flag', index: 'yf_flag', align: 'center', width: 60, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']},
+                    formatter : function(value, grid, rows) {
+                        return window.Business_JsStateList[value];
+                },hidden:true},
+                //{ name: 'upload_files', index: 'upload_files', align: 'center', width: 100, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'remark', index: 'remark', align: 'center', width: 150, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'check_by', index: 'check_by', align: 'center', width: 100, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'check_date', index: 'check_date', align: 'center', width: 150, type: 'string',  search: true, searchoptions: { sopt: ['eq', 'ne', 'lt', 'le', 'gt', 'ge'], dataEvents: [{ type: 'click', data: {}, fn: function () { WdatePicker(); } }]} },
+                { name: 'operator', index: 'operator', align: 'center', width: 100, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'create_by', index: 'create_by', align: 'center', width: 100, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'create_date', index: 'create_date', align: 'center', width: 150, type: 'string',  search: true, searchoptions: { sopt: ['eq', 'ne', 'lt', 'le', 'gt', 'ge'], dataEvents: [{ type: 'click', data: {}, fn: function () { WdatePicker(); } }]} }
+            ],
+            shrinkToFit: false,
+            altRows: true,
+            altclass: 'gridSpacingClass',
+            forceFit: true,
+            cellLayout: 0,
+            scroll: false,
+            autowidth: true,
+            sortname: 'id',
+            sortorder: "desc",
+            loadonce: false,
+            mtype: "POST",
+            viewrecords: true,
+            rownumbers: true,
+            multiselect: true,
+            rowNum: 15,
+            height: "100%",
+            rowList: [100, 200, 300, 500],
+            pager: "#gridPager",
+            jsonReader: {
+                root: "rows",
+                total: "total",
+                page: "page",
+                records: "records",
+                repeatitems: false
+            },
+            gridComplete: function () {
+                $(".cbox").shiftSelect();
+                afterRedRow();
+            },
+            ondblClickRow: function (id) {
+                showChildModule(id);
+            },
+            loadComplete: function (xhr) {
+                $('.gridViewPicLink').tooltip({
+                    position: 'bottom',
+                    content: $(this).attr("title"),
+                    onShow: function () {
+                        $(this).tooltip('tip').css({
+                            backgroundColor: '#FCF8E3',
+                            borderColor: '#FAEBCC'
+                        });
+                    }
+                });
+                FailResultDataToTip(xhr);
+            }
+        });
+        $('#gridTable').jqGrid('navGrid', '#gridPager',{
+            add : false,
+            edit : false,
+            del : false,
+            refresh : true
+        }, {}, {}, {}, {
+            multipleSearch : true,
+            closeOnEscape : true,
+            closeAfterSearch : true
+        });
+        $('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+            caption : $.i18n.prop('TOGGLE_GRID_COLUMNS'),
+            title : 'Set Columns',
+            onClickButton : toggleGridColumns
+        });
+        $('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+            caption : $.i18n.prop('TOGGLE_GRID_SEARCH_TOOLBAR'),
+            title : 'Quick Search',
+            onClickButton : toggleGridSearchToolbar
+        });
+        $('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+            caption: $.i18n.prop('EXPORT_TO_EXCEL'),// 导出数据
+            title: '结算业务数据',
+            buttonicon: 'ui-icon-disk',
+            onClickButton: function () {
+                ExportToExcel.call(this, {
+                    title: '商品车业务数据',
+                    FiledData: [{
+                        data_dictionary: Global_DicType.Business_State,
+                        filed: "data_state"
+                    },{
+                        data_dictionary: Global_DicType.Mass_loss_State,
+                        filed: "mass_loss_type"
+                    },{
+                        data_dictionary: Global_DicType.Data_From,
+                        filed: "data_from"
+                    },{
+                        data_dictionary: Global_DicType.Vehicle_Project,
+                        filed: "vehicle_project"
+                    },{
+                        data_dictionary: Global_DicType.Business_JsState,
+                        filed: "up_js_flag"
+                    },{
+                        data_dictionary: Global_DicType.Business_JsState,
+                        filed: "down_js_flag"
+                    },{
+                        data_dictionary: Global_DicType.Business_JsState,
+                        filed: "yf_flag"
+                    }]
+                });
+            }
+        });
+        setGridHeightWidth();
+    }
+
+    /**双击打开明细*/
+    function showChildModule(id) {
+        var rowData = $("#gridTable").jqGrid('getRowData', id);
+        openDetail(rowData.id);
+    };
+
+    /**新增*/
+    function add() {
+        openDetail("");
+    }
+
+    /**修改*/
+    function edit() {
+        var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
+        if (selectRowItems.length > 1 || selectRowItems.length == 0) {
+            errorNotification({
+                SimpleMessage: $.i18n.prop('selectOneDataRowOperator')
+            });
+            return;
+        }
+        var rowData = $("#gridTable").jqGrid('getRowData', selectRowItems);
+        openDetail(rowData.id);
+    }
+
+    /**打开明细*/
+    var openDetail = function (id) {
+        showLoading();
+        var href = "../View/jsyw/Tr_Business_Carrier.html?id="+id;
+        openDialog({ title: $.i18n.prop("TR_BUSINESS_CARRIER"), id: 'Tr_Business_Carrier', width:850, height: 600, isResize: true, href: href, closable: true });
+    }
+
+    /**批量注销*/
+    function remove() {
+        var jsonList = [];
+        var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
+        if (selectRowItems.length == 0) {
+            errorNotification({
+                SimpleMessage : $.i18n.prop("selectLeastOneDataRowOperator")
+            });
+            return;
+        }
+
+        for ( var i = 0; i < selectRowItems.length; i++) {
+            var rowData = $("#gridTable").jqGrid('getRowData',selectRowItems[i]);
+            if((rowData.data_state=='N' || rowData.data_state=='正常') && (rowData.mass_loss_type=='0' || rowData.mass_loss_type=='正常') ) {
+                jsonList.push({id : rowData.id,vdr_no:rowData.vdr_no});
+            } else {
+                errorNotification({SimpleMessage: $.i18n.prop("REMOVEDATA")});
+                return;
+            }
+        }
+        $.messager.confirm($.i18n.prop("prompt"),$.i18n.prop("deleteData"),
+            function(r) {
+                if (r) {
+                    showLoading();
+                    $.ajax({url : "../../jsyw/business/batchCancel?t="+ Math.random(),
+                        type : "POST",
+                        data : "jsonData=" + JSON.stringify(jsonList),
+                        success : function(dataObj) {
+                            if (isServerResultDataPass(dataObj)) {
+                                correctNotification(dataObj.resultDataFull);
+                                searchData(); // 删除时需要重新搜索
+                            } else {
+                                FailResultDataToTip(dataObj);
+                            }
+                            hideLoading();
+                        },
+                        error : function(message) {
+                            console.log(message);
+                            hideLoading();
+                        }
+                    });
+                }
+            });
+    }
+
+    //jqGrid加载
+    function afterRedRow() {
+        var ids = $("#gridTable").jqGrid("getDataIDs");
+        for (var i = 0; i < ids.length; i++) {
+            var rowData = $("#gridTable").getRowData(ids[i]);
+            //质损非正常标注为红色
+            if (rowData.mass_loss_type != '正常') {
+                $('#gridTable #' + ids[i]).find("td").css('color', "#8B0000");
+            }
+            //VIP标注色
+            if (rowData.up_js_flag == '是') {
+                $('#gridTable #' + ids[i]).find("td").css('color', "#0000FF");
+            }
+            //对下不结标注色
+            if (rowData.down_js_flag == '是') {
+                $('#gridTable #' + ids[i]).find("td").css('color', "#D2691E");
+            }
+
+        }
+    }
+
+    /**标注VIP*/
+    function markVip() { updateJsState("1");}
+    /**标注对下不结*/
+    function markNojs() { updateJsState("2");}
+    /**标注预付*/
+    function markPayInAdvance() { updateJsState("3");}
+    /**标注普损*/
+    function markGeneralDamage() { updateJsState("4");}
+    /**标注重损*/
+    function markHeavyLoss() { updateJsState("5");}
+    /**风险审核*/
+    function riskCheck() { updateJsState("7");}
+    /**重置数据*/
+    function reset() { updateJsState("6");}
+    /**统一处理结算标识状态*/
+    function updateJsState(type) {
+        var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
+        if (selectRowItems.length==0) {
+            errorNotification({
+                SimpleMessage : $.i18n.prop("selectLeastOneDataRowOperator")
+            });
+            return;
+        }
+        var rows ="";
+        var rowData = null;
+        var bState=false;
+        var errorMessage = "";
+        for (var i = 0; i < selectRowItems.length; i++) {
+            rowData = $("#gridTable").jqGrid('getRowData', selectRowItems[i]);
+            if(rowData.data_state=='新单' || rowData.data_state=='正常') {
+                if (type=="7" && rowData.mass_loss_type!="正常") {
+                    bState=true;
+                    errorMessage = $.i18n.prop("MASS_LOSS_TYPE_CHECK");
+                    break;
+                }
+                rows+=rowData.sn+",";
+            } else {
+                errorMessage = $.i18n.prop("DATA_UPDATE_STATE");
+                bState=true;
+                break;
+            }
+        }
+        if(bState) {
+            errorNotification({SimpleMessage: errorMessage});
+            return;
+        }
+        var list=[];
+        for ( var i = 0; i < selectRowItems.length; i++) {
+            var rowData = $("#gridTable").jqGrid('getRowData', selectRowItems[i]);
+            list.push({"id":rowData.id,"remark":type});
+        }
+        $.messager.confirm($.i18n.prop("prompt"), $.i18n.prop("sureTodo"), function (r) {
+            if (r) {
+                showLoading();
+                $.ajax({
+                    url : "../../jsyw/business/updateJsState",
+                    data:JSON.stringify(list),
+                    type:"POST",
+                    contentType:'application/json; charset=utf-8',
+                    success:function(dataObj){
+                        if (isServerResultDataPass(dataObj)) {
+                            correctNotification({ SimpleMessage:dataObj.resultDataFull.simpleMessage });
+                            searchData();
+                        } else {
+                            FailResultDataToTip(dataObj);
+                        }
+                        hideLoading();
+                    }
+                });
+            }
+        });
+    }
+
+    /**审核
+     * 重损、普损不参与结算
+     * */
+    function check() {
+        var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
+        if (selectRowItems.length==0) {
+            errorNotification({
+                SimpleMessage : $.i18n.prop("selectLeastOneDataRowOperator")
+            });
+            return;
+        }
+        var list=[];
+        var rowData = null;
+        for (var i = 0; i < selectRowItems.length; i++) {
+            rowData = $("#gridTable").jqGrid('getRowData', selectRowItems[i]);
+            if((rowData.data_state=='N' || rowData.data_state=='正常') && (rowData.mass_loss_type=='0' || rowData.mass_loss_type=='正常') ) {
+                list.push({"id":rowData.id});
+            } else {
+                errorNotification({SimpleMessage: $.i18n.prop("CHECKDATA")});
+                return;
+            }
+        }
+        $.messager.confirm($.i18n.prop("prompt"), $.i18n.prop("sureTodo"), function (r) {
+            if (r) {
+                showLoading();
+                $.ajax({
+                    url : "../../jsyw/business/check",
+                    data:JSON.stringify(list),
+                    type:"POST",
+                    contentType:'application/json; charset=utf-8',
+                    success:function(dataObj){
+                        if (isServerResultDataPass(dataObj)) {
+                            correctNotification({ SimpleMessage:dataObj.resultDataFull.simpleMessage });
+                            searchData();
+                        } else {
+                            FailResultDataToTip(dataObj);
+                        }
+                        hideLoading();
+                    }
+                });
+            }
+        });
+    }
+
+    /**同步VL系统未结算的数据*/
+    function fromVlData() {
+        showLoading();
+        $.ajax({
+            url : "../../interface/vljsdata/GetBusinessData",
+            data:'',
+            type:"POST",
+            success:function(dataObj){
+                if (isServerResultDataPass(dataObj)) {
+                    correctNotification({ SimpleMessage:dataObj.resultDataFull.simpleMessage });
+                    searchData();
+                } else {
+                    FailResultDataToTip(dataObj);
+                }
+                hideLoading();
+            }
+        });
+    }
+
+
+    var importData = function(){
+        var importDetailUrl = "../../jsyw/business/importData?t="+ Math.random();
+        var downModuleFileUrl = "../../jsyw/business/exportTemplate";
+        if(!$("#fileUpload").zyUpload){
+            alert("上传javascript插件未引入");
+            return;
+        }
+
+        $("#fileUpload").zyUpload({
+            itemWidth : "60px", // 文件项的宽度
+            itemHeight : "60px", // 文件项的高度
+            url : importDetailUrl,
+            multiple : false, // 是否可以多个文件上传
+            dragDrop : true, // 是否可以拖动上传文件
+            del : true, // 是否可以删除文件
+            finishDel : false, // 是否在上传文件完成后删除预览
+            close : true,
+            fileTypeFilter : [ 'xls', 'xlsx' ],
+            remark : "<p>只能上传xls/xlsx格式文件</p>",
+            isDownModuleFile : true,
+            downModuleFileUrl : downModuleFileUrl,
+            // 外部获得的回调接口
+            onSelect : function(files, allFiles) { // 选择文件的回调方法
+            },
+            onDelete : function(file, surplusFiles) { // 删除一个文件的回调方法
+            },
+            onFailure : function(file) { // 文件上传失败的回调方法
+            },
+            onComplete : function(responseInfo) { // 上传完成的回调方法
+                hideLoading();
+                $("#fileUpload").empty();
+                $("#fileUpload").hide();
+                var dataObj = JSON.parse(responseInfo);
+                if (isServerResultDataPass(dataObj)) {
+                    correctNotification({ SimpleMessage:dataObj.resultDataFull.simpleMessage });
+                    searchData();
+                } else {
+                    FailResultDataToTip(dataObj);
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>

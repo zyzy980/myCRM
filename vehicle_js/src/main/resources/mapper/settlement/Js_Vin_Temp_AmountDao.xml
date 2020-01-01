@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bba.settlement.dao.Js_Vin_Temp_AmountDao">
+
+    <sql id="begin_page"><if test="isPage == true">SELECT * FROM (SELECT t.*, ROWNUM RN FROM (</if></sql>
+    <sql id="end_page">
+        <if test="isPage == true">
+            <if test="filters!=null and filters!=''">where ${filters}</if>
+        </if>
+        ) t where ROWNUM &lt;= ${page} * ${rows}) WHERE RN &gt;=((${page} - 1) * ${rows} + 1)
+    </sql>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ID,
+        XUNJIA_NO,
+        VDR_NO,
+        VIN,
+        CUS_NO,
+        CUS_NAME,
+        DEALER,
+        DEALER_NAME,
+        QU_STATE,
+        BEGIN_CITY,
+        END_CITY,
+        TRANS_MODE,
+        CAR_TYPE,
+        MIL,
+        PRICE,
+        BEGIN_DATE,
+        RECEIPT_DATE,
+        JS_DATA_TYPE,
+        VEHICLE_PROJECT,
+        DATA_FROM,
+        CONTRACT_NO,
+        JS_STATE,
+        NOT_TAX_FREIGHT,
+        NOT_TAX_OTHER_AMOUNT,
+        SHIPMENT_QTY,
+        JS_QTY,
+        NOT_TAX_PRICE,
+        JS_NO,
+        NOT_TAX_PREMIUM,
+        TAX_AMOUNT,
+        NOT_TAX_AMOUNT,
+        REMARK,
+        CREATE_BY,
+        CREATE_DATE,
+        JS_BATCH,
+        DZ_SHEET
+    </sql>
+
+    <select id="getListForGrid" parameterType="com.bba.util.JqGridParamModel" resultType="com.bba.settlement.vo.Js_Vin_Temp_AmountVO">
+        <include refid="begin_page"/>
+        select * from JS_VIN_TEMP_AMOUNT
+        <include refid="end_page"/>
+    </select>
+
+    <select id="getListForGridCount" parameterType="com.bba.util.JqGridParamModel" resultType="java.lang.Integer">
+        select count(*) from JS_VIN_TEMP_AMOUNT
+        <if test="filters!=null and filters!=''">where ${filters}</if>
+    </select>
+
+    <select id="selectByVinids" parameterType="java.util.List" resultType="com.bba.settlement.vo.Js_Vin_Temp_AmountVO">
+        select * from JS_VIN_TEMP_AMOUNT where vin_id in
+        <foreach collection="list" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+</mapper>

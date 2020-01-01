@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bba.ht.dao.Ht_Cus_FreightDao">
+
+
+
+    <select id="findFreightByBusiness" resultType="com.bba.ht.vo.Ht_Cus_FreightVO">
+        select t.*,c.contract_no,c.contract_type from ht_cus_freight t,ht_cus c
+        where t.sheet_no=c.sheet_no and c.state='1'
+        <if test="cus_no!=null and cus_no!=''">and c.cus_no=#{cus_no}</if>
+        <if test="begin_date!=null">and c.begin_date <![CDATA[ <= ]]> #{begin_date} and c.end_date >= #{begin_date}</if>
+        <if test="trans_mode!=null and trans_mode!=''">and t.trans_mode=#{trans_mode}</if>
+        <if test="contract_type!=null and contract_type!=''">and c.contract_type=#{contract_type}</if>
+        <if test="begin_city!=null and begin_city!=''">and t.begin_city=#{begin_city}</if>
+        <if test="end_city!=null and end_city!=''">and t.end_city=#{end_city}</if>
+        order by c.contract_type desc
+    </select>
+    <!--
+    <select id="findFreightByBusiness" resultType="com.bba.ht.vo.Ht_Cus_FreightVO">
+        select t.*,c.CONTRACT_NO from HT_CUS_FREIGHT t,HT_CUS c
+        where t.SHEET_NO=c.SHEET_NO
+        <foreach collection="list" item="vo" open="and (" close=")" separator="or">
+            <trim prefixOverrides="and">
+                <if test="begin_date!=null">and c.begin_date <![CDATA[ <= ]]> #{vo.begin_date}</if>
+                <if test="end_date!=null">and c.end_date >= #{vo.end_date}</if>
+                <if test="trans_mode!=null and trans_mode!=''">and t.trans_mode=#{vo.trans_mode}</if>
+                <if test="car_type!=null and car_type!=''">and t.car_type=#{vo.car_type}</if>
+                <if test="begin_city!=null and begin_city!=''">and t.begin_city=#{vo.begin_city}</if>
+                <if test="end_city!=null and end_city!=''">and t.end_city=#{vo.end_city}</if>
+
+                &lt;!&ndash;<if test="contract_type!=null and contract_type!=''">and t.contract_type=#{vo.contract_type}</if>
+                &ndash;&gt;
+            </trim>
+        </foreach>
+    </select>-->
+
+</mapper>

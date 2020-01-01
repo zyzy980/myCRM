@@ -1,0 +1,400 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="UTF-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"/>
+    <link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+    <link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />    
+    <link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/moment/css/daterangepicker.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/fileUpload/css/fileUpload.css" />
+    <title>#{basic.page.this}</title>
+</head>
+<body>
+    <div id="toolbar" class="easyui-panel" style="padding: 4px; border-width: 0; border-bottom-width: 1px;">
+         #{PAGE_TOOLBAR_BUTTONROLE}
+    </div>
+    <div class="searchParamesPanel">
+        <table id="searchParamesTable">
+            <tr class="searchParamesTrShow">
+             	<td class="searchParamesTdTitle">
+                <label data-locale="basic.search.no"/>
+                </td>
+                <td class="searchParamesTdControl">
+                    <input type="text" name="code" id="code" class="easyui-textbox"/>
+                </td>
+                <td class="searchParamesTdTitle">
+                 <label data-locale="basic.search.type"/>
+                </td>
+                <td class="searchParamesTdControl">
+                    <input id="type" class="easyui-combobox" name="type" data-options="editable:false,panelHeight:'150'"/>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="gridControl">
+        <table id="gridTable">
+        </table>
+        <div id="gridPager">
+        </div>
+    </div>
+     <div id="fileUpload" style="position: absolute; left: 50%; top: 50%; width: 600px;
+        height: 400px; margin-left: -300px; margin-top: -200px; display: none;">
+    </div>
+</body>
+<script type="text/javascript"	src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/upload.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/file.js"></script>
+<script language="javascript" type="text/javascript">
+    var sn1="";
+    var moduleId = 0;
+    var lang = "zh";
+    var typeInnerHTML = {};
+  	var moduleidAuthority = "";
+    $(function () {
+    	initCombType();
+        var parms = getUrlParms();
+        moduleidAuthority = parms["moduleId"];
+        lang = parms["lang"];
+        initCodekeyDown();
+        initScript();
+        initData();
+        
+    });
+
+    $(window).load(function () {
+        hideLoading();
+    });
+    
+    var oldSetGridHeightWidth = setGridHeightWidth;
+    var setGridHeightWidth = function() {
+    	oldSetGridHeightWidth(40,170);
+    	oldSetGridHeightWidth(5, 128);
+    };
+    
+    var initCombType = function(){
+    	
+    	var dicText = "dicText";
+    	
+    	if(lang=="en"){
+    		dicText = "dicText_en";
+    	}
+    	$("#type").combobox({
+  		  valueField: 'dicValue',  
+  		  textField: dicText,
+  		  loader:function(param,success,error){  
+              $.ajax({  
+                  url:"../../sysInfo/dictionaryData/getDictionaryDataList?t=" + Math.random()+"&dicTypeCode=SCTS_BASIC",
+                  dataType: 'json',  
+                  method:"GET",
+                  async : false,
+                  success: function(data){
+                	  typeInnerHTML = {'': '--#{basic.search.all}--' };
+                	if(lang=="en"){
+                		data.unshift({dicValue:'',dicText_en:'--#{basic.search.all}--'});
+                		data.forEach(function(item){
+                			typeInnerHTML[item.dicValue] = item.dicText_en;
+                    	});
+                	} else {
+                		data.unshift({dicValue:'',dicText:'--#{basic.search.all}--'});
+                		data.forEach(function(item){
+                			typeInnerHTML[item.dicValue] = item.dicText;
+                    	});
+                	}
+                	success(data); 
+                  },
+                  error : function(){
+                	  hideLoading();
+                  }
+              }); 
+          },
+  		  onLoadSuccess: function () { 
+          	$(this).combobox("setValue", "--#{basic.search.all}--");
+          },
+          onChange : function(){
+        	  searchData();
+          }
+  		});
+    }
+    
+    var initScript = function () {
+    	
+    	showLog({id:"toolbar",operateModuleGlobal:"通用档案",moduleId:moduleidAuthority});
+    	
+    	var v = 0;
+    	$(window).resize(function() {
+    		if (v == 0) {
+    			setTimeout(function() {
+    				setGridHeightWidth();
+    				v = 0;
+    			}, 200)
+    			v = 1;
+    		}
+    		setGridHeightWidth();
+    		setToolbarHeightWidth();
+    	});	
+    } 
+    var initData = function () {
+
+        loadList();   
+    }
+    
+    var initCodekeyDown = function(){
+    	$('#code').textbox({
+            inputEvents: $.extend({},$.fn.textbox.defaults.inputEvents,{
+            	keyup:function(event){
+            		if(event.keyCode == 13) {
+           				searchData();
+            		}
+            	}   
+         	})
+      	})
+    }
+	
+    function searchData() {
+        $("#gridTable").jqGrid('setGridParam', {
+            url: getSearchGridUrl(),
+            datatype: 'json',
+            postData: { "filters": "" },
+            page: 1
+        }).trigger("reloadGrid");
+    }
+
+    var getSearchGridUrl = function () {
+        return '../../scts/basic/findBasic?t=' + Math.random() + '&customSearchFilters=' + encodeURI(getSearchFilters());
+    }
+
+    var getSearchFilters = function () {
+    	var tp = $("#type").combobox("getValue");
+    	var cd = $("#code").val();
+        var parmsArray = [
+          { name: 'code', value: cd, op: "cn" },
+          { name: 'type', value: tp.indexOf("--")==-1?tp:"" , op: "eq" }
+        ];
+        
+        return formatSearchParames(parmsArray);
+    }
+
+    var add = function () {
+        openDetail("");
+    }
+
+    var update = function () {
+        var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
+        if (selectRowItems.length > 1 || selectRowItems.length == 0) {
+            errorNotification({
+                SimpleMessage: $.i18n.prop('basic.message.oneValid')
+            });
+            return;
+        }
+
+        var rowData = $("#gridTable").jqGrid('getRowData', selectRowItems);
+       	sn1= rowData.sn;
+        openDetail(rowData.code);
+    }
+
+    var openDetail = function (code) {
+    	var tp = $("#type").combobox("getText");
+    	var listType = tp.indexOf("--")==-1?tp:"" ;
+    	showLoading("#{basic.loading}#{basic.page.detail}...");
+        var href = "../View/BaseInfo/BasicRecordChange.html?moduleId=" + moduleId+"&code=" + code+"&sn=" + sn1+"&type="+listType;
+        openDialog({ title: $.i18n.prop('basic.page.detail'), id: 'BasicRecordDetail', width: 500, height: 290, isResize: true, href: href, closable: true });
+    }
+
+    var remove = function() {
+    	var jsonList = [];
+    	var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
+    	if (selectRowItems.length == 0) {
+    		errorNotification({
+    			SimpleMessage : $.i18n.prop('basic.message.selectedValid')
+    		});
+    		return;
+    	}
+    	for ( var i = 0; i < selectRowItems.length; i++) {
+    		var rowData = $("#gridTable").jqGrid('getRowData',selectRowItems[i]);
+    		jsonList.push({sn : rowData.sn});
+    	}
+    	$.messager.confirm($.i18n.prop('basic.message.prompt'),'#{basic.message.deleteQuestion}?',
+				function(r) {
+					if (r) {
+						showLoading("#{basic.loading}#{basic.page.this}...");
+						$.ajax({url : "../../scts/basic/delete?t="+ Math.random(),
+									type : "POST",
+									data : "jsonData="
+											+ JSON.stringify(jsonList),
+									success : function(dataObj) {
+										if (isServerResultDataPass(dataObj)) {
+											correctNotification(dataObj.resultDataFull);
+											searchData(); // 删除时需要重新搜索
+										} else {
+											FailResultDataToTip(dataObj);
+										}
+										hideLoading();
+									},
+									error : function(message) {
+										console.log(message);
+										hideLoading();
+									}
+								});
+					}
+				});
+	}
+
+    var loadList = function () {
+        $("#gridTable").jqGrid({
+            url: getSearchGridUrl(),
+            datatype: "json",
+            width: "none",
+            colNames: [$.i18n.prop('basic.grid.field.sn'),$.i18n.prop('basic.grid.field.withinCode'), 
+                       $.i18n.prop('basic.grid.field.code'),$.i18n.prop('basic.grid.field.type'),$.i18n.prop('basic.grid.field.typeName'),$.i18n.prop('basic.grid.field.value'),
+                       $.i18n.prop('basic.grid.field.createBy'),$.i18n.prop('basic.grid.field.createDate'),$.i18n.prop('basic.grid.field.updateBy'),
+                       $.i18n.prop('basic.grid.field.updateDate'),$.i18n.prop('basic.grid.field.remark')],
+            colModel: [
+            { name: 'sn', index: 'sn',  key: true,align: 'center', sorttype: 'int', search: false, sortable: false, width: 40, hidden: true },
+            { name: 'within_code', index: 'within_code', align: 'center', sorttype: 'int', search: false, sortable: false, width: 40, hidden: true },
+            { name: 'code', index: 'code', align: 'center', width: 180, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+            { name: 'type', index: 'type', align: 'center', width: 180, type: 'string', search: true, stype:'select',searchoptions : { value : typeInnerHTML , sopt : ["eq"] }	},
+            { name: 'type_name', index: 'type_name', align: 'center', width: 180, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+            { name: 'values1', index: 'values1', align: 'center', width: 220, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+            { name: 'create_by', index: 'scts_create_by', align: 'center',hidden:true, width: 120, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+            { name: 'create_date', index: 'create_date', align: 'center', hidden:true,width: 150, type: 'string', search: true,searchoptions : { sopt : ['ge'], dataEvents : [ { type : 'click', data : {}, fn : function() { WdatePicker(); } } ] } },
+            { name: 'update_by', index: 'update_by', align: 'center', hidden:true,width: 160, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+            { name: 'update_date', index: 'update_date', align: 'center', width: 150,hidden:true, type: 'string', search: true, searchoptions : { sopt : ['ge'], dataEvents : [ { type : 'click', data : {}, fn : function() { WdatePicker(); } } ] } },
+            { name: 'remark', index: 'remark', align: 'center', width: 200, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} }
+            ],
+            shrinkToFit: false,
+            altRows: true,
+            altclass: 'gridSpacingClass',
+            forceFit: true,
+            cellLayout: 0,
+            scroll: false,
+            autowidth: true,
+            sortname: 'create_date',
+            sortorder: "desc", 
+            loadonce: false,
+            mtype: "POST",
+            viewrecords: true,
+            rownumbers: true,
+            multiselect: true,
+            rowNum: 15,
+            height: "100%",
+            rowList: [15, 20, 30, 50],
+            pager: "#gridPager",
+            jsonReader: {
+                root: "rows",
+                total: "total",
+                page: "page",
+                records: "records",
+                repeatitems: false
+            },
+            gridComplete: function () {
+                $(".cbox").shiftSelect();
+            },
+            ondblClickRow: function (code) {
+                showChildModule(code);
+            },
+            loadComplete: function (xhr) {
+                $('.gridViewPicLink').tooltip({
+                    position: 'bottom',
+                    content: $(this).attr("title"),
+                    onShow: function () {
+                        $(this).tooltip('tip').css({
+                            backgroundColor: '#FCF8E3',
+                            borderColor: '#FAEBCC'
+                        });
+                    }
+                });
+                FailResultDataToTip(xhr);
+            }
+        });
+
+        $("#gridTable").jqGrid('navGrid', '#gridPager', { add: false, edit: false, del: false, refresh: true }, {}, {}, {}, { multipleSearch: true, closeOnEscape: true, closeAfterSearch: true });
+        $("#gridTable").jqGrid('navButtonAdd', '#gridPager', {
+            caption: $.i18n.prop('basic.caption.reorderCol'),
+            title: $.i18n.prop('basic.caption.reorderCol'),
+            onClickButton: toggleGridColumns
+        });
+
+        $("#gridTable").jqGrid('navButtonAdd', '#gridPager', {
+            caption: $.i18n.prop('basic.caption.quickSearch'),
+            title: $.i18n.prop('basic.caption.quickSearch'),
+            onClickButton: toggleGridSearchToolbar
+        });
+        
+        $("#gridTable").jqGrid('navButtonAdd', '#gridPager', {
+            caption: $.i18n.prop('basic.caption.export'),
+            title: $.i18n.prop('basic.caption.export'),
+            buttonicon: "ui-icon-disk",
+            onClickButton: function(){
+            	ExportToExcel.call(this, {
+              		 url : "../../scts/basic/export?t=" + Math.random()
+              	}); 
+            }
+        });
+        setGridHeightWidth();
+    }
+
+    var showChildModule = function (code) {
+        var rowData = $("#gridTable").jqGrid('getRowData', code);
+        sn1= rowData.sn;
+        openDetail(rowData.code);
+    };
+
+    var refreshCallerData_zdTruckType = function () {
+        searchData();
+    }
+    
+    var importData = function () {
+        var url = "../../scts/basic/importExcel?t=" + Math.random();
+        $("#fileUpload").zyUpload({
+            itemWidth: "60px", // 文件项的宽度
+            itemHeight: "60px", // 文件项的高度
+            url: url,
+            multiple: false, // 是否可以多个文件上传
+            dragDrop: true, // 是否可以拖动上传文件
+            del: true, // 是否可以删除文件
+            finishDel: false, // 是否在上传文件完成后删除预览
+            close: true,
+            fileTypeFilter: ['xls', 'xlsx'],
+            remark: "<p>#{basic.message.excelValid}</p>",
+            isDownModuleFile: true,
+            downModuleFileUrl: "../../scts/basic/exportExcelModel?t=" + Math.random(),
+            /* 外部获得的回调接口 */
+            onSelect: function (files, allFiles) { // 选择文件的回调方法
+            },
+            onDelete: function (file, surplusFiles) { // 删除一个文件的回调方法
+            },
+            onSuccess: function (file) { // 文件上传成功的回调方法
+            },
+            onFailure: function (file) { // 文件上传失败的回调方法
+            },
+            onComplete: function (responseInfo) { // 上传完成的回调方法
+            	hideLoading();
+                var dataObj = JSON.parse(responseInfo);
+                if (isServerResultDataPass(dataObj)) {
+                	 searchData();
+                	 hideLoading();
+                     correctNotification(dataObj.resultDataFull);
+                } else {
+                    FailResultDataToTip(dataObj);
+                }
+                $("#fileUpload").empty();
+                $("#fileUpload").hide();
+            }
+        });
+    }
+  </script>
+</html>

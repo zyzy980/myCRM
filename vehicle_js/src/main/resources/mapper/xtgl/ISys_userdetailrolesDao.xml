@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace：必须与对应的接口全类名一致 id:必须与对应接口的某个对应的方法名一致 -->
+<mapper namespace="com.bba.xtgl.dao.ISys_userdetailrolesDao">
+
+	<select id="findAllList" parameterType="com.bba.xtgl.vo.SysUserDetailRolesVO" resultType="com.bba.xtgl.vo.SysUserDetailRolesVO">
+		SELECT DISTINCT ROLEID,WITHIN_CODE from Sys_userdetailroles
+		where 1=1
+		<if test="within_code!=null and within_code!=''">and within_code=#{within_code}</if>
+	</select>
+
+
+	<insert id="batchInsert">
+		insert into Sys_userdetailroles(roleid,userid,within_code)
+		<foreach item="vo" index="index" collection="list" separator="union all">
+			select
+		       #{vo.roleid}, #{vo.userId}, #{vo.within_code}
+			from dual
+		</foreach>
+	</insert>
+
+</mapper>

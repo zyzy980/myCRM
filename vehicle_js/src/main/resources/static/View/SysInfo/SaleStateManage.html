@@ -1,0 +1,400 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+    <link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+    <link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+    <link type="text/css" rel="stylesheet" 	href="../../Resource/js/fileUpload/css/fileUpload.css" />
+    <title>#{Page}</title>
+</head>
+<body>
+<div id="toolbar" class="easyui-panel" style="padding: 4px; border-width: 0; border-bottom-width: 1px;">
+    #{PAGE_TOOLBAR_BUTTONROLE}
+</div>
+<div class="searchParamesPanel">
+    <table id="searchParamesTable">
+        <tr class="searchParamesTrShow">
+            <td class="searchParamesTdTitle"><label data-locale="routeType"/>:</td>
+            <td class="searchParamesTdControl">
+                <input name="routeType" id="routeType" class="easyui-combobox" editable="false"
+                       data-options="valueField:'dicvalue',textField:'dictext'" />
+            </td>
+        </tr>
+    </table>
+</div>
+<div id="gridControl">
+    <table id="gridTable">
+    </table>
+    <div id="gridPager">
+    </div>
+</div>
+<div id="fileUpload" style="position: absolute; left: 50%; top: 50%; width: 600px;
+    	height: 400px; margin-left: -300px; margin-top: -200px; display: none;">
+</div>
+<div id="fileUploadByContacts" style="position: absolute; left: 50%; top: 50%; width: 600px;
+        height: 400px; margin-left: -300px; margin-top: -200px; display: none;">
+</div>
+</body>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/regex/regex.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/upload.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/file.js"></script>
+<script language="javascript" type="text/javascript">
+    var rtcomboboxList = [];
+    var osomboxList = [];
+    var editOptions = '';
+    var lastrow;  //最后修改行号先定义一个全局变量
+    var lastcell; //最后修改列号
+
+    var ywLocation = '';
+    $(function(){
+        initSearch();
+        loadList();
+        initScript();
+    })
+
+    var initSearch = function (){
+        searchType();
+        searchSate();
+        // searchStateDetail();
+    }
+
+    var initScript = function(){
+
+        // 选择分段运输状态后刷新数据
+        $("#routeType").combobox({
+            onChange: function(newValue, oldValue){
+                reload();
+            }
+        });
+    }
+
+    //查询订单明细状态
+    var searchStateDetail = function(){
+        $.ajax({
+            url : '../../sysInfo/dictionary/getListForGridSubordiById?t=' + Math.random() + '&customSearchFilters=%7B%22groupOp%22:%22AND%22,%22rules%22:%5B%7B%22field%22:%22typeCode%22,%22op%22:%22eq%22,%22data%22:%22sheet_yw_sale_detail_state%22%7D%5D%7D',
+            method: 'POST',
+            success: function(res){
+            }
+        })
+    }
+
+    //查询订单状态明细
+    var searchSate = function() {
+        $.ajax({
+            url : '../../sysInfo/dictionary/getListForGridSubordiById?t=' + Math.random() + '&customSearchFilters=%7B%22groupOp%22:%22AND%22,%22rules%22:%5B%7B%22field%22:%22typeCode%22,%22op%22:%22eq%22,%22data%22:%22sheet_yw_order_detail_state%22%7D%5D%7D',
+            method: 'POST',
+            async: false,
+            success: function(res){
+                oscomboboxList = res.rows;
+                for(let i = 0; i < res.rows.length; i++) {
+                    if(i != res.rows.length - 1) {
+                        editOptions += res.rows[i].dictext + ":" + res.rows[i].dictext + ";";
+                    } else {
+                        editOptions += res.rows[i].dictext + ":" + res.rows[i].dictext;
+                    }
+                }
+            }
+        })
+    }
+
+    //查询分段运输类型
+    var searchType = function () {
+        $.ajax({
+            url : '../../sysInfo/dictionary/getListForGridSubordiById?t=' + Math.random() + '&customSearchFilters=%7B%22groupOp%22:%22AND%22,%22rules%22:%5B%7B%22field%22:%22typeCode%22,%22op%22:%22eq%22,%22data%22:%22routeType%22%7D%5D%7D',
+            method: 'POST',
+            success: function(res){
+                var list = res.rows;
+                rtcomboboxList = [{
+                    dictext: $.i18n.prop('all'),
+                    dicvalue: ''
+                }];
+
+                for (let i = 0; i < list.length; i++) {
+                    for (let j = 0; j < list.length; j++) {
+                        const element = list[j];
+                        if (parseInt(element.dicorder) === (i+1)){
+                            rtcomboboxList.push(element)
+                            break;
+                        }
+                    }
+                }
+                $("#routeType").combobox({
+                    data: rtcomboboxList
+                });
+                $("#routeType").combobox('setValue',rtcomboboxList[0].dicvalue)
+            }
+        })
+    }
+
+    var save = function (){
+        $('#gridTable').jqGrid("saveCell", lastrow, lastcell);  //当前单元格退出编辑模式
+        var AllData = $("#gridTable").jqGrid("getRowData");// 所有行数据
+        var list = [];
+        for (let i = 0; i < AllData.length; i++) {
+            const element = AllData[i];
+            for (let i = 0; i < oscomboboxList.length; i++) {
+                const element2 = oscomboboxList[i];
+                if (element.orderState === element2.dictext){
+                    element.orderState = element2.dicvalue;
+                    list.push(element2.dicvalue)
+                    break;
+                }
+            }
+        }
+        var c = Array.from(new Set(list))
+
+        if (c.length !== AllData.length){
+            errorNotification({
+                SimpleMessage: $.i18n.prop('Duplicate waybill status')
+            });
+            return;
+        }
+
+        $.ajax({
+            url : '../../sysInfo/saleState/saveData?t=' + Math.random(),
+            method: 'POST',
+            data: JSON.stringify(AllData),
+            contentType : "application/json",
+            dataType : "json",
+            success: function(){
+                correctNotification({
+                    SimpleMessage: $.i18n.prop('save success')
+                });
+                reload();
+            }
+        })
+    }
+
+    var add = function () {
+
+        var AllData = $("#gridTable").jqGrid("getRowData");// 所有行数据
+        if (oscomboboxList.length === AllData.length) {
+            errorNotification({
+                SimpleMessage: $.i18n.prop('no state need to configured')
+            });
+            return;
+        }
+
+
+        var ids = $("#gridTable").jqGrid('getDataIDs');
+        var rowid = Math.max.apply(Math, ids);
+        if (rowid == "-Infinity"){
+            rowid = 0;
+        }
+        var newrowid = rowid + 1;
+        var dataRow = {
+            rowid: newrowid,
+            sn: "0",
+            orderState: "",
+            saleState: "",
+            routeType: $('#routeType').combobox('getValue'),
+            createBy: "",
+            createDate: ""
+        };
+
+        //如果只有一种状态没有设置 直接回显上去
+        if (oscomboboxList.length - AllData.length === 1){
+            var def = getArrDifference(oscomboboxList,AllData);
+            dataRow.orderState = def;
+        }
+
+        $("#gridTable").jqGrid("addRowData", newrowid, dataRow, "last");
+    }
+
+    var getArrDifference =  function(array1, array2) {
+
+        var list1 = [];
+        for (let j = 0; j < array2.length; j++) {
+            const element = array2[j];
+            list1.push(element.orderState);
+        };
+
+        for (let i = 0; i < array1.length; i++) {
+            const element = array1[i].dictext;
+            var index = list1.indexOf(element);
+            if (index === -1){
+                return element;
+            };
+        }
+    }
+
+    var del = function () {
+        var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
+        if (selectRowItems.length > 1 || selectRowItems.length == 0) {
+            errorNotification({
+                SimpleMessage: $.i18n.prop('SysUsersManage_selectgridrow')
+            });
+            return;
+        }
+        var rowData = $("#gridTable").jqGrid('getRowData', selectRowItems);
+
+        $.messager.confirm($.i18n.prop('alert'), '#{make sure to del}?', function (r) {
+            if (r) {
+                if (rowData.sn === "0"){
+                    jQuery("#gridTable").delRowData(selectRowItems);
+                }
+                $.ajax({
+                    url: '../../sysInfo/saleState/delData?t=' + Math.random() + '&sn=' + rowData.sn,
+                    type: 'POST',
+                    success: function (dataObj) {
+                        hideLoading();
+                        if (isServerResultDataPass(dataObj)) {
+                            correctNotification({ SimpleMessage: $.i18n.prop('del success') });
+                            reload();
+                        } else {
+                            FailResultDataToTip(dataObj);
+                        }
+                    }
+                });
+            }
+        })
+    };
+
+    $(window).load(function () {
+        hideLoading();
+    });
+
+    var getSearchGridUrl = function () {
+        var filters = encodeURI(getSearchFilters());
+        return '../../sysInfo/saleState/getList?'+Math.random() + '&filters=' + filters
+    }
+
+    var reload = function() {
+        $("#gridTable").jqGrid('setGridParam', {
+            url: getSearchGridUrl(),
+            datatype: 'json',
+            postData: { "filters": '' },
+            page: 1
+        }).trigger("reloadGrid");
+    }
+
+    var getSearchFilters = function () {
+        var parmsArray = [
+            { name: 'route_type', value: $("#routeType").combobox("getValue"), op: "eq" },
+        ];
+        return formatSearchParames(parmsArray);
+    }
+
+    function loadList() {
+        $("#gridTable").jqGrid({
+            url: getSearchGridUrl(),
+            datatype: "json",
+            width: "none",
+            colNames: ['sn',$.i18n.prop('orderState'),$.i18n.prop('saleState'),$.i18n.prop('routeType'),$.i18n.prop('createBy'),
+                $.i18n.prop('createDate')
+            ],
+            colModel: [
+                {hidden: true, name: 'sn', index: 'sn', align: 'center', sortable: true, width: 120,  search: true,truesearchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                {hidden: false, name: 'orderState', index: 'order_state', align: 'center', sortable: true, width: 120,  search: true,truesearchoptions: { sopt: ['cn', 'eq', 'ne']},
+                    editable: true, edittype:'select',editoptions: {value: editOptions},
+                    formatter: function (value, grid, rows) {
+                        for (let i = 0; i < oscomboboxList.length; i++) {
+                            const element = oscomboboxList[i];
+                            if (element.dicvalue === value){
+                                return element.dictext
+                            }
+                        }
+                        return value;
+                    } },
+                {hidden: false, name: 'saleState', index: 'sale_state', align: 'center', sortable: true, width: 120,  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']},
+                    editable: true, edittype:'text'
+                },
+                {hidden: false, name: 'routeType', index: 'routeType', align: 'center', sortable: false, width: 120,search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']}},
+                {hidden: true, name: 'createBy', index: 'createBy', align: 'center', sortable: false, width: 120,  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                {hidden: true, name: 'createDate', index: 'createDate', align: 'center', sortable: false, width: 120,  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+            ],
+            cellEdit:true, //可编辑
+            cellsubmit:'clientArray', //保存到表格
+            shrinkToFit: false,
+            altRows: true,
+            altclass: 'gridSpacingClass',
+            forceFit: true,
+            cellLayout: 0,
+            scroll: false,
+            autowidth: true,
+            sortname: 'create_date',
+            sortorder: "desc",
+            loadonce: false,
+            mtype: "POST",
+            viewrecords: true,
+            rownumbers: true,
+            multiselect: true,
+            rowNum: 15,
+            height: "100%",
+            rowList: [15, 20, 30, 50],
+            sortname: 'order_state',
+            sortorder: 'asc',
+            pager: "#gridPager",
+            jsonReader: {
+                root: "rows",
+                total: "total",
+                page: "page",
+                records: "records",
+                repeatitems: false
+            },
+            gridComplete: function () {
+                $(".cbox").shiftSelect();
+            },
+            // /双击时编辑
+            ondblClickRow : function(code) {
+            },
+            loadComplete: function (xhr) {
+                $('.gridViewPicLink').tooltip({
+                    position: 'bottom',
+                    content: $(this).attr("title"),
+                    onShow: function () {
+                        $(this).tooltip('tip').css({
+                            backgroundColor: '#FCF8E3',
+                            borderColor: '#FAEBCC'
+                        });
+                    }
+                });
+                ywLocation = xhr.yw_location
+                FailResultDataToTip(xhr);
+            },
+            beforeEditCell: function (rowid, cellname, v, iRow, iCol) {
+                lastrow = iRow;  //给全局变量赋值
+                lastcell = iCol;
+            }
+        });
+        $("#gridTable").jqGrid('navGrid', '#gridPager', { add: false, edit: false, del: false, refresh: true,search: false }, {}, {}, {}, { multipleSearch: true, closeOnEscape: true, closeAfterSearch: true });
+        $("#gridTable").jqGrid('navButtonAdd', '#gridPager', {
+            caption: $.i18n.prop('SetColumn'),
+            title: "Reorder Columns",
+            onClickButton: toggleGridColumns
+        });
+        $("#gridTable").jqGrid('navButtonAdd', '#gridPager', {
+            caption: $.i18n.prop('Quick search'),
+            title: "",
+            onClickButton: toggleGridSearchToolbar
+        });
+        $("#gridTable").jqGrid('navButtonAdd', '#gridPager', {
+            caption: $.i18n.prop('ExportData'),
+            buttonicon: "ui-icon-disk",
+            onClickButton: function(){
+                ExportToExcel.call(this, {
+                    url : '../../jcda/contractor/export?t=' + Math.random()
+                });
+            }
+        });
+        setGridHeightWidth();
+    }
+
+
+</script>
+</html>

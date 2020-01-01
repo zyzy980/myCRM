@@ -1,0 +1,350 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link id="CustomTheme" type="text/css" rel="stylesheet"
+	href="../../Resource/css/index/customLightBlue.css" />
+<link id="EasyuiTheme" type="text/css" rel="stylesheet"
+	href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+<link id="JqgridTheme" type="text/css" rel="stylesheet"
+	href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+<link type="text/css" rel="stylesheet"
+	href="../../Resource/js/easyUI/themes/icon.css" />
+<link type="text/css" rel="stylesheet"
+	href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+<style type="text/css">
+.splitBox{display: table;width: 100%;height:20px;}
+.splitBox .splitTitle{display: table-cell;cursor:pointer; text-align:center;width:15%;font-size: 12px;font-weight: bold; color:#fff; background-color:#C2D3E9; vertical-align: middle;}
+.splitBox .splitHr{display: table-cell;text-align: left;vertical-align: middle;}
+.splitBox .splitHr hr{height: 1px;border: none;border-top: 1px dotted #3eafe0;margin-top: 2px; margin-bottom: 2px;}
+.splitBox .splitRemark{display: table-cell;font-size: 12px;color: #3eafe0; text-align: right; width: 130px; vertical-align: middle; font-weight:bold;}
+.editTable table input{width:auto;}
+.button-groups {
+	position: absolute;
+	bottom: 0px;
+	right: 20px;
+	font-size: 12px;
+	padding: 10px;
+}
+.button-groups .button {
+    height: 28px;
+    line-height: 28px;
+    background-color: #0D9BF2;
+    color: #FFF;
+    border: 0;
+    outline: none;
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 3px;
+    margin-bottom: 4px;
+    cursor: pointer;
+    }
+    
+</style>
+    <title>#{zdCus.detail.thisPage}</title>
+</head>
+<body style="overflow:hidden">
+    <div id="toolbar" class="easyui-panel" style="padding: 4px; border-width:0; border-bottom-width:1px;">
+      #{PAGE_TOOLBAR_BUTTONROLE}
+    </div>
+    <form id="addForm" class="easyui-form" method="post" data-options="novalidate:true">
+    <input type="hidden" id="sn" name="sn" />
+    <table class="editTable">
+    	<tr>
+    		<td class="editTitle">
+				<label data-locale="cus no"/>:
+            </td>
+            <td class="editControl">
+                <input type="text" style="width: 157px;" maxlength="10" name="code" id="code" class="easyui-textbox"/>
+            </td>
+            <td class="editTitle">
+				<label data-locale="cus"/>:
+            </td>
+            <td class="editControl">
+                <input type="text" data-locale-missingmessage="customerDetail_customerNameCannotBeEmpty" style="width: 157px;" maxlength="35" data-options="required:true" name="name" id="name" class="easyui-textbox"/>
+            <span style="color:red;font-size:16px;text-align:center;">*</span>
+            </td>
+        </tr>
+        <tr>
+            <td class="editTitle">
+				<label data-locale="short name"/>:
+            </td>
+            <td class="editControl">
+                <input type="text" data-locale-missingmessage="customerDetail_customerShortNameCannotBeEmpty" style="width: 157px;" name="shortname" data-options="required:true" id="shortname" class="easyui-textbox"/>
+           		<span style="color:red;font-size:16px;text-align:center;">*</span>
+            </td>
+            <td class="editTitle">
+				<label data-locale="kind"/>:
+            </td>
+            <td class="editControl">
+                <input name="kind" id="kind" style="width: 157px;" class="easyui-combobox" validType="length[0,20]"/>  
+           		<span style="color:red;font-size:16px;text-align:center;">*</span>
+            </td>
+        </tr>
+        <tr>
+        	<td class="editTitle">
+				<label data-locale="city"/>:
+        	</td>
+        	<td class="editControl">
+        		<input class="easyui-textbox" data-options="required:true" data-locale-missingmessage="customerDetail_cityCannotBeEmpty" name="city" id="city" style="width: 157px;"/>
+				<span style="color:red;font-size:16px;text-align:center;">*</span>
+        	</td>
+        	<td class="editTitle">
+				<label data-locale="customerDetail_address"/>:
+        	</td>
+        	<td class="editControl">
+        		<input class="easyui-textbox" data-options="required:true" data-locale-missingmessage="customerDetail_addressCannotBeEmpty" name="address" id="address" style="width: 157px;"/>
+				<span style="color:red;font-size:16px;text-align:center;">*</span>
+        	</td>
+        </tr>
+        <tr>
+        	<td class="editTitle">
+				<label data-locale="linkman"/>:
+        	</td>
+        	<td class="editControl">
+        		<input class="easyui-textbox" data-options="required:true" data-locale-missingmessage="customerDetail_linkManCannotBeEmpty" name="linkMan" id="linkMan" style="width: 157px;"/>
+				<span style="color:red;font-size:16px;text-align:center;">*</span>
+        	</td>
+        	<td class="editTitle">
+				<label data-locale="phone"/>:
+        	</td>
+        	<td class="editControl">
+        		<input class="easyui-textbox" data-options="required:true,validType:'telNum'" missingmessage="<label data-locale="customerDetail_linkTelcannotBeEmpty"/>}" name="linkTel" id="linkTel" style="width: 157px;"/>
+				<span style="color:red;font-size:16px;text-align:center;">*</span>
+        	</td>
+        </tr>
+        <tr>
+        	<td class="editTitle">
+				<label data-locale="Email"/>:
+        	</td>
+        	<td class="editControl">
+        		<input class="easyui-textbox" name="linkMail" id="linkMail" style="width: 157px;"/>
+        	</td>
+        	<td class="editTitle">
+				<label data-locale="QQ"/>:
+        	</td>
+        	<td class="editControl">
+        		<input class="easyui-textbox" name="linkQQ" id="linkQQ" style="width: 157px;"/>
+        	</td>
+        </tr>
+	</table>
+</form>
+<input id = "snValue" type="hidden" />
+
+	<div id="gridControl">
+		<table id="gridTable"></table>
+	</div>
+</body>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/regex/regex.js"></script>
+<script language="javascript" type="text/javascript">
+	var afterSave = "close";
+	var code = "";
+	var sn = "";
+	var gps_address = "";
+	var originalFormData = "";
+	var address = "";
+	var map = "";
+	$(function() {
+		var parms = getUrlParms();
+		sn = parent.sn
+		loadCusType();
+		showLoading("#{supplier.detail.loading}#{supplier.detail.thisPage}...");
+		initData();
+
+		$("#code").textbox("textbox").focus();
+
+		loadList();
+
+	});
+
+	$(window).load(function() {
+		hideLoading();
+	});
+
+	var initData = function() {
+		if (sn != "" && sn != undefined) {
+			loadDetail(sn);
+		} else {
+			$("#sn").val("0");
+			originalFormData = $('#addForm').serialize();
+		}
+	}
+
+	var close = function() {
+		closeDialog("SupplierDetail");
+	}
+
+	$.extend($.fn.validatebox.defaults.rules, {
+		telNum: { //既验证手机号，又验证座机号
+			validator: function (value, param) {
+				return /(^(0[0-9]{2,3}\-)?([2-9][0-9]{6,7})+(\-[0-9]{1,4})?$)|(^(()|(\d{3}\-))?(1[345678]\d{9})$)/.test(value);
+			},
+			message: $.i18n.prop('tel is incorrect format')
+		}
+	})
+
+	var validate = function() {
+		flag = false;
+		var validated = $("#addForm").form('enableValidation').form('validate');
+		if (!validated) {
+			errorNotification({SimpleMessage : $.i18n.prop('customerDetail_havaMandatoryCannotBeEmpty')});
+			return false;
+		}
+		var newFormData = $('#addForm').serialize();
+		if (newFormData == originalFormData) {
+			errorNotification({SimpleMessage : $.i18n.prop('customerDetail_sureSave')});
+			return false;
+		}
+		return true;
+	}
+
+	var save = function() {
+		if (!validate()) {
+			return;
+		}
+
+		$.messager.confirm($.i18n.prop('supplier.detail.message.prompt'),
+				'#{supplier.detail.message.savePrompt}?', function(r) {
+					if (r) {
+						/* 	showLoading("#{supplier.detail.loading}#{supplier.detail.thisPage}..."); */
+						afterSave = "close";
+						save2();
+					}
+				});
+	}
+
+	var save2 = function() {
+		var formData = FormUtils.toJSONObject($("#addForm"));
+		var code = $("#code").val();
+		var name = $("#name").val();
+		var shortname = $("#shortname").val();
+		var sn = $("#snValue").val();
+		var kind = $("#kind").val();
+		var temp = 2;
+		if (sn == null || sn == "") {
+			$.post("../../jcda/ZdCus/save?t=" + Math.random(), {"jsonData": JSON.stringify(formData)}, function(dataObj) {
+				if (isServerResultDataPass(dataObj)) {
+					correctNotification(dataObj.resultDataFull);
+                    getCurrentTab().searchData();
+                    close();
+					hideLoading();
+				} else {
+					hideLoading();
+					FailResultDataToTip(dataObj);
+				}
+			}, "json");
+		} else {
+			$.post("../../jcda/ZdCus/updateBySn?t=" + Math.random(), {"jsonData": JSON.stringify(formData)}, function(dataObj) {
+				if (isServerResultDataPass(dataObj)) {
+					correctNotification(dataObj.resultDataFull);
+					getCurrentTab().searchData();
+					close();
+					hideLoading();
+				} else {
+					hideLoading();
+					FailResultDataToTip(dataObj);
+				}
+			}, "json");
+		}
+	}
+
+	var loadDetail = function(sn) {
+		var serverUrl = "../../jcda/ZdCus/findBySn?m=" + Math.random();
+		$.post(serverUrl, {"sn" : sn}, function(dataObj) {
+		    sessionStorage.setItem("cusName",dataObj.name);
+			sessionStorage.setItem("cusId",dataObj.code);
+			$("#code").textbox("setValue", dataObj.code);
+			$("#name").textbox("setValue", dataObj.name);
+			$("#shortname").textbox("setValue", dataObj.shortname);
+			$("#snValue").val(sn);
+			$("#sn").val(sn);
+			$("#city").textbox("setValue", dataObj.city);
+			$("#address").textbox("setValue", dataObj.address);
+			$("#linkMan").textbox("setValue", dataObj.linkMan);
+			$("#linkTel").textbox("setValue", dataObj.linkTel);
+			$("#linkQQ").textbox("setValue", dataObj.linkQQ);
+			$("#linkMail").textbox("setValue", dataObj.linkMail);
+			$("#kind").combobox("setValue", dataObj.kind);
+
+		});
+	}
+	var loadCusType = function() {
+		$.ajax({
+			url : '../../jcda/ZdCus/getdicdata?t=' + Math.random(),
+			type : 'POST',
+			success : function(dataObj) {
+				var data = dataObj.resultDataFull;
+				data.unshift({'dicText' : $.i18n.prop('customerDetail_pleaseChoose'),'dicValue' : ''});
+				$("#kind").combobox({
+					valueField : 'dicValue',
+					textField : 'dicText',
+					loader : function(params, success, error) {
+						success(data);
+					}
+				});
+				$("#kind").combobox("setValue", "");
+			}
+		});
+	}
+
+	let loadList = function() {
+        $('#gridTableZero').jqGrid({
+            // 	         url : getSearchGridUrl(),
+            datatype: 'local',
+            width: 'none',
+            colNames: [
+
+            ],
+            colModel: [
+
+            ],
+            cellEdit: true,
+            cellsubmit: 'clientArray',
+            shrinkToFit: false,
+            altRows: true,
+            altclass: 'gridSpacingClass',
+            forceFit: true,
+            cellLayout: 0,
+            scroll: true,
+            autowidth: true,
+            loadonce: false,
+            mtype: "POST",
+            viewrecords: true,
+            rownumbers: true,
+            rowNum: 100,
+            height: "100%",
+            rowList: [15, 20, 30, 50, 100],
+            pager: "#gridPager",
+            jsonReader: {
+                root: "rows",
+                total: "total",
+                page: "page",
+                records: "records",
+                repeatitems: false
+            },
+            gridComplete: function () {
+                $('.cbox').shiftSelect();
+            },
+
+            loadComplete: function (xhr) {
+                //$("#gbox_gridTableZero").find(".ui-jqgrid-bdiv").css("height","254px");
+            }
+        });
+
+        setGridHeightWidth();
+	}
+</script>
+</html>

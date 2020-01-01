@@ -1,0 +1,496 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<!-- <meta charset="utf-8" />
+<meta name="renderer" content="webkit">
+<meta name="description" content="{$web_description}">
+<meta name="keywords" content="{$web_keywords}"> -->
+<title>仓储中心</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<link type="text/css" rel="stylesheet" href="../../Resource/css/userWhcenter/gloab.css" />
+<link type="text/css" rel="stylesheet" href="../../Resource/css/userWhcenter/index.css" />
+<link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+<link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+<link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+<link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+<link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+<link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+</head>
+<body>
+<style>
+body{ background-color:#666;}
+.modal-window{
+	position:relative;
+	margin:40px auto;
+	border-radius: 10px;
+	background:#fff;
+	width:1000px;
+	min-height:400px;
+	box-shadow:0px 0px 3px #aaa;
+	}
+.informationform{
+	margin:0px;
+	padding:15px 80px 10px 10px;
+}
+.ui-pg-selbox{
+	width:50px;
+}
+.l-btn-icon {
+    display: inline-block;
+    width: 35px;
+    height: 30px;
+    line-height: 30px;
+    position: absolute;
+    top: 10%;
+    margin-top: -6px;
+    font-size: 1px;
+}
+.l-btn-icon-left .l-btn-icon {
+    left: -6px;
+}
+</style>
+<div class="modal-window"> <span class="mp-e2e-dialog-close iconfont" id="close"><img src="../../Resource/css/view/img/close.png" /></span>
+  <div class="login-box">
+    <div class="main bgf">
+      <div class="reg-box-pan display-inline">
+        <div class="step">
+          <ul>
+            <li class="step-title on"> <span class="num"><em class="f-r5"></em><i>1</i></span> <span class="line_bg lbg-r"></span>
+              <p class="lbg-txt">新增仓储中心资料</p>
+            </li>
+            <li class="step-title"> <span class="num"><em class="f-r5"></em><i>2</i></span> <span class="line_bg lbg-l"></span> <span class="line_bg lbg-r"></span>
+              <p class="lbg-txt">建立库区、库位档案</p>
+            </li>
+            <li class="step-title"> <span class="num"><em class="f-r5"></em><i>3</i></span> <span class="line_bg lbg-l"></span> <span class="line_bg lbg-r"></span>
+              <p class="lbg-txt">货物档案信息</p>
+            </li>
+            <li class="step-title"> <span class="num"><em class="f-r5"></em><i>4</i></span> <span class="line_bg lbg-l"></span> <span class="line_bg lbg-r"></span>
+              <p class="lbg-txt">确定信息</p>
+            </li>
+            <li class="step-title"> <span class="num"><em class="f-r5"></em><i>5</i></span> <span class="line_bg lbg-l"></span>
+              <p class="lbg-txt">完成</p>
+            </li>
+          </ul>
+        </div>
+        <div class="reg-box" id="verifyCheck" style="margin-top:10px;">
+          <div class="part1">
+            <div class="content-title">
+              <p>新增仓储中心资料</p>
+            </div>
+            <div class="content" style="height:300px;">
+           		<form id="addForm" class="easyui-form" method="post" data-options="novalidate:true">
+					<table class="editTable">
+						<tr>
+							<td class="editRequiredTitle">仓储编号:</td>
+							<td class="editControl"><input id="code" type="text" name="code" class="easyui-textbox" missingmessage="编号不能为空" data-options="required:true"  style="border:1px solid #95b8e7;"/></td>
+							<td class="editTitle">状态:</td>
+							<td class="editControl"><div id="divState">
+								<label style="width: 80px;"><input type="radio" name="state" value="Y" id="state_Y"/>
+	                            <i>✓</i><em class="xk" style="height: 20px; width: 50px;">启用</em> </label>
+	                            <label style="width: 80px;"><input type="radio" name="state" value="N" id="state_N"/>
+	                            <i>✓</i><em class="xk" style="height: 20px;width: 50px;">未启用</em> </label>
+							</div></td>
+						</tr>
+						<tr>
+							<td class="editRequiredTitle">名称:</td>
+							<td class="editControl"><input id="name" type="text" missingmessage="名称不能为空" name="name" class="easyui-textbox" data-options="required:true" style="border:1px solid #95b8e7;" /></td>
+							<td class="editTitle">城市:</td>
+							<td class="editControl"><input type="text" name="city" id="city" class="easyui-textbox" style="border:1px solid #95b8e7;"/></td>
+						</tr>
+						<tr>
+							<td class="editTitle">简称:</td>
+							<td class="editControl"><input type="text" name="shortname" id="shortname" class="easyui-textbox" style="border:1px solid #95b8e7;" /></td>
+							<td class="editTitle">联系人:</td>
+							<td class="editControl"><input type="text" name="default_link" id="default_link" class="easyui-textbox" style="border:1px solid #95b8e7;" /></td>
+						</tr>
+						<tr>
+							<td class="editTitle">经度:</td>
+							<td class="editControl"><input type="text" name="la" id="la" class="easyui-validatebox" style="border:1px solid #95b8e7;" /></td>
+							<td class="editTitle">联系电话:</td>
+							<td class="editControl"><input type="text" name="default_tel" id="default_tel" class="easyui-textbox" style="border:1px solid #95b8e7;" /></td>
+						</tr>
+						<tr>
+							<td class="editTitle">纬度:</td>
+							<td class="editControl"><input type="text" name="lo" id="lo" class="easyui-validatebox" style="border:1px solid #95b8e7;"/></td>
+							<td class="editRequiredTitle">地址:</td>
+							<td class="editControl" colspan="3"><input type="text" missingmessage="地址不能为空" name="address" id="address" data-options="required:true" class="easyui-textbox" style="width: 100%;border:1px solid #95b8e7;" /></td>
+						</tr>
+						<tr>
+							<td class="editTitle">备注:</td>
+							<td class="editControl" colspan="3"><textarea name="remark" id="remark"style="width: 100%; height: 78px;font-size: 14px;border:1px solid #95b8e7;"></textarea></td>
+						</tr>
+					</table>
+				</form>
+            </div>
+            <a href="javascript:;" style="margin-left: 410px;">
+            <span class="btn-primary  btn-next" id="btn_part1">下一步</span>
+            </a>
+           </div>
+          <!--part1-->
+          
+          <div class="part2" style="display:none">
+            <div class="content-title">
+              <p>建立库区、库位档案</p>
+            </div>
+            <div class="content">
+              <div class="archives">
+                <label id="copy_whcenter">
+                  <input type="radio" name="areaLoc" value="copy" style="display: none;"/>
+                  <i>✓</i><em class="xk">复制来源仓储中心</em>
+                  <select class="form-style" id="whcenterSelect">
+                  </select>
+                </label>
+              </div>
+              <div class="archives">
+                <label>
+                  <input type="radio" name="areaLoc" value="automatic" style="display: none;"/>
+                  <i>✓</i><em class="xk">系统自动创建库区信息（S 收货区、K 存放区、D 冻结区、C 出库区）</em> </label>
+              </div>
+              <div class="archives">
+                <label>
+                  <input type="radio" name="areaLoc" value="manual" style="display: none;"/>
+                  <i>✓</i><em class="xk">创建完毕后，手工到库位档案里面录入信息</em></label>
+              </div>
+            </div>
+            <a style="display: inline-block;margin-left: 350px;margin-top: 20px;" href="javascript:;">
+           		<span class="btn-primary  btn-next" id="back1">返回</span>
+           		<span class="btn-primary  btn-next" id="btn_part2">下一步</span>
+            </a>
+             </div>
+            
+          <!--part2-->
+          
+          <div class="part3" style="display:none">
+            <div class="content-title">
+              <p>货物档案信息</p>
+            </div>
+            <div class="copy"> <em class="xk">复制来源仓储中心</em>
+              <select class="form-style" id="whcenterSelect_2">
+              </select>
+              <span class="note">（只能复制货物属性 PUBLIC）</span> </div>
+            <a style="display: inline-block;margin-top: 160px;" href="javascript:;">
+            	<span class="pass" id="pass">跳过</span>
+           		<span class="btn-primary  btn-next" id="back2">返回</span>
+           		<span class="btn-primary  btn-next" id="btn-next">下一步</span>
+            </a>
+            </div>
+          <!--结束-->
+          
+          <div class="part4" style="display:none">
+            <div class="content-title">
+              <p>确定信息</p>
+            </div>
+            <div class="part4-content" style="padding:25px;">
+              <div class="storage-center clearfix"> <span class="center-title">新建立的仓储中心</span>
+              		<span id="newWhcenter" style="border: 1px solid #e3e3e3; padding: 5px 10px 5px 10px;"></span>
+              <!--   <ul>
+                  <li id="newWhcenter"></li>
+                </ul> -->
+              </div>
+              <div class="storage-center clearfix" style="margin-top:20px;"> <span class="center-title">库区的建立方式</span>
+                	<span id="areaLocType" style="border: 1px solid #e3e3e3; padding: 5px 10px 5px 10px;"></span>
+              <!--   <ul>
+                  <li id="areaLocType"></li>
+                </ul> -->
+              </div>
+              <div class="storage-center clearfix" style="margin-top:20px;"> <span class="center-title" id="goodsType">货物的建立方式</span>
+	           		<div id="gridControl_copy" style="margin: 25px 25px 10px;">
+						<table id="gridTable_copy">
+						</table>
+						<div id="gridPager_copy"></div>
+				    </div>
+              </div>
+              <a style="display: inline-block;margin-left: 300px;" href="javascript:;">
+           		<span class="btn-primary  btn-next" id="back3">返回</span>
+           		<span class="btn-primary  btn-next" id="btn_part4">确定</span>
+              </a>
+              </div>
+          </div>
+          <div class="part5" style="display:none">
+            <div class="content-title">
+              <p>完成</p>
+            </div>
+            <div class="content" style="text-align:center; padding:80px 50px 100px; "> <img src="../../Resource/css/view/img/complete.png" />
+              <p class="complete-text">仓储中心设置完成</p>
+            </div>
+            <a href="javascript:;" style="margin-left: 410px;">
+            <span class="btn-primary  btn-next" id="btn_part5">完成</span>
+          	</a>
+          	 </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script src="../../Resource/js/register.js"></script>
+<script type="text/javascript" src="../../Resource/js/jsLinq/linq.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/regex/regex.js"></script>
+<script language="javascript" type="text/javascript">
+var idList = [];//货物id
+var tempWz_WhcenterVO = {};//临时仓储中心数据
+$(function(){	
+	initData();
+	initScript();
+	//第一页的确定按钮
+	$("#btn_part1").click(function(){						
+		if(!verifyCheck._click()) return;
+		if (!validate()) {
+			return;
+		}
+		if(!isExistWhcenter()) {
+			return;
+		}
+		$(".part1").hide();
+		$(".part2").show();
+		$(".step li").eq(1).addClass("on");
+	});
+	
+	//第二��返回
+	$("#back1").click(function(){			
+		if(!verifyCheck._click()) return;
+		$(".part2").hide();
+		$(".part1").show();
+		$(".step li").eq(1).removeClass("on");	
+	});	
+	
+	//第二页的确定按钮
+	$("#btn_part2").click(function(){			
+		if(!verifyCheck._click()) return;
+		if (isSelect()) {
+			alert("请选择库区、库位建立方式");
+			return;
+		}
+		$(".part2").hide();
+		$(".part3").show();
+		$(".step li").eq(2).addClass("on");	
+	});	
+	
+	//第三页返回
+	$("#back2").click(function(){			
+		if(!verifyCheck._click()) return;
+		$(".part3").hide();
+		$(".part2").show();
+		$(".step li").eq(2).removeClass("on");	
+	});
+	
+	//第三页的确定按钮
+	$("#btn-next").click(function(){			
+		if(!verifyCheck._click()) return;
+		$(".part3").hide();
+		$(".part4").show();	
+		$(".step li").eq(3).addClass("on");
+		confirmData();
+	});	
+	$("#pass").click(function(){	
+		if(!verifyCheck._click()) return;
+		$(".part3").hide();
+		$(".part4").show();	
+		$(".step li").eq(3).addClass("on");
+		confirmData();
+	});	
+	
+	//第四页返回
+	$("#back3").click(function(){			
+		if(!verifyCheck._click()) return;
+		$(".part4").hide();
+		$(".part3").show();
+		$(".step li").eq(3).removeClass("on");	
+	});
+	
+	//第四页的确定按钮
+	$("#btn_part4").click(function(){	
+		save();
+	});	
+	
+	
+	//第五页的确定按钮
+	$("#btn_part5").click(function(){			
+		window.parent.location.reload();
+	});
+	
+	//关闭
+	$("#close").click(function(){
+		window.parent.location.reload();
+	});
+	
+    $("select#whcenterSelect_2").change(function(){
+    	var gridAllData = $("#gridTable_select").jqGrid("getRowData");
+    	if (gridAllData.length > 0) {
+   		   $.messager.confirm('提示', '切换仓储中心会清空已选择的货物,是否继续?', function (r) {
+   	   	        if (r) {	
+   	   	      		jQuery("#gridTable_select").jqGrid("clearGridData");
+   	   	        }
+   	   	    });
+    	}
+		searchData();
+	});
+	
+});
+
+
+$(window).load(function() {
+	try
+	{
+		showLoading();
+		hideLoading(); // 隐藏加载的圈圈
+	}catch(e1)
+	{}
+});
+
+var initData = function() {
+	$("#state_Y").click();
+
+	//获取来源仓储中心下拉框
+	$.ajax({
+		url : "../../bzbhInfo/wz_whcenter/findAllWhcenter",
+		data : '',
+		async : false,
+		type : "POST",
+		success:function(dataObj){
+			if (dataObj.length > 0){
+				var a = 1;
+				Enumerable.From(dataObj).Where(function(i) {
+					return true;
+				}).ToArray().forEach(function(i) {
+				$("#whcenterSelect").append('<option value="'+i.code+'">'+i.code+'--'+i.name+'</option>');
+				$("#whcenterSelect_2").append('<option value="'+i.code+'">'+i.code+'--'+i.name+'</option>');
+				});
+	        }else{
+	        	$("#copy_whcenter").find("input:radio").attr("disabled","disabled");
+	            FailResultDataToTip(dataObj);
+	        }
+	        
+		}
+	});
+}
+
+var initScript = function() {
+}
+
+
+var isExistWhcenter = function () {
+	var wz_WhcenterVO = {};
+	var isExist = true;
+	wz_WhcenterVO.code = $("#code").textbox('getValue');
+	$.ajax({
+		url : "../../bzbhInfo/wz_whcenter/isExistWhcenter?t=" + Math.random(),
+		contentType : 'application/json;charset=utf-8', // 设置请求头信息
+		data : JSON.stringify(wz_WhcenterVO),
+		async : false,
+		type : "POST",
+		success:function(dataObj){
+			if (dataObj=="") {
+				return true;
+	        }else{
+	        	isExist = false;
+	        	FailResultDataToTip(dataObj);
+	        }
+		}
+	});
+	return isExist;
+}
+
+
+var validate = function() {
+	var validated = $("#addForm").form('enableValidation').form('validate');
+	if (!validated) {
+		errorNotification({
+			SimpleMessage : "保存操作中部分数据验证不通过"
+		});
+		return false;
+	}
+	return true;
+}
+
+var isSelect = function(){
+	  var radios = document.getElementsByName("areaLoc");
+	  for ( var i = 0; i < radios.length; i++) {
+	  if (radios[i].checked==true) {
+		  return false;
+	   		}
+	  }
+	  return true;
+	 }
+
+
+
+
+//确认信息
+var confirmData = function () {
+	//仓储中心
+	if($("#code").textbox("getValue")!="") {
+		$("#newWhcenter").html('编号：'+$("#code").textbox("getValue")+'，名称：'+$("#name").textbox("getValue"));
+	}
+	//库区库位方式
+	var type  = $("[class=archives]").find("[name=areaLoc]:checked").val();
+	if (type == 'copy') {
+		$("#areaLocType").html('复制来源仓储中心');
+	} else if (type == 'automatic') {
+		$("#areaLocType").html('系统自动创建库区信息（S 收货区、K 存放区、D 冻结区、C 出库区）');
+	} else {
+		$("#areaLocType").html('创建完毕后，手工到库位档案里面录入信息');
+	}
+	
+	$("#goodsType").html('货物的建立方式（未设置）');
+}
+
+
+//创建完成
+function loadform() {
+	$('#addForm').form({
+		url : "../../bzbhInfo/wz_whcenter/createNewWhcenter?tempWz_WhcenterVO="+JSON.stringify(tempWz_WhcenterVO)+ '&t=' + Math.random(),
+		onSubmit : function() {
+		},
+		success : function(data) {
+			var dataObj = eval('(' + data + ')');
+			if (isServerResultDataPass(dataObj)) {
+				correctNotification(dataObj.resultDataFull);
+				showLoading();
+				hideLoading();
+			} else {
+				showLoading();
+				hideLoading();
+				FailResultDataToTip(dataObj);
+			}
+		}
+	});
+}
+
+var save = function() {
+	$.messager.confirm('提示', '确定保存吗?', function(r) {
+		if (r) {
+			showLoading();
+			var type  = $("[class=archives]").find("[name=areaLoc]:checked").val();
+			tempWz_WhcenterVO.whcenter = $("#code").textbox("getValue");
+			tempWz_WhcenterVO.FromWH = (type=='copy' ? $("#whcenterSelect option:selected").val() : 'N' );
+			tempWz_WhcenterVO.AutoLoca = (type=='automatic' ? 'Y' : 'N' );
+			tempWz_WhcenterVO.tempNO = 'N';
+			tempWz_WhcenterVO.ids = idList;
+			$("#addForm").submit();  
+			loadform();
+			hideLoading();
+			if(!verifyCheck._click()) return;
+			$(".part4").hide();
+			$(".part5").show();	
+			$(".step li").eq(4).addClass("on");
+		} 
+	});
+};
+
+</script>
+</body>
+</html>

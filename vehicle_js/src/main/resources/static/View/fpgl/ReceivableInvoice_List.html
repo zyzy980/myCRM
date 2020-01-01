@@ -1,0 +1,390 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+    <link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+    <link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/moment/css/daterangepicker.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/fileUpload/css/fileUpload.css" />
+    <title>收款发票清单</title>
+</head>
+<body>
+<div id="toolbar" class="easyui-panel" style="padding:4px;border-width:0;border-bottom-width:1px;">
+    #{PAGE_TOOLBAR_BUTTONROLE}
+</div>
+<div class="searchParamesPanel">
+    <table id="searchParamesTable">
+        <tr class="searchParamesTrShow">
+            <td class="searchParamesTdControl">
+                <input type="text" id="common_sheet_title" class="easyui-textbox" style="width: 240px" />
+            </td>
+            <td width="20px;"></td>
+            <td class="searchParamesTdTitle">
+                创建时间:
+            </td>
+            <td class="searchParamesTdControl">
+                <input type="text" name="begin_date" id="begin_date" class="easyui-datebox" editable="false" style="width: 90px" />
+            </td>
+            <td class="searchParamesTdTitle">
+                -
+            </td>
+            <td class="searchParamesTdControl">
+                <input type="text" name="end_date" id="end_date" class="easyui-datebox" editable="false" style="width: 90px" />
+            </td>
+            <td width="20px;"></td>
+            <td class="searchParamesTdTitle">
+                客户:
+            </td>
+            <td class="searchParamesTdControl">
+                <input type="text" name="cus_no" id="cus_no" class="easyui-combobox" />
+            </td>
+            <td width="20px;"></td>
+            <td class="searchParamesTdTitle">
+                状态:
+            </td>
+            <td class="searchParamesTdControl">
+                <div id="divStatus"></div>
+            </td>
+        </tr>
+    </table>
+</div>
+<div id="gridControl">
+    <table id="gridTable"></table>
+    <div id="gridPager"></div>
+</div>
+<div id="fileUpload" style="position: absolute; left: 50%; top: 50%;
+	 width: 600px; height: 400px; margin-left: -300px; margin-top: -200px; display: none;"></div>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/moment/js/moment.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/moment/js/jquery.daterangepicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/upload.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/file.js"></script>
+<script language="javascript" type="text/javascript">
+    $(function() {
+        initScript();
+        initData();
+        initStyle();
+    });
+
+    $(window).load(function() {
+        hideLoading();
+    });
+
+    var initStyle = function() {
+        enterTriggerEvent('searchParamesTable', 'searchData');
+    };
+
+    var initScript = function() {
+        $("#common_sheet_title").textbox({
+            prompt: $.i18n.prop("COMMON_SHEET_TITLE")
+        });
+        $(window).resize(function() {
+            setGridHeightWidth();
+            setToolbarHeightWidth();
+        });
+    };
+
+    // 加载数据
+    var initData = function() {
+        getDictionaryData([{
+            dicTypeCode: Global_DicType.Invoice_State,
+            ADD_ALL: true,
+            callback: function (callbackData) {
+                window.stateList = {};
+                for(var i = 0; i < callbackData.length; i++){
+                    stateList[callbackData[i].dicvalue] = callbackData[i].dictext;
+                }
+                var formatData = { data: callbackData, needChooseAll: false, chooseAllValue: "", defaultValue: "0",
+                    bindBoxName: "divStatus", bindControlPrefix: "status", onClick:function(){
+                        searchData();
+                    } };
+                formatDefaultRadio_Local(formatData);
+            }
+        }]);
+
+        getBaseData([{
+            //初始化承运商档案
+            dicTypeCode : Global_BaseDataKey.CR_CUSTOMER,
+            callback : function(callbackData) {
+                $("#cus_no").combobox({
+                    valueField: 'code',
+                    textField: 'name',
+                    panelWidth: 250,
+                    panelHeight: 150,
+                    editable: true,
+                    onSelect:function () {
+                        searchData();
+                    }
+                });
+                callbackData.unshift({code: "", name: "所有"});
+                $("#cus_no").combobox("loadData", callbackData);
+            }
+        }]);
+        loadList();// 加载数据列表
+    };
+
+    // 查询数据
+    function searchData() {
+        $('#gridTable').jqGrid('setGridParam', {
+            url: getSearchGridUrl(),
+            datatype: 'json',
+            postData: { 'filters': '' },
+            page: 1
+        }).trigger('reloadGrid');
+    };
+
+    // 获取查询URL
+    var getSearchGridUrl = function() {
+        var customSearchFilters = encodeURI(getSearchFilters());
+        return '../../fpgl/ReceivableInvoiceController/getListForGrid?' + Math.random() + '&customSearchFilters=' + customSearchFilters;
+    };
+
+    // 获取查询条件
+    var getSearchFilters = function() {
+        var parmsArray = [
+            [
+                { name: 'sheet_no', value: $('#common_sheet_title').textbox('getValue'), op: 'cn' },
+                { name: 'invoice_no', value: $('#common_sheet_title').textbox('getValue'), op: 'cn' },
+                { name: 'js_project', value: $('#common_sheet_title').textbox('getValue'), op: 'cn' }
+            ],
+            { name: 'cus_no', value: $('#cus_no').combobox('getValue'), op: 'eq' },
+            { name: '_d_create_date', value: $('#begin_date').textbox('getValue'), op: 'ge' },
+            { name: '_d_create_date', value: $('#end_date').textbox('getValue'), op: 'le' },
+            { name: 'state', value: $("#divStatus [name=status]:checked").val(), op: "eq" }
+        ];
+        return formatSearchParames(parmsArray);
+    };
+
+    // 加载数据列表
+    var loadList = function() {
+        $('#gridTable').jqGrid({
+            url: getSearchGridUrl(),
+            datatype: 'json',
+            width: 'none',
+            colNames: [
+                $.i18n.prop('ID'),
+                $.i18n.prop('DOC_NUMBER'),
+                $.i18n.prop('CUS_NAME'),
+                $.i18n.prop('CUS_TAX_NO'),
+                $.i18n.prop('CUS_ADDRESS_TEL'),
+                $.i18n.prop('CUS_BANK'),
+                $.i18n.prop('INVOICE_REMARK'),
+                $.i18n.prop('GOODS_NAME'),
+                $.i18n.prop('UNIT'),
+                $.i18n.prop('SPEC'),
+                $.i18n.prop('PRICE'),
+                $.i18n.prop('QTY'),
+                $.i18n.prop('AMOUNT'),
+                $.i18n.prop('TAX_RATE'),
+                $.i18n.prop('INVOICE_BY'),
+                $.i18n.prop('RECHECK_BY'),
+                $.i18n.prop('PAYEE'),
+                $.i18n.prop('TAX_TYPE_CODE'),
+                $.i18n.prop('STATE'),
+                $.i18n.prop('JS_PROJECT'),
+                $.i18n.prop('JS_NO'),
+                $.i18n.prop('CREATE_BY'),
+                $.i18n.prop('CREATE_DATE'),
+                $.i18n.prop('SHEET_NO'),
+                $.i18n.prop('INVOICE_NO'),
+                $.i18n.prop('INVOICE_DATE')
+            ],
+            colModel: [
+                { name: 'id', index: 'id', align: 'center', sorttype: 'int', sortable: false, key: true, width: 40, hidden: true, search: false },
+                { name: 'doc_number', index: 'doc_number', align: 'left',  width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }},
+                { name: 'cus_name', index: 'cus_name', align: 'left',width: 150, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'cus_tax_no', index: 'cus_tax_no', align: 'left', width: 150, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'cus_address_tel', index: 'cus_address_tel', align: 'left', width: 150, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'cus_bank', index: 'cus_bank', align: 'left', width: 180, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }},
+                { name: 'invoice_remark', index: 'invoice_remark', align: 'left', width: 180, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }},
+                { name: 'goods_name', index: 'goods_name', align: 'left', width: 120, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }},
+                { name: 'unit', index: 'unit', align: 'left', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }},
+                { name: 'spec', index: 'spec', align: 'left', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }},
+                { name: 'price', index: 'price', align: 'left', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }},
+                { name: 'qty', index: 'qty', align: 'left', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }},
+                { name: 'amount', index: 'amount', align: 'left', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+                    ,formatter: function (value, grid, rows) {
+                        return rows.amount.toFixed(2);
+                    }},
+                { name: 'tax_rate', index: 'tax_rate', align: 'left', width: 80, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+                    ,formatter: function (value, grid, rows) {
+                        var tax_rate=rows.tax_rate;
+                        if(tax_rate>0)
+                        {
+                            tax_rate=(tax_rate*100).toString()+"%";
+                        }
+                        return tax_rate;
+                    }},
+                { name: 'invoice_by', index: 'invoice_by', align: 'left', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }},
+                { name: 'recheck_by', index: 'recheck_by', align: 'left', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }},
+                { name: 'payee', index: 'payee', align: 'left', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }},
+                { name: 'tax_type_code', index: 'tax_type_code', align: 'left', width: 120, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }},
+                { name: 'state', index: 'state', align: 'left', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }, hidden: true},
+                { name: 'js_project', index: 'js_project', align: 'left', width: 200, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }, hidden: true },
+                { name: 'js_no', index: 'js_no', align: 'left', width: 200, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }, hidden: true },
+                { name: 'create_by', index: 'create_by', align: 'left', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] },hidden: true},
+                { name: 'create_date', index: '_d_create_date', align: 'center', width: 120, search: true, type: 'string',
+                    searchoptions: { sopt: ['ge'], dataEvents: [ { type: 'click', data: {}, fn: function() { WdatePicker(); } } ] },hidden: true },
+                { name: 'sheet_no', index: 'sheet_no', align: 'left',  width: 150, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }},
+                { name: 'invoice_no', index: 'invoice_no', align: 'left',  width: 150, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'invoice_date', index: '_d_invoice_date', align: 'center', width: 120, search: true, type: 'string', searchoptions: { sopt: ['ge'], dataEvents: [ { type: 'click', data: {}, fn: function() { WdatePicker(); } } ] }}
+            ],
+            shrinkToFit: false,
+            altRows: true,
+            altclass: 'gridSpacingClass',
+            forceFit: true,
+            cellLayout: 0,
+            scroll: false,
+            autowidth: true,
+            sortname: 'id',
+            sortorder: 'desc',
+            loadonce: false,
+            mtype: 'POST',
+            viewrecords: true,
+            rownumbers: true,
+            multiselect: true,
+            rowNum: 15,
+            height: '100%',
+            rowList: [15, 20, 30, 50],
+            pager: '#gridPager',
+            jsonReader: {
+                root: 'rows',
+                total: 'total',
+                page: 'page',
+                records: 'records',
+                repeatitems: false
+            },
+            gridComplete: function() {
+                $('.cbox').shiftSelect();
+            },
+            ondblClickRow: showChildModule,
+            loadComplete: function(xhr) {
+                FailResultDataToTip(xhr);
+            }
+        });
+        $('#gridTable').jqGrid('navGrid', '#gridPager',{
+            add : false,
+            edit : false,
+            del : false,
+            refresh : true
+        }, {}, {}, {}, {
+            multipleSearch : true,
+            closeOnEscape : true,
+            closeAfterSearch : true
+        });
+        $('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+            caption : $.i18n.prop('TOGGLE_GRID_COLUMNS'),
+            title : 'Set Columns',
+            onClickButton : toggleGridColumns
+        });
+        $('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+            caption : $.i18n.prop('TOGGLE_GRID_SEARCH_TOOLBAR'),
+            title : 'Quick Search',
+            onClickButton : toggleGridSearchToolbar
+        });
+        $('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+            caption: $.i18n.prop('EXPORT_TO_EXCEL'),// 导出数据
+            title: '收款发票',
+            buttonicon: 'ui-icon-disk',
+            onClickButton: function () {
+                ExportToExcel.call(this, {
+                    title : "收款发票"
+                });
+            }
+        });
+        setGridHeightWidth();
+    };
+
+    // 双击数据触发的事件
+    function showChildModule(id) {
+        var rowData = $("#gridTable").jqGrid('getRowData', id);
+        openDetail(rowData.sheet_no);
+    };
+
+    function edit(){
+        var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
+        if (selectRowItems.length == 0 || selectRowItems.length > 1) {
+            errorNotification({
+                SimpleMessage : "请选择一行数据行进行操作"
+            });
+            return;
+        }
+        showChildModule(selectRowItems[0]);
+    }
+
+    /**新增*/
+    function add() {
+        openDetail("");
+    }
+
+    /**打开明细*/
+    var openDetail = function (sheet_no) {
+        showLoading();
+        var href = "../View/fpgl/ReceivableInvoice_Detail.html?sheet_no="+sheet_no;
+        openDialog({ title: "收款发票明细", id: 'ReceivableInvoice_Detail', width:850, height: 520, isResize: true, href: href, closable: true });
+    }
+
+    function refreshCallerData() {
+        searchData();
+    }
+
+    /***导入修改*/
+    var importData = function(){
+        var importDetailUrl = "../../fpgl/ReceivableInvoiceController/importData?t="+ Math.random();
+        var downModuleFileUrl = "../../fpgl/ReceivableInvoiceController/exportTemplate";
+        if(!$("#fileUpload").zyUpload){
+            alert("上传javascript插件未引入");
+            return;
+        }
+        $("#fileUpload").zyUpload({
+            itemWidth : "60px", // 文件项的宽度
+            itemHeight : "60px", // 文件项的高度
+            url : importDetailUrl,
+            multiple : false, // 是否可以多个文件上传
+            dragDrop : true, // 是否可以拖动上传文件
+            del : true, // 是否可以删除文件
+            finishDel : false, // 是否在上传文件完成后删除预览
+            close : true,
+            fileTypeFilter : [ 'xls', 'xlsx' ],
+            remark : "<p>只能上传xls/xlsx格式文件</p><p style='color:red'>先导出数据，录入发票号和开票时间后再导入</p>",
+            isDownModuleFile : true,
+            downModuleFileUrl : downModuleFileUrl,
+            // 外部获得的回调接口
+            onSelect : function(files, allFiles) { // 选择文件的回调方法
+            },
+            onDelete : function(file, surplusFiles) { // 删除一个文件的回调方法
+            },
+            onFailure : function(file) { // 文件上传失败的回调方法
+            },
+            onComplete : function(responseInfo) { // 上传完成的回调方法
+                hideLoading();
+                $("#fileUpload").empty();
+                $("#fileUpload").hide();
+                var dataObj = JSON.parse(responseInfo);
+                if (isServerResultDataPass(dataObj)) {
+                    correctNotification({ SimpleMessage:dataObj.resultDataFull.simpleMessage });
+                    searchData();
+                } else {
+                    FailResultDataToTip(dataObj);
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>

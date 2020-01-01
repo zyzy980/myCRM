@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace：必须与对应的接口全类名一致 id:必须与对应接口的某个对应的方法名一致 -->
+<mapper namespace="com.bba.jcda.dao.ICr_CustomerDao">
+	<sql id="begin_page">
+		<if test="isPage == true">select A.* from (select rownum rn, T.* from (</if>
+	</sql>
+	<sql id="end_page">
+		<if test="isPage == true">)T where rownum &lt; ${page*rows+1}) A where A.rn >
+			${(page-1)*rows}</if>
+	</sql>
+
+	<!-- 客户-->
+	<sql id="cus_data">
+		 c.type
+		,c.code
+		,c.name
+		,c.tax
+		,c.in_address
+		,c.bank
+		,c.bank_no
+		,c.in_tel
+		,c.status
+		,c.pri
+		,c.city
+		,c.address
+		,c.remark
+		,c.create_by
+		,c.create_date
+		,c.id
+		from CR_CUSTOMER c
+	</sql>
+
+	<!-- 客户联系人-->
+	<sql id="cuslink_data">
+		c.cus_id
+		,c.state
+		,c.realname
+		,c.mobileno
+		,c.type
+		,c.position
+		,c.mail
+		,c.wechat
+		,c.dui_flag
+		,c.remark
+		,c.create_by
+		,c.create_date
+		,c.id
+		from CR_CUSTOMER_LINK c
+	</sql>
+
+	<!-- 查询客户列表 -->
+	<select id="findListForGrid" resultType="com.bba.jcda.vo.CrCustomerVO" parameterType="com.bba.util.JqGridParamModel">
+		<include refid="begin_page" />
+		select
+		<include refid="cus_data" />
+		<if test="filters!=null and filters!=''">where ${filters}</if>
+		<include refid="end_page" />
+	</select>
+
+	<!-- 查询客户列表数量 -->
+	<select id="findListForGridCount" resultType="int" parameterType="com.bba.util.JqGridParamModel">
+		select count(*) from (
+		select
+		<include refid="cus_data" />
+		) t
+		<if test="filters!=null and filters!=''">where ${filters}</if>
+	</select>
+
+	<!-- 查询客户联系人列表 -->
+	<select id="findCusLinkListForGrid" resultType="com.bba.jcda.vo.Cr_Customer_LinkVO" parameterType="com.bba.util.JqGridParamModel">
+		<include refid="begin_page" />
+		select
+		<include refid="cuslink_data" />
+		<if test="filters!=null and filters!=''">where ${filters}</if>
+		<include refid="end_page" />
+	</select>
+
+	<!-- 查询客户联系人数量 -->
+	<select id="findCusLinkListForGridCount" resultType="int" parameterType="com.bba.util.JqGridParamModel">
+		select count(*) from (
+		select
+		<include refid="cuslink_data" />
+		) t
+		<if test="filters!=null and filters!=''">where ${filters}</if>
+	</select>
+
+	<!--查询详情 -->
+	<select id="getDetail" resultType="com.bba.jcda.vo.CrCustomerVO" parameterType="com.bba.jcda.vo.CrCustomerVO">
+	  	select <include refid="cus_data" /> where 1=1
+		<if test="id!=null and id!='' and id!=0">and id=#{id}</if>
+		<if test="code!=null and code!=''">and code=#{code}</if>
+	</select>
+
+	<insert id="insertData" parameterType="com.bba.jcda.vo.CrCustomerVO">
+		insert into CR_CUSTOMER (type,code,name,tax,in_address,bank,bank_no,in_tel,status,pri,city,address,remark,create_by
+		) VALUES (
+			#{type,jdbcType=VARCHAR},#{code,jdbcType=VARCHAR}
+			,#{name,jdbcType=VARCHAR},#{tax,jdbcType=VARCHAR}
+			,#{in_address,jdbcType=VARCHAR},#{bank,jdbcType=VARCHAR}
+			,#{bank_no,jdbcType=VARCHAR},#{in_tel,jdbcType=VARCHAR}
+			,#{status,jdbcType=VARCHAR},#{pri,jdbcType=VARCHAR}
+			,#{city,jdbcType=VARCHAR},#{address,jdbcType=VARCHAR}
+			,#{remark,jdbcType=VARCHAR},#{create_by,jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<!--新增客户联系人-->
+	<insert id="batchInsertLinks" parameterType="java.util.List">
+		insert into CR_CUSTOMER_LINK (cus_id,cus_code,state,realname,mobileno,type,position,mail,wechat,dui_flag,remark,create_by,create_date)
+		<foreach item="item" index="index" collection="list" separator="union all">
+			select
+			#{item.cus_id,jdbcType=VARCHAR}
+			,#{item.cus_code,jdbcType=VARCHAR}
+			,#{item.state,jdbcType=VARCHAR}
+			,#{item.realname,jdbcType=VARCHAR}
+			,#{item.mobileno,jdbcType=VARCHAR}
+			,#{item.type,jdbcType=VARCHAR}
+			,#{item.position,jdbcType=VARCHAR}
+			,#{item.mail,jdbcType=VARCHAR}
+			,#{item.wechat,jdbcType=VARCHAR}
+			,#{item.dui_flag,jdbcType=VARCHAR}
+			,#{item.remark,jdbcType=VARCHAR}
+			,#{item.create_by,jdbcType=VARCHAR}
+			,sysdate
+			from dual
+		</foreach>
+	</insert>
+
+	<!--修改客户-->
+	<update id="updateData" parameterType="com.bba.jcda.vo.CrCustomerVO">
+		update CR_CUSTOMER set
+		<trim prefixOverrides=",">
+			<if test="type!=null">,type=#{type}</if>
+			<if test="name!=null">,name=#{name}</if>
+			<if test="tax!=null">,tax=#{tax}</if>
+			<if test="in_address!=null">,in_address=#{in_address}</if>
+			<if test="bank!=null">,bank=#{bank}</if>
+			<if test="bank_no!=null">,bank_no=#{bank_no}</if>
+			<if test="in_tel!=null">,in_tel=#{in_tel}</if>
+			<if test="status!=null">,status=#{status}</if>
+			<if test="pri!=null">,pri=#{pri}</if>
+			<if test="city!=null">,city=#{city}</if>
+			<if test="address!=null">,address=#{address}</if>
+			<if test="remark!=null">,remark=#{remark}</if>
+		</trim>
+		where id=#{id}
+	</update>
+
+	<!--修改客户联系人-->
+	<update id="updateLink" parameterType="com.bba.jcda.vo.Cr_Customer_LinkVO">
+		update CR_CUSTOMER_LINK set
+		<trim prefixOverrides=",">
+		<if test="realname!=null">,realname=#{realname}</if>
+		<if test="cus_code!=null">,cus_code=#{cus_code}</if>
+		<if test="mobileno!=null">,mobileno=#{mobileno}</if>
+		<if test="type!=null">,type=#{type}</if>
+		<if test="position!=null">,position=#{position}</if>
+		<if test="mail!=null">,mail=#{mail}</if>
+		<if test="wechat!=null">,wechat=#{wechat}</if>
+		<if test="dui_flag!=null">,dui_flag=#{dui_flag}</if>
+		<if test="state!=null">,state=#{state}</if>
+		<if test="remark!=null">,remark=#{remark}</if>
+		</trim>
+		where id=#{id}
+	</update>
+
+	<!--删除客户，先要删除客户联系人-->
+	<delete id="batchDelete" parameterType="java.util.List">
+		BEGIN
+		update CR_CUSTOMER_LINK set state ='0'
+		<foreach item="vo" collection="list" open="where" separator="or">
+			cus_id=#{vo.id}
+		</foreach>
+		;
+		update CR_CUSTOMER set status= '1'
+		<foreach item="vo" collection="list" open="where" separator="or">
+			id=#{vo.id}
+		</foreach>
+		;
+		END;
+	</delete>
+
+	<!--删除客户联系人-->
+	<delete id="deleteLinks" parameterType="java.util.List">
+		delete from CR_CUSTOMER_LINK
+		<foreach item="vo" collection="list" open="where" separator="or">
+			id=#{vo.id}
+		</foreach>
+	</delete>
+
+	<select id="selectHtList" parameterType="com.bba.jcda.vo.CrCustomerVO" resultType="com.bba.ht.vo.Ht_CusVO" >
+		select cus_no from HT_CUS where cus_no = #{code} and (state='0' or state='1')
+	</select>
+
+	<delete id="batchUpdate" parameterType="java.util.List">
+		BEGIN
+		update CR_CUSTOMER_LINK set state ='1'
+		<foreach item="vo" collection="list" open="where" separator="or">
+			cus_id=#{vo.id}
+		</foreach>
+		;
+		update CR_CUSTOMER set status= '0'
+		<foreach item="vo" collection="list" open="where" separator="or">
+			id=#{vo.id}
+		</foreach>
+		;
+		END;
+	</delete>
+</mapper>

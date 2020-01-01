@@ -1,0 +1,797 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  	<link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+    <link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />    
+    <link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+  	<link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+	<link type="text/css" rel="stylesheet" 	href="../../Resource/js/fileUpload/css/fileUpload.css" />
+	<link type="text/css" rel="stylesheet" href="../../Resource/js/fileinput/css/bootstrap.min.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/fileinput/css/fileinput.min.css" />
+<title>#{contractor.detail.thisPage}</title>
+<style type="text/css">
+@font-face{font-family:'Glyphicons Halflings';src:url(../../Resource/js/fileinput/fonts/glyphicons-halflings-regular.eot);src:url(../../Resource/js/fileinput/fonts/glyphicons-halflings-regular.eot?#iefix) format('embedded-opentype'),url(../../Resource/js/fileinput/fonts/glyphicons-halflings-regular.woff2) format('woff2'),url(../../Resource/js/fileinput/fonts/glyphicons-halflings-regular.woff) format('woff'),url(../../Resource/js/fileinput/fonts/glyphicons-halflings-regular.ttf) format('truetype'),url(../../Resource/js/fileinput/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular) format('svg')}
+.splitBox{display: table;width: 100%;height:20px;}
+.splitBox .splitTitle{display: table-cell;cursor:pointer; text-align:center;width:15%;font-size: 12px;font-weight: bold; color:#fff; background-color:#C2D3E9; vertical-align: middle;}
+.splitBox .splitTitle1{display: table-cell;cursor:pointer; text-align:center;width:16%;font-size: 12px;font-weight: bold; color:#fff; background-color:#C2D3E9; vertical-align: middle;}
+.splitBox .splitHr{display: table-cell;text-align: left;vertical-align: middle;}
+.splitBox .splitHr hr{height: 1px;border: none;border-top: 1px dotted #3eafe0;margin-top: 2px; margin-bottom: 2px;}
+.splitBox .splitRemark{display: table-cell;font-size: 12px;color: #3eafe0; text-align: right; width: 130px; vertical-align: middle; font-weight:bold;}
+.editTable table input{width:auto;}
+</style>
+</head>
+<body>
+	<div id="toolbar" style="padding: 4px; border-width: 0; border-bottom-width: 1px;">
+		 #{PAGE_TOOLBAR_BUTTONROLE}
+	</div>
+	<div id="tabLocation" class="easyui-tabs" data-options="tabPosition:'top',fit:true,headerWidth:80,tabWidth:80">
+	   <div data-locale-title="BasicInformation" style="padding: 3px">
+			<form id="addForm" class="easyui-form" method="post" data-options="novalidate:true">
+				<input type="hidden" id="sn" name="sn" />
+				<table class="editTable" >
+					<tr>
+						<td class="editRequiredTitle">#{CarrierID:}</td>
+						<td class="editControl" colspan="2">
+							<input type="text" data-locale-missingmessage="CarrierNumberCannotBeEmpty" data-options="required:true,validType:'length[1,40]'" name="code" id="code" class="easyui-textbox" />
+						</td>
+					
+						<td class="editRequiredTitle">#{CarrierName:}</td>
+						<td class="editControl" colspan="2">
+							<input type="text" data-locale-missingmessage="CarrierNameCannotBeEmpty" data-options="required:true,validType:'length[1,100]'" name="name" id="name" class="easyui-textbox" />
+						</td>
+					</tr>
+					<tr>
+						<td class="editTitle">#{CarrierAbbreviation:}</td>
+						<td class="editControl" colspan="2">
+							<input type="text" data-options="validType:'length[0,40]'" name="shortname" id="shortname" class="easyui-textbox" />
+						</td>
+	                <td class="editTitle">#{SupplyMode:}</td>
+					<td class="editControl" colspan="2">
+							<input type="text"  name="supply_method" id="supply_method" class="easyui-combobox" />
+					</td>
+					</tr>
+
+					<tr>
+						<td class="editTitle">#{Address:}</td>
+						<td class="editControl" colspan="7">
+							<input type="text" data-options="validType:'length[0,40]'" name="address" id="address" style="width: 100%;" class="easyui-textbox" />
+						</td>
+					</tr>
+					<tr>       
+						<td class="editTitle">#{Remark:}</td>
+						<td class="editControl" colspan="7">
+							<input type="text" data-options="validType:'length[0,200]'"  name="remark" id="remark" style="height:80px;width:100%;" class="easyui-textbox" />
+						</td>
+					</tr>
+					
+				</table>
+			</form>
+		</div>
+		   	<div data-locale-title="Contacts">
+              <table class="editTable">
+              <tr>
+                  <td colspan="8" style="border: 0px solid #EEEEEE; padding-left: 0; padding-top: 7px;">
+                      <div class="splitBox">
+                          <div class="splitTitle1">
+                           	<label data-locale="EmergencyMailRecipient"/>
+                          </div>
+                          <div class="splitHr">
+                              <hr />
+                          </div>
+                      </div>
+                  </td>
+              </tr>
+              <tr  style="border:0px;">
+                  <td>
+                  	<img onclick="add('gridTable1')" src="../../Resource/images/btn_bg_edit.png" width="25" height="25"/>
+                  </td>
+	    </tr>
+              <tr>
+                  <td>
+                    	<div id="gridControl1">
+              			<table id="gridTable1">
+              			</table>
+          			</div>
+                  </td>
+	    </tr>
+	    
+	     <tr>
+                  <td colspan="8" style="border: 0px solid #EEEEEE; padding-left: 0; padding-top: 7px;">
+                      <div class="splitBox">
+                          <div class="splitTitle">
+                           	<label data-locale="LoadingMailRecipient"/>
+                          </div>
+                          <div class="splitHr">
+                              <hr />
+                          </div>
+                      </div>
+                  </td>
+              </tr>
+              <tr>
+                  <td>
+                    	<img onclick="add('gridTable2')" src="../../Resource/images/btn_bg_edit.png" width="25" height="25"/>
+                  </td>
+	    </tr>
+              <tr>
+                  <td>
+                    	<div id="gridControl2">
+              			<table id="gridTable2">
+              			</table>
+          			</div>
+                  </td>
+	    </tr>
+          </table>     
+      </div> 
+		
+	</div>
+</body>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jsLinq/linq.js"></script>
+<script type="text/javascript" src="../../Resource/js/cookie/jquery.cookie.js"></script>
+<script type="text/javascript" src="../../Resource/js/moment/js/moment.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/cookie/jquery.cookie.js"></script>
+<script language="javascript" type="text/javascript">
+	var afterSave = "close";
+	var globalStateArray;
+	var imageJson = [];
+	var opts;
+	var code = "";
+	var userId = "";
+	var callerId = "";
+    var callerType = "";
+    var callbackFlag = "";
+    var savedRow1 = null;
+    var savedCol1 = null;
+    var savedRow2 = null;
+    var deleteBtn = $.i18n.prop('contractor.detail.field.delete');
+    var savedCol2 = null;
+
+
+	$(function() {
+		
+		$("#save").css("display", "inline-block");
+
+		var parms = getUrlParms();
+		userId = parms["userId"];
+		code = parms["code"];
+		if (userId) {
+			$("#sn").val(userId);
+			loadDetail();
+		}else{
+			hideLoading();
+		}
+		initScript();
+		initData();
+		initStyle();
+		var userLevle = $.cookie("userlevel");
+		if(userLevle=="2"){
+			$("#code").textbox('setValue',$.cookie("OSUN_partner"));
+			$("#name").textbox('setValue',$.cookie("OSUN_partner_name"));
+			$("#code").textbox('textbox').attr('readonly',true); 
+			$("#name").textbox('textbox').attr('readonly',true); 
+		}
+	});
+	$(window).load(function() {
+		
+	});
+
+	var initStyle = function() {
+		$(".combo-panel").css("padding-top","15px");
+		$(".combo-panel, .panel-body, .panel-body-noheader").css("padding","0px");
+	} 
+
+	var initScript = function() {
+
+	}
+
+	var initData = function() {
+      loadSupplyMethod();
+  	  loadList2();
+  	  loadList3();
+	}
+	
+	var saveValidationPass = function() {
+		var validated = $("#addForm").form('enableValidation').form('validate');
+		if (!validated) {
+			errorNotification({
+				SimpleMessage : $.i18n.prop('SomeDataVerificationFailsDuringTheSaveOperation')
+			});
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	var close = function() {
+		closeDialog("ContractorDetail");
+	}
+	
+	var loseGridFocus = function () {
+        if (savedRow1 && savedCol1) {
+            $('#gridTable1').jqGrid('saveCell', savedRow1, savedCol1);
+        }
+        if (savedRow2 && savedCol2) {
+            $('#gridTable2').jqGrid('saveCell', savedRow2, savedCol2);
+        }
+    }
+
+	var save = function() {
+		loseGridFocus();
+		if (!saveValidationPass()||!verified()) {
+			return;
+		}
+
+		$.messager.confirm($.i18n.prop('Prompt'), $.i18n.prop('AreYouSureToSave'), function(r) {
+			if (r) {
+				showLoading("#{contractor.detail.loading}#{contractor.detail.thisPage}...");
+				afterSave = "close";
+				save2();
+			}
+		});
+	}
+	
+	var verified = function () {
+    	loseGridFocus();
+        var errorMessage = "";
+        var mailUserArr = [];
+        var mailArr = [];
+        var gridAllData2 = $("#gridTable2").jqGrid("getRowData");
+        for (var i = 0; i < gridAllData2.length; i++) {
+            if (gridAllData2[i]["mailUser"] == "") {
+                errorMessage += "<p>#{LoadingMailRecipient}#{contractor.detail.message.di}" + (i + 1) + "#{contractor.detail.message.userValid}</p>";
+                break;
+            }
+
+            if (gridAllData2[i]["mail"] == "") {
+                errorMessage += "<p>#{LoadingMailRecipient}#{contractor.detail.message.di}" + (i + 1) + "#{contractor.detail.message.emailValid}</p>";
+                break;
+            }
+            
+            if(isInArray(mailUserArr,gridAllData2[i]["mailUser"])){
+                errorMessage += "<p>#{LoadingMailRecipient}#{contractor.detail.message.userNotRepet}</p>";
+            	break;
+            }
+            
+            if(isInArray(mailArr,gridAllData2[i]["mail"])){
+                errorMessage += "<p>#{LoadingMailRecipient}#{contractor.detail.message.mailNotRepet}</p>";
+            	break;
+            }
+            mailUserArr.push(gridAllData2[i]["mailUser"]);
+            mailArr.push(gridAllData2[i]["mail"]);
+        }
+        
+        var mailUserArr2 = [];
+        var mailArr2 = [];
+        var gridAllData = $("#gridTable1").jqGrid("getRowData");
+        for (var i = 0; i < gridAllData.length; i++) {
+            if (gridAllData[i]["mailUser"] == "") {
+            	errorMessage += "<p>#{EmergencyMailRecipient}#{contractor.detail.message.di}" + (i + 1) + "#{contractor.detail.message.userValid}</p>";
+            	break;
+            }
+
+            if (gridAllData[i]["mail"] == "") {
+                errorMessage += "<p>#{EmergencyMailRecipient}#{contractor.detail.message.di}" + (i + 1) + "#{contractor.detail.message.emailValid}</p>";
+                break;
+            }
+            if(isInArray(mailUserArr2,gridAllData[i]["mailUser"])){
+                errorMessage += "<p>#{EmergencyMailRecipient}#{contractor.detail.message.userNotRepet}</p>";
+            	break;
+            }
+            if(isInArray(mailArr2,gridAllData[i]["mail"])){
+                errorMessage += "<p>#{EmergencyMailRecipient}#{contractor.detail.message.mailNotRepet}</p>";
+            	break;
+            }
+            mailUserArr2.push(gridAllData[i]["mailUser"]);
+            mailArr2.push(gridAllData[i]["mail"]);
+        }
+
+        if (errorMessage != "") {
+            errorNotification({
+                SimpleMessage: $.i18n.prop('contractor.detail.message.guidValid'),
+                MoreMessage: errorMessage
+            });
+            return false;
+        }
+        return true;
+    }
+	
+	var save2 = function(){
+		
+		zdContractorVo = FormUtils.toJSONObject('form');
+		var spStr = $("#supply_method").combobox("getValues").join();
+		zdContractorVo.supply_method = spStr==""||spStr==undefined||spStr=="--#{contractor.detail.switch}--"?"":spStr;
+    	var gridAllData2 = $("#gridTable2").jqGrid("getRowData");
+    	var loadingUsers = [];
+        for (var i = 0; i < gridAllData2.length; i++) {
+        	var user = {};
+        	user.sn = gridAllData2[i].sn;
+        	user.mailUser = gridAllData2[i].mailUser;
+        	user.phone = gridAllData2[i].phone;
+        	user.mail = gridAllData2[i].mail;
+        	user.enabled = $(gridAllData2[i].enabled).val();
+        	user.role="LSP";
+        	user.mailGroup=zdContractorVo.code+"-LoadingPlan";
+        	loadingUsers.push(user);
+        }
+        
+        var gridAllData = $("#gridTable1").jqGrid("getRowData");
+        var emergencyUsers = [];
+        for (var i = 0; i < gridAllData.length; i++) {
+        	var user = {};
+        	user.sn = gridAllData[i].sn;
+        	user.mailUser = gridAllData[i].mailUser;
+        	user.phone = gridAllData[i].phone;
+        	user.mail = gridAllData[i].mail;
+        	user.enabled = $(gridAllData[i].enabled).val();
+        	user.role="LSP";
+        	user.mailGroup=zdContractorVo.code+"-Emergency";
+        	emergencyUsers.push(user);
+        }
+        zdContractorVo.userList =loadingUsers.concat(emergencyUsers);
+		$.ajax({
+			url : "../../jcda/contractor/save?"+Math.random(),
+			contentType : 'application/json;charset=utf-8',
+	        dataType:"json",
+	        type : "POST",
+	    	data : JSON.stringify(zdContractorVo),
+			success : function(dataObj) {
+				
+				if (isServerResultDataPass(dataObj)) {
+					correctNotification(dataObj.resultDataFull);
+					hideLoading();
+					afterSaveOperate();
+				} else {
+					hideLoading();
+					FailResultDataToTip(dataObj);
+				}
+			}
+		});
+	}
+	
+	var refreshCallerData = function () {
+        if (callerType == Global_Constant.Global_Constant_CallerType_Dialog) {
+            getDialog(callerId).refreshCallerData(callbackFlag);
+        } else {
+            getCurrentTab(callerId).refreshCallerData(callbackFlag);
+        }
+    }
+
+	var afterSaveOperate = function() {
+		switch (afterSave) {
+		case "close":
+			refreshCallerData();
+			close();
+			break;
+		case "clear":
+            $('form').form('clear');
+            $("#sn").val("0");
+			break;
+		}
+	}
+	
+	var getSearchFilters = function (val) {
+    	
+        var parmsArray = [
+		  { name: 'mail_group', value: val, op: "eq" }
+        ];
+
+        return formatSearchParames(parmsArray);
+    }
+	
+
+	var loadDetail = function() {
+		var supplierVO = {};
+	    supplierVO.sn = userId;
+	    supplierVO.code = code;
+		var serverUrl = "../../jcda/contractor/detail?t="+ Math.random();
+		$.ajax({
+			type : "POST",
+			url : serverUrl,
+			data :JSON.stringify(supplierVO),
+			contentType : 'application/json;charset=utf-8', // 设置请求头信息
+			success:function(dataObj) {
+				if (isServerResultDataPass(dataObj)) {
+					var detail = dataObj.resultDataFull;
+					$("#within_code").textbox('setValue', detail.within_code);
+					$("#code").textbox('setValue', detail.code);
+					$("#code").textbox('textbox').attr('readonly',true); 
+					$("#name").textbox('setValue', detail.name);
+					$("#shortname").textbox('setValue', detail.shortname);
+					$("#address").textbox('setValue', detail.address);
+					$("#remark").textbox('setValue', detail.remark);
+					$("#linkman").textbox('setValue', detail.linkman);
+					$("#linkmobile").textbox('setValue', detail.linkmobile);
+					
+					$("#supply_method").combobox('setValues', detail.supply_method);
+				} else {
+					FailResultDataToTip(dataObj);
+				}
+				hideLoading();
+			}
+		});
+		
+	}
+	
+	// 下拉框多选时对文本进行操作
+    var comboChange = function(){
+    	var comboList = $(this).combobox("getValues");
+        
+        var newComboList = [];
+        if(comboList!=null && comboList!=undefined){
+      	  for(var i = 0 ; i < comboList.length ; i++){
+      		  if(comboList[i].indexOf("--")==-1 && comboList[i]!=""){
+      			  newComboList.push(comboList[i]);
+      		  } else {
+      			  if(i!=0){
+      				  newComboList = ["--#{contractor.detail.switch}--"];
+      				  break;
+      			  }
+      		  }
+      	  }
+        }
+        if(newComboList.length<=0){
+        	newComboList = ["--#{contractor.detail.switch}--"];
+        }
+        $(this).combobox('setValues', newComboList);
+    }
+    
+	    // 加载“供应类型”下拉框
+	    function loadSupplyMethod() {
+	    	opts = [ { Value : '', Text : '--#{contractor.detail.switch}--'} ];
+	    	var param = {};
+	     	$.ajax({
+	     		url : "../../scts/basic/findDictionaryByType?type=supplyMethod&t=" + Math.random(),
+	     		data : JSON.stringify(param),
+	     		type : 'POST',
+	     		async : false,
+	     		contentType : 'application/json;charset=utf-8',
+	     		success : function(datas) {
+	     			
+	     			if (datas && datas.length > 0) {
+	        			for (var i = 0; i < datas.length; i++) {
+	        				opts.push({ Value : datas[i].code, Text : datas[i].values1 });
+	           			}
+	                }
+	   			}
+	    	}); 
+	    	$('#supply_method').combobox({ data : opts, valueField : 'Value', textField : 'Text', panelHeight : 200, editable : true ,multiple:true ,onChange : comboChange});
+	    	$('#supply_method').combobox('setValue', '');
+	    };
+	    
+	    var loadList2 = function () {
+	    	$("#gridTable2").jqGrid({
+	            url: getUserMailURL("LoadingPlan"),
+	            datatype: "json",
+	            width: "80%",
+	            colNames: [ '',  $.i18n.prop('contractor.detail.field.sn'),$.i18n.prop('contractor.detail.field.user'),$.i18n.prop('contractor.detail.field.phone'), 
+	                        $.i18n.prop('contractor.detail.field.mail'), $.i18n.prop('contractor.detail.field.enabled') ],
+	            colModel: [
+	                 { name : 'delete',width:40 , index : 'delete' ,align:'center',formatter:function(value,row,rowIndex){return "<a style='text-decoration:underline;color:blue;' href=javascript:deleteRow("+row.rowId+",\"gridTable2\")>"+deleteBtn+"</a>";}},
+	                 { name: 'sn', index: 'sn', hidden: true  },
+	                 { name: 'mailUser', index: 'mailUser', editable: true, edittype: 'text', align: 'left', fixed: true, width: 80, search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+		                , editoptions: {
+		                    dataEvents: [{ type: 'focus', data: {}, fn: function () {
+		                        $(this).select();
+		                    }
+		                    }]
+		                }
+	                },
+	                { name: 'phone', index: 'phone', editable: true, edittype: 'text', align: 'left', fixed: true, width: 100, search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+	                , editoptions: {
+	                    dataEvents: [{ type: 'focus', data: {}, fn: function () {
+	                        $(this).select();
+	                    }
+	                    }]
+	                },
+	                editrules:{
+	                    required : true,
+	                    custom:true,
+	                    custom_func:function(value, colNames){ 
+	                      if(!(/^(1[3-9])\d{9}$/.test(value))){
+	                         return [false, $.i18n.prop('contractor.detail.message.phoneFormatValid')]; 
+	                      }else{
+	                         return [true,""];
+	                      }  
+	                    }
+	                 },
+	            },
+	                { name: 'mail', index: 'mail', editable: true, edittype: 'text', align: 'left', fixed: true, width: 150, search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+		                , editoptions: {
+		                    dataEvents: [{ type: 'focus', data: {}, fn: function () {
+		                        $(this).select();
+		                    }
+		                    }]
+		                }/* ,
+		                editrules:{
+		                    required : true,
+		                    custom:true,
+		                    custom_func:function(value, colNames){ 
+		                      if(!(/^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/.test(value))){
+		                         return [false, $.i18n.prop('contractor.detail.message.mailFormatValid')]; 
+		                      }else{
+		                         return [true,""];
+		                      }  
+		                    }
+		                 }, */
+	            	},
+	            	{ name: 'enabled', index: 'enabled', align: 'center', width: 80,
+	            		formatter: function (value, rec, rowIndex) { 
+	            			var input = "";
+	            			if(value=="Y"){
+	            				input = "<input type='checkbox' onclick='$(this).val($(this).val()==\"N\"?\"Y\":\"N\" )' value='Y' checked style='display:block;position:relative;left:40%;' name='enabled'/>"
+	            			} else if(value=="N"){
+	            				input = "<input type='checkbox' onclick='$(this).val($(this).val()==\"N\"?\"Y\":\"N\" )' value='N' style='display:block;position:relative;left:40%;' name='enabled'/>";
+	            			} else {
+	            				input = "<input type='checkbox' onclick='$(this).val($(this).val()==\"N\"?\"Y\":\"N\" )' value='Y' checked style='display:block;position:relative;left:40%;' name='enabled'/>"
+	            			}
+	            			return input; 
+	            		}	
+	            	} 
+	            ],
+	            cellEdit: true,
+	            cellsubmit: 'clientArray',
+	            shrinkToFit: false,
+	            altRows: true,
+	            altclass: 'gridSpacingClass',
+	            forceFit: true,
+	            cellLayout: 0,
+	            scroll: false,
+	            autowidth: true,
+	            sortname: 'sn',
+	            sortorder: "asc",
+	            loadonce: false,
+	            mtype: "POST",
+	            viewrecords: true,
+	            rownumbers: true,
+	            rowNum: 100,
+	            height: "100%",
+	            rowList: [15, 20, 30, 50, 100],
+	            pager: "#gridPager",
+	            jsonReader: {
+	                root: "rows",
+	                total: "total",
+	                page: "page",
+	                records: "records",
+	                repeatitems: false
+	            },
+	            gridComplete: function () {
+	            },
+	            loadComplete: function (xhr) {
+	                FailResultDataToTip(xhr);
+	                hideLoading();
+	            },
+	            onSelectRow: function () {
+	            }
+	        });
+	        setGridHeightWidth();
+	        $('#gridTable2').setGridParam({
+	            beforeEditCell: function (rowid, cellname, value, iRow, iCol) {
+	                savedRow2 = iRow;
+	                savedCol2 = iCol;
+	            }
+	        }); 
+	    }
+	    var oldSetGridHeightWidth = setGridHeightWidth
+	    	
+	    setGridHeightWidth= function(){
+	    	oldSetGridHeightWidth(0, 380,"gridTable1");
+	    	oldSetGridHeightWidth(0, 380,"gridTable2");
+	    }
+	    var loadList3 = function () {
+	        $("#gridTable1").jqGrid({
+	            url: getUserMailURL("Emergency"),
+	            datatype: "json",
+	            width: "80%",
+	            colNames: ['',$.i18n.prop('contractor.detail.field.sn'), $.i18n.prop('contractor.detail.field.user'),$.i18n.prop('contractor.detail.field.phone'), 
+	                       $.i18n.prop('contractor.detail.field.mail'), $.i18n.prop('contractor.detail.field.enabled')],
+	            colModel: [
+	                { name : 'delete',width:40 , index : 'delete' ,align:'center',formatter:function(value,row,rowIndex){return "<a style='text-decoration:underline;color:blue;' href='javascript:deleteRow("+row.rowId+",\"gridTable1\")'>"+deleteBtn+"</a>";}},
+	                { name: 'sn', index: 'sn', hidden: true  },
+	                { name: 'mailUser', index: 'mailUser', editable: true, edittype: 'text', align: 'left', fixed: true, width: 80, search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+		                , editoptions: {
+		                    dataEvents: [{ type: 'focus', data: {}, fn: function () {
+		                        $(this).select();
+		                    }
+		                    }]
+		                }
+	                },
+	                { name: 'phone', index: 'phone', editable: true, edittype: 'text', align: 'left', fixed: true, width: 100, search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+	                , editoptions: {
+	                    dataEvents: [{ type: 'focus', data: {}, fn: function () {
+	                        $(this).select();
+	                    }
+	                    }]
+	                },
+	                editrules:{
+	                    required : true,
+	                    custom:true,
+	                    custom_func:function(value, colNames){ 
+	                      if(!(/^(1[3-9])\d{9}$/.test(value))){
+	                         return [false, $.i18n.prop('contractor.detail.message.phoneFormatValid')]; 
+	                      }else{
+	                         return [true,""];
+	                      }  
+	                    }
+	                 },
+	            },
+	                { name: 'mail', index: 'mail', editable: true, edittype: 'text', align: 'left', fixed: true, width: 150, search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+		                , editoptions: {
+		                    dataEvents: [{ type: 'focus', data: {}, fn: function () {
+		                        $(this).select();
+		                    }
+		                    }]
+		                }/* ,
+		                editrules:{
+		                    required : true,
+		                    custom:true,
+		                    custom_func:function(value, colNames){ 
+		                      if(!(/^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/.test(value))){
+		                         return [false, $.i18n.prop('contractor.detail.message.mailFormatValid')]; 
+		                      }else{
+		                         return [true,""];
+		                      }  
+		                    }
+		                 }, */
+	            	},
+	            	{ name: 'enabled', index: 'enabled', align: 'center', width: 80,
+	            		formatter: function (value, rec, rowIndex) { 
+	            			var input = "";
+	            			if(value=="Y"){
+	            				input = "<input type='checkbox' onclick='$(this).val($(this).val()==\"N\"?\"Y\":\"N\" )' value='Y' checked style='display:block;position:relative;left:40%;' name='enabled'/>"
+	            			} else if(value=="N"){
+	            				input = "<input type='checkbox' onclick='$(this).val($(this).val()==\"N\"?\"Y\":\"N\" )' value='N' style='display:block;position:relative;left:40%;' name='enabled'/>";
+	            			} else {
+	            				input = "<input type='checkbox' onclick='$(this).val($(this).val()==\"N\"?\"Y\":\"N\" )' value='Y' checked style='display:block;position:relative;left:40%;' name='enabled'/>"
+	            			}
+	            			return input; 
+	            		}	
+	            	}
+	            ],
+	            cellEdit: true,
+	            cellsubmit: 'clientArray',
+	            shrinkToFit: false,
+	            altRows: true,
+	            altclass: 'gridSpacingClass',
+	            forceFit: true,
+	            cellLayout: 0,
+	            scroll: false,
+	            autowidth: true,
+	            sortname: 'sn',
+	            sortorder: "asc",
+	            loadonce: false,
+	            mtype: "POST",
+	            viewrecords: true,
+	            rownumbers: true,
+	            rowNum: 100,
+	            height: "20%",
+	            rowList: [15, 20, 30, 50, 100],
+	            pager: "#gridPager",
+	            jsonReader: {
+	                root: "rows",
+	                total: "total",
+	                page: "page",
+	                records: "records",
+	                repeatitems: false
+	            },
+	            gridComplete: function () {
+	            },
+	            loadComplete: function (xhr) {
+	                FailResultDataToTip(xhr);
+	                hideLoading();
+	            },
+	            onSelectRow: function () {
+	            }
+	        });
+	        setGridHeightWidth();
+	        $('#gridTable1').setGridParam({
+	            beforeEditCell: function (rowid, cellname, value, iRow, iCol) {
+	                savedRow1 = iRow;
+	                savedCol1 = iCol;
+	            }
+	        });
+	    }
+	    
+	    var getUserMailURL = function(group){
+	    	var url = "../../jcda/generalUserMail/find?t="+ Math.random()+"&customSearchFilters=" + encodeURI(getSearchFilters(code+"-"+group));
+			return url;    	
+	    }
+	    
+	    var add = function (name) {
+	        loseGridFocus();
+	        var ids = $("#"+name).jqGrid('getDataIDs');
+	        var rowid = Math.max.apply(Math, ids);
+	        if (rowid == "-Infinity"){
+	            rowid = 0;
+	        }
+	        var newrowid = rowid + 1;
+	        var dataRow = {
+	        	rowid: newrowid,
+	        };
+	        $("#"+name).jqGrid("addRowData", newrowid, dataRow, "last");
+	    }
+	    
+	  //自定义验证 value=输入控件的值，name=列名称（来自colModel）
+	    function ValidateTvalue(value,name) {
+	            //#region 验证分数是否为数值
+	            var regu = "/^1(3[0-9]|5[189]|8[6789])[0-9]{8}$/";
+	            //var regu = "/^\+?(\d*\.\d{2})$/";
+	            var re = new RegExp(regu);
+	            if (re.test(value)) {
+	                return [true, ""];
+	            }
+	            else {
+	                return [false, $.i18n.prop('contractor.detail.message.phoneFormatValid')];
+	            }
+	            //#endregion
+	    }
+	  
+	    var deleteRow = function(index,name){
+	    	$.messager.confirm($.i18n.prop('Prompt'), '#{contractor.detail.message.deleteQuestion}?', function (r) {
+	    		if(r){
+	    			var rowData = $("#"+name+"").jqGrid('getRowData',index);
+	    			if(rowData.sn!='' && rowData.sn!=undefined && rowData.sn!=null){
+	    				showLoading("#{contractor.detail.loading}#{contractor.detail.thisPage}...");
+	                	$.ajax({
+	                		url : "../../jcda/generalUserMail/delete?t="+Math.random(),
+	                		data:{sn:rowData.sn},
+	                		type:"POST",
+	                		success:function(data){
+	                			  if (isServerResultDataPass(data)) {
+	                	                correctNotification({
+	                	                    SimpleMessage: data.resultDataFull.simpleMessage
+	                	                });
+	                	                $("#"+name).delRowData(index);
+	                	    	    	
+	                	    	    	if($("#"+name).jqGrid("getRowData").length<=0){
+	                	    	    		if(name=="gridTable1"){
+	                	    	    			savedRow1 = null;
+	                	    	                savedCol1 = null;
+	                	    	    		}else{
+	                	    	    			savedRow2 = null;
+	                	    	                savedCol2 = null;
+	                	    	    		}
+	                	    	    	}
+	                	            } else {
+	                	                FailResultDataToTip(data);
+	                	            }
+	                	            hideLoading();
+	                		}
+	                	});
+	    			}else {
+	    				$("#"+name).delRowData(index);
+	        	    	
+	        	    	if($("#"+name).jqGrid("getRowData").length<=0){
+	        	    		if(name=="gridTable1"){
+	        	    			savedRow1 = null;
+	        	                savedCol1 = null;
+	        	    		}else{
+	        	    			savedRow2 = null;
+	        	                savedCol2 = null;
+	        	    		}
+	        	    	}
+	    			}
+	    		}
+	    	});
+	    }
+	    function isInArray(arr,value){
+		    for(var i = 0; i < arr.length; i++){
+		        if(value === arr[i]){
+		            return true;
+		        }
+		    }
+		    return false;
+		}
+</script>
+</html>

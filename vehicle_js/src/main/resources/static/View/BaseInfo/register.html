@@ -1,0 +1,250 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link id="CustomTheme" type="text/css" rel="stylesheet"	href="../../Resource/css/index/customLightBlue.css" />
+    <link id="EasyuiTheme" type="text/css" rel="stylesheet"	href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+    <link id="JqgridTheme" type="text/css" rel="stylesheet"	href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/fileUpload/css/fileUpload.css" />
+    <link type="text/css" rel="stylesheet" href="../../View/ywgl/css/planExec.css" />
+    <style type="text/css">
+        .red{color:red;font-size:12px;}
+    </style>
+    <title>#{supplier.detail.thisPage}</title>
+</head>
+<body style="overflow:hidden;">
+<div id="orderDetailChild">
+    <div id="childBtn" style="border-top:1px dotted #c5dbec;border-left:1px dotted #c5dbec;border-right:1px dotted #c5dbec;width:99.5%">
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add'" width="15" height="15" onclick="addChild('detailChildTableId')"><label data-locale="addRow"/></a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="saveChildTable()"><label data-locale="saveDetail"/></a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="removn()"><label data-locale="closeTable"/></a>
+    </div>
+    <table id="detailChildTableId"></table>
+
+</div>
+<div id="toolbar" class="easyui-panel" style="padding: 4px; border-width:0; border-bottom-width:1px;">
+    #{PAGE_TOOLBAR_BUTTONROLE}
+</div>
+
+<form id="registerForm" class="easyui-form" method="post" data-options="novalidate:true">
+    <table class="editTable">
+        <tr>
+            <td class="editTitle" width="16%" >
+                <label data-locale="name"/>：
+            </td>
+            <td class="editControl"  width="34%">
+                <input class="easyui-textbox" id="userName" name="userName" style="width: 153px;" placeholder="请输入用户名..."/>
+                &nbsp;<span class="red">*</span>
+            </td>
+            <td class="editTitle" width="16%">
+                <label data-locale="possword"/>：
+            </td>
+            <td class="editControl" width="34%">
+                <input type="password" class="easyui-textbox" id="password"  name="password" placeholder="请输入密码...."  style="width: 153px;" />
+                &nbsp;<span class="red">*</span>
+            </td>
+        </tr>
+        <tr>
+            <td class="editTitle" >
+                <label data-locale="telephone"/>：
+            </td>
+            <td class="editControl">
+                <input id="mobile" class="easyui-textbox" name="mobile" style="width: 153px;" validType="phone" placeholder="请输入电话号码..."/>
+                &nbsp;<span class="red">*</span>
+            </td>
+            <td class="editTitle" >
+                <label data-locale="within code"/>：
+            </td>
+            <td class="editControl">
+                <input id="withinCode" class="easyui-textbox" name="withinCode" style="width: 153px;" placeholder="请输入内码..."/>
+                &nbsp;<span class="red">*</span>
+            </td>
+        </tr>
+        <tr>
+            <td class="editTitle" >
+                <label data-locale="company"/>：
+            </td>
+            <td class="editControl">
+                <input id="withinCodeName" class="easyui-textbox" name="withinCodeName" style="width:153px;" placeholder="请输入客户公司名称..."/>
+                &nbsp;<span class="red">*</span>
+            </td>
+            <td class="editTitle" >
+                <label data-locale="business data"/>：
+            </td>
+            <td class="editControl">
+                <input type="radio" id="ywdata1" name="ywdata" value="1" checked /><label for="ywdata1"><label data-locale="Y"/></label>
+                &nbsp;&nbsp;&nbsp;
+                <input type="radio" id="ywdata2" name="ywdata" value="0" /><label for="ywdata2"><label data-locale="N"/></label>
+            </td>
+
+
+        </tr>
+        <tr>
+            <td class="editTitle" >
+                <label data-locale="Duplicate data source"/>：
+            </td>
+            <td class="editControl">
+                <input id="within_code_src" class="easyui-textbox" name="within_code_src" value="TMS" style="width:153px;" />
+                &nbsp;<span class="red">*</span>
+                &nbsp;&nbsp;
+                <label data-locale="default TMS"/>
+            </td>
+
+            <td class="editTitle" >
+                <label data-locale="ywlocation first"/>：
+            </td>
+            <td class="editControl">
+                <input id="ywLocationOne" class="easyui-textbox" name="ywLocationOne" style="width:153px;" placeholder="请输入业务地点(必填���例如：北京)..."/>
+                &nbsp;<span class="red">*</span>
+            </td>
+
+        </tr>
+        <tr>
+            <td class="editTitle" >
+                <label data-locale="ywlocation second"/>：
+            </td>
+            <td class="editControl">
+                <input class="easyui-textbox" id="ywLocationTwo"  name="ywLocationTwo" style="width:153px;" placeholder="请输入业务地点...."/>
+            </td>
+
+            <td class="editTitle" >
+                <label data-locale="ywlocation third"/>：
+            </td>
+            <td class="editControl">
+                <input class="easyui-textbox" id="ywLocationThree"  name="ywLocationThree" style="width:153px;" placeholder="请输入业务地点...."/>
+            </td>
+
+        </tr>
+
+    </table>
+
+</form>
+<script type="text/javascript" src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/upload.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/file.js"></script>
+<script type="text/javascript" src="../../Resource/js/cookie/jquery.cookie.js"></script>
+<script language="javascript" type="text/javascript">
+
+
+    hideLoading();
+
+    var validateData = function() {
+        //LTJ：2019-03-18
+        SaveData();
+        return;
+
+        //2019-03-18以前代码
+        var ywLocation = $("#ywLocationOne").val();
+        if(ywLocation == "") {
+            alert($.i18n.prop('register_firstYwlocationCannotBeEmpty'));
+            return;
+        }
+        register();
+    }
+
+    function reflush()
+    {
+        window.location.href=window.location.href+"?t="+Math.random();
+    }
+
+    var register = function() {
+        var registerVO = FormUtils.toJSONObject($("#registerForm"));
+        window.registerVO = registerVO;
+        let href = '../View/SysInfo/validatePassword.html?t=' + Math.random() + '&state=validRegister';
+        showLoading("#{supplier.loading}...");
+        openDialog({ title: $.i18n.prop('supplier.page.detail.title'), id: 'SupplierDetail', width: 390, height: 280, isResize: true, href: href, closable: true });
+    }
+
+    //保存数据
+    var SaveData=function(){
+        var userName=$.trim($("#userName").val());
+        if(userName=="")
+        {
+            errorNotification({ SimpleMessage : $.i18n.prop('register_userNameCannotBeEmpty') });
+            return;
+        }
+        var password=$.trim($("#password").val());
+        if(password=="")
+        {
+            errorNotification({ SimpleMessage : $.i18n.prop('register_passwordCannotBeEmpty') });
+            return;
+        }
+        var mobile=$.trim($("#mobile").val());
+        if(mobile=="")
+        {
+            errorNotification({ SimpleMessage : $.i18n.prop('register_telphoneCannotBeEmpty') });
+            return;
+        }
+        var withinCode=$.trim($("#withinCode").val());
+        if(withinCode=="")
+        {
+            errorNotification({ SimpleMessage : $.i18n.prop('register_withinCodedCannotBeEmpty') });
+            return;
+        }
+        var withinCodeName=$.trim($("#withinCodeName").val());
+        if(withinCodeName=="")
+        {
+            errorNotification({ SimpleMessage : $.i18n.prop('register_companyNameCannotBeEmpty') });
+            return;
+        }
+
+        var within_code_src=$.trim($("#within_code_src").val());
+        if(within_code_src=="")
+        {
+            errorNotification({ SimpleMessage : $.i18n.prop('register_dataCannotBeEmpty') });
+            return;
+        }
+
+
+        var ywLocationOne=$.trim($("#ywLocationOne").val());
+        if(ywLocationOne=="")
+        {
+            errorNotification({ SimpleMessage : $.i18n.prop('register_ywLocationFirstCannotBeEmpty') });
+            return;
+        }
+        var registerVO = FormUtils.toJSONObject($("#registerForm"));
+
+        var url = '../../sysInfo/user/registerdata';
+        $.messager.confirm($.i18n.prop('register_tip'),'#{register_tipInfo}?', function(r) {
+            if(r) {
+                showLoading("#{running}...");
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: "jsondata="+encodeURI(JSON.stringify(registerVO)),
+                    success:function(dataObj){
+                        if(isServerResultDataPass(dataObj)){
+                            correctNotification(dataObj.resultDataFull);
+                        }else{
+                            FailResultDataToTip(dataObj);//提示
+                        }
+                        hideLoading();
+                    },
+                    error:function(message){
+                        FailResultDataToTip('出现错误，请联系管理人员');//提示
+                        hideLoading();
+                    }
+                });
+            }
+        });
+
+
+
+    }
+</script>
+</body>
+</html>

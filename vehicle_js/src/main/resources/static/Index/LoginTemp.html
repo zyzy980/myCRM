@@ -1,0 +1,361 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="shortcut icon" href="../Resource/images/favicon.ico" />
+<link type="text/css" rel="stylesheet" href="../Resource/css/index/index.css" />
+<link rel="stylesheet" href="../Resource/css/index/base.css" />
+<link rel="stylesheet" href="../Resource/css/index/login_1.css" />
+<title>#{SYSTEM_TITLE}</title>
+</head>
+<body>
+    <div class="login-box">
+    	<div class="login-top">
+            <div class="login-logo">
+                <p><label data-locale="LOGIN_WELCOME_TITLE"/></p>
+            </div>
+            <div class="login-trig">
+            	<a><label data-locale="LOGIN_WEB"/></a>
+            	<a id="zh_en" target="_self" href="Login.html?lang=en">English</a>
+                <a><label data-locale="LOGIN_ABOUT"/></a>
+            </div>
+    	</div>
+    	<div class="login-center-box">
+    		<div class="login-center">
+    			<!-- <img class="login-center-img" src="../Resource/css/img/img_login_left.png"/> -->
+    			<div class="login-center-left">
+    				<!--下面是图片框，点击login-ctrl，滑动并显示对应的图片，每张图片宽度480px-->
+    				<div class="login-center-img-box">
+    					<img class="login-center-img" src="../Resource/images/img_login_left01.png">
+    					<img class="login-center-img" src="../Resource/images/img_login_left02.png">
+    					<img class="login-center-img" src="../Resource/images/img_login_left03.png">
+    				</div>
+    				<div class="login-center-ctrl-box">
+    					<span class="login-ctrl login-ctrl-cur"></span>
+    					<span class="login-ctrl"></span>
+    					<span class="login-ctrl"></span>
+    				</div>
+    			</div>
+        		<div class="login-cont">
+        			<div class="login-contbox">
+            			<span class="login-tit">
+            				<img src="../Resource/images/ico_logo.png"/>
+            			</span>
+            			<form class="easyui-form" method="post">
+              			<ul>
+              			  	<li>
+                    			<div class="login-input-box">
+                    		        <img src="../Resource/css/img/icon-zhanghu.jpg"/>
+                    		        <input type="text" data-locale-placeholder="LOGIN_ACCOUNT" name="userId" id="userId"/>
+                    		        <div class="clearfix"></div>
+                    		    </div>
+                    		</li>
+                    		<li>
+                    			<div class="login-input-box">
+                    		        <img src="../Resource/css/img/icon-mima.jpg"/>
+                    		        <input type="password" data-locale-placeholder="LOGIN_PASSWORD" name="password" id="password"/>
+                    		        <div class="clearfix"></div>
+                    		    </div>
+                    		</li>
+                    		<li>
+                    			<div class="login-input-box">
+                    		        <img src="../Resource/css/img/icon-num.jpg"/>
+                    		        <input type="text" data-locale-placeholder="LOGIN_COMPANYID" name="within_code" id="within_code" />
+                    		        <div class="clearfix"></div>
+                    		    </div>
+                    		</li>	
+                    		<li>
+                    			<div class="login-cont-left">
+                    		    	<input class="checkbox" type="checkbox" value="" id="next_password"/>
+                    		        <p><label data-locale="LOGIN_FORGET"/></p>
+                    		    </div>
+                    		    <a id="resetbtn" ><label data-locale="LOGIN_RESET"/></a>
+                    		    <div class="clearfix"></div>
+                    		</li>
+                    		<li>
+                    			<a class="login-btn" id="loginbtn" name="loginbtn"><label data-locale="LOGIN_LOGIN"/></a>
+                    		</li>
+                    		<li>
+                            <div id="msg" style="display: none;margin-top: -20px; color: #999999">
+                                <img src="../Resource/images/index/onLoad.gif" style="vertical-align: middle;" />
+                                <span style="display: inline; font-size: 12px;"><label data-locale="LOGIN_LOADING"/></span></div>
+                        </li>
+                		</ul>
+                		</form>
+            		</div>
+        		</div>
+        	</div>
+        </div>
+        <div id="ywLocationBox" class="ywLocationBox">
+        <div id="ywLocationClose" class="ywLocationClose">
+            <img src="../Resource/images/index/close2.png" /></div>
+        <div class="ywLocationContent">
+        </div>
+    </div>
+        <div class="login-bottom">
+        	<p>Copy&nbsp;Right&nbsp;&nbsp;©&nbsp;&nbsp;2017&nbsp;<label data-locale="LOGIN_COPY_RIGHT"/></p>
+        </div>
+    </div>
+	<div id="createWhcenter" style="height:100%;width:100%;position: absolute;left: 80px;top: 0px;display: none;">
+		<!-- 
+		<iframe id="createFirstWhcenter" height="650px" width="1200px" src="../View/SysInfo/createFirstWhcenter.html"></iframe>
+		 -->
+	</div>
+</body>
+<script type="text/javascript" src="../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../Resource/js/cookie/jquery.cookie.js"></script>
+<script type="text/javascript" src="../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript">
+var lang="zh";
+var langText="中文";
+var Token="Token";
+$(function () {
+   initScript();
+   initData();
+    
+   var parms = getUrlParms();   
+   if(parms["lang"]==undefined || parms["lang"]==null || parms["lang"]=="" || parms["lang"]=="zh")
+   {   
+	   lang="en";
+	   langText="English";
+   }
+   $("#zh_en").attr("href","Login.html?lang="+lang).text(langText);
+   
+   $("#userId").val("admin");
+   $("#password").val("1");
+   $("#within_code").val("1");
+});
+
+var initData = function () {
+    $("#userId").val($.cookie('OSUN_userId'));
+    $("#password").val($.cookie('OSUN_password'));
+    $("#within_code").val($.cookie('OSUN_within_code')); 
+    
+    if($.cookie('OSUN_userId')){
+    	$("#next_password").attr("checked","checked");
+    }
+}
+
+var initScript = function () {
+    $("#userId").focus();
+
+    $("#loginbtn").click(function () {
+		submitLogin();
+    });
+
+    $("#resetbtn").click(function () {
+        $("#userId").val("");
+        $("#password").val("");
+         $("#withinCode").val("");
+        $("#location").empty("");
+    });
+
+    $("#ywLocationClose").click(function () {
+        $(this).parent().animate({
+            height: 'toggle'
+        });
+    });
+
+    $('body').keydown(function (e) {
+        if (e.keyCode == 13) {
+            $("form").submit();
+        }
+    });
+}
+
+var massageDisplay = function (displayIco, displayContent, display, fontColor) {
+    $("#msg img").attr("src", "../Resource/images/index/" + displayIco);
+    $("#msg span").text(displayContent);
+    $("#msg span").css("color", fontColor);
+    $("#msg").css("display", display);
+}
+
+var submitVerified = function () {
+    if ($("#userId").val() == "") {
+        massageDisplay("error.png", "用户名不能为空", "block", "#CC0033");
+        return false;
+    }
+
+    if ($("#password").val() == "") {
+        massageDisplay("error.png", "密码不能为空", "block", "#CC0033");
+        return false;
+    }
+    return true;
+}
+
+var submitLogin = function () {
+    if (!submitVerified()) {
+        return;
+    }
+    $(".ywLocationContent").empty();
+    $("#loginbtn").attr("disabled", "disabled");
+    $("#resetbtn").attr("disabled", "disabled");
+    massageDisplay("onLoad.gif", "正在登录...", "block", "#999999");
+    LoginServer();
+}
+
+// 加载公司编码下系统业务地点
+var loadYwLocation = function (withinCode) {
+        //       1、登录成功并且该公司编码下有多个系统，则弹出选择业务地点页面
+        //       2、登录成功并且该公司编码下只有一个系统，则直接进入该业务地点
+        //       3、登录成功并且该公司编码个性化设置中设置了默认登录业务地点，则直接进入该业务地点
+        var serverUrl = "../sysInfo/custom/getUserCustom?";
+        $.ajax({
+    		url: serverUrl+ Math.random(),
+         	data:{},
+         	type:"POST",
+         	success:function(data){
+         		if (data != null && data.resultCode == 0 && data.resultDataFull != null) {
+         			var ywLocationCode = data.resultDataFull.defaultYwLocation;
+                    if (data.resultDataFull.userHeadPic != "" && data.resultDataFull.userHeadPic != null) {
+                        $.cookie('abisUserHeadPic', data.resultDataFull.userHeadPic, { path: '/' });
+                    }
+                    $.cookie('abisTheme', data.resultDataFull.theme, { path: '/' });
+                    $.cookie('abisIsMaxDisplay', data.resultDataFull.isMaxDisplay, { path: '/' });
+                    var serverUrl1 = "../jcda/Zd_YWLocation/findWhcenterListByUser?t=";
+                    var param = {withinCode:withinCode,state:1};
+                    $.ajax({
+                		url: serverUrl1+ Math.random(),
+                     	data:{},
+                     	type:"POST",
+                     	success:function(dataObj){
+                     		if (dataObj != null && dataObj.resultCode == 0 & dataObj.resultDataFull != null) {
+                     			
+                     			for(var i=0;i<dataObj.resultDataFull.length;i++){
+                     				dataObj.resultDataFull.datalist[i].code = dataObj.resultDataFull.datalist[i].whcenter;
+                     				dataObj.resultDataFull.datalist[i].name = dataObj.resultDataFull.datalist[i].name;
+                     			}
+                                 if (dataObj.resultDataFull.datalist.indexOf(ywLocationCode) >= 0) {
+                                    gotoYwLocation(dataObj.resultDataFull.datalist[i].code, dataObj.resultDataFull.datalist[0].name);
+                                 } 
+                                 var ywLocationItemCount = dataObj.resultDataFull.datalist.length;
+                                 if (dataObj.resultDataFull.isexist == 'NOEXIST') {
+                                	 alert("查询到用户无仓储中心,请设置");
+                                	 $("#createWhcenter").css('display','inline-block');
+                                	 return;
+                              	}
+                                if (ywLocationItemCount == 1) {
+                                    gotoYwLocation(dataObj.resultDataFull.datalist[0].whcenter, dataObj.resultDataFull.datalist[0].name);
+                                    return;
+                                }
+                          
+                                var ywLocationStr = "<div>";
+                                for (var i = 0; i < 8; i++) {                                	
+                                  	if(i<dataObj.resultDataFull.datalist.length){
+                                		if(i == 0){
+                                    		dataObj.resultDataFull.datalist[i].logo = "Resource/images/OSUN/nanjing.png";
+                                    	}else if(i == 1){
+                                    		dataObj.resultDataFull.datalist[i].logo = "Resource/images/OSUN/png-1197.png";
+                                    	}else if(i == 2){
+                                    		dataObj.resultDataFull.datalist[i].logo = "Resource/images/OSUN/png-1182.png";
+                                    	}else if(i == 3){
+                                    		dataObj.resultDataFull.datalist[i].logo = "Resource/css/img/ico_logo_ICMS.png";
+                                    	}else if(i == 4){
+                                    		dataObj.resultDataFull.datalist[i].logo = "Resource/images/OSUN/nanjing.png";
+                                    	}else if(i == 5){
+                                    		dataObj.resultDataFull.datalist[i].logo = "Resource/images/OSUN/png-1197.png";
+                                    	}else if(i == 6){
+                                    		dataObj.resultDataFull.datalist[i].logo = "Resource/images/OSUN/png-1182.png";
+                                    	}else if(i == 7){
+                                    		dataObj.resultDataFull.datalist[i].logo = "Resource/css/img/ico_logo_ICMS.png";
+
+                                    	}
+                                	}
+                                  	
+                                    if (ywLocationItemCount > i) {
+                                        ywLocationStr += "<div class=\"ywLocationContentEach\" onclick=\"gotoYwLocation('" + dataObj.resultDataFull.datalist[i].whcenter + "','" + dataObj.resultDataFull.datalist[i].name + "')\"><span>" + dataObj.resultDataFull.datalist[i].name + "</span><div><img alt=\"/" + dataObj.resultDataFull.datalist[i].name + "\" src=\"../" + dataObj.resultDataFull.datalist[i].logo + "\" /></div> </div>";
+                                    } else {
+                                        ywLocationStr += "<div class=\"ywLocationContentEach\"> </div>";
+                                    }
+
+                                    if (i == 3) {
+                                        ywLocationStr += "</div>";
+                                        ywLocationStr += "<div>";
+                                    }
+                                }
+                                ywLocationStr += "</div>";
+                                $("#ywLocationBox .ywLocationContent").append(ywLocationStr);
+                                $("#ywLocationBox").animate({
+                                    height: 'toggle'
+                                });
+                                
+                                $.cookie('OSUN_userId', $("#userId").val(), { path: '/' });
+                                if ($("#next_password").prop("checked")) {
+                					$.cookie('OSUN_password', $("#password").val(), { path: '/' });
+                					$.cookie('OSUN_within_code', $("#within_code").val(), { path: '/' });
+                                }else{
+                					$.cookie('OSUN_password', "", { path: '/' });
+                					$.cookie('OSUN_within_code', "", { path: '/' });
+                                }
+                            } else {
+                                massageDisplay("error.png", "加载业务地点列表失败", "block", "#CC0033");
+                            }
+                     		
+                     	},
+                     	error:function(message){
+                     		hideLoading();
+                     	}
+                     });
+                } else {
+                    massageDisplay("error.png", data.resultDataFull?data.resultDataFull.simpleMessage:"未知错误", "block", "#CC0033");
+                }
+         	},
+         	error:function(message){
+         		hideLoading();
+         	}
+         });
+        
+    }
+
+var gotoYwLocation = function (ywLocationCode, ywLocationName) {
+	$.cookie('OSUN_whcenter', ywLocationCode, { path: '/' });
+    var locationHref = "../Index/Main.html?lang="+((lang=="zh")?"en":"zh");
+    var serverUrl = "../sysInfo/user/setYwLocationSession";
+    var data = { ywLocationCode: ywLocationCode, ywLocationName: ywLocationName };
+    $.getJSON(serverUrl, data, function (dataObj) {
+        if (dataObj != null && dataObj.resultCode == 0 && dataObj.resultDataFull != null) {
+        	location.href = locationHref;
+        } else {
+            alert(dataObj.resultDataUi);
+        }
+    });
+}
+
+var LoginServer = function () {
+	var url="../sysInfo/user/loginIn";
+	url+="?userId="+ $("#userId").val()+"&password="+$("#password").val()+"&within_code="+$("#within_code").val()+"&t="+ Math.random();
+	
+	$.ajax({
+	    url:url,
+	    type:'get', //GET
+	    cache:false,//不缓存
+	    data:null, //JSON.stringify(data),
+	    timeout:10000,  //超时时间
+	    dataType:'text', //返回的数据格式：json/xml/html/script/jsonp/text
+	    contentType: 'text/plain;charset=utf-8', //'application/json',
+	    success:function(dataObj)
+	    {
+	    	var data=JSON.parse(dataObj);
+	    	if (data != null && data.resultCode == 0 && data.resultDataFull != null) {
+            	$.cookie(Token, data.resultDataFull.moreMessage, { expires: 7 * 24 * 60 * 60 * 1000,path: '/' });
+                massageDisplay("right.png", data.resultDataFull.simpleMessage, "block", "#006633");
+                loadYwLocation($("#withinCode").val());
+            } else {
+                massageDisplay("error.png", data.resultDataFull.simpleMessage, "block", "#CC0033");
+            }
+
+            $("#loginbtn").removeAttr("disabled");
+            $("#resetbtn").removeAttr("disabled");
+	    },
+	    error:function(xhr,textStatus)
+	    {
+	    	 massageDisplay("error.png","网络连接出错", "block", "#CC0033");
+	    }
+	});
+}
+</script>
+</html>

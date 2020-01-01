@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bba.nosettlement.dao.IJs_Non_Down_VehicleDao">
+
+    <sql id="begin_page"><if test="isPage == true">SELECT * FROM (SELECT t.*, ROWNUM RN FROM (</if></sql>
+    <sql id="end_page">
+        <if test="isPage == true">
+            <if test="filters!=null and filters!=''">where ${filters}</if>
+        </if>
+        ) t where ROWNUM &lt;= ${page} * ${rows}) WHERE RN &gt;=((${page} - 1) * ${rows} + 1)
+    </sql>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+              id id,
+			  type type,
+			  handover_no handover_no,
+			  service_type service_type,
+			  xunjia_no xunjia_no,
+			  vin vin,
+			  carrier_no carrier_no,
+			  carrier_name carrier_name,
+			  to_char(begin_date,'yyyy-mm-dd hh24:mi:ss')  begin_date,
+			  to_char(receipt_date,'yyyy-mm-dd hh24:mi:ss')  receipt_date,
+			  trans_mode trans_mode,
+			  car_type car_type,
+			  shipment_qty shipment_qty,
+			  js_qty js_qty,
+			  begin_address begin_address,
+			  end_address end_address,
+			  freight_basis freight_basis,
+			  mil mil,
+			  price price,
+			  not_tax_losed_car_price not_tax_losed_car_price,
+			  closed_num closed_num,
+			  not_tax_price not_tax_price,
+			  not_tax_freight not_tax_freight,
+			  not_tax_other_amount not_tax_other_amount,
+			  tax_amount tax_amount,
+			  not_tax_amount not_tax_amount,
+			  to_char(create_date,'yyyy-mm-dd hh24:mi:ss') create_date,
+			  not_tax_rescue_truck_price not_tax_rescue_truck_price,
+			  not_tax_rescue_truck_startoric not_tax_rescue_truck_startoric,
+			  tax_rate,
+			  js_no js_no,
+			  js_batch js_batch,
+			  vehicle_project vehicle_project,
+			  data_from data_from,
+			  js_state js_state,
+			  contract_no,
+			  contract_type,
+			  remark remark,
+			  create_by create_by,
+			  attribute attribute,
+			  js_data_type
+    </sql>
+
+    <select id="getListForGrid" parameterType="com.bba.util.JqGridParamModel" resultType="com.bba.nosettlement.vo.Js_Non_Down_VehicleVO">
+        <include refid="begin_page"/>
+        select <include refid="Base_Column_List"/> from JS_NON_DOWN_VEHICLE
+        <include refid="end_page"/>
+    </select>
+
+    <select id="getListForGridCount" parameterType="com.bba.util.JqGridParamModel" resultType="java.lang.Integer">
+        select count(*) from JS_NON_DOWN_VEHICLE
+        <if test="filters!=null and filters!=''">where ${filters}</if>
+    </select>
+
+
+
+	<update id="UpdateDataList" parameterType="java.util.List">
+		<!--数据驳回-->
+		begin
+		<foreach item="item" index="index" collection="list">
+			update js_non_down_vehicle
+			set js_state='0',
+			contract_no=null,
+			contract_type=null,
+			mil=0,
+			not_tax_freight=0,
+			not_tax_premium=0,
+			not_tax_other_amount=0,
+			tax_amount=0,
+			not_tax_rescue_truck_price=0,
+			not_tax_rescue_truck_startoric=0,
+			not_tax_amount=0,
+			js_no=null,
+			js_batch=null,
+			bill_number=null
+			where id=#{item.id};
+		</foreach>
+		end;
+	</update>
+
+	<update id="update" parameterType="com.bba.nosettlement.vo.Js_Non_Down_VehicleVO">
+		update js_non_down_vehicle set js_state = #{js_state},invoice_no=#{invoice_no},invoice_date=#{invoice_date}
+		where 1=1
+		<if test="js_no !=null and js_no!=''">and js_no=#{js_no}</if>
+		<if test="js_batch !=null and js_batch!=''">and js_batch=#{js_batch}</if>
+		<if test="carrier_no !=null and carrier_no!=''">and carrier_no=#{carrier_no}</if>
+	</update>
+
+	<select id="findContractVO" parameterType="com.bba.nosettlement.vo.Js_Non_Down_VehicleVO"  resultType="com.bba.ht.vo.Non_Ht_CarrierVO">
+		select * from NON_HT_CARRIER where state='1' and CARRIER_NO=#{carrier_no} and to_date(#{begin_date},'yyyy-mm-dd hh24:mi:ss')&gt;=BEGIN_DATE and to_date(#{begin_date},'yyyy-mm-dd hh24:mi:ss')&lt;=END_DATE and rownum=1 order by CONTRACT_TYPE desc
+	</select>
+
+	<select id="updateJs_Non_DownTemp_Vehicle" parameterType="java.util.List">
+		begin
+			<foreach collection="list" item="item" index="index">
+				update js_non_downtemp_vehicle set js_state=#{item.js_state} where vin_id=#{item.vin_id};
+			</foreach>
+		end;
+	</select>
+
+	<select id="findContractFreightVO" parameterType="com.bba.nosettlement.vo.Js_Non_Down_VehicleVO" resultType="com.bba.ht.vo.Non_Ht_Carrier_FreightVO">
+		select t.*,c.contract_no,c.contract_type from non_ht_carrier_freight t,non_ht_carrier c
+		where c.state='1' and c.sheet_no=t.sheet_no
+		<if test="carrier_no!=null and carrier_no!=''">and c.carrier_no=#{carrier_no}</if>
+		<if test="begin_date!=null">and c.begin_date <![CDATA[ <= ]]> to_date(#{begin_date},'YYYY-mm-dd') and c.end_date >= to_date(#{begin_date},'YYYY-mm-dd')</if>
+		<if test="trans_mode!=null and trans_mode!=''">and t.trans_mode=#{trans_mode}</if>
+		<if test="trans_fangan!=null and trans_fangan!=''">and t.trans_fangan=#{trans_fangan}</if>
+		<if test="begin_address!=null and begin_address!=''">and t.begin_city=#{begin_address}</if>
+		<if test="end_address!=null and end_address!=''">and t.end_city=#{end_address}</if>
+		order by c.contract_type desc
+	</select>
+
+</mapper>

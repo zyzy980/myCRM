@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace：必须与对应的接口全类名一致 id:必须与对应接口的某个对应的方法名一致 -->
+<mapper namespace="com.bba.xtgl.dao.IRoleDao">
+
+	<sql id="begin_page"><if test="isPage == true">SELECT * FROM (SELECT t.*, ROWNUM RN FROM (</if></sql>
+	<sql id="end_page">
+		<if test="isPage == true">
+			<if test="filters!=null and filters!=''">where ${filters}</if>
+		</if> 
+		) t where ROWNUM &lt;= ${page} * ${rows}) WHERE RN &gt;=((${page} - 1) * ${rows} + 1)
+	</sql>
+	
+	
+	<select id="getListForGrid" resultType="com.bba.xtgl.vo.RoleVO"	parameterType="com.bba.util.JqGridParamModel">
+		<include refid="begin_page" />
+		select
+		'edit' operateType,
+		roleid roleid,
+		within_code within_code,
+		rolename rolename,
+		roledescription roledescription,
+		create_by createby,
+		create_date	createdate,
+		update_by updateby,
+		update_date updatedate
+		from sys_role 
+		<include refid="end_page" />
+	</select>
+
+
+	<select id="getListForGridCount" resultType="java.lang.Integer"
+		parameterType="com.bba.util.JqGridParamModel">
+		select count(1) from sys_role
+		<if test="filters!=null and filters!=''">where ${filters}</if>
+	</select>
+
+	<select id="findRoleButtonList" resultType="com.bba.xtgl.vo.RoleVO">
+		select r.buttonid buttonId,
+		r.moduleid moduleId,
+		r.buttonname
+		buttonName,
+		r.buttonuse buttonUse,
+		r.buttonsdescription
+		buttonsDescription,
+		r.buttonicon buttonIcon,
+		r.buttonorder buttonOrder
+		from sys_rolebuttons r ,sys_module m 
+		where m.within_code=r.within_code and m.moduleid=r.moduleid
+		<if test="moduleName != null and moduleName != ''">
+			and m.moduleName=#{moduleName}
+		</if>
+		<if test="moduleid != null and moduleid != ''">
+			and moduleid = #{moduleId}
+		</if>
+
+	</select>
+	<insert id="insertRole" parameterType="java.util.List">
+		insert into sys_role( rolename, roledescription,within_code, create_by,create_date)
+		<foreach item="item" index="index" collection="list" separator="union all">
+		select 
+			#{item.rolename},
+			#{item.roledescription},
+			#{item.within_code},
+			#{item.createby},
+			sysdate
+		from dual
+		</foreach>
+	</insert>
+
+	<update id="updateRole" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="begin"
+			close="end;" separator=" ">
+			update sys_role
+			<set>
+				rolename = #{item.rolename},
+				roledescription = #{item.roledescription},
+				update_by = #{item.updateby},
+				update_date = sysdate
+			</set>
+			where roleid= #{item.roleid};
+		</foreach>
+	</update>
+
+
+	<delete id="deleteRole" parameterType="java.util.List">
+		delete from sys_role
+		where
+			roleid in
+		<foreach item="item" index="index" collection="list" open="("
+			close=")" separator=",">
+			#{item.roleid}
+		</foreach>
+		and within_code = #{withinCode}
+	</delete>
+	
+	<delete id="deleteAuthorith" parameterType="java.util.List">
+		delete from sys_authorith
+		where roleid in
+		<foreach collection="list" index="index" item="item" open="(" close=")" separator=",">
+			#{item.roleid}
+		</foreach>
+		and within_code = #{withinCode}
+	</delete>
+
+	<delete id="deleteSysRole" parameterType="java.util.List">
+		delete from sys_userdetailroles
+		where roleid in
+		<foreach collection="list" index="index" separator="," close=")" open="(" item="item">
+			#{item.roleid}
+		</foreach>
+		and within_code = #{withinCode}
+	</delete>
+	
+	
+	 <!-- 管理员权限 -->
+	<select id="GetAdminRole" resultType="com.bba.xtgl.vo.RoleVO">
+	 SELECT B.ButtonUse,b.ButtonName,b.ButtonName_en,b.ButtonIcon,b.ButtonOrder  FROM SYS_RoleButtons B 
+	 WHERE within_code=#{within_code} and MODULEID IN
+	 (
+	 	select moduleid from sys_module	where within_code=#{within_code} and upper(moduleurl)=upper(#{url})
+	 )  
+	 order by B.ButtonOrder asc
+	</select>
+	
+	
+	<!-- 普通用户权限 -->
+	<select id="GetUserRole" resultType="com.bba.xtgl.vo.RoleVO">
+	select c.ButtonUse,c.ButtonName,c.ButtonName_en,c.ButtonIcon  
+	from (SELECT a.ButtonUse,b.ButtonName,b.ButtonName_en,b.ButtonIcon,b.ButtonOrder FROM SYS_Authorith a left join  SYS_RoleButtons b  
+	on a.within_code=b.within_code and a.ModuleID=b.ModuleID and a.ButtonUse=b.ButtonUse  
+	left join sys_module s on s.ModuleID=b.ModuleID WHERE a.within_code=#{within_code} and
+	a.roleid in(select roleid from sys_userdetailroles where within_code=#{within_code} and userid=#{UserId}) and  
+	 a.MODULEID  in(select moduleid from sys_module where within_code=#{within_code} and upper(moduleurl)=upper(#{url}))  
+	) c group by c.ButtonUse,c.ButtonName,c.ButtonName_en,c.ButtonIcon,c.ButtonOrder  order by c.ButtonOrder asc 
+	</select>
+	
+	<insert id="save">
+	${sql}
+	</insert>
+
+
+
+	<select id="GetRoleButtonAllList" parameterType="com.bba.xtgl.vo.RoleVO" resultType="com.bba.xtgl.vo.RoleVO">
+		select * from SYS_ROLE
+		where
+		<if test="within_code != null and within_code != ''">
+			within_code=#{within_code}
+		</if>
+		<if test="roleid != null and roleid != ''">
+			roleid=#{roleid}
+		</if>
+	</select>
+	<select id="GetRoleButtonSeq"  resultType="java.lang.Long">
+		select (S_SYS_ROLE.nextval+1) as roleid from dual
+	</select>
+
+	<insert id="insert" parameterType="com.bba.xtgl.vo.RoleVO" >
+
+		insert into sys_role( rolename, roledescription,within_code, create_by,create_date
+		<if test="item.rowNum!=null and item.rowNum!=''">,roleid</if>
+		)
+		values(
+		#{item.rolename,jdbcType=VARCHAR},
+		#{item.roledescription,jdbcType=VARCHAR},
+		#{item.within_code,jdbcType=VARCHAR},
+		#{item.createby,jdbcType=VARCHAR},
+		sysdate
+		<if test="item.rowNum!=null and item.rowNum!=''">,#{item.rowNum}</if>
+		)
+	</insert>
+</mapper>

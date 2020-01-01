@@ -1,0 +1,299 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+    <link id="EasyuiTheme" type="text/css" rel="stylesheet"
+        href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+    <link id="JqgridTheme" type="text/css" rel="stylesheet"
+        href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/validform/style.css" />
+    <title>#{this.page}</title>
+</head>
+
+<body>
+    <div id="toolbar" class="easyui-panel" style="padding: 4px; border-width: 0; border-bottom-width: 1px;">
+        #{PAGE_TOOLBAR_BUTTONROLE}
+    </div>
+    <div class="sheelDetail">
+        <form id="addForm" class="easyui-form" method="post" data-options="novalidate:true">
+            <table class="editTable">
+                <tr>
+                    <td class="editTitle"><label data-locale="funName"/>:</td>
+                    <td class="editControl">
+                        <input type="text" editable="false" name="p_functionName" id="p_functionName"
+                            class="easyui-combobox" data-locale-missingmessage="please selected" 
+                            data-options="required:true,valueField:'id',textField:'value'" />
+                    </td>
+                    <td class="editTitle"><label data-locale="kind"/>:</td>
+                    <td class="editControl">
+                        <input type="text" editable="false" name="p_kind" id="p_kind" class="easyui-combobox"
+                            data-locale-missingmessage="please selected"
+                            data-options="required:true,valueField:'id',textField:'value',
+                            data:kindListt,onSelect: function(){getSimulate()}" />
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="editTitle"><label data-locale="front"/>:</td>
+                    <td class="editControl">
+                        <input type="text" name="p_front" id="p_front" class="easyui-textbox" 
+                        missingmessage="<label data-locale="front"/><label data-locale="can not be empty"/>"
+                        data-options="required:true,inputEvents: $.extend({},$.fn.textbox.defaults.inputEvents,{
+                            keyup: function(event){
+                                    var value = String(this.value);
+                                    if (value.length > 2) {
+                                        this.value = value.substring(0,2)
+                                    }
+                                    front = this.value;
+                                    getSimulate();
+                                }})" />
+                    </td>
+                    <td class="editTitle"><label data-locale="len"/>:</td>
+                    <td class="editControl">
+                        <input type="text" name="p_L" id="p_L" class="easyui-numberbox" max=5 precision=0 
+                        missingmessage="<label data-locale="len"/><label data-locale="can not be empty"/>"
+                        data-options="required:true,inputEvents: $.extend({},$.fn.textbox.defaults.inputEvents,{
+                            keyup: function(event){
+                                this.value=this.value.replace(/\D/g,'')
+                                if (this.value > 5) {
+                                    this.value = 5;
+                                }
+                                len = this.value;
+                                getSimulate();
+                            }})" />
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="editTitle"><label data-locale="simulate"/>:</td>
+                    <td class="editControl">
+                        <input type="text" name="simulate" id="simulate" class="easyui-textbox" readonly=true />
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</body>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/validform/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="../../Resource/js/cookie/jquery.cookie.js"></script>
+<script language="javascript" type="text/javascript">
+    var sn = '';
+    var kind = '';
+    var funName = '';
+    var len = 0;
+    var front = '';
+    var ywlocation = '';
+    var kindListt = [
+        {
+            id: 'YYYY',
+            value: 'YYYY'
+        }, {
+            id: 'YYYYMMDD',
+            value: 'YYYYMMDD'
+        }
+    ];
+    var simulate = '';
+
+    $(function () {
+        var parms = getUrlParms();
+        sn = parms["sn"];
+        ywlocation = parms['yl']
+
+        loadDisc();
+        if (typeof (sn) != 'undefined' || sn != '') {
+            initData();
+            getSimulate();
+        }
+    });
+
+
+    $.extend($.fn.validatebox.defaults.rules, {
+	});
+
+    var validate = function () {
+        var validated = $("#addForm").form('enableValidation').form('validate');
+		if (!validated) {
+			return false;
+		}
+
+        var funName = $("#p_functionName").combobox("getValue");
+        if (funName == '') {
+            return false;
+        }
+        var kind = $("#p_kind").combobox("getValue");
+        if (kind == '') {
+            return false;
+        }
+
+        var front = $("#p_front").textbox("getValue");
+        if (front == '') {
+            return false;
+        }
+        var len = $("#p_L").textbox("getValue");
+        if (len == '') {
+            return false;
+        }
+
+        return true;
+    };
+
+    var save = function () {
+        if (!validate()) {
+            return;
+        }
+        var sheelDetail = FormUtils.toJSONObject($("#addForm"));
+        sheelDetail.sn = sn? sn:null;
+        sheelDetail.p_yw_location = ywlocation;
+        var opt = $('#p_functionName').combobox('options');
+        var optData = opt.data;
+        for (let a = 0; a < optData.length; a++) {
+            var item = optData[a];
+            if (item.id === sheelDetail.p_functionName) {
+                sheelDetail.p_functionName = item.value;
+                sheelDetail.p_tablename = item.id;
+                break;
+            }
+        }
+
+        $.messager.confirm($.i18n.prop('alert'), '#{make sure to save}?', function (r) {
+            if (r) {
+                $.ajax({
+                    url: '../../sysInfo/SheelNo/save?t=' + Math.random(),
+                    type: 'POST',
+                    async: true,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify(sheelDetail),
+                    success: function (dataObj) {
+                        hideLoading();
+                        if (isServerResultDataPass(dataObj)) {
+                            correctNotification({ SimpleMessage: $.i18n.prop('success save') });
+                            getCurrentTab().searchData();
+                            close();
+                        } else {
+                            FailResultDataToTip(dataObj);
+                        }
+                    },
+                    error:function(){
+                        errorNotification({ SimpleMessage: $.i18n.prop('repetition') });
+                    }
+                });
+            }
+        });
+    }
+
+    $(window).load(function () {
+        hideLoading();
+    });
+
+    var initData = function () {
+        if (sn != '') {
+            loadDetail(sn)
+        }
+    };
+
+    var getSimulate = function () {
+        var date = new Date();
+        var timestamp = String(date.getTime());
+
+        //获取生规则
+        var kind = date.Format($('#p_kind').combobox('getValue'));
+        //流水
+        var times = '';
+        if (len != '' || len != 0 || len <= 5) {
+            times = timestamp.substring(timestamp.length - len);
+        }
+        var simulate = front + kind + times
+        $('#simulate').textbox('setValue', simulate)
+    };
+
+    Date.prototype.Format = function (fmt) { // author: meizz
+        var o = {
+            "M+": this.getMonth() + 1, // 月份
+            "D+": this.getDate() // 日
+            // "H+": this.getHours(), // 小时
+            // "m+": this.getMinutes(), // 分
+            // "S+": this.getSeconds(), // 秒
+            // "Q+": Math.floor((this.getMonth() + 3) / 3), // 季度
+            // "S": this.getMilliseconds() // 毫秒
+        };
+        if (/(Y+)/.test(fmt))
+            fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+        for (var k in o)
+            if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+        return fmt;
+    };
+
+    var loadDisc = function () {
+        var filters = [
+            { name: 'typeCode', value: 'sysSheetFunction', op: "eq" }
+        ];
+        $.ajax({
+            url: "../../sysInfo/dictionary/getListForGridSubordiById?t=" + Math.random() + "&customSearchFilters=" + encodeURI(formatSearchParames(filters)),
+            type: "POST",
+            async: false,
+            success: function (dataObj) {
+                var funList = [];
+                var list = dataObj.rows;
+                for (let a = 0; a < list.length; a++) {
+                    var item = {
+                        'id': list[a].dicvalue,
+                        'value': list[a].dictext,
+                    };
+                    funList.push(item);
+                }
+                $("#p_functionName").combobox({ data: funList })
+            },
+            error: function (message) {
+                hideLoading();
+            }
+        });
+    }
+
+    var loadDetail = function (sn) {
+        $.ajax({
+            url: "../../sysInfo/SheelNo/searchDetail?t=" + Math.random() + "&sn=" + sn,
+            type: "POST",
+            async: false,
+            success: function (dataObj) {
+                hideLoading();
+                if (isServerResultDataPass(dataObj)) {
+                    var data = dataObj.resultDataFull;
+                    var b = data.p_functionName;
+                    $("#p_functionName").combobox('select', b);
+                    $("#p_kind").combobox('select', data.p_kind);
+                    $("#p_front").textbox('setValue', data.p_front);
+                    front = data.p_front;
+                    $("#p_L").numberbox('setValue', data.p_L);
+                    len = data.p_L;
+                    ywlocation = data.p_yw_location;
+                }
+            },
+            error: function (message) {
+                hideLoading();
+            }
+        });
+    }
+</script>
+
+<style>
+    .sheelDetail {
+        margin-top: 20px;
+    }
+</style>
+
+</html>

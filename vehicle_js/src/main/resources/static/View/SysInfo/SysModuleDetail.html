@@ -1,0 +1,342 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"/>
+    <link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+    <link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />    
+    <link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/validform/style.css" />
+    <title>模块管理明细</title>
+</head>
+<body>
+    <div id="toolbar" class="easyui-panel" style="padding: 4px; border-width:0; border-bottom-width:1px;">
+        #{PAGE_TOOLBAR_BUTTONROLE}
+    </div>
+    
+    <form id="addForm" class="easyui-form" method="post" data-options="novalidate:true">
+    <input type="hidden" id="moduleid" name="moduleid" />
+    <input type="hidden" id="modulefatherid" name="modulefatherid" />
+    <table class="editTable">
+        <tr>
+            <td class="editTitle" >
+                <label data-locale="name_zh"/>:
+            </td>
+            <td class="editControl" colspan="3">
+                <input type="text" data-locale-missingmessage="sysModuleDetail_nameZhCannotEmpty" data-options="required:true" name="modulename" id="modulename" class="easyui-textbox"  style="width:240px;"/>
+            </td>
+        </tr>
+         <tr>
+            <td class="editTitle">
+                <label data-locale="name_en"/>:
+            </td>
+            <td class="editControl" colspan="3">
+                <input type="text" data-locale-missingmessage="sysModuleDetail_nameEnCannotEmpty" data-options="required:true" name="modulename_en" id="modulename_en" class="easyui-textbox"  style="width:240px;"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="editTitle">
+                模块地址-URL
+            </td>
+            <td class="editControl" colspan="3">
+                <input type="text" name="moduleurl" id="moduleurl" class="easyui-textbox" style="width:240px;" />
+            </td>
+        </tr>
+         <tr>
+            <td class="editTitle">
+                <label data-locale="sort"/>:
+            </td>
+            <td class="editControl" colspan="3">
+                <input type="text" name="orderid" id="orderid" class="easyui-textbox" style="width:240px;" />&nbsp;&nbsp;<span style="color:red;">*&nbsp;<label data-locale="Required number"/></span>
+            </td>
+        </tr>
+        <tr>
+            <td class="editTitle" valign="top">
+                备注
+            </td>
+            <td class="editControl" colspan="3">
+                <input type="text" name="moduledescription" data-options="multiline:true" style="width:240px;height: 60px"
+                    id="moduledescription" class="easyui-textbox" />
+            </td>
+        </tr>
+        <tr>
+            <td class="editTitle">
+                <label data-locale="use"/>:
+            </td>
+            <td class="editControl" style="width: 150px;">
+                <input id="IsShowYes" name="isshow" type="radio" value="1" checked="checked" /><label
+                    for="IsShowYes"><label data-locale="yes"/></label>
+                <input id="IsShowNo" name="isshow" type="radio" value="0" /><label for="IsShowNo"><label data-locale="no"/></label>
+            </td>
+            <td class="editTitle" style="text-align: center;">默认图标
+            </td>
+            <td class="editTitle" style="text-align: center;">深色图标
+            </td>
+
+        </tr>
+        <tr>
+            <td class="editTitle">
+                <label data-locale="nav"/>:
+            </td>
+            <td class="editControl">
+                <input id="isnavYes" name="isnav" type="radio" value="1" checked="checked" /><label
+                    for="isnavYes"><label data-locale="yes"/></label>
+                <input id="isnavNo" name="isnav" type="radio" value="0" /><label for="isnavNo"><label data-locale="no"/></label>
+            </td>
+            <td class="editControl" rowspan="2">
+                <div style="height: 50px; width: 100%;text-align:center">
+                    <img onclick="choosePng('')" id="imgIco" style="width: 50px; height: 50px; cursor: pointer;margin-left:auto;margin-right:auto;"
+                         src="../../Resource/images/index/defaultModulePic.png" />
+                    <input type="hidden" id="ico" name="ico" value="Resource/images/index/defaultModulePic.png" />
+                </div>
+            </td>
+            <td class="editControl" rowspan="2" style="background-color: rgb(44, 58, 70);">
+                <div style="height: 50px; width: 100%;text-align:center">
+                    <img onclick="choosePng('1')" id="blue_imgIco" style="width: 50px; height: 50px; cursor: pointer;margin-left:auto;margin-right:auto;"
+                         src="../../Resource/images/index/defaultModulePic.png" />
+                    <input type="hidden" id="blue_ico" name="blue_ico" value="Resource/images/index/defaultModulePic.png" />
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="editTitle">
+                <label data-locale="home"/>:
+            </td>
+            <td class="editControl">
+                <input id="ishomepageYes" name="ishomepage" type="radio" value="1" checked="checked" /><label
+                    for="ishomepageYes"><label data-locale="yes"/></label>
+                <input id="ishomepageNo" name="ishomepage" type="radio" value="0" /><label for="ishomepageNo"><label data-locale="no"/></label>
+            </td>
+        </tr>
+    </table>
+    </form>
+</body>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/validform/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="../../Resource/js/cookie/jquery.cookie.js"></script>
+<script language="javascript" type="text/javascript">
+    var afterSave = "close";
+
+    var maxorderid="0";
+    $(function () {
+        var parms = getUrlParms();
+        $("#moduleid").val(parms["moduleId"]);
+        $("#modulefatherid").val(parms["modulefatherid"]);
+        maxorderid=parms["maxorderid"];
+        $("#orderid").textbox("setValue",maxorderid);
+        
+        initData();
+  
+        $("input",$("#modulename").next("span")).blur(function(){
+            var moduledescription=$("#moduledescription").textbox("getValue");
+            if(moduledescription=='')
+            {
+            	moduledescription=$("#modulename").textbox("getValue");
+            	$("#moduledescription").textbox("setValue",moduledescription);
+            }
+        }); 
+    });
+
+    $(window).load(function () {
+        hideLoading();
+    });
+
+  
+
+    var initData = function () {
+        if ($("#moduleid").val() != "0") {
+            loadDetail();
+        }
+    }
+
+    var close = function () {
+        closeDialog("SysModuleDetail");
+    }
+
+    var reset = function () {
+        if ($("#moduleid").val() == "0") {
+            $('form').form('clear');
+            $("#orderid").textbox("setValue",maxorderid);
+        } else {
+            showLoading();
+            loadDetail();
+        }
+    }
+
+    var saveValidationPass = function () {
+        var validated = $("#addForm").form('enableValidation').form('validate');
+        if (!validated) {
+            errorNotification({
+                SimpleMessage: $.i18n.prop('sysModuleDetail_allCannotEmpty')
+            });
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    var save = function () {
+        if (!saveValidationPass()) {
+            return;
+        }
+
+        $.messager.confirm($.i18n.prop('sysModuleDetail_tip'), '确定保存吗?', function (r) {
+            if (r) {
+                showLoading();
+                afterSave = "close";
+                SaveData();
+            }
+        });
+    }
+
+    var saveAndAddClear = function () {
+        if (!saveValidationPass()) {
+            return;
+        }
+        $.messager.confirm($.i18n.prop('sysModuleDetail_tip'), '确定保存吗?', function (r) {
+            if (r) {
+                showLoading();
+                afterSave = "clear";
+                SaveData();
+            }
+        });
+    }
+
+    var saveAndAddCopy = function () {
+        if (!saveValidationPass()) {
+            return;
+        }
+        $.messager.confirm($.i18n.prop('sysModuleDetail_tip'), '确定保存吗?', function (r) {
+            if (r) {
+                showLoading();
+                afterSave = "copy";
+                SaveData();
+            }
+        });
+
+    }
+
+    var afterSaveOperate = function () {
+        switch (afterSave) {
+            case "close":
+                getCurrentTab().searchData();
+                close();
+                break;
+            case "clear":
+                $('form').form('clear');
+                $("#moduleid").val("0");
+                getCurrentTab().searchData();
+                break;
+            case "copy":
+                $("#moduleid").val("0");
+                getCurrentTab().searchData();
+                break;
+        }
+    }
+
+    var loadDetail = function () {
+        var serverUrl = "../../admin/module/getModuleVO?t="+Math.random();
+        $.getJSON(serverUrl, { moduleid: $("#moduleid").val(),modulefatherid:$("#modulefatherid").val() }, function (dataObj) {
+            if (isServerResultDataPass(dataObj)) {
+                $("#modulename").textbox('setValue', dataObj.resultDataFull.modulename);
+                $("#modulename_en").textbox('setValue', dataObj.resultDataFull.modulename_en);
+                $("#moduleurl").textbox('setValue', dataObj.resultDataFull.moduleurl);
+                $("#moduledescription").textbox('setValue', dataObj.resultDataFull.moduledescription);
+                $("#orderid").textbox("setValue",dataObj.resultDataFull.orderid);
+                $("[name='isshow'][value='" + dataObj.resultDataFull.isshow + "']").attr("checked", true);
+                $("[name='isnav'][value='" + dataObj.resultDataFull.isnav + "']").attr("checked", true);
+                $("[name='ishomepage'][value='" + dataObj.resultDataFull.ishomepage + "']").attr("checked", true);
+                $("#ico").val(dataObj.resultDataFull.ico);
+                $("#imgIco").attr("src", "../../"+dataObj.resultDataFull.ico);
+                $("#blue_ico").val(dataObj.resultDataFull.blue_ico);
+                $("#blue_imgIco").attr("src", "../../"+dataObj.resultDataFull.blue_ico);
+            } else {
+                FailResultDataToTip(dataObj);
+            }
+            hideLoading();
+        });
+    }
+
+    function SaveData() {
+    	var url="../../admin/module/insertModule?t="+Math.random();
+    	var data=
+    	{
+    		'modulefatherid':($("#modulefatherid").val()==""?"0":$("#modulefatherid").val()),
+    		'moduleid':$("#moduleid").val(),
+    		'modulename': encodeURI($("#modulename").textbox('getValue')),
+    		'modulename_en':encodeURI($("#modulename_en").textbox('getValue')),
+    		'moduleurl':encodeURI($("#moduleurl").textbox('getValue')),
+    		'moduledescription':encodeURI($("#moduledescription").textbox('getValue')),
+    		'orderid':$("#orderid").textbox('getValue'),
+    		'isshow':$("input[name='isshow']:checked").val(),
+    		'isnav':$("input[name='isnav']:checked").val(),
+    		'ishomepage':$("input[name='ishomepage']:checked").val(),
+    		'ico':$("#ico").val(),
+            'blue_ico':$("#blue_ico").val()
+    	};
+    	$.post(url,data,function(dataObj){
+    		dataObj=JSON.parse(dataObj);
+    		if (isServerResultDataPass(dataObj)) {
+                correctNotification(dataObj.resultDataFull);
+                hideLoading();
+                afterSaveOperate();
+            } else {
+                hideLoading();
+                FailResultDataToTip(dataObj);
+            }
+    	},'text');
+    	
+    	return;
+    	
+    	
+    	
+    	
+        $('#addForm').form({
+            url: "../../admin/module/insertModule",
+            data:{moduleid: $("#moduleid").val()},
+            onSubmit: function () {
+            },
+            success: function (data) {
+                var dataObj = eval('(' + data + ')');
+                if (isServerResultDataPass(dataObj)) {
+                    correctNotification(dataObj.resultDataFull);
+                    hideLoading();
+                    afterSaveOperate();
+                } else {
+                    hideLoading();
+                    FailResultDataToTip(dataObj);
+                }
+            }
+        });
+    }
+
+    var prevType = null;
+    var choosePng = function (type) {
+        prevType = type;
+        showLoading();
+        var href = "../View/SysInfo/SysIcoChoose.html?callerDialogId=SysModuleDetail&type="+type;
+        window.top.open({ title: $.i18n.prop('sysModuleDetail_choosePic'), id: 'SysIcoChoose', width: 730, height: 480, isResize: true, href: href });
+    }
+
+    var afterChoosePng = function (imgSrc) {
+        if(window.prevType == "1"){
+            $("#blue_imgIco").attr("src", imgSrc);
+            //替换前缀
+            imgSrc = imgSrc.replace(/(..\/)+/,"");
+            $("#blue_ico").val(imgSrc);
+        }else{
+            $("#imgIco").attr("src", imgSrc);
+            //替换前缀
+            imgSrc = imgSrc.replace(/(..\/)+/,"");
+            $("#ico").val(imgSrc);
+        }
+    }
+</script>
+</html>

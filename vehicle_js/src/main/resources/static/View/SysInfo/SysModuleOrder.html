@@ -1,0 +1,152 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+    <link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />    
+    <link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+    <title>模块排序</title>
+    <style type="text/css">
+        .drag-item
+        {
+            list-style-type: none;
+            display: block;
+            padding: 5px;
+            border: 1px solid #ccc;
+            margin: 2px;
+            width: 300px;
+            background: #fafafa;
+            color: #444;
+        }
+        .indicator
+        {
+            position: absolute;
+            font-size: 9px;
+            width: 10px;
+            height: 10px;
+            display: none;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+ <div id="toolbar" class="easyui-panel" style="padding: 4px; border-width: 0; border-bottom-width: 1px;">
+        <a href="javascript:save();" id="save" class="easyui-splitbutton" iconcls="icon-save" ">保存</a>
+        <a href="javascript:close();" id="close" class="easyui-linkbutton" plain="true" iconcls="icon-cancel">关闭</a>
+    </div>
+    <div id="orderDiv" style="overflow-y:auto;height:500px;  padding-top:10px;">
+        <ul id="Item" style="margin: 0; padding: 0; margin-left: 10px;">
+        </ul>
+    </div>
+</body>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script language="javascript" type="text/javascript">
+
+    var moduleidAuthority = 0;
+    var modulefatherid = 0;
+    $(function () {
+        var parms = getUrlParms();
+        modulefatherid = parms["moduleFatherId"] == undefined ? 0 : parms["moduleFatherId"];
+        initScript();
+        initData();
+        initStyle();
+    });
+
+    var initStyle = function () {
+    }
+
+    var initScript = function () {
+    }
+
+    var initData = function () {
+        loadDetil();
+    }
+
+    var loadDetil = function () {
+        var box = "";//
+        var serverUrl = "../../admin/module/findModuleAll" ;
+        $.getJSON(serverUrl, {  modulefatherid: modulefatherid }, function (dataObj) {
+            if (isServerResultDataPass(dataObj)) {
+                if (dataObj.resultDataFull.length > 0) {
+                    for (var i = 0; i < dataObj.resultDataFull.length; i++) {
+                        box += "<li id=\"OrderTree" + i + "\" class=\"drag-item\" value=\"" + dataObj.resultDataFull[i].moduleid + "\">";
+                        box += dataObj.resultDataFull[i].modulename;
+                        box += "</li>";
+                    }
+                    $("#Item").append(box);
+                    var indicator = $('<div class="indicator">>></div>').appendTo('body');
+                    $('.drag-item').draggable({
+                        revert: true,
+                        deltaX: 0,
+                        deltaY: 0
+                    }).droppable({
+                        onDragOver: function () {
+                            indicator.css({
+                                display: 'block',
+                                left: $(this).offset().left - 10,
+                                top: $(this).offset().top + $(this).outerHeight() - 5
+                            });
+                        },
+                        onDragLeave: function () {
+                            indicator.hide();
+                        },
+                        onDrop: function (e, source) {
+                            $(source).insertAfter(this);
+                            indicator.hide();
+                        }
+                    });
+                }
+            } else {
+                FailResultDataToTip(dataObj);
+            }
+            hideLoading();
+        });
+
+    }
+    
+    var save = function(){
+	   	 $.messager.confirm('提示', '确定保存吗?', function (e) {
+	   	 	if(e){
+	   	 		var moduleArray = [];
+	   	    	$('li').each(function() {
+	   	        	var moduleVO= {moduleid:$(this).attr("value")}
+	   	            moduleArray.push(moduleVO);
+	   	         });
+	   	    	showLoading();
+	   	         $.ajax({
+	   	         	url : "../../admin/module/orderModule?" + Math.random(),
+	   	         	type : "POST",
+	   	         	data:JSON.stringify(moduleArray),
+	   	          	contentType:'application/json; charset=utf-8',
+	   	         	success : function(dataObj){
+	   	         		 if (isServerResultDataPass(dataObj)) {
+	   	                      correctNotification(dataObj.resultDataFull);
+	   	                 	  hideLoading();
+	   	                      close();
+	   	                  } else {
+	   	                      FailResultDataToTip(dataObj);
+	   	                  }
+	   	         	}
+	   	         });
+	   	 	}
+	   	 });
+    	
+   	}
+
+    var close = function(){
+    	closeDialog("SysModuleOrder");
+    }
+    $(window).load(function () {
+        hideLoading();
+    });
+
+</script>
+</html>

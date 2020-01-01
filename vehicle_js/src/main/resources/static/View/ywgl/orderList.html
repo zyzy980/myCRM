@@ -1,0 +1,368 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+    <link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />    
+    <link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/moment/css/daterangepicker.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/fileUpload/css/fileUpload.css" />
+    <title>#{orderList_Title}</title>
+</head>
+<body>
+<div id="toolbar" class="easyui-panel" style="padding:4px;border-width:0; border-bottom-width:1px;">
+	 #{PAGE_TOOLBAR_BUTTONROLE}
+</div>
+<!-- <div class="searchParamesPanel">
+	<table id="searchParamesTable">
+		<tr class="searchParamesTrShow">
+   			<td class="searchParamesTdTitle"><label data-locale="beginTime"/>:</td>
+         	<td class="searchParamesTdControl">
+     			<input type="text" name="txtLoadUnit" id="beginTime" class="easyui-datebox" data-options="editable:false"/>
+       		</td>
+         	<td class="searchParamesTdTitle"><label data-locale="endTime"/>:</td>
+           	<td class="searchParamesTdControl">
+             	<input type="text" name="txtBinCode" id="endTime" class="easyui-datebox" data-options="editable:false"  />
+           	</td>
+           	<td class="searchParamesTdTitle"><label data-locale="cusNo"/>:</td>
+           	<td class="searchParamesTdControl">
+             	<input type="text" name="txtBinCode" id="cusNo" class="easyui-textbox" />
+           	</td>
+    	</tr>
+    </table>
+</div>  -->
+<div id="gridControl">
+    <table id="gridTable"></table>
+     <div id="gridPager"></div>
+</div>
+<div id="fileUpload" style="position:absolute;left:50%;top:50%;width:600px;height:400px;margin-left:-300px;margin-top:-200px;display:none;"></div>
+
+<form id="formExportFile" target="_blank"  method="post" style="display: none"></form>
+
+<script type="text/javascript"	src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/upload.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/file.js"></script>
+<script language="javascript" type="text/javascript">
+    var moduleId = 0;
+    var trainno = "";
+    var ywLocation = "";
+    $(function() {
+        var parms = getUrlParms();
+        var sn = parms["sn"];
+        trainno = parms["trainno"];
+        moduleId = parms['moduleId'];
+        ywLocation = parms["ywLocation"];
+        initScript();
+        initData();
+        initStyle();
+    });
+
+    $(window).load(function() { hideLoading(); });
+
+    var initStyle = function() {
+    	$(':radio').click(function() { searchData(); });
+        enterTriggerEvent('searchParamesTable', 'searchData');
+    };
+    var oldSetGridHeightWidth = setGridHeightWidth;
+    var setGridHeightWidth = function() {
+    	oldSetGridHeightWidth(40,170);
+    	oldSetGridHeightWidth(5, 128);
+    };
+    var initScript = function() {
+    	var v = 0;
+    	$(window).resize(function() {
+    		if (v == 0) {
+    			setTimeout(function() { setGridHeightWidth(); v = 0; }, 200)
+    			v = 1;
+    		}
+    		setGridHeightWidth();
+    		setToolbarHeightWidth();
+    	});	
+    };
+    var initData = function() {
+
+        loadList();// 加载列表数据
+    };
+    
+	// 查询数据
+    function searchData() {
+        $('#gridTable').jqGrid('setGridParam', {
+        	url : getSearchGridUrl(),
+        	datatype : 'json',
+        	postData : { 'filters' : '' },
+        	page : 1
+        }).trigger('reloadGrid');
+    }
+
+	// 获取查询访问路径
+    var getSearchGridUrl = function() {
+        return '../../order/findOrderList?t=' + Math.random() + '&customSearchFilters=' + encodeURI(getSearchFilters());
+    };
+
+ 	// 获取查询条件
+    var getSearchFilters = function() {
+		var parmsArray = [
+		{ name: 'trainno', value: trainno, op: "eq" },
+        ];
+        return formatSearchParames(parmsArray);
+    };
+
+    // 新增
+    var add = function() { openDetail('-1'); };
+
+    // 修改
+    var edit = function() {
+        var selectRowItems = $('#gridTable').jqGrid('getGridParam', 'selarrrow');
+        if (selectRowItems.length > 1 || selectRowItems.length == 0) {
+            errorNotification({ SimpleMessage : $.i18n.prop('planExecDetail_Prompt2Update') });// 请选择一行数据行进行操作
+            return;
+        }
+        var rowData = $('#gridTable').jqGrid('getRowData', selectRowItems);
+        openDetail(rowData.sn);
+    };
+	
+    
+    // 修改车次信息
+    var openDetail = function(sn) {
+        showLoading();
+        var href = '../View/ywgl/planExecManage.html?moduleId=' + moduleId + '&sn=' + sn;
+        openDialog({ title : $.i18n.prop('planExec_Title_Detail'), id : 'planExecDetail', width : 1000, height : 300, isResize : true, href : href, closable : true });
+    };
+
+    // 删除
+    var remove = function() {
+    	var jsonList = [];
+    	var selectRowItems = $('#gridTable').jqGrid('getGridParam', 'selarrrow');
+    	if (selectRowItems.length == 0) {
+    		errorNotification({ SimpleMessage : $.i18n.prop('SctsLoadUnit_Prompt2Del') });// 请至少选择一行数据行进行操作
+    		return;
+    	}
+    	for ( var i = 0; i < selectRowItems.length; i++) {
+    		var rowData = $('#gridTable').jqGrid('getRowData', selectRowItems[i]);
+    		jsonList.push({sn : rowData.sn});
+    	}
+    	$.messager.confirm($.i18n.prop('SctsLoadUnit_Prompt'), '#{SctsLoadUnit_Prompt4Del}?', function(r) {// 提示, 确定删除选中的数据项吗
+			if (r) {
+				showLoading();
+				$.ajax({
+					url : '../../jcda/SctsLoadUnit/remove?t='+ Math.random(),
+					type : 'POST',
+					data : 'jsonData=' + JSON.stringify(jsonList),
+					success : function(dataObj) {
+						if (isServerResultDataPass(dataObj)) {
+							correctNotification(dataObj.resultDataFull);
+							searchData(); // 删除时需要重新搜索
+						} else {
+							FailResultDataToTip(dataObj);
+						}
+						hideLoading();
+					},
+					error : function(message) {
+						console.log(message);
+						hideLoading();
+					}
+				});
+			}
+		});
+	};
+
+	// 审核
+    var examine = function() {
+    	var jsonList = [];
+    	var orderMostlyVO = {};
+    	var selectRowItems = $('#gridTable').jqGrid('getGridParam', 'selarrrow');
+    	if (selectRowItems.length == 0) {
+    		errorNotification({ SimpleMessage : $.i18n.prop('orderList_Prompt2Update') });// 请选择一行数据行进行操作
+    		return;
+    	}
+    	for ( var i = 0; i < selectRowItems.length; i++) {
+    		var rowData = $('#gridTable').jqGrid('getRowData', selectRowItems[i]);
+    		if(rowData.state==1){
+    			errorNotification({ SimpleMessage : $.i18n.prop('orderList_Prompt_examine') });//重复审核
+    			return;
+    		}
+    		orderMostlyVO.guid = rowData.mainGuid;
+    		//jsonList.push({sn : rowData.sn,guid:rowData.guid}); 
+    	}
+    	$.messager.confirm($.i18n.prop('orderList_Prompt'), '#{orderList_examine}?', function(r) {// 提示, 确定审核选中的数据项吗
+			if (r) {
+				showLoading();	
+				$.ajax({
+					url : '../../order/examine?t='+ Math.random(),
+					type : 'POST',
+					data :JSON.stringify(orderMostlyVO),
+					contentType : 'application/json;charset=utf-8',
+					success : function(dataObj) {
+						if (isServerResultDataPass(dataObj)) {
+							correctNotification(dataObj.resultDataFull);
+							searchData(); //审核完需要重新搜索
+						} else {
+							FailResultDataToTip(dataObj);
+						}
+						hideLoading();
+					},
+					error : function(message) {
+						hideLoading();
+					}
+				});
+			}
+		});
+	};
+	
+	
+	// 加载列表数据
+    var loadList = function() {
+        $('#gridTable').jqGrid({
+            url : getSearchGridUrl(),
+            datatype : 'json',
+            width : 'none',
+            colNames : [
+            	$.i18n.prop('sn'),$.i18n.prop('guid'),$.i18n.prop('withinCode'),$.i18n.prop('createBy'),$.i18n.prop('createDate'),
+            	$.i18n.prop('updateBy'),$.i18n.prop('updateDate'),$.i18n.prop('goodsName'),$.i18n.prop('mostlyGuid'),$.i18n.prop('contId'),
+            	$.i18n.prop('unit'),$.i18n.prop('vol'), $.i18n.prop('gwt'), $.i18n.prop('qty'),$.i18n.prop('trainNo'), 
+            	$.i18n.prop('sjTrucknoq'),$.i18n.prop('sjTrucknog'),$.i18n.prop('driverCode'),$.i18n.prop('driverName'),$.i18n.prop('driverTel'),
+            	$.i18n.prop('abnormalMode'),$.i18n.prop('abnormalDes'),$.i18n.prop('isAbnormal'),$.i18n.prop('isDelay'),$.i18n.prop('currentLocalLng'),
+            	$.i18n.prop('currentLocalLat'),$.i18n.prop('currentLocalDate'),$.i18n.prop('currentLocalAddr'),$.i18n.prop('billState'),$.i18n.prop('state'),
+            	$.i18n.prop('globalState'),/* $.i18n.prop('cusNo'),$.i18n.prop('businessYwId'),$.i18n.prop('beginLocal'),$.i18n.prop('endLocalSite'),
+            	$.i18n.prop('businessDate'), */$.i18n.prop('existDetailchild')
+            ],
+            colModel : [
+                { name: 'sn', index: 'sn',  key: true,align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+                { name: 'mainGuid', index: 'm.guid',  key: true,align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+                { name : 'withinCode', index: 'within_Code', key : true, align : 'center', sorttype: 'string', sortable : false,hidden: true},
+            	{ name : 'createBy', index: 'create_By', align : 'center', sorttype: 'string',sortable : false,hidden: true},
+            	{ name: 'createDate', index: 'CREATE_DATE',  key: true,align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+            	{ name: 'updateBy', index: 'UPDATE_BY',  key: true,align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+            	{ name : 'updateDate', index : 'UPDATE_DATE', align : 'center', isSort : false,search : true, type : 'string',hidden: true, searchoptions : { sopt : ['cn', 'eq', 'ne']} },
+            	{ name : 'goodsName', index : 'goods_name', align : 'center', isSort : false,search : true, type : 'string', searchoptions : { sopt : ['cn', 'eq', 'ne']} },
+            	{ name : 'mostlyGuid', index : 'MOSTLY_GUID', align : 'center', isSort : false,search : true, type : 'string', searchoptions : { sopt : ['cn', 'eq', 'ne']},hidden: true },
+            	{ name: 'contId', index: 'CONT_ID',  key: true,align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+            	{ name : 'unit', index : 'UNIT', align : 'center', isSort : false,stype : 'select', search : true},
+            	{ name : 'vol', index : 'VOL', align : 'center', width : 100, search : true,type : 'string' },
+	            { name : 'gwt', index : 'GWT', align : 'center', width : 100, stype : 'select', search : true},
+            	{ name : 'qty', index : 'QTY', align : 'center', width : 100, search : true,type : 'string', searchoptions : { sopt : ['cn', 'eq', 'ne']} },
+            	{ name: 'trainNo', index: 'TRAINNO',  key: true,align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+            	{ name : 'sjTrucknoq', index : 'SJ_TRUCKNOQ', align : 'center', isSort : false,stype : 'select', search : true,hidden: true,searchoptions : { sopt : ['cn', 'eq', 'ne']}},
+            	{ name: 'sjTrucknog', index: 'SJ_TRUCKNOG',  key: true,align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+            	{ name: 'driverCode', index: 'DRIVERCODE',  key: true,align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+            	{ name: 'driverName', index: 'DRIVERNAME',  key: true,align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+            	{ name: 'driverTel', index: 'DRIVERTEL',  key: true,align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+            	{ name: 'abnormalMode', index: 'ABNORMALMODE',  key: true,align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+            	{ name: 'abnormalDes', index: 'ABNORMALDES',  key: true,align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+            	{ name: 'isAbnormal', index: 'ISABNORMAL',  key: true,align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+            	{ name: 'isDelay', index: 'ISDELAY',  key: true,align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+            	{ name: 'currentLocalLng', index: 'CURRENT_LOCAL_LNG',  key: true,align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+            	{ name: 'currentLocalLat', index: 'CURRENT_LOCAL_LAT',  key: true,align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+            	{ name: 'currentLocalDate', index: 'CURRENT_LOCAL_DATE',  key: true,align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+            	{ name: 'currentLocalAddr', index: 'CURRENT_LOCAL_ADDR',  key: true,align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+            	{ name: 'billState', index: 'BILL_STATE',  key: true,align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+            	{ name: 'state', index: 'STATE',  key: true,align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+            	{ name: 'globalState', index: 'GLOBAL_STATE',  key: true,align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+            	/* { name: 'cusNo', index: 'cusNo',  key: true,align: 'center', sorttype: 'string', search: false, sortable: false, width: 40 },
+            	{ name: 'businessYwId', index: 'businessYwId',  key: true,align: 'center', sorttype: 'string', search: false, sortable: false, width: 40},
+            	{ name: 'beginLocalName', index: 'beginLocalName',  key: true,align: 'center', sorttype: 'string', search: false, sortable: false, width: 40},
+            	{ name: 'endLocalSiteName', index: 'endLocalSiteName',  key: true,align: 'center', sorttype: 'string', search: false, sortable: false, width: 40},
+            	{ name: 'businessDate', index: 'businessDate',  key: true,align: 'center', sorttype: 'string', search: false, sortable: false, width: 40}, */
+            	{ name: 'existDetailchild', index: 'EXIST_DETAILCHILD',  key: true,align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true }
+            ],
+            shrinkToFit : false,
+            altRows : true,
+            altclass : 'gridSpacingClass',
+            forceFit : true,
+            cellLayout : 0,
+            scroll : false,
+            autowidth : true,
+            sortname :'o.create_date',
+            sortorder : 'desc', 
+            loadonce : false,
+            mtype : 'POST',
+            viewrecords : true,
+            rownumbers : true,
+            multiselect : true,
+            rowNum : 15,
+            height : '100%',
+            rowList : [15, 20, 30, 50],
+            pager : '#gridPager',
+            jsonReader : {
+                root : 'rows',
+                total : 'total',
+                page : 'page',
+                records : 'records',
+                repeatitems : false
+            },
+            gridComplete : function() {
+                $('.cbox').shiftSelect();
+            },
+            ondblClickRow : function(code) {
+            	//双击触发跳转订单子明细列表
+        		var rowData = $("#gridTable").jqGrid('getRowData',code);
+        		var mostlyGuid = rowData.mainGuid;
+            	var href = '../View/ywgl/orderDetailChild.html?moduleId=' + moduleId + '&detail_guid=' + mostlyGuid;
+            	openDialog({ title : $.i18n.prop('orderList_Title'), id : 'orderDetailChild', width : 1000, height : 300, isResize : true, href : href, closable : true });
+            },
+            loadComplete : function(xhr) {
+                $('.gridViewPicLink').tooltip({
+                    position : 'bottom',
+                    content : $(this).attr('title'),
+                    onShow : function() {
+                        $(this).tooltip('tip').css({ backgroundColor: '#FCF8E3', borderColor: '#FAEBCC' });
+                    }
+                });
+                FailResultDataToTip(xhr);
+            }
+        });
+
+        $('#gridTable').jqGrid('navGrid', '#gridPager',
+        		{ add: false, edit: false, del: false, refresh: true }, {}, {}, {},
+        		{ multipleSearch: true, closeOnEscape: true, closeAfterSearch: true });
+        $('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+            caption: $.i18n.prop('OrderList_ReorderColumns'),// 设置列
+            title: 'Reorder Columns',
+            onClickButton: toggleGridColumns
+        });
+
+        $('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+            caption: $.i18n.prop('OrderList_QuickSearch'),// 快捷搜索
+            title: 'Quick Search',
+            onClickButton: toggleGridSearchToolbar
+        });
+        $('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+       		caption: $.i18n.prop('OrderList_ExportDatas'),// 导出数据
+            title: 'Export Datas',
+            buttonicon: 'ui-icon-disk',
+            onClickButton: function() {
+          		ExportToExcel.call(this, { title:$.i18n.prop('OrderList_ExportDatas')});
+            }
+        });
+        setGridHeightWidth();
+    };
+    //订单详情
+    var showPlanDetail = function(trainno){
+    	var href = '../View/ywgl/orderDetail.html?moduleId=' + moduleId + '&trainno=' + trainno;
+    }
+    
+    // 用户双击跳转车次物品清单
+    var showChildModule = function (trainno) { showPlanDetail(trainno); };
+
+   
+    // 新增、修改操作完成后调用的刷新方法
+    var refreshCallerData_List = function () {
+        searchData();
+    };
+</script>
+</body>
+</html>
+  

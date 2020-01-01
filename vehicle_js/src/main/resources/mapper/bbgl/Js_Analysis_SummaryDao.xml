@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bba.bbgl.dao.Js_Analysis_SummaryDao">
+	<sql id="begin_page">
+		<if test="isPage == true">select A.* from (select rownum rn, T.* from (</if>
+	</sql>
+	<sql id="end_page">
+		<if test="isPage == true">)T where rownum &lt; ${page*rows+1}) A where A.rn >
+			${(page-1)*rows}</if>
+	</sql>
+
+	<!-- 查询结算分析汇总列表 -->
+	<select id="findListForGrid" resultType="com.bba.tzgl.vo.LedgerVO" parameterType="com.bba.util.JqGridParamModel">
+		<include refid="begin_page" />
+		select * from js_analysis_summary
+		<if test="filters!=null and filters!=''">where ${filters}</if>
+		<include refid="end_page" />
+	</select>
+
+	<!-- 查询结算分析汇总数量 -->
+	<select id="findListForGridCount" resultType="int" parameterType="com.bba.util.JqGridParamModel">
+		select count(*) from js_analysis_summary
+		<if test="filters!=null and filters!=''">where ${filters}</if>
+	</select>
+
+</mapper>

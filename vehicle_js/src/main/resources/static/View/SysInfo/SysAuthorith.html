@@ -1,0 +1,281 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+    <link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />    
+    <link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+    <title>权限设置</title>
+</head>
+<body>
+    <div style="display: table; width: 100%;">
+        <div style="display: table-cell; height: 400px; width: 19%; padding: 10px; border-right: 1px solid #CCCCCC;">
+            <input type="hidden" id="hdmoduleid" value="" />
+            <ul id="treeModule" class="easyui-tree"  style="width: 280px; height: 447px; overflow: auto;font-family: 微软雅黑; font-size: 14px;">
+            </ul>
+        </div>
+        <div style="display: table-cell; width: 1%;">
+            &nbsp;&nbsp;
+        </div>
+        <div style="display: table-cell; overflow: auto; vertical-align: top; height: 400px; width: 80%; padding-top: 4px;">
+            <div id="toolbar" class="easyui-panel" style="padding: 4px; border-width: 0; border-bottom-width: 1px;">
+                #{PAGE_TOOLBAR_BUTTONROLE}
+            </div>
+            <div style="height: 10px;">
+            </div>
+            <div id="gridControl">
+                <table id="gridTable">
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+	<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/jsLinq/linq.js"></script>
+<script language="javascript" type="text/javascript">
+    var roleId = 0;
+    var savedRow = null;
+    var savedCol = null;
+    $(function () {
+        var parms = getUrlParms();
+        roleId = parms["roleid"];
+        initScript();
+        initData();
+        initStyle();
+    });
+
+    $(window).load(function () {
+        hideLoading();
+    });
+
+    var initStyle = function () {
+    }
+
+    var initScript = function () {
+        $(window).resize(function () {
+            setToolbarHeightWidth();
+        });
+    }
+
+    var initData = function () {
+
+        loadModuleTree();
+        loadList();
+    }
+
+    var loadModuleTree = function () {
+        showLoading();
+        var moduleVO = [];
+        var serverUrl = "../../admin/module/findModuleLeftList";
+        $.getJSON(serverUrl, {}, function (dataObj) {
+            if (isServerResultDataPass(dataObj)) {
+                formatTree(dataObj);
+            } else {
+                FailResultDataToTip(dataObj);
+            }
+            hideLoading();
+        });
+
+
+    }
+
+    var formatTree = function (dataObj) {
+        // 格式化数据
+        var moduleList = [];
+        Enumerable.From(dataObj.resultDataFull)
+                    .Where(function (i) { return i.modulefatherid == 0; })
+                    .ToArray()
+                    .forEach(function (i) {
+                        var fatherModule = {};
+                        fatherModule.id = i.moduleid;
+                        fatherModule.text = i.modulename;
+                        fatherModule.children = loadModulesChild(dataObj.resultDataFull, i.moduleid);
+                        moduleList.push(fatherModule);
+                    });
+
+        $('#treeModule').tree({
+            checkbox: false,
+            data: moduleList,
+            animate: true,
+            open: false,
+            onClick: function (node) {
+            	if (node.children == undefined) {
+                    showLoading();
+                    $('#hdmoduleid').val(node.id);
+                    searchData();
+                }
+            },
+            onSelect: function (node) {
+                $(this).tree('expand', node.target);
+            }
+        });
+    }
+
+    var loadModulesChild = function (moduleJson, moduleid) {
+        var moduleList = [];
+        Enumerable.From(moduleJson)
+            .Where(function (i) { return i.modulefatherid == moduleid; })
+            .ToArray()
+            .forEach(function (i) {
+                var childModule = {};
+                childModule.id = i.moduleid;
+                childModule.text = i.modulename;
+                moduleList.push(childModule);
+            });
+
+        return moduleList;
+    }
+
+    var save = function () {
+        var buttonList = [];
+        showLoading();
+        var allData = $("#gridTable").jqGrid("getRowData");
+        
+        
+        /* var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
+        var ids=[];
+        for (var i = 0; i < selectRowItems.length; i++) {
+            var rowData = $("#gridTable").jqGrid('getRowData', selectRowItems[i]);
+            ids.push(rowData.buttonId);
+        } */
+        
+     	// 遍历获取勾选
+        for (var i = 0; i < allData.length; i++) {
+            /* for(var j = 0;j<ids.length;j++){
+            	if(allData[i].buttonId==ids[j]){
+            		allData[i].isOwnAuthorith='Yes';
+            	}
+            } */
+        	var dataJson = { "roleId":roleId,"moduleid":$('#hdmoduleid').val(),"buttonUse": allData[i].buttonUse, "isOwnAuthorith": allData[i].isOwnAuthorith == "Yes" ? true : false };
+            buttonList.push(dataJson);
+        }
+
+        if (buttonList.length > 0) {
+        	 $.ajax({
+         		url : "../../admin/button/updateButton",
+         		data:JSON.stringify(buttonList),
+         		type:"POST",
+         		contentType:'application/json; charset=utf-8',
+         		success:function(data){
+         			if (isServerResultDataPass(data)) {
+                         searchData();
+                         correctNotification(data.resultDataFull);
+                     } else {
+                         FailResultDataToTip(data);
+                     }
+                     hideLoading();
+         		}
+         	});
+        }
+    }
+
+    var close = function () {
+        closeDialog("SysAuthorith");
+    }
+
+    var searchData = function () {
+        $("#gridTable").jqGrid('setGridParam', {
+            url: getSearchGridUrl(),
+            datatype: 'json',
+            postData: { "filters": "" },
+            page: 1,
+			rowNum: 0,
+        }).trigger("reloadGrid");
+    }
+
+    var getSearchGridUrl = function () {
+        return '../../admin/button/getButtonList?'+Math.random()+"&moduleid="+$('#hdmoduleid').val()+"&roleId="+roleId;
+    }
+
+    var getSearchFilters = function () {
+        var parmsArray = [
+          { name: 'roleId', value: roleId },
+           { name: 'moduleid', value: $('#hdmoduleid').val() }
+        ];
+        return formatSearchParames(parmsArray);
+    }
+
+    var loadList = function () {
+        $("#gridTable").jqGrid({
+            url: "",
+            datatype: "json",
+            width: "100%",
+            colNames: [$.i18n.prop('jurisdiction'), $.i18n.prop('sysAuthorith_buttonCode'), $.i18n.prop('sysAuthorith_moduleId'), '按钮名称', '按钮编号'],
+            colModel: [
+             { name: 'isOwnAuthorith', index: 'isOwnAuthorith', width: 80, align: 'center', formatter: 'checkbox', formatoptions: { value: 'True:True;False:False', disabled: false} },
+                { name: 'buttonId', index: 'buttonId', editable: true, edittype: 'text', align: 'center', sorttype: 'int', search: false, sortable: true, hidden: true, width: 40, key: true },
+                { name: 'moduleid', index: 'moduleid', align: 'center', fixed: true, hidden: true, width: 150, search: false },
+                { name: 'buttonName', index: 'buttonName', align: 'center', fixed: true, width: 135, search: false },
+                { name: 'buttonUse', index: 'buttonUse', align: 'center', fixed: true, width: 135, search: false }
+            ],
+            cellEdit: false,
+            cellsubmit: 'clientArray',
+            shrinkToFit: false,
+            altRows: true,
+            altclass: 'gridSpacingClass',
+            forceFit: true,
+            cellLayout: 0,
+            scroll: false,
+            autowidth: true,
+            sortname: 'buttonId',
+            sortorder: "desc",
+            loadonce: true,
+            mtype: "POST",
+            viewrecords: true,
+            rownumbers: true,
+            multiselect: false,
+            height: 384,
+             jsonReader: {
+                root: "resultDataFull",
+                repeatitems: false
+            },
+            gridComplete: function () {
+            },
+            loadComplete: function (xhr) {
+            	if(xhr && xhr.resultDataFull && xhr.resultDataFull.length != null){
+            		$("#gridTable").jqGrid("setGridParam",{rowNum:xhr.resultDataFull.length})
+            	}
+                FailResultDataToTip(xhr);
+                hideLoading();
+            },
+            onSelectRow: function () {
+            }
+            ,onSelectAll: function(rowids,statue){
+            	/* for(var i=0;i<rowids.length;i++){
+            		//$("#gridTable").setSelection(rowids[i+1].isOwnAuthorith);
+            		if(statue){
+            			$("#gridTable").jqGrid('setRowData',rowids[i],{isOwnAuthorith:true});
+            		}else{
+            			$("#gridTable").jqGrid('setRowData',rowids[i],{isOwnAuthorith:false});
+            		}
+            	} */
+            }
+        });
+    }
+    
+    var SelectAll = function () {
+        $('#gridTable tr td input[type="checkbox"]').each(function (i) {
+            $(this).attr('checked', true);
+        });
+    };
+
+    var noSelectAll = function () {
+        $('#gridTable tr td input[type="checkbox"]').each(function (i) {
+            $(this).attr('checked', false);
+        });
+    };
+
+</script>
+</html>

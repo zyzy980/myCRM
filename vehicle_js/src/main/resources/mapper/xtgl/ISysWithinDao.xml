@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace：必须与对应的接口全类名一致 id:必须与对应接口的某个对应的方法名一致 -->
+<mapper namespace="com.bba.xtgl.dao.ISysWithinDao">
+
+	<select id="findWithin" resultType="com.bba.xtgl.vo.SysWithinVO"
+			parameterType="java.lang.String">
+		select * from sys_within
+		where code=#{withinCode,jdbcType=VARCHAR}
+	</select>
+	<select id="getByWithinCode" resultType="com.bba.xtgl.vo.SysWithinVO"
+			parameterType="java.lang.String">
+		select * from sys_within
+		where code=#{withinCode,jdbcType=VARCHAR}
+	</select>
+
+	<update id="batchUpdate" parameterType="java.util.List">
+		<foreach collection="list" index="index" item="vo" open="begin" close="end;">
+			update sys_within set
+			<trim prefixOverrides=",">
+				<if test="vo.name!=null">,name=#{vo.name}</if>
+				<if test="vo.address!=null">,address=#{vo.address}</if>
+				<if test="vo.remark!=null">,remark=#{vo.remark}</if>
+				<if test="vo.logo_path!=null">,logo_path=#{vo.logo_path}</if>
+			</trim>
+			where code=#{vo.code};
+		</foreach>
+	</update>
+
+	<insert id="insert" parameterType="com.bba.xtgl.vo.SysWithinVO">
+		insert into SYS_WITHIN(code,name,state,link_moblie,create_by,create_date)
+		values(
+			#{vo.code},
+			#{vo.name},
+			#{vo.state},
+			#{vo.link_moblie},
+			#{vo.create_by},
+			sysdate
+		)
+	</insert>
+
+	<!-- 新代码开始 -->
+	<sql id="sql_maps">
+		code,
+		name,
+		name_eng as nameEng,
+		province,
+		city,
+		address,
+		web,
+		link_man as linkMan,
+		link_email as linkEmail,
+		state,
+		weixin as weiXin,
+		link_moblie as linkMobile,
+		link_QQ as linkQQ,
+		to_char(create_date,'yyyy-MM-dd HH24:mi:ss') as createDate,
+		create_by as createBy,
+		update_by,
+		to_char(update_date,'yyyy-MM-dd HH24:mi:ss') as updateDate,
+		logo_path as logoPath,
+		remark,
+		sn,
+		to_char(birthday,'yyyy-MM-dd HH24:mi:ss') as birthday,
+		guimo as guiMo,
+		shortname as shortName
+	</sql>
+
+	<select id="findList" parameterType="com.bba.util.JqGridParamModel" resultType="com.bba.xtgl.vo.SysWithinCodeVO">
+		select
+			<include refid="sql_maps"></include>
+		from sys_within
+		<if test="filters != null and filters != ''">where ${filters}</if>
+	</select>
+
+	<!-- 删除 sys_authorith -->
+	<delete id="deleteSysAuthority" parameterType="java.lang.String">
+		delete from sys_authorith where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 sys_module -->
+	<delete id="deleteSysModule" parameterType="java.lang.String">
+		delete from sys_module where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 sys_role -->
+	<delete id="deleteSysRole" parameterType="java.lang.String">
+		delete from sys_role where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 sys_rolebuttons -->
+	<delete id="deleteSysRoleButtons" parameterType="java.lang.String">
+		delete from sys_rolebuttons where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 sys_sheetid -->
+	<delete id="deleteSysSheetId" parameterType="java.lang.String">
+		delete from sys_sheetid where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 sys_users -->
+	<delete id="deleteSysUsers" parameterType="java.lang.String">
+		delete from sys_users where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 sys_users_token -->
+	<delete id="deleteSysUsersToken" parameterType="java.lang.String">
+		delete from sys_users_token where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 sys_within -->
+	<delete id="deleteSysWithin" parameterType="java.lang.String">
+		delete from sys_within where code = #{withinCode}
+	</delete>
+
+	<!-- 删除 sys_within_set -->
+	<delete id="deleteSysWithinSet" parameterType="java.lang.String">
+		delete from sys_within_set where code = #{withinCode}
+	</delete>
+
+	<!-- 删除 yw_fare_get -->
+	<delete id="deleteYwFareGet" parameterType="java.lang.String">
+		delete from yw_fare_get where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 yw_fare_get_qtylist -->
+	<delete id="deleteYwFareGetQtyList" parameterType="java.lang.String">
+		delete from yw_fare_get_qtylist where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 yw_fare_get_sign -->
+	<delete id="deleteYwFareGetSign" parameterType="java.lang.String">
+		delete from yw_fare_get_sign where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 yw_fare_pay -->
+	<delete id="deleteYwFarePay" parameterType="java.lang.String">
+		delete from yw_fare_pay where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 yw_fare_pay_qtylist -->
+	<delete id="deleteYwFarePayQtyList" parameterType="java.lang.String">
+		delete from yw_fare_pay_qtylist where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 yw_get -->
+	<delete id="deleteYwGet" parameterType="java.lang.String">
+		delete from yw_get where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 yw_invoice -->
+	<delete id="deleteYwInvoice" parameterType="java.lang.String">
+		delete from yw_invoice where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 yw_invoice_billitem -->
+	<delete id="deleteYwInvoiceBillItem" parameterType="java.lang.String">
+		delete from yw_invoice_billitem where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 yw_invoice_pay -->
+	<delete id="deleteInvoicePay" parameterType="java.lang.String">
+		delete from yw_invoice_pay where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 yw_message_app -->
+	<delete id="deleteYwMessageApp" parameterType="java.lang.String">
+		delete from yw_message_app where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 yw_message_app_his -->
+	<delete id="deleteYwMessageAppHis" parameterType="java.lang.String">
+		delete from yw_message_app_his where within_code = #{withinCOde}
+	</delete>
+	
+	<!-- 删除 yw_message_sms -->
+	<delete id="deleteYwMessageSms" parameterType="java.lang.String">
+		delete from yw_message_sms where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 yw_message_sms_his -->
+	<delete id="deleteYwMessageSmsHis" parameterType="java.lang.String">
+		delete from yw_message_sms where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 ywMessageWechat -->
+	<delete id="deleteYwMessageWechat" parameterType="java.lang.String">
+		delete from yw_message_wechat where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 ywMessageWechatHis -->
+	<delete id="deleteYwMessageWechatHis" parameterType="java.lang.String">
+		delete from yw_message_wechat_his where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 yw_oil_card -->
+	<delete id="deleteYwOilCard" parameterType="java.lang.String">
+		delete from yw_oil_card where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 yw_order_detail -->
+	<delete id="deleteYwOrderDetail" parameterType="java.lang.String">
+		delete from yw_order_detail where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 yw_order_detail_exec -->
+	<delete id="deleteYwOrderDetailExec" parameterType="java.lang.String">
+		delete from yw_order_detail_exec where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 yw_order_mostly -->
+	<delete id="deleteYwOrderMostly" parameterType="java.lang.String">
+		delete from yw_order_mostly where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 yw_order_mostly_local -->
+	<delete id="deleteYwOrderMostlyLocal" parameterType="java.lang.String">
+		delete from yw_order_mostly_local where  within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 yw_pay_billitem -->
+	<delete id="deleteYwPayBillItem" parameterType="java.lang.String">
+		delete from yw_pay_billitem where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 yw_pay_fee -->
+	<delete id="deleteYwPayFee" parameterType="java.lang.String">
+		delete from yw_pay_fee where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 yw_pay_feeitem -->
+	<delete id="deleteYwPayFeeItem" parameterType="java.lang.String">
+		delete from yw_pay_feeitem where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 yw_plan_exec -->
+	<delete id="deleteYwPlanExec" parameterType="java.lang.String">
+		delete from yw_plan_exec where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 yw_plan_trans_recorder -->
+	<delete id="deleteYwPlanTransRecorder" parameterType="java.lang.String">
+		delete from yw_plan_trans_recorder where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 yw_position -->
+	<delete id="deleteYwPosition" parameterType="java.lang.String">
+		delete from yw_position where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 yw_position_backup -->
+	<delete id="deleteYwPositionBackUp" parameterType="java.lang.String">
+		delete from yw_position_backup where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 yw_position_last -->
+	<delete id="deleteYwPositionLast" parameterType="java.lang.String">
+		delete from yw_position_last where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 yw_position_space -->
+	<delete id="deleteYwPostionSpace" parameterType="java.lang.String">
+		delete from yw_position_space where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 yw_position_space_backup -->
+	<delete id="deleteYwPositionSpaceBackup" parameterType="java.lang.String">
+		delete from yw_position_space_backup where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 yw_rcv_billitem -->
+	<delete id="deleteYwRcvBillItem" parameterType="java.lang.String">
+		delete from yw_rcv_billitem where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 yw_rcv_fee -->
+	<delete id="deleteYwRcvFee" parameterType="java.lang.String">
+		delete from yw_rcv_fee where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 yw_fee_item -->
+	<delete id="deleteYwFeeItem" parameterType="java.lang.String">
+		delete from yw_rcv_feeitem where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 zd_business_state -->
+	<delete id="deleteZdBusinessState" parameterType="java.lang.String">
+		delete from zd_business_state where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 zd_contractor -->
+	<delete id="deleteZdContractor" parameterType="java.lang.String">
+		delete from zd_contractor where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 zd_currency -->
+	<delete id="deleteZdCurrency" parameterType="java.lang.String">
+		delete from zd_currency where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 zd_cus -->
+	<delete id="deleteZdCus" parameterType="java.lang.String">
+		delete from zd_cus where within_code = #{wihinCode}
+	</delete>
+
+	<!-- 删除 zd_cus_address -->
+	<delete id="deleteZdCusAddress" parameterType="java.lang.String">
+		delete from zd_cus_address where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 zd_dictionary -->
+	<delete id="deleteZdDictionary" parameterType="java.lang.String">
+		delete from zd_dictionary where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 zd_dictionary_data -->
+	<delete id="deleteZdDictionaryData" parameterType="java.lang.String">
+		delete from zd_dictionary_data where within_code = #{withinCode}
+	</delete>
+
+	<!-- 通过内码去 zd_driver_relate 查code-->
+	<select id="queryZdDriverRelateCode" parameterType="java.lang.String" resultType="java.lang.String">
+		select code from zd_driver_relate where within_code = #{withinCode}
+	</select>
+
+	<!-- 删除 zd_driver -->
+	<delete id="deleteZdDriver" parameterType="java.util.List">
+		delete from zd_driver where code in 
+		<foreach collection="list" item="list" index="" separator="," open="(" close=")">
+			#{list}
+		</foreach>
+	</delete>
+
+	<!-- 删除 zd_driver_relate -->
+	<delete id="deleteZdDriverRelate" parameterType="java.lang.String">
+		delete from zd_driver_relate where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 zd_errorkind -->
+	<delete id="deleteZdErrorKind" parameterType="java.lang.String">
+		delete from zd_errorkind where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 zd_fare -->
+	<delete id="deleteZdFare" parameterType="java.lang.String">
+		delete from zd_fare where wihtin_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 zd_fare_fangan -->
+	<delete id="deleteZdFareFangAn" parameterType="java.lang.String">
+		delete from zd_fare_fangan where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 zd_fare_fangan_rule -->
+	<delete id="deleteZdFangAnRule" parameterType="java.lang.String">
+		delete from zd_fare_fangan_rule where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 zd_fare_fangan_rule_site -->
+	<delete id="deleteZdFareFangAnRuleSite" parameterType="java.lang.String">
+		delete from zd_fare_fangan_rule_site where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 zd_fare_item -->
+	<delete id="deleteZdFareQtyItem" parameterType="java.lang.String">
+		delete from zd_fare_qtyitem where wihtin_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 zd_location -->
+	<delete id="deleteZdLocation" parameterType="java.lang.String">
+		delete from zd_location where within_code = #{withinCode}
+	</delete>
+
+	<!-- 查询 zd_truck_relate 的truck_no -->
+	<select id="queryZdTruckRelateCode" parameterType="java.lang.String" resultType="java.lang.String">
+		select truck_no from zd_truck_relate where within_code = #{withinCode}
+	</select>
+
+	<!-- 删除 zd_truck -->
+	<delete id="deleteZdTruck" parameterType="java.util.List" >
+		delete from zd_truck where truckno in
+		<foreach collection="list" index="" close=")" open="(" separator="," item="list">
+			#{list}
+		</foreach>
+	</delete>
+
+	<!-- 删除 zd_truck_relate -->
+	<delete id="deleteZdTruckRelate" parameterType="java.lang.String">
+		delete from zd_truck_relate where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 zd_trucktype -->
+	<delete id="deleteZdTruckType" parameterType="java.lang.String">
+		delete from zd_trucktype where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 zd_unit -->
+	<delete id="deleteZdUnit" parameterType="java.lang.String">
+		delete from zd_unit where wihtin_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 zd_ywlocation -->
+	<delete id="deleteZdYwLocation" parameterType="java.lang.String">
+		delete from zd_ywlocation where within_code = #{withinCode}
+	</delete>
+
+	<!-- 删除 zd_ywlocation_base -->
+	<delete id="deleteZdYwLocationBase" parameterType="java.lang.String">
+		delete from zd_ywlocation_base where within_code = #{withinCode}
+	</delete>
+
+	<!-- 修改 sys_within -->
+	<update id="updateSysWithin" parameterType="com.bba.xtgl.vo.SysWithinCodeVO">
+		update sys_within set
+			<if test="name != null and name != ''">name = #{name},</if>
+			<if test="nameEng != null and nameEng != ''">name_eng = #{nameEng},</if>
+			<if test="province != null and province != ''">province = #{province},</if>
+			<if test="city != null and city != ''">city = #{city},</if>
+			<if test="address != null and address != ''">address = #{address},</if>
+			<if test="web != null and web != ''">web = #{web},</if>
+			<if test="linkMan != null and linkMan != ''">link_man = #{linkMan},</if>
+			<if test="linkEmail != null and linkEmail != ''">link_email = #{linkEmail},</if>
+			<if test="linkMobile != null and linkMobile != ''">link_moblie = #{linkMobile},</if>
+			<if test="linkQQ != null and linkQQ != ''">link_qq = #{linkQQ},</if>
+		    <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+
+		    <if test="birthday != null and birthday != ''">birthday = #{birthday},</if>
+			<if test="guiMo != null and guiMo != ''">guimo = #{guiMo},</if>
+			<if test="shortName != null and shortName != ''">shortname = #{shortName},</if>
+		    update_date = sysdate
+		where sn = #{sn}
+	</update>
+
+	<select id="querySysWithin" parameterType="java.lang.String" resultType="com.bba.xtgl.vo.SysWithinCodeVO">
+		select
+			<include refid="sql_maps"></include>
+		from sys_within
+		where sn = #{sn}
+	</select>
+
+	<insert id="copySet" parameterType="com.bba.xtgl.vo.RegisterVO">
+		INSERT INTO SYS_WITHIN_SET(CODE,SEL_TIHUO,VISION,END_DATE,AMOUNT,IS_DRIVER_CHECK,IS_TRUCK_CHECK,GPS_OFFLINE_TIME,IS_KM_ADDRESS,GPS_OVERSPEED,GPS_AVGSPEED,API_ERROR_SEND_SMS,API_ERROR_SEND_EMAIL)
+		SELECT #{withinCode,jdbcType=VARCHAR},SEL_TIHUO,VISION,END_DATE,AMOUNT,IS_DRIVER_CHECK,IS_TRUCK_CHECK,GPS_OFFLINE_TIME,IS_KM_ADDRESS,GPS_OVERSPEED,GPS_AVGSPEED,API_ERROR_SEND_SMS,API_ERROR_SEND_EMAIL
+		from SYS_WITHIN_SET
+		where code = #{within_code_src,jdbcType=VARCHAR}
+	</insert>
+</mapper>
+

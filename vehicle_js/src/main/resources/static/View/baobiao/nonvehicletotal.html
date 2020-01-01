@@ -1,0 +1,609 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+	<link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+	<link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+	<link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+	<link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+	<link type="text/css" rel="stylesheet" href="../../Resource/js/moment/css/daterangepicker.css" />
+	<link type="text/css" rel="stylesheet" href="../../Resource/js/fileUpload/css/fileUpload.css" />
+	<title>非商品车统计</title>
+</head>
+<body>
+<div id="toolbar" class="easyui-panel" style="padding:4px;border-width:0;border-bottom-width:1px;">
+	#{PAGE_TOOLBAR_BUTTONROLE}
+</div>
+<div class="searchParamesPanel">
+	<table id="searchParamesTable">
+		<tr class="searchParamesTrShow">
+			<td class="searchParamesTdTitle">起运时间:</td>
+			<td class="searchParamesTdControl">
+				<input type="text" name="begin_date_start" id="begin_date_start" class="easyui-datebox" style="width: 100px" />
+			</td>
+			<td class="searchParamesTdTitle">
+				-
+			</td>
+			<td class="searchParamesTdControl">
+				<input type="text" name="begin_date_end" id="begin_date_end" class="easyui-datebox" style="width: 100px" />
+			</td>
+			<td width="20px;"></td>
+			<td class="searchParamesTdTitle">起运地</td>
+			<td class="searchParamesTdControl">
+				<input type="text" name="begin_city" id="begin_city" class="easyui-combobox" style="width: 100px" />
+			</td>
+			<td width="20px;"></td>
+			<td class="searchParamesTdTitle">运输方式:</td>
+			<td class="searchParamesTdControl">
+				<input type="text" name="trans_mode" id="trans_mode" class="easyui-combobox" />
+			</td>
+			<td width="20px;"></td>
+			<td class="searchParamesTdTitle">结算进度</td>
+			<td class="searchParamesTdControl">
+				<input type="text" id="up_js_state" class="easyui-combobox"  style="width: 100px" />
+			</td>
+		</tr>
+		<tr class="searchParamesTrShow">
+			<td class="searchParamesTdTitle">收车时间:</td>
+			<td class="searchParamesTdControl">
+				<input type="text" name="end_date_start" id="end_date_start" class="easyui-datebox" style="width: 100px" />
+			</td>
+			<td class="searchParamesTdTitle">
+				-
+			</td>
+			<td class="searchParamesTdControl">
+				<input type="text" name="end_date_end" id="end_date_end" class="easyui-datebox" style="width: 100px" />
+			</td>
+			<td width="20px;"></td>
+			<td class="searchParamesTdTitle">目的地</td>
+			<td class="searchParamesTdControl">
+				<input type="text" name="end_city" id="end_city" class="easyui-combobox" style="width: 100px" />
+			</td>
+			<td width="20px;"></td>
+			<td class="searchParamesTdTitle">承运商:</td>
+			<td class="searchParamesTdControl">
+				<input type="text" name="carrier_no" id="carrier_no" class="easyui-combobox" />
+			</td>
+			<td width="20px;"></td>
+			<td class="searchParamesTdTitle">数据来源</td>
+			<td class="searchParamesTdControl">
+				<input type="text" id="from_data" class="easyui-combobox"  style="width: 100px" />
+			</td>
+			<td class="searchParamesTdControl">
+				<input type="text" id="common_sheet_title" class="easyui-textbox" style="width: 240px" />
+			</td>
+		</tr>
+	</table>
+</div>
+<div id="gridControl">
+	<table id="gridTable"></table>
+	<div id="gridPager"></div>
+</div>
+<div id="fileUpload" style="position: absolute; left: 50%; top: 50%;width: 600px; height: 400px; margin-left: -300px; margin-top: -200px; display: none;"></div>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/moment/js/moment.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/moment/js/jquery.daterangepicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/upload.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/file.js"></script>
+<script language="javascript" type="text/javascript">
+	$(function() {
+		var parms = getUrlParms();
+		initScript();
+		initData();
+		initStyle();
+	});
+
+	$(window).load(function() {
+		hideLoading();
+	});
+
+	var initStyle = function() {
+        $("#common_sheet_title").textbox({
+            prompt: "交接单号/结算号/合同号"
+        });
+		enterTriggerEvent('searchParamesTable', 'searchData');
+	};
+
+	var initScript = function() {
+
+
+		$(window).resize(function() {
+			setGridHeightWidth();
+			setToolbarHeightWidth();
+		});
+	};
+
+	// 加载数据
+	var initData = function() {
+        var date = new Date();
+        var days = new Date(date.getTime() - 86400000*7);
+        searchBTime=days.getFullYear()+"-"+(days.getMonth())+"-26";
+        searchETime=date.getFullYear()+"-"+(date.getMonth()+1)+"-25";
+        /*        searchBTime_JH =days.getFullYear()+"-"+(days.getMonth()+1)+"-"+days.getDate()+' '+days.getHours() + ':' + days.getMinutes();
+                searchETime_JH=date.getFullYear()+"-"+(date.getMonth()+1)+"-"+date.getDate()+' '+date.getHours() + ':' + date.getMinutes();*/
+        $("#end_date_start").textbox('setValue', searchBTime);
+        $("#end_date_end").textbox('setValue', searchETime);
+		var from_dataList=[];
+		from_dataList.push({dicvalue:"",dictext:"所有"});
+		from_dataList.push({dicvalue:"业务",dictext:"业务"});
+		from_dataList.push({dicvalue:"导入",dictext:"导入"});
+
+		$("#from_data").combobox({
+			valueField: 'dicvalue',
+			textField: 'dictext',
+            panelHeight: 80,
+			editable: false
+		});
+		$("#from_data").combobox("loadData", from_dataList);
+
+		getDictionaryData([{
+			//初始化结算状态数据字典
+			dicTypeCode: Global_DicType.JS_STATE,
+			ADD_ALL: true,
+			callback: function (callbackData) {
+				window.JS_STATEMap = {};
+				for (var i = 0; i < callbackData.length; i++) {
+					JS_STATEMap[callbackData[i].dicvalue] = callbackData[i].dictext;
+				}
+				$("#up_js_state").combobox({
+					valueField: 'dicvalue',
+					textField: 'dictext',
+					panelHeight: 200,
+					editable: true
+				});
+				$("#up_js_state").combobox("loadData", callbackData);
+
+			}
+		},{
+            //加载运输方式字典
+            dicTypeCode : Global_DicType.TRANS_MODE,
+            ADD_ALL: true,
+            callback : function(callbackData) {
+                window.TransModeList = {};
+                for(var i = 0; i < callbackData.length; i++){
+                    TransModeList[callbackData[i].dicvalue] = callbackData[i].dictext;
+                }
+                $("#trans_mode").combobox({
+                    valueField: 'dicvalue',
+                    textField: 'dictext',
+                    panelHeight: 200,
+                    panelWidth: 250,
+                    editable: true,
+                    onSelect:function(){
+                        searchData();
+                    }
+                });
+                $("#trans_mode").combobox("loadData", callbackData);
+            }
+        }, {
+				//起运地 - 数据字典
+				dicTypeCode: Global_DicType.CITY_ARCHIVE,
+				ADD_ALL: true,
+				callback: function (callbackData) {
+					window.BEGIN_ADDRESSMap = {};
+					window.END_ADDRESSMap = {};
+					for (var i = 0; i < callbackData.length; i++) {
+						BEGIN_ADDRESSMap[callbackData[i].dicvalue] = callbackData[i].dictext;
+						END_ADDRESSMap[callbackData[i].dicvalue] = callbackData[i].dictext;
+					}
+					$("#begin_city,#end_city").combobox({
+						valueField: 'dicvalue',
+						textField: 'dictext',
+						panelHeight: 200,
+						editable: true
+					});
+					$("#begin_city,#end_city").combobox("loadData", callbackData);
+				}
+			}
+		]);
+        getBaseData([{
+            //初始化承运商档案
+            dicTypeCode : Global_BaseDataKey.ZD_CARRIER,
+            callback : function(callbackData) {
+                $("#carrier_no").combobox({
+                    valueField: 'code',
+                    textField: 'name',
+                    panelWidth: 250,
+                    panelHeight: 150,
+                    editable: true,
+                    onSelect:function () {
+                        searchData();
+                    }
+                });
+                callbackData.unshift({code: "", name: "所有"});
+                $("#carrier_no").combobox("loadData", callbackData);
+            }
+        }]);
+		loadList();// 加载数据列表
+	};
+
+	// 查询数据
+	function searchData() {
+		$('#gridTable').jqGrid('setGridParam', {
+			url: getSearchGridUrl(),
+			datatype: 'json',
+			postData: { 'filters': '' },
+			page: 1
+		}).trigger('reloadGrid');
+	};
+
+	// 获取查询URL
+	var getSearchGridUrl = function() {
+		return '../../nosettlement/Js_Non_Vehicle/getListForGridBaobiao?t=' + Math.random() + '&customSearchFilters=' + encodeURI(getSearchFilters());
+	};
+
+	// 获取查询条件
+	var getSearchFilters = function() {
+        var end_date_end=$('#end_date_end').datebox('getValue');
+        if(end_date_end!="")
+            end_date_end=addDate(end_date_end,1);
+        var begin_date_end=$('#begin_date_end').datebox('getValue');
+        if(begin_date_end!="")
+            begin_date_end=addDate(begin_date_end,1);
+		var parmsArray = [
+            [
+                { name: 'handover_no', value: $('#common_sheet_title').textbox('getValue'), op: 'cn'},
+                { name: 'contract_no', value: $('#common_sheet_title').textbox('getValue'), op: 'cn'},
+                { name: 'js_no', value: $('#common_sheet_title').textbox('getValue'), op: 'cn'}
+            ],
+            { name: 'receipt_date', value: $('#end_date_start').datebox('getValue'), op: 'ge'},
+            { name: 'receipt_date', value: end_date_end, op: 'le'},
+            {name: 'begin_date', value: $('#begin_date_start').datebox('getValue'), op: 'ge'},
+            {name: 'begin_date', value: begin_date_end, op: 'le'},
+			{ name: 'begin_city', value: $('#begin_city').combobox('getValue'), op: 'eq'},
+			{ name: 'end_city', value: $('#end_city').combobox('getValue'), op: 'eq'},
+			{ name: '', value: $('#up_js_state').combobox('getValue'), op: 'eq' },
+			{ name: 'from_data', value: $('#from_data').combobox('getValue'), op: 'eq' }
+
+		];
+		return formatSearchParames(parmsArray);
+	};
+
+	// 加载数据列表
+	var loadList = function() {
+		$('#gridTable').jqGrid({
+			url: getSearchGridUrl(),
+			datatype: 'json',
+			width: 'none',
+			colNames: [
+				"序号"
+				,"业务完成月"/*bus_completion_month*/
+				,"统计月"/*statistical_month*/
+				,"询价号"/*xunjia_no*/
+				,"合同号"/*contract_no*/
+				,"属性"/*attribute*/
+				,"项目"/*project*/
+				,"需求部门"/*demand_sector*/
+				,"客户"/*cus_no*/
+				,"发运指令人"/*applican*/
+				,"交接单号"/*handover_no*/
+				,"发运日期"/*begin_date*/
+				,"收车日期"/*receipt_date*/
+				,"运输方式"/*trans_mode*/
+				,"运输方案"/*trans_fangan*/
+				,"发运地"/*becin_city*/
+				,"目的地"/*end_city*/
+				,"运输车型"/*car_type*/
+				,"合同线路距离"/*mil*/
+				,"（合同）运输费用/公里/台"/*ht_price*/
+				,"承运数量"/*chengyun_qty*/
+				,"计费数量-收"/*jifei_qty*/
+				,"（合同）运费小计-收"/*not_tax_freight*/
+				,"（合同）保费/台-收"/*not_tax_premium_price*/
+				,"保费小计-收"/*not_tax_premium*/
+				,"其他费用-收"/*not_tax_other_amount*/
+				,"备注-收"/*up_remark*/
+				,"统计收入"/*not_tax_amount*/
+				,"分包商"/*carrier_no*/
+				,"运费成本"/*freight_zucheng*/
+				,"计费标准/公里/台"/*ht_jifei_biaozhun*/
+				,"计费数量-成本"/*down_jifei_qty*/
+				,"（合同）运费小计-成本"/*not_tax_down_freight*/
+				,"保费/台-成本"/*down_premium_price*/
+				,"保费小计-成本"/*down_premium_total*/
+				,"其他费用-成本"/*not_tax_other_down_amount*/
+				,"备注成本"/*down_remark*/
+				,"统计成本"/*down_amount*/
+				,"收单日期"/*receipt_sheet_date*/
+				,"送单日期"/*delivery_date*/
+				,"回单日期"/*return_date*/
+				,"结算异常备注"/*js_unusual_remark*/
+				,"结算号"/*js_no*/
+				,"发票号码"/*invoice_no*/
+				,"开票日期"/*invoice_date*/
+				,"实际收入含税"/*real_tax_amount*/
+				,"实际收入不含税"/*real_ntax_amount*/
+				,"实际成本"/*real_cost*/
+				,"结算进度"/*up_js_state*/
+				,"商务审核人"/*business_auditor*/
+				,"账单编号"/*bill_number*/
+
+				,"实际成本含税"/*tax__real_cost*/
+				,"对下开票月份"/*down_invoice_month*/
+				,"下家发票号码"/*down_invoice_no*/
+				,"对下结算进度"/*down_js_state*/
+				,"付款计划提报月"/*down_pay_plan_date*/
+				,"车牌号"/*car_no*/
+				,"备注"/*remark*/
+				,"数据来源"
+				,"id"/*id*/
+			],
+			colModel:[
+					{/*序号*/ name: 'num', index: 'num', align: 'left', width: 60, key:true,type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+					{ name:  "bus_completion_month", index:  "bus_completion_month",/*业务完成月*/ align: "center", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+					{ name:  "statistical_month", index:  "statistical_month",/*统计月*/ align: "center", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+					{ name:  "xunjia_no", index:  "xunjia_no",/*询价号*/ align: "left", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+					{ name:  "contract_no", index:  "contract_no",/*合同号*/ align: "left", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+					{ name:  "attribute", index:  "attribute",/*属性*/ align: "center", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+					{ name:  "project", index:  "project",/*项目*/ align: "center", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+					{ name:  "demand_sector", index:  "demand_sector",/*需求部门*/ align: "left", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+					{ name:  "cus_no", index:  "cus_no",/*客户*/ align: "left", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+					{ name:  "applicant", index:  "applicant",/*发运指令人*/ align: "center", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+					{ name:  "handover_no", index:  "handover_no",/*交接单号*/ align: "left", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+					{ name:  "begin_date", index:  "begin_date",/*发运日期*/ align: "left", isSort: false, width: 120, type: "string", search: true, frozen: false, searchoptions: { sopt: ["eq"]}
+						,formatter:function(value,grid,rows){
+							var begin_date=rows.begin_date;
+							if(begin_date!=null && begin_date.indexOf(" ")!=-1)
+							{
+								begin_date=begin_date.split(" ")[0];
+							}else if(begin_date==null)
+							{
+								begin_date="";
+							}
+							return begin_date;
+						}
+					},
+					{ name:  "receipt_date", index:  "receipt_date",/*收车日期*/ align: "left", isSort: false, width: 120, type: "string", search: true, frozen: false, searchoptions: { sopt: ["eq"]}
+						,formatter:function(value,grid,rows){
+							var begin_date=rows.receipt_date;
+							if(begin_date!=null && begin_date.indexOf(" ")!=-1)
+							{
+								begin_date=begin_date.split(" ")[0];
+							}else if(begin_date==null)
+							{
+								begin_date="";
+							}
+							return begin_date;
+						}
+					},
+					{ name:  "trans_mode", index:  "trans_mode",/*运输方式*/ align: "left", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+					{ name:  "trans_fangan", index:  "trans_fangan",/*运输方案*/ align: "left", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+					{ name:  "begin_city", index:  "begin_city",/*发运地*/ align: "left", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+					{ name:  "end_city", index:  "end_city",/*目的地*/ align: "left", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+					{ name:  "car_type", index:  "car_type",/*运输车型*/ align: "left", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+					{ name:  "mil", index:  "mil",/*合同线路距离*/ align: "right", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+					{ name:  "ht_price", index:  "ht_price",/*运输费用/公里/台*/ align: "right", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+					{ name:  "chengyun_qty", index:  "chengyun_qty",/*承运数量*/ align: "right", isSort: false, width: 80, type: "string", search: true, frozen: false, searchoptions: { sopt: ["eq"]} },
+					{ name:  "jifei_qty", index:  "jifei_qty",/*计费数量_收*/ align: "right", isSort: false, width: 80, type: "string", search: true, frozen: false, searchoptions: { sopt: ["eq"]} },
+					{ name:  "not_tax_freight", index:  "not_tax_freight",/*运费小计-收*/ align: "right", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+					{ name:  "not_tax_premium_price", index:  "not_tax_premium_price",/*保费/台-收*/ align: "right", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+					{ name:  "not_tax_premium", index:  "not_tax_premium",/*保费小计-收*/ align: "right", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+					{ name:  "not_tax_other_amount", index:  "not_tax_other_amount",/*其他费用-收*/ align: "right", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+					{ name:  "up_remark", index:  "up_remark",/*备注_收*/ align: "left", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+					{ name:  "not_tax_amount", index:  "not_tax_amount",/*统计收入*/ align: "right", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+					{ name:  "carrier_no", index:  "carrier_no",/*分包商*/ align: "left", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+				{ name:  "freight_zucheng", index:  "freight_zucheng",/*运费成本*/ align: "right", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+				{ name:  "ht_jifei_biaozhun", index:  "ht_jifei_biaozhun",/*计费标准/公里/台*/ align: "right", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+				{ name:  "down_jifei_qty", index:  "down_jifei_qty",/*计费数量_成本*/ align: "right", isSort: false, width: 80, type: "string", search: true, frozen: false, searchoptions: { sopt: ["eq"]} },
+				{ name:  "not_tax_down_freight", index:  "not_tax_down_freight",/*运费小计-成本*/ align: "right", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+				{ name:  "down_premium_price", index:  "down_premium_price",/*保费/台-成本*/ align: "right", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+				{ name:  "down_premium_total", index:  "down_premium_total",/*保费小计-成本*/ align: "right", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+				{ name:  "not_tax_other_down_amount", index:  "not_tax_other_down_amount",/*其他费用-成本*/ align: "right", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+				{ name:  "down_remark", index:  "down_remark",/*备注成本*/ align: "left", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+				{ name:  "down_amount", index:  "down_amount",/*统计成本*/ align: "right", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+				{ name:  "receipt_sheet_date", index:  "receipt_sheet_date",/*收单日期*/ align: "left", isSort: false, width: 120, type: "string", search: true, frozen: false, searchoptions: { sopt: ["eq"]} },
+				{ name:  "delivery_date", index:  "delivery_date",/*送单日期*/ align: "left", isSort: false, width: 120, type: "string", search: true, frozen: false, searchoptions: { sopt: ["eq"]} },
+				{ name:  "return_date", index:  "return_date",/*回单日期*/ align: "left", isSort: false, width: 120, type: "string", search: true, frozen: false, searchoptions: { sopt: ["eq"]} },
+				{ name:  "js_unusual_remark", index:  "js_unusual_remark",/*结算异常备注*/ align: "left", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+				{ name:  "js_no", index:  "js_no",/*结算号*/ align: "left", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+				{ name:  "invoice_no", index:  "invoice_no",/*发票号码*/ align: "left", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+				{ name:  "invoice_date", index:  "invoice_date",/*开票日期*/ align: "left", isSort: false, width: 120, type: "string", search: true, frozen: false, searchoptions: { sopt: ["eq"]} },
+				{ name:  "real_tax_amount", index:  "real_tax_amount",/*实际收入含税*/ align: "right", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+				{ name:  "real_ntax_amount", index:  "real_ntax_amount",/*实际收入不含税*/ align: "right", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+				{ name:  "real_cost", index:  "real_cost",/*实际成本*/ align: "right", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+				{ name:  "up_js_state", index:  "up_js_state",/*结算进度*/ align: "center", isSort: false, width: 60, type: "string", search: true, frozen: false, searchoptions: { sopt: ["eq"]} },
+				{ name:  "business_auditor", index:  "business_auditor",/*商务审核人*/ align: "left", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+				{ name:  "bill_number", index:  "bill_number",/*账单编号*/ align: "left", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+
+
+				{ name:  "tax__real_cost", index:  "tax__real_cost",/*实际成本含税*/ align: "right", hidden:true, isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+				{ name:  "down_invoice_month", index:  "down_invoice_month",/*对下开票月份*/ align: "left",hidden:true, isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+				{ name:  "down_invoice_no", index:  "down_invoice_no",/*下家发票号码*/ align: "left",hidden:true, isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+				{ name:  "down_js_state", index:  "down_js_state",/*对下结算进度*/ align: "center",hidden:true, isSort: false, width: 80, type: "string", search: true, frozen: false, searchoptions: { sopt: ["eq"]} },
+				{ name:  "down_pay_plan_date", index:  "down_pay_plan_date",/*付款计划提报月*/ align: "left",hidden:true, isSort: false, width: 120, type: "string", search: true, frozen: false, searchoptions: { sopt: ["eq"]} },
+				{ name:  "car_no", index:  "car_no",/*车牌号*/ align: "left", isSort: false, width: 100,hidden:true, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+				{ name:  "remark", index:  "remark",/*备注*/ align: "left", isSort: false, width: 100,hidden:true, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+
+				{ name: 'from_data', index: 'from_data', align: 'center', width: 60,key:true, type: 'string', search: true, searchoptions: { sopt: ['eq'] } },
+				{ name: 'id', index: 'id', align: 'left', width: 30, key:true,type: 'string',  search: true, hidden:true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } }
+			],
+			shrinkToFit: false,
+			altRows: true,
+			altclass: 'gridSpacingClass',
+			forceFit: true,
+			cellLayout: 0,
+			scroll: false,
+			autowidth: true,
+			sortname: 'begin_date',
+			sortorder: 'asc',
+			loadonce: false,
+			mtype: 'POST',
+			viewrecords: true,
+			rownumbers: true,
+			multiselect: true,
+			rowNum: 15,
+			height: '100%',
+			rowList: [15, 20, 30, 50],
+			pager: '#gridPager',
+			jsonReader: {
+				root: 'rows',
+				total: 'total',
+				page: 'page',
+				records: 'records',
+				repeatitems: false
+			},
+			gridComplete: function() {
+				$('.cbox').shiftSelect();
+			},
+			loadComplete: function(xhr) {
+				FailResultDataToTip(xhr);
+			}
+		});
+		$('#gridTable').jqGrid('navGrid', '#gridPager',{
+			add : false,
+			edit : false,
+			del : false,
+			refresh : true
+		}, {}, {}, {}, {
+			multipleSearch : true,
+			closeOnEscape : true,
+			closeAfterSearch : true
+		});
+		$('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+			caption : '设置列',
+			title : 'Set Columns',
+			onClickButton : toggleGridColumns
+		});
+		$('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+			caption : '快速搜索',
+			title : 'Quick Search',
+			onClickButton : toggleGridSearchToolbar
+		});
+		$('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+			caption: '导出数据',
+			title: 'Export Datas',
+			buttonicon: 'ui-icon-disk',
+			onClickButton: function () {
+				exportData();
+			}
+		});
+		setGridHeightWidth();
+	};
+
+
+	function del()
+	{
+		var selectRowItems=$("#gridTable").jqGrid("getGridParam","selarrrow");
+		if(selectRowItems.length==0)
+		{
+			errorNotification({
+				SimpleMessage:"请至少选择一行数据进行操作。"
+			});
+			return;
+		}
+		var requestParams=[];
+		var error="";
+		for(var i=0,ilen=selectRowItems.length;i<ilen;i++)
+		{
+			var rowData=$("#gridTable").jqGrid("getRowData",selectRowItems[i]);
+			if(rowData.from_data=="导入") {
+				requestParams.push(rowData.id);
+			}else {
+				error+=rowData.num+",";
+			}
+		}
+		if(error!="")
+		{
+			errorNotification({
+				SimpleMessage:"选中“数据来源”不是导入，不能删除，只能删除导入数据；序号是："+error
+			});
+			return;
+		}
+
+		$.messager.confirm("提示","确定删除选中的导入数据吗？",function(r){
+			if(r){
+				showLoading();
+				$.ajax({
+					url:"../../nosettlement/Js_Non_Vehicle/delBaobiao?t=" + Math.random(),
+					type:"post",
+					contentType: "application/json",
+					data:JSON.stringify(requestParams),
+					success:function(dataObj){
+						hideLoading();
+						if(isServerResultDataPass(dataObj))
+						{
+							correctNotification({
+								SimpleMessage:"删除成功。"
+							});
+							searchData();
+						}else{
+							FailResultDataToTip(dataObj);
+						}
+					}
+				});
+			}
+		});
+	}
+
+
+	function exportData() {
+		ExportToExcel.call($('#gridTable').jqGrid(), {
+			FiledData: [{
+				data_dictionary: Global_DicType.JS_STATE,
+				filed: "js_state"
+			}]
+		});
+	}
+
+
+	var importData = function(){
+		var  importUrl = "../../nosettlement/Js_Non_Vehicle/importBaobiaoData?t="+ Math.random();
+		var  importTemplateUrl = "../../nosettlement/Js_Non_Vehicle/exportTemplateBaobiao?t="+ Math.random();
+
+		if(!$("#fileUpload").zyUpload){
+			alert("上传javascript插件未引入");
+			return;
+		}
+
+		$("#fileUpload").zyUpload({
+			itemWidth : "60px", // 文件项的宽度
+			itemHeight : "60px", // 文件项的高度
+			url : importUrl,
+			multiple : false, // 是否可以多个文件上传
+			dragDrop : true, // 是否可以拖动上传文件
+			del : true, // 是否可以删除文件
+			finishDel : false, // 是否在上传文件完成后删除预览
+			close : true,
+			fileTypeFilter : [ 'xls', 'xlsx' ],
+			remark : "<p>只能上传xls/xlsx格式文件</p>",
+			isDownModuleFile : true,
+			downModuleFileUrl : importTemplateUrl,
+			// 外部获得的回调接口
+			onSelect : function(files, allFiles) { // 选择文件的回调方法
+			},
+			onDelete : function(file, surplusFiles) { // 删除一个文件的回调方法
+			},
+			onFailure : function(file) { // 文件上传失败的回调方法
+			},
+			onComplete : function(responseInfo) { // 上传完成的回调方法
+				hideLoading();
+				$("#fileUpload").empty();
+				$("#fileUpload").hide();
+				var dataObj = JSON.parse(responseInfo);
+				if (isServerResultDataPass(dataObj)) {
+					correctNotification({ SimpleMessage:dataObj.resultDataFull.simpleMessage });
+					searchData();
+				} else {
+					FailResultDataToTip(dataObj);
+				}
+			}
+		});
+	}
+
+
+</script>
+</body>
+</html>

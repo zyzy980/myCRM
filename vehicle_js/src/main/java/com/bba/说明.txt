@@ -1,0 +1,10 @@
+com.bba 包说明：
+1、com.bba.common 公共代码
+1、com.bba.util 公共类库
+2、com.bba.jcda 基础档案所有后台代码文件
+3、com.bba.xtgl 系统管理所有后台代码文件
+4、com.bba.lpgl LoadingPlan管理所有后台代码文件
+5、com.bba.ywgl 业务管理
+6、com.bba.ztgl 在途管理所有后台代码文件
+7、com.bba.ddgl 订单管理所有后台代码文件
+8、com.bba.jsxt 结算系统所有后台代码文件

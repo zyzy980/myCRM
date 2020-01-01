@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bba.jcda.dao.ITax_rateDao">
+	<sql id="begin_page">
+		<if test="isPage == true">select A.* from (select rownum rn, T.* from (</if>
+	</sql>
+	<sql id="end_page">
+		<if test="isPage == true">)T where rownum &lt; ${page*rows+1}) A where A.rn >
+			${(page-1)*rows}</if>
+	</sql>
+
+	<!--发票字段--><!--,to_char(d.tax_month,'yyyy-mm') tax_month-->
+	<sql id="sql_data">
+		select d.id
+			  ,d.tax_month
+			  ,d.tax_rate
+			  ,d.create_by
+			  ,d.create_date
+		from js_tax_rate d
+	</sql>
+
+	<!-- 查询台账列表 -->
+	<select id="findListForGrid" resultType="com.bba.jcda.vo.Tax_rateVO" parameterType="com.bba.util.JqGridParamModel">
+		<include refid="begin_page" />
+		select t.* from (
+		<include refid="sql_data" />
+		) t
+		<if test="filters!=null and filters!=''">where ${filters}</if>
+		<include refid="end_page" />
+	</select>
+
+	<!-- 查询台账数量 -->
+	<select id="findListForGridCount" resultType="int" parameterType="com.bba.util.JqGridParamModel">
+		select count(*) from (
+		<include refid="sql_data" />
+		) t
+		<if test="filters!=null and filters!=''">where ${filters}</if>
+	</select>
+</mapper>

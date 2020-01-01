@@ -1,0 +1,446 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <title></title>
+    <link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+    <link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+    <link id="JqgridTheme" type="text/css" rel="stylesheet"
+          href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/fileUpload/css/fileUpload.css" />
+    <link type="text/css" rel="stylesheet" href="../../View/ywgl/css/planExec.css" />
+    <style type="text/css">
+        /*---页面样式---*/
+        body {
+            background: #fff;
+        }
+        .register-box label {
+            height: 34px;
+            line-height: 34px;
+            padding-left: 5px;
+            display: inline-block;
+            font-size: 14px;
+            color: #666;
+        }
+        .query-select select{ width: 100%; height: 24px; border:none; padding-left:6px;}
+
+        select{ font-size: 12px; color: #999; appearance: none;-moz-appearance: none; -webkit-appearance: none; background-image: url(images/right-arrow.png); background-repeat: no-repeat;background-position: right 6px;}
+
+        .content{border: 1px solid #e5e5e5; box-shadow: 0px 0px 10px #eee; }
+        /*---页面样式---*/
+        .operation img{ float:left; margin-top:3px; margin-right:8px;}
+        .operation span{ float:left; font-size:14px; color:#18ab2b; }
+
+        .opera-conleft p{ font-size:12px; color:#999; line-height:22px;}
+        .opera-conleft p span{font-size:14px; color:#666; font-weight:bold;}
+
+        .opera-title p{ font-size:14px; color:#666; float:left;}
+        .adjust-btn img{ float:left; margin-top:15px; margin-right:5px;}
+        .adjust-btn span{ font-size:12px; font-weight:600;}
+
+        ::-webkit-scrollbar{display:none;}
+
+        .opera-list li{ background:#fff; border-radius:6px; box-shadow: 0px 0px 10px #eee; padding:0 15px; padding-bottom:8px; margin-bottom:10px;}
+
+        .location img{ float:left; margin-top:5px; margin-right:6px;}
+        .location span{ float:left; font-size:12px; color:#666; font-weight:600;}
+        .con-list1 p{ float:left; width:33%; font-size:12px; color:#999;line-height:24px;}
+        .con-list1 p span{font-size:13px; color:#666; font-weight:bold;}
+        .con-list2 p{ float:left; width:50%;font-size:12px; color:#999;line-height:24px;}
+        .con-list2 p span{font-size:13px; color:#666; font-weight:bold;}
+
+
+        .pages a { margin: 0px 5px; color: #666; padding: 7px 8px; background: #fff; text-decoration: none;}
+        .pages a:hover { color: #18ab2b;}
+        div.pagination a:active { border: 1px solid #999; color: #fff;}
+
+
+        .right{ position: absolute; right:0; top:-3px; width:420px; height:450px; background:#f8f8f8; box-shadow: 0px 0px 10px #ddd; overflow:hidden;}
+        .right-top{ background:#fff; padding:10px 10px 0; box-shadow: 0px 0px 10px #eee; border-bottom:1px solid #f2f2f2;}
+        .cost{ padding:0 10px; height:40px; line-height:40px; color:#18ab2b; font-size:14px; background:#f2f2f2; border-radius:4px;}
+        .cost img{ float:right; margin-top:15px;}
+
+        .order{ margin:10px 0;}
+        .order p{ font-size:12px; color:#999; line-height:22px;}
+        .order p span{font-size:14px; color:#666; font-weight:bold;}
+
+        .order-opera a{ float:left; margin-right:30px;}
+        .order-opera img{ float:left; margin-top:7px; margin-right:5px;}
+        .order-opera span{ float:left;font-size: 12px; font-weight: 600;}
+
+        .order-list ul li{ background:#fff; border-radius:6px;box-shadow: 0px 0px 10px #eee;padding: 0 15px; padding-bottom: 8px;
+            margin-bottom: 10px;}
+
+        /* 复选框 */
+        label {font-size:10px;cursor:pointer;}
+        label i {font-size:10px;font-style:normal;display:inline-block;width:14px;height:14px;text-align:center;line-height:13px;color:#fff;vertical-align:middle;margin:-4px 2px 1px 0px;border:#cecece 1px solid; border-radius:3px;}
+        input[type="checkbox"],input[type="radio"] {display:none;}
+        input[type="radio"] + i {border-radius:50%;}
+        input[type="checkbox"]:checked + i,input[type="radio"]:checked + i {background:#ff9f00; border: 1px solid #ff9f00;}
+        input[type="checkbox"]:disabled + i,input[type="radio"]:disabled + i {border-color:#cecece;}
+        input[type="checkbox"]:checked:disabled + i,input[type="radio"]:checked:disabled + i {background:#ccc;}
+
+        .check-title img{ float:left; margin-top:15px; margin-right:6px;}
+        .check-title span{ float:left; font-size:14px; display:block; margin-top:12px; color:#666; font-weight:600;}
+
+
+        /*浮动css*/
+        #floatDivBoxs{width:420px;background:#fff;position:fixed;top:96px;right:-420px;z-index:999;}
+        #floatDivBoxs .floatDtt{width:100%;height:45px;line-height:45px; background:#f08326;color:#fff;font-size:18px;text-indent:22px;position:relative;}
+        #rightArrow{width:45px;height:45px;background:url(images/online_arrow.png) no-repeat;position:fixed;top:120px;right:0;z-index:9999;}
+        #rightArrow a{display:block;height:45px;}
+
+
+        /*手工调整css*/
+        .register-box2 input{ margin:10px 10px; width:312px;}
+        .order-list2 li{ margin:0 10px;}
+
+
+        .order-opera2 a{ margin-left:30px; margin-right:0;}
+        .order-opera2 img{ margin-top:6px;}
+        .order-opera3 img{margin-top:6px;}
+        .operation2 img{ margin-top:2px;}
+        .order-list2 ul li{ padding-top:10px; margin-top:10px;}
+        .order-list3 ul li{ padding-top:0px; margin-top:0;}
+        .opera-conleft2 p span{ font-size:13px;}
+        .line-map img{ width:100%; height:100%;}
+        .register-box4 lable{ height:30px; line-height:30px;}
+        .register-box4 input{ height:28px; line-height:28px;}
+
+        .glass img{ position:absolute; right:4px; top:2px; width:14px;}
+    </style>
+</head>
+<body style="height: 713px;">
+<div id="toolbar" class="easyui-panel" style="padding: 4px; border-width: 0; border-bottom-width: 1px;">
+    #{PAGE_TOOLBAR_BUTTONROLE}
+</div>
+<div id="mapContainer" class="content" style="height: 664px">
+
+    <div id="rightArrow"></div>
+    <!--floatDivBoxs-->
+    <div id="floatDivBoxs">
+        <div class="right">
+            <div class="right-top" onclick="changeStrategy(AMap.DrivingPolicy.LEAST_TIME)">
+                <p class="cost">速度优先</p>
+                <div class="order">
+                    <p>耗时：<span id="speedHours"></span></p>
+                    <p>里程：<span id="speedMilega"></span></p>
+                </div>
+            </div>
+            <div class="right-top" onclick="changeStrategy(AMap.DrivingPolicy.LEAST_DISTANCE)">
+                <p class="cost">距离最短</p>
+                <div class="order">
+                    <p>耗时：<span id="noHours"></span></p>
+                    <p>里程：<span id="noMilega"></span></p>
+                </div>
+            </div>
+            <div class="right-top" onclick="changeStrategy(AMap.DrivingPolicy.REAL_TRAFFIC)">
+                <p class="cost">躲避拥堵</p>
+                <div class="order">
+                    <p>耗时：<span id="avoidHours"></span></p>
+                    <p>里程：<span id="avoidMilega"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="realTimeTraffic" style="background-color:white;position: absolute;top: 10%; left: 20px; cursor: pointer;width: 200px;height: 30px;font-size: 16px; ">
+    <div class="realTimeTraffic" style="padding: 3px 6px; border-radius: 3.5px;text-align: center;">
+        <span style="float: left;">通畅</span>
+        <div style="width: 30px;height: 16px; background: #0cc50c;float: left;margin-top: 3px;"></div>
+        <div style="width: 30px;height: 16px; background: #f5f50f;float: left;margin-top: 3px;"></div>
+        <div style="width: 30px;height: 16px; background: #ef1616;float: left;margin-top: 3px;"></div>
+        <div style="width: 30px;height: 16px; background: #ad0404;float: left;margin-top: 3px;"></div>
+        <span style="float: left;">拥堵</span>
+    </div>
+</div>
+
+
+
+<link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" />
+<script src="https://a.amap.com/jsapi_demos/static/demo-center/js/demoutils.js"></script><!--
+<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.14&key=6202c32e3dccbecd6d7251d9f396db30&plugin=AMap.Driving"></script>-->
+<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.14&key=1799554860864c3c9be0a98efb89ecca&plugin=AMap.Driving"></script>
+
+<script type="text/javascript" src="https://cache.amap.com/lbs/static/addToolbar.js"></script>
+
+
+<!--
+<script src="https://a.amap.com/jsapi_demos/static/demo-center/js/demoutils.js"></script>
+<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.12&key=6202c32e3dccbecd6d7251d9f396db30&plugin=AMap.GraspRoad,AMap.Driving,AMap.TruckDriving,AMap.PolyEditor,AMap.Geocoder,AMap.CircleEditor,AMap.MouseTool,AMap.ToolBar"></script>
+-->
+
+
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/truckOnline/js/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/truckOnline/js/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/truckOnline/js/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/truckOnline/js/linq.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/My_AMapUtils.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonUtils.js"></script>
+<!--
+<script type="text/javascript" src="../../Resource/js/echarts/echarts.min.js"></script>
+-->
+<!--
+<script type="text/javascript" src="https://cache.amap.com/lbs/static/addToolbar.js"></script>
+-->
+
+<script type="text/javascript">
+
+
+
+
+
+    var beginLngLat = [];
+    var endLngLat = [];
+    var beginLo = "";
+    var beginLa = "";
+    var endLo = "";
+    var endLa = "";
+    var lngLatList = {};
+    var allHours = "";
+    var allMilega = "";
+
+    var path = [];
+    $(function() {
+
+        var flag=0;
+        $('#rightArrow').on("click",function(){
+            if(flag==1){
+                $("#floatDivBoxs").animate({right: '-425px'},300);
+                $(this).animate({right: '0px'},300);
+                $(this).css('background-position','-45px 0');
+                flag=0;
+            }else{
+                $("#floatDivBoxs").animate({right: '0'},300);
+                $(this).animate({right: '420px'},300);
+                $(this).css('background-position','0px 0');
+                flag=1;
+            }
+        });
+
+        var parms = getUrlParms();
+        beginLo = parms["beginLo"];
+        beginLa = parms["beginLa"];
+        endLo = parms["endLo"];
+        endLa = parms["endLa"];
+
+        beginLngLat.push(beginLo);
+        beginLngLat.push(beginLa);
+        endLngLat.push(endLo);
+        endLngLat.push(endLa);
+
+        setTimeout(() => {
+            loadMap();
+            changeStrategy(AMap.DrivingPolicy.LEAST_TIME);
+        }, 1);
+
+
+    });
+
+    var map = null;
+    var loadMap = function() {
+        //基本地图加载
+        map = new AMap.Map("mapContainer", {
+            resizeEnable: true,
+            zoom: 13 //地图显示的缩放级别
+        });
+    }
+
+    var changeStrategy = function(policy) {
+        search2(path, {
+            map: map
+        }, policy);
+    }
+
+    var search2 = function(arr, options,policy){
+        map.clearMap();
+        //构造路线导航类
+
+        var DrivingOptions  = {
+            map : map,
+            policy : policy,
+            showTraffic : true,	//设置是否显示实时路况信息，默认设置为true。 显示绿色代表畅通，黄色代表轻微拥堵，红色代表比较拥堵，灰色表示无路况信息
+            hideMarkers : false,		//设置隐藏路径规划的起始点图标，设置为true：隐藏图标；设置false
+            autoFitView : true 	//用于控制在路径规划结束后，是否自动调整地图视野使绘制的路线处于视口的可见范围
+            /*panel: 'panel',
+            extensions: 'base',
+            outlineColor : "#0091FF",
+            size : 4,
+            hideMarkers : false,		//设置隐藏路径规划的起始点图标，设置为true：隐藏图标；设置false：
+            showTraffic : true,	//设置是否显示实时路况信息，默认设置为true。 显示绿色代表畅通，黄色代表轻微拥堵，红色代表比较拥堵，灰色表示无路况信息。
+            */
+        };
+
+
+        var driving = new AMap.Driving(DrivingOptions);
+
+        // 根据起终点经纬度规划驾车导航路线
+        driving.search(new AMap.LngLat(beginLo, beginLa), new AMap.LngLat(endLo, endLa), function(status, result) {
+            allHours = formatSeconds(result.routes[0].time);
+            allMilega = parseInt(result.routes[0].distance) / 1000 + "公里";
+            if(policy == AMap.DrivingPolicy.LEAST_TIME) {
+                $("#speedHours").html(allHours);
+                $("#speedMilega").html(allMilega);
+                $("#noHours").html('');
+                $("#noMilega").html('');
+                $("#avoidHours").html('');
+                $("#avoidMilega").html('');
+            } else if(policy == AMap.DrivingPolicy.LEAST_DISTANCE) {
+                $("#noHours").html(allHours);
+                $("#noMilega").html(allMilega);
+                $("#speedHours").html('');
+                $("#speedMilega").html('');
+                $("#avoidHours").html('');
+                $("#avoidMilega").html('');
+            } else if(policy == AMap.DrivingPolicy.REAL_TRAFFIC) {
+                $("#avoidHours").html(allHours);
+                $("#avoidMilega").html(allMilega);
+                $("#speedHours").html('');
+                $("#speedMilega").html('');
+                $("#noHours").html('');
+                $("#noMilega").html('');
+            }
+            // result 即是对应的驾车导航信息，相关数据结构文档请参考  https://lbs.amap.com/api/javascript-api/reference/route-search#m_DrivingResult
+            if (status === 'complete') {
+            } else {
+            }
+        });
+
+            /*function fun(path){
+            var driving = new AMap.Driving(DrivingOptions);
+            driving.search(path,function(status, result) {
+                console.log(result);
+                // allHours = formatSeconds(result.routes[0].time);
+                // allMilega = parseInt(result.routes[0].distance) / 1000 + "公里";
+                // if(policy == '10') {
+                //     $("#speedHours").html(allHours);
+                //     $("#speedMilega").html(allMilega);
+                //     $("#noHours").html('');
+                //     $("#noMilega").html('');
+                //     $("#avoidHours").html('');
+                //     $("#avoidMilega").html('');
+                // } else if(policy == '2') {
+                //     $("#noHours").html(allHours);
+                //     $("#noMilega").html(allMilega);
+                //     $("#speedHours").html('');
+                //     $("#speedMilega").html('');
+                //     $("#avoidHours").html('');
+                //     $("#avoidMilega").html('');
+                // } else if(policy == '1') {
+                //     $("#avoidHours").html(allHours);
+                //     $("#avoidMilega").html(allMilega);
+                //     $("#speedHours").html('');
+                //     $("#speedMilega").html('');
+                //     $("#noHours").html('');
+                //     $("#noMilega").html('');
+                // }
+
+
+                if(status == "complete" && result.info == "OK"){
+                }else{
+                    fun(path);		//如果失败，重新再次操作
+                }
+            });
+        }
+        var newArray = [];
+        for(var i = 0; i < arr.length; i++){
+            newArray.push(arr[i]);
+            if(((i+1)%15) == 0 || (i+1) == arr.length){
+                fun(JSON.parse(JSON.stringify(newArray)));
+                newArray = [arr[i]];
+            }
+        }
+        if(options){
+            var pixel = new AMap.Pixel(-16,-33);
+            options = options.map;
+            if(options.begin_local && options.begin_local.longitude && options.begin_local.latitude){
+                var address = options.begin_local.address || "";
+                if(address){
+                    var content = "<div class = 'colorA' style='margin-left: 30px;width: auto;border: inherit;background-color: inherit;'><div style='text-align:center'></div><div style='font-size:12px;  font-weight:bold; color:#00a7d0; padding:5px 10px; background:#fff;border-radius:2px;box-shadow: 1px 1px 4px 1px #999; display:block;text-align:center;width:150px;white-space:normal;'>"+address+"</div></div>";
+                    var marker = new AMap.Marker({
+                        position: new AMap.LngLat(options.begin_local.longitude, options.begin_local.latitude),
+                        offset: pixel,
+                        icon: '../../Resource/images/truckImages/start.png'
+                    });
+                    marker.setLabel({
+                        //offset: new AMap.Pixel(15, 15),
+                        content: content
+                    });
+                }else{
+                    marker = new AMap.Marker({
+                        offset: pixel,
+                        position: new AMap.LngLat(options.begin_local.longitude, options.begin_local.latitude),
+                        icon: '../../Resource/images/truckImages/start.png'
+                    });
+                }
+                map.add(marker);
+            }
+
+            if(options.end_local && options.end_local.longitude && options.end_local.latitude){
+                var address = options.end_local.address || "";
+                if(address){
+                    var content = "<div class = 'colorA' style='margin-left: 30px;width: auto;border: inherit;background-color: inherit;'><div style='text-align:center'></div><div style='font-size:12px;  font-weight:bold; color:#00a7d0; padding:5px 10px; background:#fff;border-radius:2px;box-shadow: 1px 1px 4px 1px #999; display:block;text-align:center;width:150px;white-space:normal;'>"+address+"</div></div>";
+                    var marker = new AMap.Marker({
+                        offset: pixel,
+                        position: new AMap.LngLat(options.end_local.longitude, options.end_local.latitude),
+                        icon: '../../Resource/images/truckImages/end.png'
+                    });
+                    marker.setLabel({
+                        content: content
+                    });
+                }else{
+                    marker = new AMap.Marker({
+                        offset: pixel,
+                        position: new AMap.LngLat(options.end_local.longitude, options.end_local.latitude),
+                        icon: '../../Resource/images/truckImages/end.png'
+                    });
+
+                }
+                map.add(marker);
+            }
+        }
+        map.setFitView();*/
+    }
+
+
+
+    function formatSeconds(value) {
+        var theTime = parseInt(value);// 秒
+        var theTime1 = 0;// 分
+        var theTime2 = 0;// 小时
+        if(theTime > 60) {
+            theTime1 = parseInt(theTime/60);
+            theTime = parseInt(theTime%60);
+            if(theTime1 > 60) {
+                theTime2 = parseInt(theTime1/60);
+                theTime1 = parseInt(theTime1%60);
+            }
+        }
+        var result = ""+parseInt(theTime)+"秒";
+        if(theTime1 > 0) {
+            result = ""+parseInt(theTime1)+"分"+result;
+        }
+        if(theTime2 > 0) {
+            result = ""+parseInt(theTime2)+"小时"+result;
+        }
+        return result;
+    }
+
+    var close = function() {
+        window.top.close("pathPlanning");
+    }
+</script>
+</body>
+</html>
