@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="fb7608ed-92d8-470e-802b-ca88f6c7cb74" name="Default Changelist" comment="" />
+    <list default="true" id="fb7608ed-92d8-470e-802b-ca88f6c7cb74" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -90,7 +92,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$/.." value="master" />
+        <entry key="$PROJECT_DIR$/.." value="009abe87b3553b220dc45a7e4d4c9deb6b88b505" />
       </map>
     </option>
   </component>
@@ -185,7 +187,7 @@
   <component name="MavenRunner">
     <option name="skipTests" value="true" />
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-7" />
     <option name="width" value="480" />
     <option name="height" value="520" />
@@ -199,42 +201,7 @@
     </navigator>
     <panes>
       <pane id="PackagesPane" />
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="vehicle_js" type="b2602c69:ProjectViewProjectNode" />
-              <item name="vehicle_js" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="vehicle_js" type="b2602c69:ProjectViewProjectNode" />
-              <item name="vehicle_js" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="vehicle_js" type="b2602c69:ProjectViewProjectNode" />
-              <item name="vehicle_js" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="vehicle_js" type="b2602c69:ProjectViewProjectNode" />
-              <item name="vehicle_js" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="vehicle_js" type="b2602c69:ProjectViewProjectNode" />
-              <item name="vehicle_js" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="resources" type="462c0819:PsiDirectoryNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
+      <pane id="ProjectPane" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -245,7 +212,7 @@
     <property name="RequestMappingsPanelWidth1" value="75" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1577880456370" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1577945445514" />
     <property name="last_opened_file_path" value="E:/Idea project" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -349,10 +316,11 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Test" />
-        <item itemvalue="Application.test" />
         <item itemvalue="Application.Up_AccountController" />
+        <item itemvalue="Application.test" />
+        <item itemvalue="Application.Test" />
         <item itemvalue="Application.AccountsToLedgerServiceimpl" />
+        <item itemvalue="Application.Up_AccountController" />
       </list>
     </recent_temporary>
   </component>
@@ -870,7 +838,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1869434000" />
+    <option name="totallyTimeSpent" value="1869548000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -882,10 +850,9 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
-    <editor active="true" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.7179803" visible="true" weight="0.21002132" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.7179803" visible="true" weight="0.21002132" />
       <window_info id="Structure" order="1" sideWeight="0.5017123" side_tool="true" weight="0.20469083" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -904,7 +871,7 @@
       <window_info anchor="bottom" id="Spring" order="8" weight="0.32936078" />
       <window_info anchor="bottom" id="Terminal" order="9" weight="0.32936078" />
       <window_info anchor="bottom" id="Docker" order="10" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.50053304" side_tool="true" weight="0.30227518" />
+      <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.50053304" side_tool="true" weight="0.30151844" />
       <window_info anchor="bottom" id="Messages" order="12" weight="0.31852654" />
       <window_info anchor="bottom" id="Java Enterprise" order="13" weight="0.32936078" />
       <window_info anchor="bottom" id="Database Changes" order="14" />
