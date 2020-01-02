@@ -6,6 +6,7 @@ package com.bba.web;
  */
 public class Test {
     public static void main (String [] args) {
+        System.out.print("this is a test");
         Long id1=371L;
         Long id2=371L;
         System.out.print(id1.equals(id2));
