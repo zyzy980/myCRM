@@ -198,7 +198,9 @@ var Global_DicType = {
     COMPENSATION_TYPE:"COMPENSATION_TYPE",
     //补差状态
     COMPENSATION_STATE:"COMPENSATION_STATE",
-
+    /**文档管理*/
+    Questions_State:"Questions_State",
+    Questions_Type:"Questions_Type",
 
 	/**发票管理*/
 	Invoice_State:"Invoice_State",
