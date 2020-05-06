@@ -23,6 +23,8 @@ public class Sys_sheetidUtil {
 
     public static final String JS_PAYMENT_INVOICE = "JS_PAYMENT_INVOICE";
 
+    public static final String QUESTIONS = "QUESTIONS";
+
     public static String getSys_sheetid(String key){
         String json = HttpRequestUtils.sendPost("http://localhost:9101/vehicle_js/sysInfo/SheelNo/getSys_sheetid",
                 "p_within_code=TMS&p_whcenter=TMS&p_tablename="+key);

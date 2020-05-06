@@ -1,10 +1,10 @@
 spring:
     profiles:
         #dev----开发
-        #wkcytest----微科质量测试
-        #cmscltest----CMSCL测试
+        #wkcytest--
+        #cmscltest----
         #pro----生产
-        active: pro
+        active: dev
 swagger:
     production: false
     basic:

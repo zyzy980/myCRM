@@ -1,0 +1,603 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace：必须与对应的接口全类名一致 id:必须与对应接口的某个对应的方法名一致 -->
+<mapper namespace="com.bba.xtgl.dao.ISysUserDao">
+
+	<sql id="begin_page"><if test="isPage == true">SELECT * FROM (SELECT t.*, ROWNUM RN FROM (</if></sql>
+	<sql id="end_page">
+		<if test="isPage == true">
+			<if test="filters!=null and filters!=''">where ${filters}</if>
+		</if>
+		) t where ROWNUM &lt;= ${page} * ${rows}) WHERE RN &gt;=((${page} - 1) * ${rows} + 1)
+	</sql>
+	<select id="findListByPropertys" resultType="com.bba.xtgl.vo.SysUserVO">
+		select
+			u.id,
+			u.userId,
+			u.realName,
+			u.within_code,
+			u.password,
+			u.status,
+			u.dept_id,
+			u.mobileNo,
+			u.position,
+			u.sex,
+			u.idcard,
+			u.tel,
+			u.mail,
+		u.mailhost,
+		u.mailport,
+		u.mailpassword,
+			u.fax,
+			u.userloginIp,
+			u.userloginTime,
+			u.address,
+			u.birthday,
+			u.headimg,
+			u.province,
+			u.company_id,
+			u.city,
+			u.sensitive_authority,
+			u.partner,
+			u.userLevel,
+<!-- 			u.partner_name, -->
+			u.remark,
+			u.is_op isOp,u.is_contractor isContractor,u.is_th_driver isThDriver,u.is_ps_driver isPsDriver,u.is_cus isCus,
+		    u.contractor_code contractorCode,
+		    u.cus_code cusCode,
+<!-- 			(CASE USERLEVEL WHEN '2' THEN (SELECT wm_concat(DISTINCT LOCATION_CODE)  -->
+<!-- 			FROM ZD_YWLOCATION_BASE a INNER JOIN ZD_CONTRACTOR b on b.sn=a.base_sn and b.within_code=a.within_code  -->
+<!-- 			and upper(a.kind)='ZD_CONTRACTOR' WHERE b.CODE=u.partner) else u.partner END) contractor_supplier_ywlocation, -->
+			u.create_by,
+			to_char(u.create_date,'yyyy-mm-dd HH24:mi:ss')as create_date,
+			u.update_by,
+			to_char(u.create_date,'yyyy-mm-dd HH24:mi:ss')as create_date,
+		    u.valid_date as validDate,
+		    sw.logo_path as logoPath
+		from SYS_USERS u
+		left join sys_within sw on sw.code = u.within_code
+		<foreach item="vo" collection="list" open="where" separator="or">
+			<trim prefixOverrides="and">
+				<if test="vo.within_code!=null">and within_code=#{vo.within_code}</if>
+				<if test="vo.id!=null">and u.id=#{vo.id}</if>
+				<if test="vo.userId!=null">and u.userId=#{vo.userId}</if>
+				<if test="vo.password!=null">and u.password=#{vo.password}</if>
+			</trim>
+	    </foreach>
+	</select>
+
+
+	<resultMap type="com.bba.xtgl.vo.SysUserVO" id="sysUserLocation">
+		<id property="id" column="id"/>
+		<result property="userId" column="userId"/>
+		<result property="realName" column="realName"/>
+		<result property="within_code" column="within_code"/>
+	<!-- 	<result property="password"/> -->
+		<!-- <result property="password" column="password"/> -->
+		<result property="status" column="status"/>
+		<result property="dept_id" column="dept_id"/>
+
+		<result property="mobileNo" column="mobileNo"/>
+		<result property="position" column="position"/>
+
+		<result property="sex" column="sex"/>
+
+		<result property="idcard" column="idcard"/>
+		<result property="tel" column="tel"/>
+
+		<result property="mail" column="mail"/>
+		<result property="mailhost" column="mailhost"/>
+		<result property="mailport" column="mailport"/>
+		<result property="mailpassword" column="mailpassword"/>
+
+		<result property="sensitive_authority" column="sensitive_authority"/>
+		<result property="fax" column="fax"/>
+		<result property="partner" column="partner"/>
+		<result property="partner_name" column="partner_name"/>
+		<result property="ywloation" column="ywloation"/>
+		<result property="userloginIp" column="userloginIp"/>
+		<result property="userLevel" column="userLevel"/>
+		<result property="userloginTime" column="userloginTime"/>
+		<result property="address" column="address"/>
+		<result property="birthday" column="birthday"/>
+		<result property="headimg" column="headimg"/>
+		<result property="userloginBrowser" column="userloginBrowser"/>
+		<result property="userloginPlatform" column="userloginPlatform"/>
+		<result property="validating" column="validating"/>
+		<result property="push_flag" column="push_flag"/>
+		<result property="push_baidu_key" column="push_baidu_key"/>
+		<result property="province" column="province"/>
+		<result property="company_id" column="company_id"/>
+		<result property="city" column="city"/>
+		<result property="remark" column="remark"/>
+		<result property="wechat" column="wechat"/>
+		<result property="wechar" column="wechar"/>
+		<result property="create_by" column="create_by"/>
+		<result property="create_date" column="create_date"/>
+		<result property="update_by" column="update_by"/>
+		<result property="update_date" column="update_date"/>
+		<result property="isCus" column="isCus"/>
+		<result property="isContractor" column="isContractor"/>
+		<result property="isPsDriver" column="isPsDriver"/>
+		<result property="isOp" column="isOp"/>
+		<result property="cusCode" column="cusCode"/>
+		<result property="site" column="site"/>
+		<result property="is_p_site" column="is_p_site"/>
+		<result property="is_q_site" column="is_q_site"/>
+		<result property="contractorCode" column="contractorCode"/>
+		<collection property="userLocationList" ofType="com.bba.xtgl.vo.SysUserLocationVO" >
+			<id property="userId" column="USERID"/>
+			<result property="within_code" column="WITHIN_CODE"/>
+			<result property="ywlocation" column="YWLOCATION"/>
+		</collection>
+	</resultMap>
+
+	<select id="getList" parameterType="com.bba.util.JqGridParamModel" resultType="com.bba.xtgl.vo.SysAddressVO">
+		<!-- <include refid="begin_page"/> -->
+		   select
+		   sn,
+	       within_code,
+	       id,
+	       name,
+	       parentid,
+	       shortname,
+	       lng,
+	       lat,
+	       layer,
+	       position,
+	       sort,
+	       acronym,
+	       create_by,
+	       to_char(u.create_date,'yyyy-mm-dd hh24:mi:ss') create_date,
+	       update_by,
+	       to_char(u.update_date,'yyyy-mm-dd hh24:mi:ss') update_date
+  		   from sys_address
+		<if test="filters!=null and filters!=''">where ${filters}</if>
+	</select>
+
+	<select id="getListForGrid" parameterType="com.bba.util.JqGridParamModel" resultType="com.bba.xtgl.vo.SysUserVO">
+		<include refid="begin_page"/>
+		select u.id, u.userId, u.realName,u.sensitive_authority, u.within_code, u.password, u.status, u.dept_id, u.mobileNo, u.position, u.sex, u.idcard,
+		  u.tel,
+		  u.mail,
+		  u.mailhost,
+		  u.mailport,
+		  u.mailpassword,
+		 u.fax, u.userloginIp, u.userloginTime,
+		  u.address, u.birthday, u.headimg, u.partner,u.userLevel,
+		  u.province, u.company_id, u.city, u.remark, u.create_by, to_char(u.create_date,'yyyy-mm-dd hh24:mi:ss') create_date,
+		  u.update_by, to_char(u.update_date,'yyyy-mm-dd hh24:mi:ss') update_date,u.userRoles, u.is_cus as isCus,
+		  u.is_contractor as isContractor,u.is_op as isOp,u.is_ps_driver as isPsDriver	 from
+         (
+         select u.*,
+         (
+            SELECT REPLACE(WM_CONCAT(R.ROLENAME),',','/') FROM SYS_ROLE R LEFT JOIN sys_userdetailroles D ON
+      		R.WITHIN_CODE=D.WITHIN_CODE AND R.ROLEID=D.ROLEID
+      		WHERE R.WITHIN_CODE=u.within_code AND D.USERID=u.userid
+         ) userRoles
+         from sys_users u
+			) u
+        <include refid="end_page"/>
+	</select>
+
+	<!--查询客户下的员工-->
+	<select id="getCusListForGrid" parameterType="com.bba.util.JqGridParamModel" resultType="com.bba.xtgl.vo.SysUserVO">
+		SELECT * FROM (SELECT t.*, ROWNUM RN FROM (
+		select u.id, u.userId, u.realName,u.sensitive_authority, u.within_code, u.password, u.status, u.dept_id, u.mobileNo, u.position, u.sex, u.idcard,
+		u.tel, u.mail, u.fax, u.userloginIp, u.userloginTime,
+		u.address, u.birthday, u.headimg, u.partner,
+		u.province, u.company_id, u.city, u.remark, u.create_by, to_char(u.create_date,'yyyy-mm-dd hh24:mi:ss') create_date,
+		u.update_by, to_char(u.update_date,'yyyy-mm-dd hh24:mi:ss') update_date,u.userRoles from
+		(
+		select DISTINCT u.*,
+		(
+		SELECT REPLACE(WM_CONCAT(R.ROLENAME),',','/') FROM SYS_ROLE R LEFT JOIN sys_userdetailroles D ON
+		R.WITHIN_CODE=D.WITHIN_CODE AND R.ROLEID=D.ROLEID
+		WHERE R.WITHIN_CODE=u.within_code AND D.USERID=u.userid
+		) userRoles
+		from sys_users u,zd_cus z
+		where u.cus_code = z.code
+		  and z.code = #{filters}
+		) u
+		) t where ROWNUM &lt;= ${page} * ${rows}) WHERE RN &gt;=((${page} - 1) * ${rows} + 1)
+	</select>
+
+	<select id="getListForGridCount" resultType="java.lang.Integer" parameterType="com.bba.util.JqGridParamModel">
+		select count(*) from
+         (
+         select u.*,
+         (
+            SELECT REPLACE(WM_CONCAT(R.ROLENAME),',','/') FROM SYS_ROLE R LEFT JOIN sys_userdetailroles D ON
+      		R.WITHIN_CODE=D.WITHIN_CODE AND R.ROLEID=D.ROLEID
+      		WHERE R.WITHIN_CODE=u.within_code AND D.USERID=u.userid
+         ) userRoles
+         from sys_users u
+			) u
+		<if test="filters!=null and filters!=''">where ${filters}</if>
+	</select>
+
+
+	<insert id="addSysUserVO" parameterType="com.bba.xtgl.vo.SysUserVO">
+			insert into sys_users(
+				code,userId,realName,within_code,
+				password,status,dept_id,
+				mobileNo,position,sex,
+				idcard,tel,
+				mail,
+				mailhost,
+				mailport,
+				mailpassword,
+				wechat,
+				fax,partner,
+				userloginIp,
+				userloginTime,address,birthday,
+				headimg,
+			    province,company_id,
+				city,remark,create_by,update_by,
+				create_date,wechar,sensitive_authority,is_ps_driver
+			)
+			values(
+			    #{code,jdbcType=VARCHAR},
+				#{userId,jdbcType=VARCHAR},#{realName,jdbcType=VARCHAR},#{within_code,jdbcType=VARCHAR},
+				#{password,jdbcType=VARCHAR},'1',#{dept_id,jdbcType=VARCHAR},
+				#{mobileNo,jdbcType=VARCHAR},#{position,jdbcType=VARCHAR},#{sex,jdbcType=VARCHAR},
+				#{idcard,jdbcType=VARCHAR},#{tel,jdbcType=VARCHAR},
+
+				#{mail,jdbcType=VARCHAR},
+				#{mailhost,jdbcType=VARCHAR},
+				#{mailport,jdbcType=VARCHAR},
+				#{mailpassword,jdbcType=VARCHAR},
+
+				#{wechat,jdbcType=VARCHAR},
+				#{fax,jdbcType=VARCHAR}, #{partner,jdbcType=VARCHAR},
+			    #{userloginIp,jdbcType=VARCHAR},
+				#{userloginTime,jdbcType=VARCHAR},#{address,jdbcType=VARCHAR},#{birthday,jdbcType=VARCHAR},
+				#{headimg,jdbcType=VARCHAR},#{province,jdbcType=VARCHAR},#{company_id,jdbcType=VARCHAR},
+				#{city,jdbcType=VARCHAR},#{remark,jdbcType=VARCHAR},#{create_by,jdbcType=VARCHAR},#{update_by,jdbcType=VARCHAR},
+				sysdate,#{wechar,jdbcType=VARCHAR},#{sensitive_authority,jdbcType=VARCHAR},#{isPsDriver,jdbcType=VARCHAR}
+			)
+	</insert>
+	<select id="findByUserId" parameterType="java.util.Map" resultMap="sysUserLocation">
+		select
+	    u.id id,
+	    u.userId userId,
+      u.realName realName,
+      u.within_code within_code,
+      u.password password,
+      u.status status,
+      u.dept_id dept_id,
+      u.mobileNo mobileNo,
+      u.position position,
+      u.sex sex,
+      u.idcard idcard,
+      u.tel tel,
+        u.mail mail,
+		u.mailhost,
+		u.mailport,
+		u.mailpassword,
+
+      u.fax fax,
+      u.userLevel userLevel,
+      u.userloginIp userloginIp,
+      u.userloginTime userloginTime,
+      u.address address,
+      u.birthday birthday,
+      u.headimg headimg,
+      u.province province,
+      u.company_id company_id,
+      u.city city,
+      u.remark remark,
+      u.create_by create_by,
+      u.create_date create_date,
+      u.update_by update_by,
+      u.update_date update_date,
+      u.within_code,
+      u.partner,
+	  u.userLevel,
+      u.wechar,
+	  u.wechat,
+      u.sensitive_authority,
+      u.is_cus isCus,
+      u.is_contractor isContractor,
+      u.is_ps_driver isPsDriver,
+      u.is_op isOp,
+      u.cus_code cusCode,
+      u.contractor_code contractorCode
+
+      from
+      sys_users u<!-- u left join sys_users_location s on u.userid=s.userid -->
+	    where userId= #{userid} and within_code = #{within_code}
+	</select>
+	<update id="updateSysUserVO" parameterType="com.bba.xtgl.vo.SysUserVO">
+		update sys_users
+		set
+		<trim prefixOverrides=",">
+						     <if test="realName!=null">,realName = #{realName,jdbcType=VARCHAR} </if>
+						     <if test="password!=null">,password = #{password,jdbcType=VARCHAR}</if>
+						     <if test="status!=null">,status = #{status,jdbcType=VARCHAR}</if>
+						     <if test="dept_id!=null">,dept_id = #{dept_id,jdbcType=VARCHAR}</if>
+						     <if test="mobileNo!=null">,mobileNo = #{mobileNo,jdbcType=VARCHAR}</if>
+						     <if test="position!=null">,position = #{position,jdbcType=VARCHAR}</if>
+						     <if test="sex!=null">,sex = #{sex,jdbcType=VARCHAR}</if>
+						     <if test="idcard!=null">,idcard = #{idcard,jdbcType=VARCHAR}</if>
+						     <if test="tel!=null">,tel = #{tel,jdbcType=VARCHAR}</if>
+						     <if test="mail!=null">,mail = #{mail,jdbcType=VARCHAR}</if>
+			<if test="mailhost!=null">,mailhost = #{mailhost,jdbcType=VARCHAR}</if>
+			<if test="mailport!=null">,mailport = #{mailport,jdbcType=VARCHAR}</if>
+			<if test="mailpassword!=null">,mailpassword = #{mailpassword,jdbcType=VARCHAR}</if>
+
+						     <if test="fax!=null">,fax = #{fax,jdbcType=VARCHAR}</if>
+						     <if test="sensitive_authority!=null">,sensitive_authority = #{sensitive_authority,jdbcType=VARCHAR}</if>
+						     <if test="partner!=null">,partner = #{partner,jdbcType=VARCHAR}</if>
+						     <if test="partner_name!=null">,partner_name = #{partner_name,jdbcType=VARCHAR}</if>
+						     <if test="userloginIp!=null">,userloginIp = #{userloginIp,jdbcType=VARCHAR}</if>
+						     <if test="userloginTime!=null">,userloginTime = #{userloginTime,jdbcType=VARCHAR}</if>
+						     <if test="address!=null">,address = #{address,jdbcType=VARCHAR}</if>
+						     <if test="birthday!=null">,birthday = #{birthday,jdbcType=VARCHAR}</if>
+						     <if test="headimg!=null">,headimg = #{headimg,jdbcType=VARCHAR}</if>
+						     <if test="province!=null">,province = #{province,jdbcType=VARCHAR}</if>
+						     <if test="company_id!=null">,company_id = #{company_id,jdbcType=VARCHAR}</if>
+						     <if test="city!=null">,city = #{city,jdbcType=VARCHAR}</if>
+						     <if test="remark!=null">,remark = #{remark,jdbcType=VARCHAR}</if>
+						     <if test="update_by!=null">,update_by = #{update_by,jdbcType=VARCHAR}</if>
+						     <if test="wechar!=null">,wechar = #{wechar,jdbcType=VARCHAR}</if>
+			                 <if test="wechat!=null">,wechat = #{wechat,jdbcType=VARCHAR}</if>
+						     <if test="update_date!=null">,update_date =to_date(#{update_date,jdbcType=VARCHAR},'yyyy-mm-dd hh24:mi:ss')</if>
+						     </trim>
+		where within_code = #{within_code} and userId = #{userId}
+	</update>
+	<select id="getRoles" parameterType="com.bba.xtgl.vo.SysUserDetailRolesVO" resultType="com.bba.xtgl.vo.SysUserDetailRolesVO">
+	select
+	roleId id,
+	roleName text
+	from sys_role
+	where within_code=#{within_code}
+	</select>
+	<select id="getCheckedRoles" parameterType="com.bba.xtgl.vo.SysUserVO" resultType="com.bba.xtgl.vo.SysUserDetailRolesVO">
+		select
+		u.roleid id,
+		u.userId,
+		r.rolename text
+		from sys_userdetailroles u left join sys_role r
+		on u.roleid = r.roleid and u.within_code = r.within_code
+		where u.within_code=#{within_code} and u.userId = #{userId}
+	</select>
+
+	<insert id="addUserRoles" parameterType="java.util.Map">
+		insert into sys_userdetailroles(roleId,userId,within_code)
+		<foreach collection="roleIds" item="role" separator = "UNION ALL">
+			select
+			#{role,jdbcType=VARCHAR},
+			#{userId},
+			#{within_code}
+			from dual
+		</foreach>
+	</insert>
+	<delete id="deleteUserRoles" parameterType="java.lang.String">
+		delete from sys_userdetailroles
+		where userId = #{_parameter}
+	</delete>
+	<select id="getUserId" parameterType="java.lang.String"  resultType="com.bba.xtgl.vo.SysUserVO">
+		select * from sys_users
+		where userId = #{_parameter}
+	</select>
+
+	<select id="getAppVersion" resultType="com.bba.xtgl.vo.AppUpdateVo">
+	    select t.version,t.title,t.app_name,t.url,t.remark
+	    from sys_app_version t
+	</select>
+
+
+	<update id="updateUserstate" parameterType="java.util.List">
+		update sys_users set status=#{kind} where id in
+		 <foreach item="item" index="index" collection="list"  open="("  close=")" separator=",">
+				#{item}
+		 </foreach>
+	</update>
+
+    <insert id="save">
+   ${sql}
+   </insert>
+
+   <select id="CheckUser" parameterType="java.lang.String" resultType="java.lang.Integer">
+   select count(1) from sys_users where ${wheresql}
+   </select>
+
+	<delete id="deleteSysUser" parameterType="java.util.List">
+		begin
+		delete sys_users
+		where
+		<foreach collection="list" index="index" item="item" open="("
+			separator=" or " close=");">
+			id=#{item}
+		</foreach>
+		end;
+	</delete>
+
+	<select id="getWxOpenId" parameterType="java.lang.String" resultType="java.lang.String">
+			select wxopenid from sys_users where userid = #{userId} and rownum = 1
+	</select>
+
+	<insert id="addUserDetail" parameterType="com.bba.xtgl.vo.SysUserVO">
+		insert into sys_users
+			(
+				within_code,code,userid,mobileno
+				<if test="realName != null and realName != ''">,realname</if>
+				<if test="password != null and password != ''">,password</if>
+				<if test="sex != null and sex != ''">,sex</if>
+				<if test="birthday != null and birthday != ''">,birthday</if>
+				<if test="wechat != null and wechat != ''">,wechat</if>
+				<if test="tel != null and tel != ''">,tel</if>
+				<if test="mail != null and mail != ''">,mail</if>
+		<if test="mailhost != null and mailhost != ''">,mailhost</if>
+		<if test="mailport != null and mailport != ''">,mailport</if>
+		<if test="mailpassword != null and mailpassword != ''">,mailpassword</if>
+				<if test="fax != null and fax != ''">,fax</if>
+				<if test="isOp != null and isOp != ''">,is_op</if>
+				<if test="isCus != null and isCus != ''">,is_cus</if>
+				<if test="isContractor != null and isContractor != ''">,is_contractor</if>
+				<if test="isPsDriver != null and isPsDriver != ''">,is_ps_driver</if>
+				<if test="sensitive_authority != null and sensitive_authority != ''">,sensitive_authority</if>
+				<if test="partner != null and partner != ''">,partner</if>
+				<if test="contractorCode != null and contractorCode != ''">,contractor_code</if>
+				<if test="cusCode != null and cusCode != ''">,cus_code</if>
+				<if test="address != null and address != ''">,address</if>
+				<if test="remark != null and remark != ''">,remark</if>
+				<if test="create_by != null and create_by != ''">,create_by</if>
+				<if test="userLevel != null">,userLevel</if>
+				,create_date,update_date
+			) values
+				(
+					#{within_code},#{code},#{userId},#{mobileNo}
+					<if test="realName != null and realName != ''">,#{realName}</if>
+					<if test="password != null and password != ''">,#{password}</if>
+					<if test="sex != null and sex != ''">,#{sex}</if>
+					<if test="birthday != null and birthday != ''">,#{birthday}</if>
+					<if test="wechat != null and wechat != ''">,#{wechat}</if>
+					<if test="tel != null and tel != ''">,#{tel}</if>
+					<if test="mail != null and mail != ''">,#{mail}</if>
+
+		<if test="mailhost != null and mailhost != ''">,#{mailhost}</if>
+		<if test="mailport != null and mailport != ''">,#{mailport}</if>
+		<if test="mailpassword != null and mailpassword != ''">,#{mailpassword}</if>
+
+					<if test="fax != null and fax != ''">,#{fax}</if>
+					<if test="isOp != null and isOp != ''">,#{isOp}</if>
+					<if test="isCus != null and isCus != ''">,#{isCus}</if>
+					<if test="isContractor != null and isContractor != ''">,#{isContractor}</if>
+					<if test="isPsDriver != null and isPsDriver != ''">,#{isPsDriver}</if>
+					<if test="sensitive_authority != null and sensitive_authority != ''">,#{sensitive_authority}</if>
+					<if test="partner != null and partner != ''">,#{partner}</if>
+					<if test="contractorCode != null and contractorCode != ''">,#{contractorCode}</if>
+					<if test="cusCode != null and cusCode != ''">,#{cusCode}</if>
+					<if test="address != null and address != ''">,#{address}</if>
+					<if test="remark != null and remark != ''">,#{remark}</if>
+					<if test="create_by != null and create_by != ''">,#{create_by}</if>
+					<if test="userLevel != null">,#{userLevel}</if>
+					,sysdate,sysdate
+				)
+	</insert>
+
+	<!-- 查找承运商 -->
+	<select id="queryContractor" resultType="java.util.Map">
+		select code,name from zd_contractor where within_code = #{code}
+	</select>
+
+	<update id="updateUserDetail" parameterType="com.bba.xtgl.vo.SysUserVO">
+		update sys_users set
+		<trim>
+			<if test="code != null">code = #{code},</if>
+			<if test="realName != null">realname = #{realName},</if>
+			<if test="password != null">password = #{password},</if>
+			<if test="mobileNo != null">mobileno = #{mobileNo},</if>
+			<if test="sex != null">sex = #{sex},</if>
+			<if test="tel != null">tel = #{tel},</if>
+			<if test="mail != null">mail = #{mail},</if>
+
+			<if test="mailhost != null ">mailhost = #{mailhost},</if>
+			<if test="mailport != null">mailport = #{mailport},</if>
+			<if test="mailpassword != null">mailpassword = #{mailpassword},</if>
+
+			<if test="fax != null">fax = #{fax},</if>
+			<if test="isCus != null">is_cus = #{isCus},</if>
+			<if test="isContractor != null">is_contractor = #{isContractor},</if>
+			<if test="isPsDriver != null">is_ps_driver = #{isPsDriver},</if>
+			<if test="isOp != null">is_op = #{isOp},</if>
+			<if test="cusCode != null">cus_code = #{cusCode},</if>
+			<if test="birthday!=null">birthday = #{birthday,jdbcType=VARCHAR},</if>
+			<if test="contractorCode != null">contractor_code = #{contractorCode},</if>
+			<if test="partner != null and partner != ''">partner = #{partner},</if>
+			<if test="wechat != null and wechat != ''">wechat = #{wechat},</if>
+			<if test="address != null and address != ''">address = #{address},</if>
+			<if test="remark != null and remark != ''">remark = #{remark},</if>
+			<if test="update_by != null and update_by != ''">update_by = #{update_by},</if>
+			<if test="userLevel != null">userLevel = #{userLevel},</if>
+			update_date = sysdate
+		</trim>
+		where userId = #{userId}
+	</update>
+
+	<select id="getTelPhoneByCusNo" parameterType="java.lang.String" resultType="com.bba.xtgl.vo.SysUserVO">
+		select mobileno as mobileNo,realname as realName, wxopenid from sys_users where is_cus = 'Y' and cus_code = #{cusNo}
+	</select>
+
+	<select id="getTelPhoneByContractorCode" parameterType="java.lang.String" resultType="com.bba.xtgl.vo.SysUserVO">
+		select mobileno as mobileNo,realname as realName, wxopenid from sys_users where is_contractor = 'Y' and contractor_code = #{contractorCode} and rownum = 1
+	</select>
+
+	<update id="register" statementType="CALLABLE" parameterType="java.util.Map">
+		<![CDATA[
+		{call usp_sys_create_within(
+				#{p_new_within_code,mode=IN,jdbcType=VARCHAR},
+				#{p_new_within_name,mode=IN,jdbcType=VARCHAR},
+				#{p_new_user_id,mode=IN,jdbcType=VARCHAR},
+				#{p_new_user_code,mode=IN,jdbcType=VARCHAR},
+				#{p_new_user_pwd,mode=IN,jdbcType=VARCHAR},
+		  		#{p_new_user_mobile,mode=IN,jdbcType=VARCHAR},
+		  		#{p_new_ywlocation_code1,mode=IN,jdbcType=VARCHAR},
+		  		#{p_new_ywlocation_name1,mode=IN,jdbcType=VARCHAR},
+		  		#{p_new_ywlocation_code2,mode=IN,jdbcType=VARCHAR},
+		  		#{p_new_ywlocation_name2,mode=IN,jdbcType=VARCHAR},
+		  		#{p_new_ywlocation_code3,mode=IN,jdbcType=VARCHAR},
+		  		#{p_new_ywlocation_name3,mode=IN,jdbcType=VARCHAR},
+				#{p_ReturnFlag,mode=OUT,jdbcType=VARCHAR},
+				#{p_ReturnInfo,mode=OUT,jdbcType=VARCHAR}
+			)}
+		]]>
+	</update>
+
+	<select id="querySysUsersByTel" parameterType="java.lang.String" resultType="java.lang.Integer">
+		select count(*) from sys_users where mobileno = #{telphone} and within_code = #{withinCode}
+	</select>
+
+	<sql id="findTms_SysUsersVO">
+		within_code,
+		code,
+		userid,
+		realname,
+		password,
+		status,
+		dept_id,
+		mobileno,
+		position,
+		sex,
+		idcard,
+		tel,
+		mail,
+		mailhost,
+		mailport,
+		mailpassword,
+		fax,
+		is_cus,
+	 	is_contractor,
+		is_th_driver,
+		is_ps_driver,
+		cus_code,
+		contractor_code,
+		address,
+		birthday,
+		headimg,
+		remark,
+		to_char(create_date,'yyyy-mm-dd hh24:mi:ss') create_date,
+		key,
+		openid,
+		wxopenid,
+		is_recipient
+	</sql>
+
+
+
+	<select id="getDriverInfo" parameterType="java.lang.String" resultType="com.bba.xtgl.vo.SysUserVO">
+		select mobileno as mobileNo, realname as realName, wxopenid from sys_users where userid = #{driverTel}  and rownum = 1
+	</select>
+
+	<select id="getCusInfo" parameterType="java.lang.String" resultType="com.bba.xtgl.vo.SysUserVO">
+		select su.mobileno as mobileNo, su.realname as realName, su.wxopenid
+		from sys_users su
+		join yw_order_mostly yom on yom.cus_no = su.cus_code and yom.within_code = su.within_code
+		join yw_order_detail yod on yod.mostly_guid = yom.guid and yom.within_code = yod.within_code
+		where yod.cont_id in ${contId}
+		and yod.within_code = #{withinCode}
+	</select>
+</mapper>
