@@ -21,4 +21,8 @@ public interface IQuestionsService extends IService<QusetionsVO> {
     QusetionsVO getDetail(QusetionsVO vo);
 
     ResultVO check(List<QusetionsVO> vos, SysUserVO sysUserVO);
+
+    ResultVO reset(List<QusetionsVO> vos, SysUserVO sysUserVO);
+
+    ResultVO batchDelete(List<QusetionsVO> vos);
 }

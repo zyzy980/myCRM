@@ -16,7 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author:Suwendaidi
@@ -41,7 +43,7 @@ public class QuestionsServiceimpl extends ServiceImpl<IQuestionsDao, QusetionsVO
 
     @Override
     public ResultVO saveDetail(QusetionsVO requestQusetionsVO, SysUserVO sysUserVO) {
-        if(requestQusetionsVO.getId()==0){
+        if(StringUtils.isBlank(requestQusetionsVO.getSheet_no())){
             String sheet_no = Sys_sheetidUtil.getSys_sheetid(Sys_sheetidUtil.QUESTIONS);
             requestQusetionsVO.setSheet_no(sheet_no);
             requestQusetionsVO.setCreate_by(sysUserVO.getRealName());
@@ -58,10 +60,16 @@ public class QuestionsServiceimpl extends ServiceImpl<IQuestionsDao, QusetionsVO
                 return ResultVO.failResult("只允许正常状态下的发票进行修改操作");
             }*/
             requestQusetionsVO.setId(dataQusetionsVO.getId());
+            requestQusetionsVO.setState(null);
             requestQusetionsVO.setCreate_by(null);
             questionsDao.updateById(requestQusetionsVO);
         }
-        return ResultVO.successResult("保存成功");
+        ResultVO resultVO = ResultVO.successResult();
+        Map<String, Object> returnMap = new HashMap<String, Object>();
+        returnMap.put("sheet_no", requestQusetionsVO.getSheet_no());
+        returnMap.put("msg", "保存成功");
+        resultVO.setResultDataFull(returnMap);
+        return resultVO;
     }
 
     @Override
@@ -87,7 +95,7 @@ public class QuestionsServiceimpl extends ServiceImpl<IQuestionsDao, QusetionsVO
     @Override
     public QusetionsVO getDetail(QusetionsVO qusetionsVO) {
         QusetionsVO paramQusetionsVO = new QusetionsVO();
-        paramQusetionsVO.setSheet_no(paramQusetionsVO.getSheet_no());
+        paramQusetionsVO.setSheet_no(qusetionsVO.getSheet_no());
         QusetionsVO dataQusetionsVO = questionsDao.selectOne(paramQusetionsVO);
         if(dataQusetionsVO == null){
             return null;
@@ -103,28 +111,34 @@ public class QuestionsServiceimpl extends ServiceImpl<IQuestionsDao, QusetionsVO
          * */
         try {
             for (QusetionsVO requestQusetionsVO:vos) {
-                //1 验证
-                QusetionsVO paramQusetionsVO = new QusetionsVO();
-                paramQusetionsVO.setSheet_no(requestQusetionsVO.getSheet_no());
-                QusetionsVO dataQusetionsVO = questionsDao.selectOne(paramQusetionsVO);
-                if (dataQusetionsVO==null) {
-                    throw new RuntimeException("该问题数据存在异常，单号："+requestQusetionsVO.getSheet_no());
-                } else if (StringUtils.notEquals(InvoiceEnum.NORMAL.getCode(),dataQusetionsVO.getState())) {
-                    throw new RuntimeException("非‘未使用’状态无法进行此操作，单号："+requestQusetionsVO.getSheet_no());
-                }
-                //2 修改状态
-                QusetionsVO updateQusetionsVO = new QusetionsVO();
-                updateQusetionsVO.setState(QuestionsEnum.USED.getCode());
-                updateQusetionsVO.setUsed_by(sysUserVO.getRealName());
-                updateQusetionsVO.setUsed_date(new Date());
-                EntityWrapper questionsEntityWrapper = new EntityWrapper();
-                questionsEntityWrapper.setEntity(paramQusetionsVO);
-                questionsDao.update(updateQusetionsVO,questionsEntityWrapper);
+                requestQusetionsVO.setState(QuestionsEnum.USED.getCode());
+                requestQusetionsVO.setUsed_by(sysUserVO.getRealName());
+                requestQusetionsVO.setUsed_date(new Date());
             }
+            questionsDao.updateQuestionState(vos);
         } catch (Exception e) {
             throw new RuntimeException("操作失败，请联系管理员，"+e.getMessage());
         }
         return ResultVO.successResult("操作成功");
     }
 
+    @Override
+    public ResultVO reset(List<QusetionsVO> vos, SysUserVO sysUserVO) {
+        try {
+            questionsDao.updateQuestionState(vos);
+            return ResultVO.successResult("操作成功");
+        } catch (Exception e) {
+            throw new RuntimeException("操作失败，请联系管理员，"+e.getMessage());
+        }
+    }
+
+    @Override
+    public ResultVO batchDelete(List<QusetionsVO> vos) {
+        try {
+            questionsDao.batchDelete(vos);
+            return ResultVO.successResult("操作成功");
+        } catch (Exception e) {
+            throw new RuntimeException("操作失败，请联系管理员，"+e.getMessage());
+        }
+    }
 }

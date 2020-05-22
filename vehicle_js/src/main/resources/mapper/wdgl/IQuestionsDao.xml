@@ -34,4 +34,22 @@
 		<if test="filters!=null and filters!=''">where ${filters}</if>
 	</select>
 
+	<update id="updateQuestionState" parameterType="java.util.List">
+		<foreach item="vo" index="index" collection="list" open="begin" close="end;" separator="">
+		   <choose>
+			  <when test="vo.state!=null and vo.state!=''">
+				  update questions set state ='1',used_date =#{vo.used_date},used_by=#{vo.used_by} where id=#{vo.id} ;
+			  </when>
+			  <otherwise>
+				  update questions set state ='0',used_date =null,used_by=null where id=#{vo.id};
+			  </otherwise>
+		   </choose>
+		</foreach>
+	</update>
+
+	<delete id="batchDelete" parameterType="java.util.List">
+		<foreach item="vo" index="index" collection="list" open="begin" close="end;" separator="">
+			delete questions where id=#{vo.id} ;
+		</foreach>
+	</delete>
 </mapper>

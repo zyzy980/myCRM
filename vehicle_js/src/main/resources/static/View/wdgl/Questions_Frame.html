@@ -11,24 +11,24 @@
 <body>
 <div id="easyui-tabs" class="easyui-tabs" data-options="tabPosition:'top',fit:true,headerWidth:80,tabWidth:80">
 	<div
-			data-locale-title="LEDGER_LIST"
+			data-locale-title="QUESTIONS_LIST"
 			style="padding: 0px;"
 			data-options="tabWidth:125">
 		<iframe
 				scrolling="auto"
-				name='Ledger_List'
+				name='Questions_List'
 				frameborder="0"
 				src=""
 				style="width: 100%; height: calc(100% - 3px);">
 		</iframe>
 	</div>
 	<div
-			data-locale-title="LEDGER_DETAIL"
+			data-locale-title="QUESTIONS_DETAIL"
 			style="padding: 0px"
 			data-options="tabWidth:125">
 		<iframe
 				scrolling="auto"
-				name='Ledger_Detail'
+				name='Questions_Detail'
 				frameborder="0"
 				src=""
 				style="width: 100%; height: calc(100% - 3px);">
@@ -53,7 +53,7 @@
         });
 
         var parms = getUrlParms();
-        $("iframe:eq("+0+")").attr("src", "Ledger_List.html");
+        $("iframe:eq("+0+")").attr("src", "Questions_List.html");
     });
 
     function onIframeSelect(sheet_no){
@@ -64,13 +64,13 @@
                     sheet_no: sheet_no
                 });
             }else{
-                $("iframe:eq("+1+")").attr("src", "Ledger_Detail.html?sheet_no="+sheet_no);
+                $("iframe:eq("+1+")").attr("src", "Questions_Detail.html?sheet_no="+sheet_no);
             }
         }else{
             if(window.frames[1].add_after){
                 window.frames[1].add_after();
             }else{
-                $("iframe:eq("+1+")").attr("src", "Ledger_Detail.html");
+                $("iframe:eq("+1+")").attr("src", "Questions_Detail.html");
             }
         }
     };

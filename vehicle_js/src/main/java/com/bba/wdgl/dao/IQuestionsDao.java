@@ -7,5 +7,7 @@ import java.util.List;
 public interface IQuestionsDao extends BaseMapper<QusetionsVO> {
     List<QusetionsVO> findListForGrid(JqGridParamModel jqGridParamModel);
     int findListForGridCount(JqGridParamModel jqGridParamModel);
+    void updateQuestionState(List<QusetionsVO> vos);
+    void batchDelete(List<QusetionsVO> vos);
 }
 

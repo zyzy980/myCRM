@@ -927,3 +927,25 @@ function keepTwoPointData(t) {
 function keepThreePointData(t) {
     return Math.round(t*1000)/1000;
 }
+
+var comboChange = function(){
+    var comboList = $(this).combobox("getValues");
+    var comboText = $(this).combobox("getText").split(",");
+    var newComboList = [];
+    if(comboList!=null && comboList!=undefined){
+        for(var i = 0 ; i < comboList.length ; i++){
+            if(comboList[i]!=""){
+                newComboList.push(comboList[i]);
+            } else {
+                if(i!=0){
+                    newComboList = [""];
+                    break;
+                }
+            }
+        }
+    }
+    if(newComboList.length<=0){
+        newComboList = [""];
+    }
+    $(this).combobox('setValues', newComboList);
+}

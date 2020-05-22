@@ -39,7 +39,14 @@
                 类型:
             </td>
             <td class="searchParamesTdControl">
-                <input type="text" id="ledger_type" class="easyui-combobox"/>
+                <input type="text" id="type" class="easyui-combobox"/>
+            </td>
+            <td width="20px;"></td>
+            <td class="searchParamesTdTitle">
+                模块:
+            </td>
+            <td class="searchParamesTdControl">
+                <input type="text" id="module" class="easyui-combobox" data-options="multiple:true"/>
             </td>
             <td width="20px;"></td>
             <td class="searchParamesTdTitle">
@@ -101,13 +108,12 @@
     // 加载数据
     var initData = function() {
         getDictionaryData([{
-            //初始化台账状态数据字典
-            dicTypeCode : Global_DicType.Ledger_State,
+            dicTypeCode : Global_DicType.Questions_State,
             ADD_ALL: true,
             callback : function(callbackData) {
-                window.Ledger_StateMap = {};
+                window.Questions_StateMap = {};
                 for(var i = 0; i < callbackData.length; i++){
-                    Ledger_StateMap[callbackData[i].dicvalue] = callbackData[i].dictext;
+                    Questions_StateMap[callbackData[i].dicvalue] = callbackData[i].dictext;
                 }
                 var formatData = { data: callbackData, needChooseAll: false, chooseAllValue: "", defaultValue: "0",
                     bindBoxName: "divStatus", bindControlPrefix: "state", onClick:function(){
@@ -116,15 +122,14 @@
                 formatDefaultRadio_Local(formatData);
             }
         },{
-            //初始化台账类型数据字典
-            dicTypeCode : Global_DicType.Ledger_Type,
+            dicTypeCode : Global_DicType.Questions_Type,
                 ADD_ALL: true,
                 callback : function(callbackData) {
-                window.Ledger_TypeMap = {};
+                window.Questions_TypeMap = {};
                 for(var i = 0; i < callbackData.length; i++){
-                    Ledger_TypeMap[callbackData[i].dicvalue] = callbackData[i].dictext;
+                    Questions_TypeMap[callbackData[i].dicvalue] = callbackData[i].dictext;
                 }
-                $("#ledger_type").combobox({
+                $("#type").combobox({
                     valueField: 'dicvalue',
                     textField: 'dictext',
                     panelHeight: 100,
@@ -133,16 +138,44 @@
                         searchData();
                     }
                 });
-                $("#ledger_type").combobox("loadData", callbackData);
+                $("#type").combobox("loadData", callbackData);
             }
         },{
-            //初始化状态数据字典
-            dicTypeCode : Global_DicType.Global_DicType_CommonStateYesNo,
+            dicTypeCode : Global_DicType.Questions_Module,
+            ADD_ALL: true,
             callback : function(callbackData) {
-                window.CommonStateMap = {};
+                window.Questions_ModuleMap = {};
                 for(var i = 0; i < callbackData.length; i++){
-                    CommonStateMap[callbackData[i].dicvalue] = callbackData[i].dictext;
+                    Questions_ModuleMap[callbackData[i].dicvalue] = callbackData[i].dictext;
                 }
+                $("#module").combobox({
+                    valueField: 'dicvalue',
+                    textField: 'dictext',
+                    panelHeight: 200,
+                    editable: true,
+                    onLoadSuccess: defaultSelect,
+                    labelSeparator:',',
+                    displaySeparator:',',
+                    valueSeparator:',',
+                    onSelect : comboChange,
+                    onUnselect : comboChange,
+                    onChange : function() {
+                        var vals = $(this).combobox("getValues");
+                        var datas = $(this).combobox("getData");
+                        for (var i = 0; i < vals.length; i++) {
+                            if (vals[i] == "") {
+                                return;
+                            }
+                        }
+                        for (var i = 0; i < vals.length; i++) {
+                            if (isInArray(datas, vals[i])) {
+                                /*  searchData(); */
+                                break;
+                            }
+                        }
+                    }
+                });
+                $("#module").combobox("loadData", callbackData);
             }
         }]);
         loadList();// 加载数据列表
@@ -161,22 +194,21 @@
     // 获取查询URL
     var getSearchGridUrl = function() {
         var customSearchFilters = encodeURI(getSearchFilters());
-        return '../../tzgl/LedgerController/getListForGrid?' + Math.random() + '&customSearchFilters=' + customSearchFilters;
+        return '../../wdgl/QuestionsController/getListForGrid?' + Math.random() + '&customSearchFilters=' + customSearchFilters;
     };
 
     // 获取查询条件
     var getSearchFilters = function() {
         var parmsArray = [
             [
-                { name: 'ledger_no', value: $('#common_sheet_title').textbox('getValue'), op: 'cn' },
-                { name: 'contract_no', value: $('#common_sheet_title').textbox('getValue'), op: 'cn' },
-                { name: 'js_no', value: $('#common_sheet_title').textbox('getValue'), op: 'cn' },
+                { name: 'question', value: $('#common_sheet_title').textbox('getValue'), op: 'cn' },
                 { name: 'sheet_no', value: $('#common_sheet_title').textbox('getValue'), op: 'cn' }
             ],
+            getMultipleComboVal($('#module'),'module'),
             { name: '_d_create_date', value: $('#begin_date').textbox('getValue'), op: 'ge' },
             { name: '_d_create_date', value: $('#end_date').textbox('getValue'), op: 'le' },
             { name: 'state', value: $("#divStatus [name=state]:checked").val(), op: "eq" },
-            { name: 'ledger_type', value: $('#ledger_type').combobox("getValue"), op: 'eq' }
+            { name: 'type', value: $('#type').combobox("getValue"), op: 'eq' }
         ];
         return formatSearchParames(parmsArray);
     };
@@ -190,97 +222,38 @@
             colNames: [
                 $.i18n.prop('ID'),
                 $.i18n.prop('STATE'),
-                $.i18n.prop('LEDGER_TYPE'),
+                $.i18n.prop('TYPE'),
                 $.i18n.prop('SHEET_NO'),
-                $.i18n.prop('LEDGER_NO'),
-                $.i18n.prop('BILL_NUMBER'),
-                $.i18n.prop('CONTRACT_NO'),
-                $.i18n.prop('JS_PROJECT'),
-                $.i18n.prop('JS_NO'),
-                $.i18n.prop('NTAX_UP_TOTAL'),
-                $.i18n.prop('TAX_UP_TOTAL'),
-                $.i18n.prop('TAX_AMOUNT'),
-                $.i18n.prop('NTAX_DOWN_TOTAL'),
-                $.i18n.prop('TAX_DOWN_TOTAL'),
-                $.i18n.prop('TAX_RATE'),
-                $.i18n.prop('NOT_TAX_PROFIT'),
-                $.i18n.prop('CUS_NO'),
-                $.i18n.prop('CUS_NAME'),
-                $.i18n.prop('INVOICE_NO'),
+                $.i18n.prop('MODULE'),
+                $.i18n.prop('QUESTION'),
+                $.i18n.prop('ANSWER'),
+                $.i18n.prop('USED_BY'),
+                $.i18n.prop('USED_DATE'),
                 $.i18n.prop('CREATE_BY'),
                 $.i18n.prop('CREATE_DATE'),
-                $.i18n.prop('CHECK_BY'),
-                $.i18n.prop('CHECK_DATE'),
-                $.i18n.prop('CUS_INVOICE'),
-                $.i18n.prop('INVOICE_COMPANY'),
                 $.i18n.prop('REMARK')
             ],
             colModel: [
                 { name: 'id', index: 'id', align: 'center', sorttype: 'int', sortable: false, key: true, width: 40, hidden: true, search: false },
-                { name: 'state', index: 'state', align: 'center', width: 65, search: false, sortable: false, formatter: function (value, grid, rows) {
-                        return window.Ledger_StateMap[value];
+                { name: 'state', index: 'state', align: 'center', width: 65, search: false,formatter: function (value, grid, rows) {
+                        return window.Questions_StateMap[value];
                     }},
-                { name: 'ledger_type', index: 'ledger_type', align: 'center', width: 65, search: false, sortable: false, formatter: function (value, grid, rows) {
-                        return window.Ledger_TypeMap[value];
+                { name: 'type', index: 'type', align: 'center', width: 80, search: false,formatter: function (value, grid, rows) {
+                        return window.Questions_TypeMap[value];
                     }},
-                { name: 'sheet_no', index: 'sheet_no', align: 'left',  width: 150, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
-                { name: 'ledger_no', index: 'ledger_no', align: 'left',width: 150, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
-                { name: 'bill_number', index: 'bill_number', align: 'left',width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
-                { name: 'contract_no', index: 'contract_no', align: 'left', width: 130, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
-                { name: 'js_project', index: 'js_project', align: 'left', width: 150, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
-                { name: 'js_no', index: 'js_no', align: 'left', width: 150, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
-                { name: 'ntax_up_total', index: 'ntax_up_total', align: 'left', width: 120, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
-                    ,formatter: function (value, grid, rows) {
-                        return rows.ntax_up_total.toFixed(2);
-                    }
-                },
-                { name: 'tax_up_total', index: 'tax_up_total', align: 'left', width: 120, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
-                    ,formatter: function (value, grid, rows) {
-                        return rows.tax_up_total.toFixed(2);
-                    }
-                },
-                { name: 'tax_amount', index: 'tax_amount', align: 'left', width: 120, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
-                    ,formatter: function (value, grid, rows) {
-                        return rows.tax_amount.toFixed(2);
-                    }
-                },
-                { name: 'tax_down_total', index: 'tax_down_total', align: 'left', width: 120, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
-                    ,formatter: function (value, grid, rows) {
-                        return rows.tax_down_total.toFixed(2);
-                    }
-                },
-                { name: 'ntax_down_total', index: 'ntax_down_total', align: 'left', width: 120, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
-                    ,formatter: function (value, grid, rows) {
-                        return rows.ntax_down_total.toFixed(2);
-                    }
-                },
-                { name: 'tax_rate', index: 'tax_rate', align: 'left', width: 120, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
-                ,formatter: function (value, grid, rows) {
-                        var tax_rate=rows.tax_rate;
-                        if(tax_rate>0)
-                        {
-                            tax_rate= (tax_rate*100).toString()+"%";
-                        }
-                        return tax_rate;
+                { name: 'sheet_no', index: 'sheet_no', align: 'center',  width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'module', index: 'module', align: 'center', width: 80, search: false,formatter: function (value, grid, rows) {
+                        return window.Questions_ModuleMap[value];
                     }},
-                { name: 'not_tax_profit', index: 'not_tax_profit', align: 'left', width: 120, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
-                    ,formatter: function (value, grid, rows) {
-                        return rows.not_tax_profit.toFixed(2);
-                    }
-                },
-                { name: 'cus_no', index: 'cus_no', align: 'left', width: 120, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
-                { name: 'cus_name', index: 'cus_name', align: 'left', width: 160, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
-                { name: 'invoice_no', index: 'invoice_no', align: 'left', width: 120, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
-                { name: 'create_by', index: 'create_by', align: 'left', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
-                { name: 'create_date', index: '_d_create_date', align: 'center', width: 120, search: true, type: 'string',
-                    searchoptions: { sopt: ['ge'], dataEvents: [ { type: 'click', data: {}, fn: function() { WdatePicker(); } } ] } },
-                { name: 'check_by', index: 'check_by', align: 'left', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
-                { name: 'check_date', index: '_d_check_date', align: 'center', width: 120, search: true, type: 'string',
+                { name: 'question', index: 'question', align: 'left',width: 600, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'answer', index: 'answer', align: 'left', width: 600, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'used_by', index: 'used_by', align: 'left', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'used_date', index: '_d_used_date', align: 'center', width: 100, search: true, type: 'string',
                     searchoptions: { sopt: ['le'], dataEvents: [ { type: 'click', data: {}, fn: function() { WdatePicker(); } } ] } },
-                { name: 'cus_invoice', index: 'cus_invoice', align: 'center', width: 65, search: false, sortable: false, formatter: function (value, grid, rows) {
-                        return window.CommonStateMap[value];
-                    }},
-                { name: 'invoice_company', index: 'invoice_company', align: 'left', width: 160, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'create_by', index: 'create_by', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'create_date', index: '_d_create_date', align: 'center', width: 100, search: true, type: 'string',
+                    searchoptions: { sopt: ['ge'], dataEvents: [ { type: 'click', data: {}, fn: function() { WdatePicker(); } } ] },hidden: true },
+
                 { name: 'remark', index: 'remark', align : 'left', width: 150, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } }
             ],
             shrinkToFit: false,
@@ -310,6 +283,7 @@
             },
             gridComplete: function() {
                 $('.cbox').shiftSelect();
+                afterRedRow();
             },
             ondblClickRow: showChildModule,
             loadComplete: function(xhr) {
@@ -343,11 +317,11 @@
             onClickButton: function () {
                 ExportToExcel.call(this, {
                     FiledData: [{
-                        data_dictionary: Global_DicType.Ledger_State,
+                        data_dictionary: Global_DicType.Questions_State,
                         filed: "state"
                     },{
-                        data_dictionary: Global_DicType.Ledger_Type,
-                        filed: "ledger_type"
+                        data_dictionary: Global_DicType.Questions_Type,
+                        filed: "type"
                     }]
                 });
             }
@@ -355,6 +329,16 @@
         setGridHeightWidth();
     };
 
+    //jqGrid加载
+    function afterRedRow() {
+        var ids = $("#gridTable").jqGrid("getDataIDs");
+        for (var i = 0; i < ids.length; i++) {
+            var rowData = $("#gridTable").getRowData(ids[i]);
+            if (rowData.state == '已使用') {
+                $('#gridTable #' + ids[i]).find("td").css('color', "#8b2f2c");
+            }
+        }
+    }
     // 双击数据触发的事件
     var showChildModule = function(rowid) {
         var rowData = $('#gridTable').jqGrid('getRowData', rowid);
@@ -401,8 +385,24 @@
         });
     }
 
-    //生成发票
-    function createInvoice() {
+    /**批量使用*/
+    function check() {
+        commonFunction(1);
+    }
+
+    /**批量重置*/
+    function reset() {
+        commonFunction(2);
+    }
+
+    /**批量删除*/
+    function batchDelete() {
+        commonFunction(3);
+    }
+
+    //批量使用
+    function commonFunction(select) {
+        var url = select==1?"../../wdgl/QuestionsController/check?t="+Math.random():(select==2?"../../wdgl/QuestionsController/reset?t="+Math.random():"../../wdgl/QuestionsController/delete?t="+Math.random());
         var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
         if (selectRowItems.length==0) {
             errorNotification({
@@ -414,18 +414,18 @@
         var rowData = null;
         for (var i = 0; i < selectRowItems.length; i++) {
             rowData = $("#gridTable").jqGrid('getRowData', selectRowItems[i]);
-            if(rowData.cus_invoice=="否") {
-                list.push({"js_no":rowData.js_no,"js_project":rowData.js_project,"ledger_no":rowData.ledger_no});
-            } else {
-                errorNotification({SimpleMessage: $.i18n.prop("CHECKDATA")});
+            /*if(rowData.state=="未使用") {*/
+            list.push({"id":rowData.id});
+       /*     } else {
+                errorNotification({SimpleMessage: $.i18n.prop("只有‘未使用’数据才可以操作")});
                 return;
-            }
+            }*/
         }
         $.messager.confirm($.i18n.prop("PROMPT"), $.i18n.prop("SURETODO"), function (r) {
             if (r) {
                 showLoading();
                 $.ajax({
-                    url : "../../tzgl/LedgerController/createInvoice?t="+Math.random(),
+                    url : url,
                     data:JSON.stringify(list),
                     type:"POST",
                     contentType:'application/json; charset=utf-8',
@@ -442,7 +442,6 @@
             }
         });
     }
-
 </script>
 </body>
 </html>

@@ -44,21 +44,33 @@ public class QuestionsController {
         return resultVO;
     }
 
-    @Log(value = "问题管理-注销")
-    @RequestMapping("cancel")
-    public ResultVO cancel(QusetionsVO qusetionsVO) {
-        if(StringUtils.isBlank(qusetionsVO.getSheet_no())){
-            return ResultVO.failResult("先保存后在进行操作");
-        }
+    @Log(value = "问题管理-批量使用")
+    @RequestMapping("check")
+    public ResultVO check(@RequestBody List<QusetionsVO> list) {
+        List<QusetionsVO> vos = new Gson().fromJson(new Gson().toJson(list), new TypeToken<List<QusetionsVO>>(){}.getType());
         SysUserVO sysUserVO = SessionUtils.currentSession();
-        ResultVO resultVO = questionsService.cancel(qusetionsVO, sysUserVO);
-        return resultVO;
+        return questionsService.check(vos,sysUserVO);
+    }
+
+    @Log(value = "问题管理-批量重置")
+    @RequestMapping("reset")
+    public ResultVO reset(@RequestBody List<QusetionsVO> list) {
+        List<QusetionsVO> vos = new Gson().fromJson(new Gson().toJson(list), new TypeToken<List<QusetionsVO>>(){}.getType());
+        SysUserVO sysUserVO = SessionUtils.currentSession();
+        return questionsService.reset(vos,sysUserVO);
+    }
+
+    @Log(value = "问题管理-批量删除")
+    @RequestMapping("delete")
+    public ResultVO delete(@RequestBody List<QusetionsVO> list) {
+        List<QusetionsVO> vos = new Gson().fromJson(new Gson().toJson(list), new TypeToken<List<QusetionsVO>>(){}.getType());
+        return questionsService.batchDelete(vos);
     }
 
     @Log(value = "问题管理-明细查询")
     @RequestMapping("getDetail")
     public ResultVO getDetail(QusetionsVO qusetionsVO) {
-        if(StringUtils.isBlank(qusetionsVO.getSheet_no())){
+            if(StringUtils.isBlank(qusetionsVO.getSheet_no())){
             return ResultVO.failResult("单号不能为空");
         }
         QusetionsVO returnQusetionsVO = questionsService.getDetail(qusetionsVO);
@@ -70,11 +82,4 @@ public class QuestionsController {
         return resultVO;
     }
 
-    @Log(value = "问题管理-批量审核")
-    @RequestMapping("check")
-    public ResultVO check(@RequestBody List<QusetionsVO> list) {
-        List<QusetionsVO> vos = new Gson().fromJson(new Gson().toJson(list), new TypeToken<List<QusetionsVO>>(){}.getType());
-        SysUserVO sysUserVO = SessionUtils.currentSession();
-        return questionsService.check(vos,sysUserVO);
-    }
 }

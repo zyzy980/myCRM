@@ -201,6 +201,7 @@ var Global_DicType = {
     /**文档管理*/
     Questions_State:"Questions_State",
     Questions_Type:"Questions_Type",
+    Questions_Module:"Questions_Module",
 
 	/**发票管理*/
 	Invoice_State:"Invoice_State",

@@ -1,13 +1,13 @@
 package com.bba.wdgl.vo;
 import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
-import com.bba.common.annotation.Table;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.util.Date;
 
-@Table("QUESTIONS")
+@TableName("QUESTIONS")
 @Data
 public class QusetionsVO {
 
