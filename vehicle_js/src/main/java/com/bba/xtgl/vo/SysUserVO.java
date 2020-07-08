@@ -63,11 +63,11 @@ public class SysUserVO extends BaseVo {
 
 	private String headimg;
 
-	//private String province;
+	private String province;
 
-	//private String company_id;// 所属公司
+	private String company_id;// 所属公司
 
-	//private String city;
+	private String city;
 
 	private String remark;// 备注
 
