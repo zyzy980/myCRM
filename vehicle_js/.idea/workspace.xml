@@ -1,23 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="fb7608ed-92d8-470e-802b-ca88f6c7cb74" name="Default Changelist" comment="都市照片">
-      <change afterPath="$PROJECT_DIR$/logs/niu_debug.2020-01-02-0.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/logs/niu_debug.2020-01-03-0.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/logs/niu_debug.2020-01-08-0.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/logs/niu_debug.2020-06-08-0.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/niu_debug.2019-11-04-0.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/niu_debug.2019-11-05-0.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/niu_debug.2019-11-06-0.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/niu_debug.2019-11-07-0.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/niu_debug.2019-11-08-0.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/niu_debug.2019-11-10-0.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/niu_debug.2019-11-11-0.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/niu_debug.2019-11-12-0.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/niu_debug.2019-11-13-0.log" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/logs/niu_debug.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/niu_debug.log" afterDir="false" />
-    </list>
+    <list default="true" id="fb7608ed-92d8-470e-802b-ca88f6c7cb74" name="Default Changelist" comment="都市照片" />
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -212,7 +196,7 @@
   <component name="MavenRunner">
     <option name="skipTests" value="true" />
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-7" />
     <option name="width" value="480" />
     <option name="height" value="520" />
@@ -266,7 +250,7 @@
     <property name="RequestMappingsPanelWidth1" value="75" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1594175646586" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1594175990594" />
     <property name="last_opened_file_path" value="E:/Idea project" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -576,7 +560,7 @@
       <workItem from="1591596775683" duration="2713000" />
       <workItem from="1591775848753" duration="128000" />
       <workItem from="1591775998495" duration="480000" />
-      <workItem from="1594173257358" duration="2115000" />
+      <workItem from="1594173257358" duration="2622000" />
     </task>
     <task id="LOCAL-00052">
       <created>1568112582224</created>
@@ -925,7 +909,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2017006000" />
+    <option name="totallyTimeSpent" value="2017513000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -938,7 +922,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.7163743" visible="true" weight="0.22654584" />
       <window_info id="Structure" order="1" sideWeight="0.28362572" side_tool="true" weight="0.25053304" />
