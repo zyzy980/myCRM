@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace：必须与对应的接口全类名一致 id:必须与对应接口的某个对应的方法名一致 -->
+<mapper namespace="com.bba.xtgl.dao.IZd_dictionaryDao">
+
+	<insert id="copyDic">
+		INSERT INTO ZD_DICTIONARY(WITHIN_CODE,TYPENAME,TYPECODE,PARENTSN,REMARK)
+		SELECT #{item.withinCode,jdbcType=VARCHAR} as WITHIN_CODE,TYPENAME,TYPECODE,#{sn} as PARENTSN,REMARK
+		from ZD_DICTIONARY
+		where WITHIN_CODE = #{item.within_code_src,jdbcType=VARCHAR}
+		AND PARENTSN != 0
+	</insert>
+
+	<insert id="copyDicData">
+		INSERT INTO ZD_DICTIONARY_DATA(WITHIN_CODE,DICTEXT_EN,DICTEXT,DICVALUE,TYPECODE,DICORDER,REMARK,ISDEFAULT)
+		SELECT #{withinCode,jdbcType=VARCHAR} as WITHIN_CODE,DICTEXT_EN,DICTEXT,DICVALUE,TYPECODE,DICORDER,REMARK,ISDEFAULT
+		from ZD_DICTIONARY_DATA
+		where WITHIN_CODE = #{within_code_src,jdbcType=VARCHAR}
+	</insert>
+
+	<insert id="copyParent">
+		INSERT INTO ZD_DICTIONARY(WITHIN_CODE,TYPENAME,TYPECODE,PARENTSN,REMARK)
+		SELECT #{withinCode,jdbcType=VARCHAR} as WITHIN_CODE,TYPENAME,TYPECODE,PARENTSN,REMARK
+		from ZD_DICTIONARY
+		where WITHIN_CODE = #{within_code_src,jdbcType=VARCHAR}
+		and PARENTSN = 0
+	</insert>
+
+	<select id="seldemo" resultType="java.util.Map">
+		SELECT *
+		from ZD_DICTIONARY
+		where WITHIN_CODE = #{within_code_src,jdbcType=VARCHAR}
+		and PARENTSN = 0
+	</select>
+
+	<select id="parentSn" resultType="java.lang.String">
+		select sn
+		from ZD_DICTIONARY
+		where WITHIN_CODE = #{withinCode,jdbcType=VARCHAR}
+		and PARENTSN = 0
+	</select>
+
+</mapper>

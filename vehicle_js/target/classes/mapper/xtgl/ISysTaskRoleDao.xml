@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace：必须与对应的接口全类名一致 id:必须与对应接口的某个对应的方法名一致 -->
+<mapper namespace="com.bba.xtgl.dao.ISysTaskRoleDao">
+
+	<sql id="begin_page"><if test="isPage == true">SELECT * FROM (SELECT t.*, ROWNUM RN FROM (</if></sql>
+	<sql id="end_page">
+		<if test="isPage == true">
+			<if test="filters!=null and filters!=''">where ${filters}</if>
+		</if> 
+		) t where ROWNUM &lt;= ${page} * ${rows}) WHERE RN &gt;=((${page} - 1) * ${rows} + 1)
+	</sql>
+	
+	<select id="findListByProperty" resultType="com.bba.xtgl.vo.SysTaskRoleVO" parameterType="com.bba.xtgl.vo.SysTaskRoleVO">
+		select
+			function_id,
+			function_name,
+			role_id
+			from sys_task_role
+			<where>
+				<if test="role_id!=null">role_id=#{role_id}</if>	
+			</where>
+	</select>
+	
+	<delete id="deleteTaskRole"  parameterType="java.util.List">
+			 delete from sys_task_role 
+			 where 
+			  <foreach item="item" index="index" collection="list"  open="("   close=")" separator=" or ">
+					(role_id=#{item.role_id} and function_id=#{item.function_id}) 
+		   	  </foreach>  
+	</delete>
+	
+	<insert id="insertTaskRole"  parameterType="java.util.List">
+			insert into sys_task_role
+					  ( role_id, function_id, function_name)
+		 <foreach item="item" index="index" collection="list" separator="union all">
+			select #{item.role_id}, #{item.function_id}, #{item.function_name}
+			from dual
+		</foreach>  
+	</insert>
+	
+	<resultMap type="java.util.HashMap" id="taskRoleMap">
+	</resultMap>
+	<select id="findHomeTaskRoleList" parameterType="java.util.Map" statementType="CALLABLE">
+		 {call FWJS.PRO_USER_TASK(
+			 #{p_userId,mode=IN,jdbcType=VARCHAR},
+			 #{p_task_cursor,mode=OUT,javaType=java.sql.ResultSet,jdbcType=CURSOR,resultMap=taskRoleMap}
+		 )}
+	</select>
+</mapper>

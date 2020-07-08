@@ -1,0 +1,244 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+    <link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+    <link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/jquery   UI/theme/ui.jqgrid.css" />
+    <title>字典类别明细</title>
+</head>
+<body>
+<div id="toolbar" class="easyui-panel" style="padding: 4px; border-width:0; border-bottom-width:1px;">
+    <a href="javascript:reset();" id="reset" class="easyui-linkbutton" style="display: none;"
+       plain="true" iconcls="icon-reload"><label data-locale="cusDictionary_reset"/></a>
+    <a href="javascript:save();" id="save"
+       class="easyui-splitbutton"data-options="menu:'#moreSave',iconCls:'icon-save'">
+        <label data-locale="cusDictionary_save"/></a><a href="javascript:close();" id="close" class="easyui-linkbutton" style="display: inline-block;"
+                 plain="true" iconcls="icon-cancel"> <label data-locale="cusDictionary_close"/></a>
+</div>
+<div id="moreSave" style="width: 180px;">
+    <div onclick="saveAndAddClear()" data-options="iconCls:'icon-save'">
+        <label data-locale="cusDictionary_saveAndAddEmpty"/></div>
+    <div onclick="saveAndAddCopy()" data-options="iconCls:'icon-save'">
+        <label data-locale="cusDictionary_saveAndAddCopy"/></div>
+</div>
+<form id="addForm" class="easyui-form" method="post" data-options="novalidate:true">
+    <input type="hidden" id="hidSn" name="sn" />
+    <input type="hidden" id="hidOperateType" name="hidOperateType" />
+    <input type="hidden" id="hidParentSn" name="parentSn" />
+    <table class="editTable">
+        <tr>
+            <td class="editTitle">
+                <label data-locale="cusDictionary_categoryName"/>:
+            </td>
+            <td class="editControl" colspan="2">
+                <input type="text" data-locale-missingmessage="cusDictionary_categoryNameCannotBeEmpty" data-options="required:true" name="typeName"
+                       id="txtTypeName" class="easyui-textbox" style="width:245px;"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="editTitle">
+                <label data-locale="cusDictionary_categoryCode"/>:
+            </td>
+            <td class="editControl" colspan="2">
+                <input type="text" name="typeCode" id="txtTypeCode" data-locale-missingmessage="cusDictionary_categoryCodeCannotBeEmpty"
+                       data-options="required:true" class="easyui-textbox" style="width:245px;"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="editTitle">
+                <label data-locale="cusDictionary_remark"/>:
+            </td>
+            <td class="editControl" colspan="2">
+                <input type="text" name="remark" data-options="multiline:true" style="height: 80px;width:245px"
+                       id="txtRemark" class="easyui-textbox"/>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/validform/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="../../Resource/js/cookie/jquery.cookie.js"></script>
+<script language="javascript" type="text/javascript">
+    var afterSave = "close";
+    var sn = null;
+    var parentSn = null;
+    var operateType = null;
+
+    $(function () {
+        var parms = getUrlParms();
+        operateType = parms["operateType"];
+        if (operateType == "edit") {
+            sn = parms["sn"];
+        } else {
+            sn = "0";
+            parentSn = parms["sn"];
+        }
+
+
+        initData();
+
+    });
+
+    $(window).load(function () {
+        hideLoading();
+    });
+
+
+
+    var initData = function () {
+        console.log(operateType);
+        if (sn != "0") {
+            loadDetail();
+        } else {
+            $("#hidSn").val("0");
+            $("#hidParentSn").val(parentSn);
+        }
+    }
+
+    var close = function () {
+        closeDialog("SysDictionaryDetail");
+    }
+
+    var reset = function () {
+        if (sn == "0") {
+            $('form').form('clear');
+        } else {
+            showLoading();
+            loadDetail();
+        }
+    }
+
+    var saveValidationPass = function () {
+        var validated = $("#addForm").form('enableValidation').form('validate');
+        if (!validated) {
+            errorNotification({
+                SimpleMessage: $.i18n.prop('cusDictionary_allEmpty')
+            });
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    var save = function () {
+        if (!saveValidationPass()) {
+            return;
+        }
+
+        $.messager.confirm($.i18n.prop('cusDictionary_tip'), '#{cusDictionary_sureWantSave}?', function (r) {
+            if (r) {
+                showLoading();
+                afterSave = "close";
+                SaveData();
+            }
+        });
+    }
+
+    var saveAndAddClear = function () {
+        if (!saveValidationPass()) {
+            return;
+        }
+        $.messager.confirm($.i18n.prop('cusDictionary_tip'), '#{cusDictionary_sureWantSave}?', function (r) {
+            if (r) {
+                showLoading();
+                afterSave = "clear";
+                SaveData();
+            }
+        });
+    }
+
+    var saveAndAddCopy = function () {
+        if (!saveValidationPass()) {
+            return;
+        }
+        $.messager.confirm($.i18n.prop('cusDictionary_tip'), '#{cusDictionary_sureWantSave}?', function (r) {
+            if (r) {
+                showLoading();
+                afterSave = "copy";
+                SaveData();
+            }
+        });
+    }
+
+    var afterSaveOperate = function () {
+        switch (afterSave) {
+            case "close":
+                getCurrentTab().afterSaveDicRefreshData();
+                close();
+                break;
+            case "clear":
+                $('form').form('clear');
+                $("#hidSn").val("0");
+                $("#hidParentSn").val(parentSn);
+                getCurrentTab().afterSaveDicRefreshData();
+                break;
+            case "copy":
+                $("#hidSn").val("0");
+                $("#hidParentSn").val(parentSn);
+                getCurrentTab().afterSaveDicRefreshData();
+                break;
+        }
+    }
+
+    var loadDetail = function () {
+        $.ajax({
+            url: "../../sysInfo/dictionary/getCusDictionary?t="+ Math.random()+"&sn="+sn,
+            type:"POST",
+            success:function(dataObj){
+                if(isServerResultDataPass(dataObj)){
+                    $("#hidSn").val(dataObj.resultDataFull.sn);
+                    $("#hidParentSn").val(dataObj.resultDataFull.parentSn);
+                    parentSn = dataObj.resultDataFull.parentSn;
+                    $("#txtTypeName").textbox('setValue', dataObj.resultDataFull.typeName);
+                    $("#txtTypeCode").textbox('setValue', dataObj.resultDataFull.typeCode);
+                    $("#txtRemark").textbox('setValue', dataObj.resultDataFull.remark);
+                }
+                hideLoading();
+            },
+            error:function(message){
+                hideLoading();
+            }
+        });
+    }
+
+    function SaveData() {
+        var url = "";
+        if(sn!='0'){//修改
+            url="../../sysInfo/dictionary/updateDic?t=";
+        }else{//新增
+            url="../../sysInfo/dictionary/addDic?t=";
+        }
+        var data={
+            'sn':$("#hidSn").val(),
+            'parentsn':$("#hidParentSn").val(),
+            'typename':encodeURI($("#txtTypeName").textbox('getValue')),
+            'typecode':encodeURI($("#txtTypeCode").textbox('getValue')),
+            'remark':encodeURI($("#txtRemark").textbox('getValue'))
+
+        };
+        $.post(url,data,function(dataObj){
+            dataObj=JSON.parse(dataObj);
+            if (isServerResultDataPass(dataObj)) {
+                correctNotification(dataObj.resultDataFull);
+                afterSaveOperate();
+            } else {
+                FailResultDataToTip(dataObj);
+            }
+            hideLoading();
+        },'text');
+
+
+    }
+</script>
+</html>

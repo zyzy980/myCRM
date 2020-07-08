@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace：必须与对应的接口全类名一致 id:必须与对应接口的某个对应的方法名一致 -->
+<mapper namespace="com.bba.jcda.dao.ITr_statistical_rulesDao">
+
+
+	<sql id="begin_page"><if test="isPage == true">SELECT * FROM (SELECT t.*, ROWNUM RN FROM (</if></sql>
+	<sql id="end_page">
+		<if test="isPage == true">
+			<if test="filters!=null and filters!=''">where ${filters}</if>
+		</if>
+		) t where ROWNUM &lt;= ${page} * ${rows}) WHERE RN &gt;=((${page} - 1) * ${rows} + 1)
+	</sql>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+        sn sn,
+        state state,
+			trans_mode trans_mode,
+			begin_city begin_city,
+			end_city end_city,
+			begin_date begin_date,
+			end_date end_date,
+			up_first_mileage up_first_mileage,
+			up_first_price up_first_price,
+			up_two_mileage up_two_mileage,
+			up_two_price up_two_price,
+			up_three_mileage up_three_mileage,
+			up_three_price up_three_price,
+			up_premium up_premium,
+			up_total up_total,
+			down_first_mileage down_first_mileage,
+			down_first_price down_first_price,
+			down_two_mileage down_two_mileage,
+			down_two_price down_two_price,
+			down_three_mileage down_three_mileage,
+			down_three_price down_three_price,
+			down_cross_sea_amount down_cross_sea_amount,
+			down_premium down_premium,
+			down_total down_total,
+			up_cross_sea_amount up_cross_sea_amount,
+			create_by create_by,
+			to_char(create_date,'yyyy-mm-dd hh24:mi:ss') create_date
+    </sql>
+
+	<select id="getListForGrid" parameterType="com.bba.util.JqGridParamModel" resultType="com.bba.jcda.vo.Tr_statistical_rulesVO">
+		<include refid="begin_page"/>
+		select <include refid="Base_Column_List"/> from TR_STATISTICAL_RULES
+		<include refid="end_page"/>
+	</select>
+
+	<select id="getListForGridCount" parameterType="com.bba.util.JqGridParamModel" resultType="java.lang.Integer">
+		select count(*) from TR_STATISTICAL_RULES
+		<if test="filters!=null and filters!=''">where ${filters}</if>
+	</select>
+
+
+
+</mapper>

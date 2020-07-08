@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace：必须与对应的接口全类名一致 id:必须与对应接口的某个对应的方法名一致 -->
+<mapper namespace="com.bba.xtgl.dao.ISysShortCutLinkDao">
+
+	<select id="findList" parameterType="com.bba.xtgl.vo.SysShortCutLinkVO"
+		resultType="com.bba.xtgl.vo.SysShortCutLinkVO">
+		select 
+			id,
+			title,
+			link,
+			ico,
+			userid,	
+			orderid
+	  	from sys_shortcutlink
+	   <where>
+	   		<if test="userId!=null">and userId=#{userId}</if>
+	   		<if test="id!=null">and id=#{id}</if>
+	   </where>
+	   order by orderId
+	</select>
+	<insert id="save" parameterType="com.bba.xtgl.vo.SysTaskFunctionVO">
+		insert into sys_shortcutlink
+		(
+			title,
+			link,
+			ico,
+			userId,
+			orderId
+		)
+		values
+		(#{title,jdbcType=VARCHAR}, #{link,jdbcType=VARCHAR},#{ico,jdbcType=VARCHAR},#{userId},
+		(select isnull(max(orderId),0)+1 from sys_shortcutlink where userId=#{userId}))
+	</insert>
+
+	<update id="update" parameterType="com.bba.xtgl.vo.SysTaskFunctionVO">
+		begin
+		<foreach item="vo" collection="list" open="" separator=" " close="">
+	    	update sys_shortcutlink set
+			<trim prefixOverrides=",">
+			<if test="vo.title!=null">,title=#{vo.title}</if>
+			<if test="vo.link!=null">,link=#{vo.link}</if>
+			<if test="vo.ico!=null">,ico=#{vo.ico}</if>
+			<if test="vo.orderId!=null">,orderId=#{vo.orderId}</if>
+			</trim>
+		where id=#{vo.id};
+	   		</foreach>
+		end;
+	</update>
+	<delete id="delete" parameterType="com.bba.xtgl.vo.SysTaskFunctionVO">
+		begin
+			delete from sys_shortcutlink where id=#{id};
+			update sys_shortcutlink set orderId=orderId-1 where userId=#{userId} and orderId>#{orderId};
+		end;
+	</delete>
+</mapper>

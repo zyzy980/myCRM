@@ -1,0 +1,277 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/fileinput/css/bootstrap.min.css" />
+    <link id="CustomTheme" type="text/css" rel="stylesheet"	href="../../Resource/css/index/customLightBlue.css" />
+    <link id="EasyuiTheme" type="text/css" rel="stylesheet"	href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+    <link id="JqgridTheme" type="text/css" rel="stylesheet"	href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/fileUpload/css/fileUpload.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/fileinput/css/fileinput.min.css" />
+    <link type="text/css" rel="stylesheet" href="../../View/ywgl/css/planExec.css" />
+    <style type="text/css">
+        body {
+            overflow-y: auto
+        }
+        /*#fileDriverLicense {
+            overflow-y: auto
+        }*/
+    </style>
+    <title>#{supplier.detail.thisPage}</title>
+</head>
+<body  id="body">
+<div id="orderDetailChild">
+    <div id="childBtn" style="border-top:1px dotted #c5dbec;border-left:1px dotted #c5dbec;border-right:1px dotted #c5dbec;width:99.5%">
+        <!--<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add'" width="15" height="15" onclick="addChild('detailChildTableId')"><label data-locale="addRow"/></a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="saveChildTable()"><label data-locale="saveDetail"/></a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="removn()"><label data-locale="closeTable"/></a>-->
+    </div>
+    <table id="detailChildTableId"></table>
+
+</div>
+<div id="toolbar" class="easyui-panel" style="padding: 4px; border-width:0; border-bottom-width:1px;">
+    #{PAGE_TOOLBAR_BUTTONROLE}
+
+</div>
+<input type="hidden" id="sn" name="sn" />
+    <form id="addForm" class="easyui-form" method="post" data-options="novalidate:true">
+        <table class="editTable">
+            <tr>
+                <td class="editTitle" >
+                    <label data-locale="receiptEntry_date"/>:
+                </td>
+                <td class="editControl">
+                    <input type="text" id="mostlyGuid" hidden="hidden"/>
+                    <input type="text" id="receiptGuid" hidden="hidden"/>
+                    <input class="easyui-datebox" id="hdBackDate" name="hdBackDate" style="width: 153px;"/><span style="color:red"></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="editTitle" >
+                    <label data-locale="receiptEntry_endDate"/>:
+                </td>
+                <td class="editControl" >
+                    <input class="easyui-datetimebox" id="hdSignDate"  name="hdSignDate" style="width: 153px;" />
+                </td>
+            </tr>
+            <tr>
+                <td class="editTitle">
+                    <label data-locale="receiptEntry_signForPeople"/>:
+                </td>
+                <td class="editControl">
+                    <input class="easyui-textbox" id="hdSignPerson" name="hdSignPerson" style="width:153px;"/>
+                </td>
+            </tr>
+            <tr>
+                <td class="editTitle">
+                    <label data-locale="receiptEntry_remark"/>
+                </td>
+                <td class="editControl">
+                    <input class="easyui-textbox" id="hdRemark" name="hdRemark" style="width:153px;"/>
+                </td>
+            </tr>
+            <tr>
+                <td class="editTitle">
+                    <label data-locale="receiptEntry_pic"/>
+                </td>
+                <td class="editControl">
+                    <input name="fileDriverLicense" id="fileDriverLicense" type="file" multiple
+                           class="file-loading" /><span style="color: red; font-size: 16px;"> (*请录入回单信息，保存后再上传图片)</span>
+                </td>
+            </tr>
+        </table>
+    </form>
+<script type="text/javascript" src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jsLinq/linq.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileinput/bootstrap.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/upload.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/file.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileinput/fileinput.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileinput/zh.js"></script>
+<script type="text/javascript" src="../../Resource/js/locationChoose/location.js"></script>
+<script type="text/javascript" src="../../Resource/js/locationsChoose/locations.js"></script>
+<script type="text/javascript" src="../../Resource/js/cookie/jquery.cookie.js"></script>
+<script type="text/javascript" src="../../Resource/js/moment/js/moment.min.js"></script>
+<script language="javascript" type="text/javascript">
+        let mostlyGuid = "";
+        let receiptGuid = "";
+        var imageJson = [];
+        var imagePath = "";
+        var perList = new Array();
+        var previewConfig = {};
+        var previewConfigList = new Array();
+        var planJiaofuData = "";
+
+        var currentDate = null;
+        $(function(){
+            let params = getUrlParms();
+            mostlyGuid = params["mostlyGuid"];
+            receiptGuid = params["receiptGuid"];
+            planJiaofuData = params["planJiaofuData"];
+            loadImage();
+
+            $("#mostlyGuid").val(mostlyGuid);
+
+
+            if(receiptGuid != "" && receiptGuid != null && receiptGuid != undefined) {
+                $("#receiptGuid").val(receiptGuid);
+                loadDetail();
+            }
+            setTimeout(() => {
+                initFileInput();
+            }, 20);
+
+            currentDate = new Date().Format('yyyy-MM-dd');
+
+            $("#hdBackDate").datebox('setValue', currentDate);
+
+            $("#hdSignDate").datetimebox("setValue", planJiaofuData);
+
+            $("#hdSignDate").datetimebox({
+                value: $("#hdSignDate").datetimebox('getValue'),
+                showSeconds: false
+            });
+
+
+        });
+
+        let save = function() {
+            let formData = FormUtils.toJSONObject($("#addForm"));
+            formData.mostlyGuid = $("#mostlyGuid").val();
+            formData.guid = $("#receiptGuid").val();
+            $.messager.confirm($.i18n.prop('receiptEntry_tip'), "#{receiptEntry_save}?", function(r){
+                if(r) {
+                    $.ajax({
+                        url: '../../receipt/manager/save',
+                        type: 'POST',
+                        data: "jsonData=" + encodeURI(JSON.stringify(formData)),
+                        success: function(dataObj) {
+                            if (isServerResultDataPass(dataObj)) {
+                                correctNotification({ SimpleMessage : '#{receiptEntry_success}v'});
+                                //刷新父页面
+                                getCurrentTab().searchData();
+                                receiptGuid = dataObj.resultDataFull;
+                                loadDetail();
+                            } else {
+                                FailResultDataToTip(dataObj);
+                            }
+                        }
+                    });
+                }
+            })
+        }
+
+        let loadDetail = function() {
+            $.ajax({
+               url: '../../receipt/manager/getDetail?t=' + Math.random(),
+               type: 'POST',
+               data: 'receiptGuid=' + receiptGuid,
+               success: function(dataObj) {
+                   if (isServerResultDataPass(dataObj)) {
+                       let data = dataObj.resultDataFull;
+                       if(data != null) {
+                           $("#hdBackDate").datebox("setValue", data.hdBackDate);
+                           $("#hdSignDate").datebox('setValue', data.hdSignDate);
+                           $("#hdSignPerson").textbox('setValue', data.hdSignPerson);
+                           $("#hdRemark").textbox("setValue", data.hdRemark);
+                       }
+                   } else {
+                       FailResultDataToTip(dataObj);
+                   }
+               }
+            });
+        }
+
+        function initFileInput(imagePath) {
+            var control = $('#fileDriverLicense');
+            var uploadUrl = "../../receipt/manager/uploadImage?t=" + Math.random() + "&receiptGuid=" + receiptGuid + "&hdImage=hdImage";
+
+            control.fileinput({
+                language: 'zh', //设置语言
+                uploadUrl: uploadUrl, //上传的地址
+                uploadAsync: false,
+                overwriteInitial: false,
+                allowedFileExtensions: ['jpg', 'png', 'gif'], //接收的文件后缀
+                initialPreview:  perList,
+                showPreview: true,//是否显示预览区域
+                showUpload: true, //是否显示上传按钮
+                initialPreviewConfig: previewConfigList,
+                showCaption: false, //是否显示标题
+                browseClass: "btn btn-primary", //按钮样式
+                previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
+                enctype: 'multipart/form-data',
+                maxFileSize: 12288, //单位为kb，如果为0表示不限制文件大小
+                allowedPreviewTypes: ['image'],
+                maxFileCount: 5
+            }).on("fileuploaded", function (event, data) {
+                var dataObj = data.response;
+                if (isServerResultDataPass(dataObj)) {
+                    correctNotification({ SimpleMessage: $.i18n.prop('receiptEntry_uploadSuccess') });
+                    hideLoading(); //隐藏页面加载的圈圈
+                } else {
+                    hideLoading(); //隐藏页面加载的圈圈
+                    $(".kv-file-upload").attr('style', 'display: ');
+                    $(".file-thumb-progress").attr('style', 'display:none');
+                    $(".file-upload-indicator > i").attr('class', 'glyphicon glyphicon-hand-down text-warning');
+                    initFileInput();
+                    FailResultDataToTip(dataObj);
+                }
+            }).on('filesuccessremove', function (event, id) {
+                var index = id.substring(id.length - 1, id.length);
+                delete imageJson[index];
+            });
+        }
+
+        let loadImage = function() {
+            let url = "../../receipt/manager/loadImage?t=" + Math.random() + "&receiptGuid=" + receiptGuid;
+            let deleteImagePath = "../../receipt/manager/deleteImage?t=" + Math.random();
+            imagePath = "";
+            $.ajax({
+                url: url,
+                type: 'POST',
+                success: function(dataObj) {
+                    if(isServerResultDataPass(dataObj)) {
+                        imagePath = dataObj.resultDataFull;
+                        for(let i = 0 ; i < imagePath.length; i++) {
+                            perList[i] = "<img src='https://www.niuhuoyun.cn/" + imagePath[i]  + "' class='file-preview-image'/>";
+                            // previewConfig.caption = i + ".jpg";
+                            previewConfig.width = "120px";
+                            previewConfig.url = deleteImagePath;
+                            previewConfig.key = i;
+                            previewConfig.extra = {imagePathParams: imagePath[i]};
+                            previewConfigList.push(previewConfig);
+                        }
+                    }
+                }
+            })
+        }
+        Date.prototype.Format = function (fmt) { //author: meizz
+            var o = {
+                "M+": this.getMonth() + 1, //月份
+                "d+": this.getDate(), //日
+                "h+": this.getHours(), //小时
+                "m+": this.getMinutes(), //分
+                "s+": this.getSeconds(), //秒
+                "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                "S": this.getMilliseconds() //毫秒
+            };
+            if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+            for (var k in o)
+                if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            return fmt;
+        }
+
+</script>
+</body>
+</html>

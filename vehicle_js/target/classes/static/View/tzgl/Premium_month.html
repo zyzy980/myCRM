@@ -1,0 +1,326 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+<link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+<link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+<link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+<link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+<title>每月保费汇总</title>
+</head>
+<body style="overflow:hidden">
+    <div id="toolbar" class="easyui-panel" style="padding: 4px; border-width:0; border-bottom-width:1px;">
+		#{PAGE_TOOLBAR_BUTTONROLE}
+    </div>
+	<div class="searchParamesPanel">
+		<table id="searchParamesTable">
+			<tr class="searchParamesTrShow">
+				<td class="searchParamesTdTitle">
+					实际起运时间:
+				</td>
+				<td class="searchParamesTdControl">
+					<input type="text" id="begin_date" class="easyui-datebox" data-options="editable:false"/>
+				</td>
+			</tr>
+		</table>
+	</div>
+<div id="gridControl">
+	<table id="gridTable"></table>
+</div>
+<div id="gridPager">
+</div>
+</body>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/regex/regex.js"></script>
+<script language="javascript" type="text/javascript">
+    var callerId = "";
+    var callerType = "";
+    var callbackFlag = "";
+    var sheet_no="";
+    $(function () {
+        var parms = getUrlParms();
+        sheet_no = parms["sheet_no"];
+        callerId = parms["callerId"];
+        callerType = parms["callerType"];
+        callbackFlag = parms["callbackFlag"];
+        initScript();
+        initData();
+        initStyle();
+    });
+
+    $(window).load(function () {
+        hideLoading();
+    });
+
+    function initStyle() {
+    }
+
+    function initScript() {
+    }
+
+    function initData() {
+        formatData();
+        getDictionaryData([{
+            //加载对下保费状态
+            dicTypeCode : Global_DicType.Premium_State,
+            ADD_ALL: true,
+            callback : function(callbackData) {
+                window.Premium_StateList = {};
+                for(var i = 0; i < callbackData.length; i++){
+                    Premium_StateList[callbackData[i].dicvalue] = callbackData[i].dictext;
+                }
+            }
+        },{
+            //加载结算状态
+            dicTypeCode : Global_DicType.Premium_Js_State,
+            ADD_ALL: true,
+            callback : function(callbackData) {
+                window.JsStateList = {};
+                for(var i = 0; i < callbackData.length; i++){
+                    JsStateList[callbackData[i].dicvalue] = callbackData[i].dictext;
+                }
+            }
+        }]);
+        loadList();
+    }
+
+    function searchData() {
+        $("#gridTable").jqGrid('setGridParam', {
+            url: getSearchGridUrl(),
+            datatype: 'json',
+            postData: { "filters": "" },
+            page: 1
+        }).trigger("reloadGrid");
+    }
+
+    function getSearchGridUrl() {
+        var customSearchFilters = encodeURI(getSearchFilters());
+        return '../../jsgl/premium/selectPremiumGroupByMonth?t=' + Math.random() + '&customSearchFilters=' + customSearchFilters;
+    }
+
+    function getSearchFilters() {
+        var parmsArray = [
+            { name : 'data_state',value : '0',op : "eq"},
+            { name : 'js_state',value : '1',op : "eq"},
+            { name: 'begin_date_month', value: $("#begin_date").textbox("getValue"), op: "eq" }
+        ];
+        return formatSearchParames(parmsArray);
+    }
+
+    function loadList() {
+        $("#gridTable").jqGrid({
+            url: getSearchGridUrl(),
+            datatype: "json",
+            width: "none",
+            colNames: [
+                'rownum',
+                $.i18n.prop('DATA_STATE'),
+                $.i18n.prop('NOT_TAX_AMOUNT'),
+                $.i18n.prop('TAX_AMOUNT'),
+                $.i18n.prop('TAX_RATE'),
+                $.i18n.prop('BEGIN_DATE')
+            ],
+            colModel: [
+                { name: 'rownum', index: 'rownum',key: true, hidden: true },
+                { name: 'data_state', index : 'data_state', align : 'center', isSort : false, width : 60, type: 'string', search : true, searchoptions : { sopt: ['cn', 'eq', 'ne']},
+                    formatter : function(value, grid, rows) {
+                        return window.Premium_StateList[value];
+                    }},
+                { name: 'not_tax_amount', index: 'not_tax_amount', align: 'center', width: 100, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'tax_amount', index: 'tax_amount', align: 'center', width: 100, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'tax_rate', index: 'tax_rate', align: 'center', width: 80, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+                { name: 'begin_date_month', index: 'begin_date_month', align: 'center', width: 100, type: 'string',  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} }
+            ],
+            shrinkToFit: false,
+            altRows: true,
+            altclass: 'gridSpacingClass',
+            forceFit: true,
+            cellLayout: 0,
+            scroll: false,
+            autowidth: true,
+            sortname: 'begin_date_month',
+            sortorder: "desc",
+            loadonce: false,
+            mtype: "POST",
+            viewrecords: true,
+            rownumbers: true,
+            multiselect: true,
+            rowNum: 15,
+            height: "100%",
+            rowList: [100, 200, 300, 500],
+            pager: "#gridPager",
+            jsonReader: {
+                root: "rows",
+                total: "total",
+                page: "page",
+                records: "records",
+                repeatitems: false
+            },
+            gridComplete: function () {
+                $(".cbox").shiftSelect();
+            },
+            ondblClickRow: function (id) {
+            },
+            loadComplete: function (xhr) {
+                $('.gridViewPicLink').tooltip({
+                    position: 'bottom',
+                    content: $(this).attr("title"),
+                    onShow: function () {
+                        $(this).tooltip('tip').css({
+                            backgroundColor: '#FCF8E3',
+                            borderColor: '#FAEBCC'
+                        });
+                    }
+                });
+                FailResultDataToTip(xhr);
+            }
+        });
+   /*     $('#gridTable').jqGrid('navGrid', '#gridPager',{
+            add : false,
+            edit : false,
+            del : false,
+            refresh : true
+        }, {}, {}, {}, {
+            multipleSearch : true,
+            closeOnEscape : true,
+            closeAfterSearch : true
+        });*/
+        $('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+            caption : $.i18n.prop('TOGGLE_GRID_COLUMNS'),
+            title : 'Set Columns',
+            onClickButton : toggleGridColumns
+        });
+        $('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+            caption : $.i18n.prop('TOGGLE_GRID_SEARCH_TOOLBAR'),
+            title : 'Quick Search',
+            onClickButton : toggleGridSearchToolbar
+        });
+        setGridHeightWidth();
+    }
+
+    /**格式化日期*/
+    function formatData() {
+        $('#begin_date').datebox({
+            //显示日趋选择对象后再触发弹出月份层的事件，初始化时没有生成月份层
+            onShowPanel: function () {
+                //触发click事件弹出月份层
+                span.trigger('click');
+                if (!tds)
+                //延时触发获取月份对象，因为上面的事件触发和对象生成有时间间隔
+                    setTimeout(function() {
+                        tds = p.find('div.calendar-menu-month-inner td');
+                        tds.click(function(e) {
+                            //禁止冒泡执行easyui给月份绑定的事件
+                            e.stopPropagation();
+                            //得到年份
+                            var year = /\d{4}/.exec(span.html())[0] ,
+                                //月份
+                                //之前是这样的month = parseInt($(this).attr('abbr'), 10) + 1;
+                                month = parseInt($(this).attr('abbr'), 10);
+
+                            //隐藏日期对象
+                            $('#begin_date').datebox('hidePanel')
+                            //设置日期的值
+                                .datebox('setValue', year + '-' + month);
+                        });
+                    }, 0);
+            },
+            //配置parser，返回选择的日期
+            parser: function (s) {
+                if (!s) return new Date();
+                var arr = s.split('-');
+                return new Date(parseInt(arr[0], 10), parseInt(arr[1], 10) - 1, 1);
+            },
+            //配置formatter，只返回年月 之前是这样的d.getFullYear() + '-' +(d.getMonth());
+            formatter: function (d) {
+                var currentMonth = (d.getMonth()+1);
+                var currentMonthStr = currentMonth < 10 ? ('0' + currentMonth) : (currentMonth + '');
+                return d.getFullYear() + '-' + currentMonthStr;
+            },
+            onChange : function () {
+                searchData();
+            }
+        });
+
+        //日期选择对象
+        var p = $('#begin_date').datebox('panel'),
+            //日期选择对象中月份
+            tds = false,
+            //显示月份层的触发控件
+            span = p.find('span.calendar-text');
+        var curr_time = new Date();
+
+        //设置前当月
+        $("#begin_date").datebox("setValue", myformatter(curr_time));
+    };
+    //格式化日期
+    function myformatter(date) {
+        //获取年份
+        var y = date.getFullYear();
+        //获取月份
+        var m = date.getMonth() + 1;
+        return y + '-' + m;
+    }
+
+    /**关闭*/
+    function close() {
+        closeDialog("Premium_month");
+    }
+
+    function refreshCallerData(sheet_no) {
+            //此callerId此时为frame的id
+            getCurrentTab(callerId).onIframeSelect(sheet_no);
+    }
+
+    //选择月份数据到台账明细
+    function selectData() {
+        var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
+        if (selectRowItems.length==0) {
+            errorNotification({
+                SimpleMessage : $.i18n.prop("selectLeastOneDataRowOperator")
+            });
+            return;
+        }
+        var list=[];
+        var rowData = null;
+        for (var i = 0; i < selectRowItems.length; i++) {
+            rowData = $("#gridTable").jqGrid('getRowData', selectRowItems[i]);
+			list.push({"sheet_no":sheet_no,"begin_date_month":rowData.begin_date_month});
+        }
+        $.messager.confirm($.i18n.prop("prompt"), $.i18n.prop("sureTodo"), function (r) {
+            if (r) {
+                showLoading();
+                $.ajax({
+                    url : "../../tzgl/LedgerController/addPremium?t="+Math.random(),
+                    data:JSON.stringify(list),
+                    type:"POST",
+                    contentType:'application/json; charset=utf-8',
+                    success:function(dataObj){
+                        if (isServerResultDataPass(dataObj)) {
+                            correctNotification({ SimpleMessage:dataObj.resultDataFull.msg });
+                            refreshCallerData(dataObj.resultDataFull.sheet_no);
+                            closeDialog("Premium_month");
+                        } else {
+                            FailResultDataToTip(dataObj);
+                        }
+                        hideLoading();
+                    }
+                });
+            }
+        });
+    }
+</script>
+</html>

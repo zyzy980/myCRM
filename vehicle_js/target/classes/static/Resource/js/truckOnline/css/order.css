@@ -1,0 +1,106 @@
+ /* 水平时间轴 */
+        .stepInfo
+        {
+            position: relative;
+            margin: 1px 30px 3px 15px;
+            height: 20px;
+        }
+        
+        .stepInfo li
+        {
+            float: left;
+            width: 25%;
+            height: 0.2em;
+            background: #0099ff;
+            margin-top: 10px;
+        }
+        .stepInfo li:last-child {
+        	width: 0;
+        }
+        .stepInfo .li_notArrive
+        {
+            background: #ccc;
+            position: relative;
+        }
+        .stepInfo .li_notArrive .des
+       /*  {
+            display:block;
+            position:absolute;
+            background:red;
+            height:30px;
+            line-height:30px;
+            border:1px solid #666;
+            top:100%;
+            left:50%;
+            transform:translate(-50%,0)
+        } */
+        .stepInfo .li_notArrive:hover .des
+        {
+            display:block
+        }
+        
+        .stepIco
+        {
+            border-radius: 1.5em;
+            padding: 0.2em;
+            background: #0099ff;
+            text-align: center;
+            line-height: 1.5em;
+            position: absolute;
+            width: 1.5em;
+            height: 1.5em;
+            font-size: 9px;
+            color: white;
+            top: 0;
+            -webkit-transform: scale(0.7);
+        }
+        
+        .stepIco .stateName
+        {
+            margin-top: 15px;
+            left: -50%;
+            position: absolute;
+            font-size: 12px;
+            margin-left: -10px;
+            -webkit-transform: scale(0.9);
+        }
+        
+        .stepIco_notArrive
+        {
+            background: #ccc;
+            color: #666;
+        }
+        
+        .stepIco1
+        {
+            left: -3%;
+        }
+        .stepIco2
+        {
+            left: 24%;
+        }
+        .stepIco3
+        {
+            left: 48%;
+        }
+        .stepIco4
+        {
+            left: 72%;
+        }
+        .stepIco5
+        {
+            left: 97%;
+        }
+        .stepText
+        {
+            color: #ff7701;
+            margin-top: 0.4em;
+            width: 5em;
+            text-align: center;
+            margin-left: -1.7em;
+        }
+        
+        .stepText_notArrive
+        {
+            color: #666;
+        }

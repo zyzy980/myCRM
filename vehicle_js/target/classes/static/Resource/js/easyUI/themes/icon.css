@@ -1,0 +1,276 @@
+.icon-blank{
+	background:url('icons/blank.gif') no-repeat center center;
+}
+.icon-add{
+	background:url('icons/edit_add.png') no-repeat center center;
+}
+.icon-edit{
+	background:url('icons/pencil.png') no-repeat center center;
+}
+.icon-clear{
+	background:url('icons/clear.png') no-repeat center center;
+}
+.icon-remove{
+	background:url('icons/delete.gif') no-repeat center center;
+}
+.icon-delete{
+	background:url('icons/edit_remove.png') no-repeat center center;
+}
+.icon-save{
+	background:url('icons/filesave.png') no-repeat center center;
+}
+.icon-cut{
+	background:url('icons/cut.png') no-repeat center center;
+}
+.icon-ok{
+	background:url('icons/ok.png') no-repeat center center;
+}
+.icon-no{
+	background:url('icons/no.png') no-repeat center center;
+}
+.icon-cancel{
+	background:url('icons/cancel.png') no-repeat center center;
+}
+.icon-reload{
+	background:url('icons/reload.png') no-repeat center center;
+}
+.icon-search{
+	background:url('icons/search.png') no-repeat center center;
+}
+.icon-print{
+	background:url('icons/print.png') no-repeat center center;
+}
+.icon-help{
+	background:url('icons/help.png') no-repeat center center;
+}
+.icon-undo{
+	background:url('icons/undo.png') no-repeat center center;
+}
+.icon-redo{
+	background:url('icons/redo.png') no-repeat center center;
+}
+.icon-back{
+	background:url('icons/back.png') no-repeat center center;
+}
+.icon-sum{
+	background:url('icons/sum.png') no-repeat center center;
+}
+.icon-tip{
+	background:url('icons/tip.png') no-repeat center center;
+}
+.icon-filter{
+	background:url('icons/filter.png') no-repeat center center;
+}
+.icon-man{
+	background:url('icons/man.png') no-repeat center center;
+}
+.icon-lock{
+	background:url('icons/lock.png') no-repeat center center;
+}
+.icon-more{
+	background:url('icons/more.png') no-repeat center center;
+}
+.icon-mini-add{
+	background:url('icons/mini_add.png') no-repeat center center;
+}
+.icon-mini-edit{
+	background:url('icons/modify.gif') no-repeat center center;
+}
+.icon-mini-refresh{
+	background:url('icons/mini_refresh.png') no-repeat center center;
+}
+
+.icon-refresh{
+	background:url('icons/refresh.gif') no-repeat center center;
+}
+
+.icon-large-picture{
+	background:url('icons/large_picture.png') no-repeat center center;
+}
+.icon-large-clipart{
+	background:url('icons/large_clipart.png') no-repeat center center;
+}
+.icon-large-shapes{
+	background:url('icons/large_shapes.png') no-repeat center center;
+}
+.icon-large-smartart{
+	background:url('icons/large_smartart.png') no-repeat center center;
+}
+.icon-large-chart{
+	background:url('icons/large_chart.png') no-repeat center center;
+}
+
+/*个性化手动添加*/
+.icon-role{
+	background:url('icons/role.gif') no-repeat center center;
+}
+
+.icon-view
+{
+  background:url('icons/view.gif') no-repeat center center;  
+ }
+ 
+ .icon-save-disabled
+{
+  background:url('icons/save-disabled.gif') no-repeat center center;  
+ }
+
+.icon-chakan-sj
+{
+  background:url('icons/chakan-sj.png') no-repeat center center;  
+ }
+ 
+.icon-danpiao-gs
+{
+  background:url('icons/danpiao-gs.png') no-repeat center center;  
+ }
+ 
+.icon-duopiao-gs
+{
+  background:url('icons/duopiao-gs.png') no-repeat center center;  
+ }
+ 
+.icon-jiesuan-cz
+{
+  background:url('icons/jiesuan-cz.png') no-repeat center center;  
+ }
+.icon-kehu-sh
+{
+  background:url('icons/kehu-sh.png') no-repeat center center;  
+ }
+.icon-luru-fy
+{
+	background:url('icons/luru-fy.png') no-repeat center center;  
+}
+.icon-shangwu-sh
+{
+	background:url('icons/shangwu-sh.png') no-repeat center center;  
+}
+.icon-shoufukuan-fy
+{
+	background:url('icons/shoufukuan-fy.png') no-repeat center center;  
+}
+.icon-taizhang-xx
+{
+	background:url('icons/taizhang-xx.png') no-repeat center center;  
+}
+.icon-clipboard-copy{
+	background:url('icons/clipboard-copy.png') no-repeat center center;
+}
+
+.icon-refresh{
+	background:url('icons/refresh.png') no-repeat center center;
+}
+
+.icon-up{
+	background:url('icons/up.gif') no-repeat center center;
+}
+.icon-shi{
+	background:url('icons/shi.png') no-repeat center center;
+}
+.icon-fou{
+	background:url('icons/fou.png') no-repeat center center;
+}
+.icon-goods{
+	background:url('icons/goods.png') no-repeat center center;
+}
+.icon-goodst{
+	background:url('icons/goodsType.jpg') no-repeat center center;
+}
+.icon-rightMove{
+	background:url('icons/rightMove.png') no-repeat center center;
+}
+.icon-leftMove{
+	background:url('icons/leftMove.png') no-repeat center center;
+}
+.icon-kunb{
+	background:url('icons/kunb.png') no-repeat center center;
+}
+.icon-kunbg{
+	background:url('icons/kunbg.png') no-repeat center center;
+}
+.icon-baoz{
+	background:url('icons/baoz.png') no-repeat center center;
+}
+.icon-baozg{
+	background:url('icons/baozg.png') no-repeat center center;
+}
+
+.icon-down{
+	background:url('icons/down.gif') no-repeat center center;
+}
+.icon-customers{
+	background:url('icons/customers.gif') no-repeat center center;
+}
+.icon-attibutes{
+	background:url('icons/attibutes.gif') no-repeat center center;
+}
+.icon-saves{
+	background:url('icons/save.gif') no-repeat center center;
+}
+.icon-search2{
+	background:url('icons/search2.gif') no-repeat center center;
+}
+.icon-receipt{
+	background:url('icons/receipt.png') no-repeat center center;
+}
+.icon-forward{
+	background:url('icons/forward.png') no-repeat center center;
+}
+/**结算图标*/
+.icon-js_add{	background:url('icons/js_add.png') no-repeat center center;}
+.icon-js_check{	background:url('icons/js_check.png') no-repeat center center;}
+.icon-custrue{	background:url('icons/js_custrue.png') no-repeat center center;}
+.icon-js_delete{	background:url('icons/js_delete.png') no-repeat center center;}
+.icon-js_edit{	background:url('icons/js_edit.png') no-repeat center center;}
+.icon-js_email{	background:url('icons/js_email.png') no-repeat center center;}
+.icon-js_export{	background:url('icons/js_export.png') no-repeat center center;}
+.icon-js_import{	background:url('icons/js_import.png') no-repeat center center;}
+.icon-js_remove{	background:url('icons/js_remove.png') no-repeat center center;}
+.icon-js_search{	background:url('icons/js_search.png') no-repeat center center;}
+.icon-js_uncheck{	background:url('icons/js_uncheck.png') no-repeat center center;}
+
+/*个性化手动添加*/
+.icon-role{	background:url('icons/role.gif') no-repeat center center;}
+.icon-view{ background:url('icons/view.gif') no-repeat center center; }
+
+.icon-add2{background:url('icons/add.gif') no-repeat center center;}
+.icon-archives{background:url('icons/archives.gif') no-repeat center center;}
+.icon-attibutes{	background:url('icons/attibutes.gif') no-repeat center center;}
+.icon-back2{background:url('icons/back.gif') no-repeat center center;}
+.icon-bluebook{	background:url('bluebook/role.gif') no-repeat center center;}
+.icon-bookpen{	background:url('icons/bookpen.gif') no-repeat center center;}
+.icon-busy{	background:url('icons/busy.gif') no-repeat center center;}
+.icon-calendar{	background:url('icons/calendar.gif') no-repeat center center;}
+.icon-candle{	background:url('icons/candle.gif') no-repeat center center;}
+.icon-coffee{	background:url('icons/coffee.gif') no-repeat center center;}
+.icon-comment{	background:url('icons/comment.gif') no-repeat center center;}
+.icon-communication{	background:url('icons/communication.gif') no-repeat center center;}
+.icon-config{	background:url('icons/config.gif') no-repeat center center;}
+.icon-customers{	background:url('icons/customers.gif') no-repeat center center;}
+.icon-database{	background:url('icons/database.gif') no-repeat center center;}
+.icon-discuss{	background:url('icons/discuss.gif') no-repeat center center;}
+.icon-doc{	background:url('icons/doc.gif') no-repeat center center;}
+.icon-down{	background:url('icons/down.gif') no-repeat center center;}
+.icon-edit2{	background:url('icons/edit.gif') no-repeat center center;}
+.icon-graywarn{	background:url('icons/graywarn.gif') no-repeat center center;}
+.icon-greenwarn{	background:url('icons/greenwarn.gif') no-repeat center center;}
+.icon-home{	background:url('icons/home.gif') no-repeat center center;}
+.icon-lock{	background:url('icons/lock.gif') no-repeat center center;}
+.icon-logout{	background:url('icons/logout.gif') no-repeat center center;}
+.icon-memeber{	background:url('icons/memeber.gif') no-repeat center center;}
+.icon-msn{	background:url('icons/msn.gif') no-repeat center center;}
+.icon-myaccount{	background:url('icons/myaccount.gif') no-repeat center center;}
+.icon-ok2{	background:url('icons/ok.gif') no-repeat center center;}
+.icon-outbox{	background:url('icons/outbox.gif') no-repeat center center;}
+.icon-plus{	background:url('icons/plus.gif') no-repeat center center;}
+.icon-prev{	background:url('icons/prev.gif') no-repeat center center;}
+.icon-process{	background:url('icons/process.gif') no-repeat center center;}
+.icon-qq{	background:url('icons/qq.gif') no-repeat center center;}
+.icon-right{	background:url('icons/right.gif') no-repeat center center;}
+.icon-save-disabled{	background:url('icons/save-disabled.gif') no-repeat center center;}
+.icon-settings{	background:url('icons/settings.gif') no-repeat center center;}
+.icon-true{	background:url('icons/true.gif') no-repeat center center;}
+.icon-up{	background:url('icons/up.gif') no-repeat center center;}
+.icon-warning{background:url('icons/warning.gif') no-repeat center center;}
+.icon-unlock{background:url('icons/unlock.png') no-repeat center center;}

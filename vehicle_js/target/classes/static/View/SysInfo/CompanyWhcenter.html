@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<link rel="stylesheet" type="text/css" href="../../Resource/css/view/css/base.css">
+<link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+<link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+<link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+<link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+<link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+<title>仓储中心</title>
+</head>
+<body>
+    <div id="gridControl">
+		<table id="gridTable">
+		</table>
+		<div id="gridPager"></div>
+	</div>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonUtils.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/regex/regex.js"></script>
+<script language="javascript" type="text/javascript">
+var savedRow = "";
+var savedCol = "";
+var moduleId = 0;
+var callerType = "";
+var callerId = "";
+var callbackFlag = "";
+$(function(){
+	initData();
+	initScript();
+	var parms = getUrlParms();
+	moduleId = parms["moduleId"];
+	callerId = parms["callerId"];
+	callerType = parms["callerType"];
+	callbackFlag = parms["callbackFlag"];
+});
+
+var oldSetGridHeightWidth = setGridHeightWidth;
+var setGridHeightWidth = function(){
+	oldSetGridHeightWidth(0,90);
+} 
+$(window).load(function () {
+    hideLoading();
+});
+
+var initScript = function(){
+};
+
+var initData = function () {
+	//状态
+	getDictionaryData({
+		dicTypeCode : Global_DicType.Global_DicType_Status,
+		async : false,
+		callback : function(callbackData) {
+			//initStateControl(callbackData);
+			globalStateArray = callbackData;
+		}
+	});
+	
+	 loadList();
+}
+ 
+//查询所有仓储中心列表
+	var getSearchGridUrl = function () {
+	var parmsArray = [
+                     ];
+ 	 return '../../bzbhInfo/wz_whcenter/findListForGrid?customSearchFilters='+formatSearchParames(parmsArray)+'&t='+Math.random();
+ }
+ 
+	var loadList = function() {
+	$("#gridTable").jqGrid({
+		url : getSearchGridUrl(),
+		datatype : "json",
+		width : "none",
+		colNames :[ '状态', '内码', '编号', '名称', '简称','经度','纬度','城市','地址', '类别', '默认联系人', '默认联系电话', '创建时间','创建人员', '备注' ],
+		colModel :[ 
+		             { name : 'state', index : 'state', align : 'center', width : 50, stype : 'select', search : true, searchoptions : {value : { '' : '全部', 'Y': '启用', 'N': '未���用' },sopt : [ 'eq' ]},formatter: function (value, grid, rows) {return formatGridCombobox_Local(globalStateArray)[value]; } },
+		             { name : 'within_code', index : 'within_code', align : 'center', fixed : true, width : 100, search : true,  searchoptions : { sopt : [ 'cn', 'eq', 'ne' ] } },
+		             { name : 'code', index : 'code',key : true, align : 'center',fixed : true, width : 150, search : true, searchoptions : { sopt : [ 'cn', 'eq', 'ne' ] } },
+		             { name : 'name', index : 'name', align : 'center', width : 200, type : 'string', search : true, searchoptions : { sopt : [ 'cn', 'eq', 'ne' ] } },
+		             { name : 'shortname', index : 'shortname', align : 'center', width : 100, type : 'string', search : true, searchoptions : { sopt : [ 'cn', 'eq', 'ne' ] } },
+		             { name : 'la', index : 'la', align : 'right', width : 50, type : 'string', search : true, searchoptions : { sopt : [ 'cn', 'eq', 'ne' ] } },
+		             { name : 'lo', index : 'lo', align : 'right', width : 50, type : 'string', search : true, searchoptions : { sopt : [ 'cn', 'eq', 'ne' ] } },
+		             { name : 'city', index : 'city', align : 'center', width : 100, type : 'string', search : true, searchoptions : { sopt : [ 'cn', 'eq', 'ne' ] } },
+		             { name : 'address', index : 'address', align : 'center', width : 250, type : 'string', search : true, searchoptions : { sopt : [ 'cn', 'eq', 'ne' ] } },
+		             { name : 'kind', index : 'kind', align : 'center', width : 100, type : 'string', search : true, searchoptions : { sopt : [ 'cn', 'eq', 'ne' ] } },
+		             { name : 'default_link', index : 'default_link', align : 'center', width : 100, type : 'string', search : true, searchoptions : { sopt : [ 'cn', 'eq', 'ne' ] } },
+		             { name : 'default_tel', index : 'default_tel', align : 'center', width : 100, type : 'string', search : true, searchoptions : { sopt : [ 'cn', 'eq', 'ne' ] } },
+		             { name : 'create_date', index : 'create_date', align : 'center', width : 140, type : 'string', search : true, searchoptions : { sopt : [ 'gt', 'lt' ], dataEvents : [ { type : 'click', data : {}, fn : function() { WdatePicker(); } } ] } },
+		             { name : 'create_by', index : 'create_by', align : 'center', width : 120, type : 'string', search : true, searchoptions : { sopt : [ 'cn', 'eq', 'ne' ] } },
+		             { name : 'remark', index : 'remark', align : 'center', width : 200, type : 'string', search : true, searchoptions : { sopt : [ 'cn', 'eq', 'ne' ] } }
+		             ],
+					shrinkToFit : false,
+					altRows : true,
+					altclass : 'gridSpacingClass',
+					forceFit : true,
+					cellLayout : 0,
+					scroll : false,
+					autowidth : true,
+					sortname : 'create_date',
+					sortorder : "asc",
+					loadonce : false,
+					mtype : "POST",
+					viewrecords : true,
+					rownumbers : true,
+					multiselect : true,
+					rowNum : 15,
+					height : "100%",
+					rowList : [ 15, 20, 30, 50 ],
+					pager : "#gridPager",
+					jsonReader : {
+						root : "rows",
+						total : "total",
+						page : "page",
+						records : "records",
+						repeatitems : false
+		
+					},
+					gridComplete : function() {
+						$(".cbox").shiftSelect();
+					},
+					onCellSelect : function(rowid, iCol, cellcontent, e) {
+						checkboxJqgrid(rowid, iCol, cellcontent, e);
+					},
+					// /双击时编辑
+				/* 	ondblClickRow : function(code) {
+						showChildModule(code);
+					}, */
+					loadComplete : function(xhr) {
+						setGridHeightWidth();
+						FailResultDataToTip(xhr);
+					}
+		
+				});
+				$("#gridTable").jqGrid('navGrid', '#gridPager', {
+					add : false,
+					edit : false,
+					del : false,
+					refresh : true
+				}, {}, {}, {}, {
+					multipleSearch : true,
+					closeOnEscape : true,
+					closeAfterSearch : true
+				});
+				$("#gridTable").jqGrid('navButtonAdd', '#gridPager', {
+					caption : "设置列",
+					title : "Reorder Columns",
+					onClickButton : toggleGridColumns
+				});
+		
+				$("#gridTable").jqGrid('navButtonAdd', '#gridPager', {
+					caption : "快捷搜索",
+					title : "",
+					onClickButton : toggleGridSearchToolbar
+				});
+			}
+</script>
+</body>
+</html>

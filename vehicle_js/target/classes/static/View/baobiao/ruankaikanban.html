@@ -1,0 +1,1350 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+    <link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+    <link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/css/index/goodsStyle.css" />
+    <title>管理看板</title>
+    <style type="text/css">
+        .submit_btn_1 {
+            width: 86px;
+            height: 30px;
+            text-align: center;
+            line-height: 30px;
+            color: #fff;
+            background: #7eabc6;
+            border: 0;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="easyui-panel" style="padding: 4px; border-width: 0; border-bottom-width: 1px;"></div>
+    <!--遮罩层-->
+    <div class="bgPop"></div>
+    <!--弹出框-->
+    <div class="pop">
+        <div class="pop-top"><span class="pop-close">Ｘ</span></div>
+        <div class="pop-content">
+            <div id="gridControl_1">
+                <table id="gridTable_1">
+                </table>
+                <div id="gridPager_1"></div>
+            </div>
+        </div>
+    </div>
+    <!--第一部分开始-->
+    <div class="first">
+        <div class="first-title"><span>软开云联创中心管理看板</span></div>
+    </div>
+    <!--第二部分开始-->
+    <div class="second fix">
+        <!-- 部门目标-->
+        <div class="second-1" id="dep_target">
+            <p class="second-dep-1"><span>部门目标</span></p>
+            <p class="second-dep-2"><span>7000万</span></p>
+            <p class="second-dep-1"><span>本月人员构成</span></p>
+            <div class="second-1-1">
+                <p><span>厦门：14人（海晟7人）</span></p>
+                <p><span>南京：14人</span></p>
+                <p><span>西安：13人</span></p>
+            </div>
+        </div>
+        <!-- 下拨进展-->
+        <div class="second-2" id="allocation_progress">
+            <p class="second-pro-2"><span>重点项目推进进度</span></p>
+        </div>
+        <!-- 促云进展-->
+        <div class="second-2" id="pro_cloud_progress">
+            <p class="second-pro-2"><span>重点项目推进进度</span></p>
+        </div>
+    </div>
+    <!--第三部分开始-->
+    <div class="second fix">
+        <!--健康度-->
+        <div class="second-3" id="health" style="line-height: 180px; text-align: center; background-color: #faf9f9;">
+
+        </div>
+        <!--运营活动-->
+        <div class="second-3" id="operational_activities">
+
+        </div>
+        <!--SA解决方案-->
+        <div class="second-3" id="sa_solution"></div>
+        <!--BD拜访-->
+        <div class="second-3" id="bd_visit"></div>
+    </div>
+</div>
+<script type="text/javascript" src="../../Resource/js/jsLinq/linq.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/regex/regex.js"></script>
+<script type="text/javascript" src="../../Resource/js/echarts/echarts.src.js"></script>
+<script language="javascript" type="text/javascript">
+    var savedRow = null;
+    var savedCol = null;
+    var extend =0;//订单预测切换 0,列表 1,折线图
+    var moduleId = 0;
+    var globalAttributeArray; // 分类
+    var owner_code = "";
+    var goods_no = "";
+    var goods;
+    var callerType = "";
+    var callerId = "";
+    var callbackFlag = "";
+    getAuthorityByName("货物综合查询", "toolbar");
+    $(function() {
+        var parms = getUrlParms();
+        callerId = parms["callerId"];
+        callerType = parms["callerType"];
+        callbackFlag = parms["callbackFlag"];
+        moduleId = parms["moduleId"];
+        goods = parms["goods"];
+        initScript();
+        initData();
+        $("#ForecastOrder").hide();
+    });
+    var initData = function(){
+        //预测订单，默认前后五天
+        $("#begin_date").textbox("setValue", getBeforeDate(5));
+        $("#end_date").textbox("setValue", getBeforeDate(-5));
+        //进出库日志记录，默认近三周
+        $("#begin_date_1").textbox("setValue", getBeforeDate(21));
+        $("#end_date_1").textbox("setValue", getBeforeDate(0));
+        $("#begin_date_2").textbox("setValue", getBeforeDate(21));
+        $("#end_date_2").textbox("setValue", getBeforeDate(0));
+        $("#begin_date_3").textbox("setValue", getBeforeDate(21));
+        $("#end_date_3").textbox("setValue", getBeforeDate(0));
+        //入库波峰趋势,默认近10天
+        $("#begin_date_4").textbox("setValue", getBeforeDate(10));
+        $("#end_date_4").textbox("setValue", getBeforeDate(0));
+        $("#begin_date_5").textbox("setValue", getBeforeDate(10));
+        $("#end_date_5").textbox("setValue", getBeforeDate(0));
+        loadDetail();
+
+        getDictionaryData({
+            dicTypeCode : Global_DicType.Global_DicType_Area_Att,
+            async : false,
+            callback : function(callbackData) {
+                globalAttributeArray = callbackData;
+            }
+        });
+    }
+
+    var initScript = function() {
+    }
+
+    var oldSetGridHeightWidth = setGridHeightWidth;
+    var setGridHeightWidth = function() {
+        oldSetGridHeightWidth(80,300);
+    }
+
+    var autoWidthHeight=function()
+    {
+        oldSetGridHeightWidth(485,300,"gridTable_1");
+    }
+    $(window).load(function() {
+        hideLoading(); // 隐藏加载的圈圈
+    });
+
+    //订单预测
+    $(function(){
+        $(".flip").click(function(){
+            $(".panel").slideToggle("slow");
+            $(".zhanshi").toggle();
+            loadForecastOrderList();
+            $(".yincang").toggle();
+        });});
+
+    //进出库记录日志
+    $(function(){
+        $(".flip2").click(function(){
+            $(".panel2").slideToggle("slow");
+            $(".zhanshi2").toggle();
+            searchData_1();
+            $(".yincang2").toggle();
+        });});
+
+    //出库操作日志
+    $(function(){
+        $(".flip3").click(function(){
+            $(".panel3").slideToggle("slow");
+            $(".zhanshi3").toggle();
+            searchData_2();
+            $(".yincang3").toggle();
+        });});
+
+    //库内移动操作日志
+    $(function(){
+        $(".flip4").click(function(){
+            $(".panel4").slideToggle("slow");
+            $(".zhanshi4").toggle();
+            searchData_3();
+            $(".yincang4").toggle();
+        });});
+
+    //入库波峰趋势
+    $(function(){
+        $(".flip5").click(function(){
+            $(".panel5").slideToggle("slow");
+            $(".zhanshi5").toggle();
+            getInTrendLoad();
+            $(".yincang5").toggle();
+        });});
+
+    //出库波峰趋势
+    $(function(){
+        $(".flip6").click(function(){
+            $(".panel6").slideToggle("slow");
+            $(".zhanshi6").toggle();
+            getOutTrendLoad();
+            $(".yincang6").toggle();
+        });});
+
+
+    //订单预测视图切换
+    var change = function () {
+        if (extend==0) {
+            $("#gridControl").hide();
+            $("#ForecastOrder").show();
+            ForecastOrderFoldlineLoad();
+            extend++;
+        } else {
+            $("#gridControl").show();
+            $("#ForecastOrder").hide();
+            extend--;
+        }
+
+    }
+
+    function getBeforeDate(n){//获取近一周的日期
+        var n = n;
+        var d = new Date();
+        var year = d.getFullYear();
+        var mon=d.getMonth()+1;
+        var day=d.getDate();
+        if(day <= n){
+            if(mon>1) {
+                mon=mon-1;
+            }
+            else {
+                year = year-1;
+                mon = 12;
+            }
+        }
+        d.setDate(d.getDate()-n);
+        year = d.getFullYear();
+        mon=d.getMonth()+1;
+        day=d.getDate();
+        s = year+"-"+(mon<10?('0'+mon):mon)+"-"+(day<10?('0'+day):day);
+        return s;
+    };
+
+    // 详细信息的方法页面的方法
+    var loadDetail = function() {
+        var Goods= jQuery.parseJSON(goods);
+        var wz_Owner_goodsVO = {};
+        wz_Owner_goodsVO.owner_code = Goods[0].owner_code;
+        wz_Owner_goodsVO.goods_no = Goods[0].goods_no;
+        showLoading();
+        var serverUrl = "../../service/bzbhInfo/Wz_Ownergoods/getGoodsOtherInfo?t="+Math.random();
+        $.ajax({
+            url : serverUrl,
+            data : JSON.stringify(wz_Owner_goodsVO),
+            contentType : 'application/json;charset=utf-8', // 设置请求头信息
+            dataType : "json",
+            type : "POST",
+            success : function(dataObj) {
+                if (isServerResultDataPass(dataObj)) {
+                    $("#owner").html(dataObj.resultDataFull.owner_code+'/'+dataObj.resultDataFull.name);
+                    $("#goods").html(dataObj.resultDataFull.goods_no+'/'+dataObj.resultDataFull.goods_name);
+                    $("#unit").html(dataObj.resultDataFull.unit);
+                    $("#max_stock").html(dataObj.resultDataFull.max_stock);
+                    $("#min_stock").html(dataObj.resultDataFull.min_stock);
+                    $("#out_lastdate").html(dataObj.resultDataFull.out_lastdate);
+                    $("#in_lastdate").html(dataObj.resultDataFull.in_lastdate);
+                    $("#noreceipt").html(dataObj.resultDataFull.noreceipt!='null'?dataObj.resultDataFull.noreceipt : '0.0');
+                    $("#nodeliver").html(dataObj.resultDataFull.nodeliver!='null'?dataObj.resultDataFull.nodeliver : '0.0');
+                    owner_code = dataObj.resultDataFull.owner_code;
+                    goods_no = dataObj.resultDataFull.goods_no;
+                    //总库存
+                    if (dataObj.resultDataFull.stock_qty>0 || dataObj.resultDataFull.stock_ngqty>0) {
+                        getAllStock(dataObj.resultDataFull.stock_qty,dataObj.resultDataFull.stock_ngqty);
+                    }
+                    //良品库存
+                    if (dataObj.resultDataFull.buhuo_qty>0 || dataObj.resultDataFull.lock_qty>0 || dataObj.resultDataFull.jianhuo_qty>0 ||dataObj.resultDataFull.keyong_qty>0) {
+                        getLiangpin_qtyStock(dataObj.resultDataFull.buhuo_qty,dataObj.resultDataFull.lock_qty,dataObj.resultDataFull.jianhuo_qty,dataObj.resultDataFull.keyong_qty);
+                    }
+                    //库存分布
+                    getStockDistribution();
+                } else {
+                    FailResultDataToTip(dataObj);
+                }
+                hideLoading();
+            },
+            error : function(message) {
+                console.log("请求异常..");
+                console.log(message);
+                hideLoading();
+            }
+        });
+    }
+
+    //总库存
+    var getAllStock = function (stock_qty,stock_ngqty) {
+        var option = {
+            title : {
+                text: '总库存',
+                subtext: '参考数据',
+                x:'center'
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            legend: {
+                orient : 'vertical',
+                x : 'left',
+                data:['良品','不良品']
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    mark : {show: true},
+                    dataView : {show: true, readOnly: false},
+                    restore : {show: true},
+                    saveAsImage : {show: true}
+                }
+            },
+            calculable : true,
+            series : [
+                {
+                    name:'访问来源',
+                    type:'pie',
+                    radius : '55%',
+                    center: ['50%', '60%'],
+                    data:(function() {
+                        var res = [];
+                        if(stock_qty>0 && stock_qty!=null) {
+                            res.push({
+                                name : '良品',
+                                value : stock_qty
+                            });
+                        }
+                        if(stock_ngqty>0 && stock_ngqty!=null) {
+                            res.push({
+                                name : '不良品',
+                                value : stock_ngqty
+                            });
+                        }
+                        return res;
+                    })(),
+                    itemStyle: {
+                        normal:{
+                            label:{
+                                show:true,
+                                formatter: '{b} : {c} \n ({d}%)'
+                            },
+                            labelLine:{
+                                show:true
+                            }
+                        },
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+        var myChart = echarts.init(document.getElementById('Allstock_qty'));
+        myChart.setOption(option);
+    }
+
+    //良品库存
+    var getLiangpin_qtyStock = function (buhuo,lock,jianhuo,keyong) {
+        var option = {
+            noDataLoadingOption: {
+                text: '暂无数据',
+                effect: 'bubble',
+                effectOption: {
+                    effect: {
+                        n: 1
+                    }
+                }
+            },
+            title : {
+                text: '良品库存',
+                subtext: '参考数据',
+                x:'center'
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            legend: {
+                orient : 'vertical',
+                x : 'left',
+                data:['补货未执行','库存锁定','拣货未执行','可用库存']
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    mark : {show: true},
+                    dataView : {show: true, readOnly: false},
+                    restore : {show: true},
+                    saveAsImage : {show: true}
+                }
+            },
+            calculable : true,
+            series : [
+                {
+                    name:'访问来源',
+                    type:'pie',
+                    radius : '55%',
+                    center: ['50%', '60%'],
+                    data:(function() {
+                        var res = [];
+                        if(buhuo>0 && buhuo!=null) {
+                            res.push({
+                                name : '补货未执行',
+                                value : buhuo
+                            });
+                        }
+                        if(lock>0 && lock!=null) {
+                            res.push({
+                                name : '库存锁定',
+                                value : lock
+                            });
+                        }
+                        if(jianhuo>0 && jianhuo!=null) {
+                            res.push({
+                                name : '拣货未执行',
+                                value : jianhuo
+                            });
+                        }
+                        if(keyong>0 && keyong!=null) {
+                            res.push({
+                                name : '可用库存',
+                                value : keyong
+                            });
+                        }
+                        return res;
+                    })(),
+
+                    /*   	[
+                          {value:buhuo, name:'补货未执行'},
+                          {value:lock, name:'库存锁定'},
+                          {value:jianhuo, name:'拣货未执行'},
+                          {value:keyong, name:'可用库存'}
+                      ], */
+                    itemStyle: {
+                        normal:{
+                            label:{
+                                show:true,
+                                formatter: '{b} : {c} \n ({d}%)'
+                            },
+                            labelLine:{
+                                show:true
+                            }
+                        },
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+        var myChart = echarts.init(document.getElementById('liangpin_qty'));
+        myChart.setOption(option);
+    }
+
+    //库存分布
+    var getStockDistributionUrl = function() {
+        var parmsArray = [
+            { name: 'owner_code', value:owner_code, op: "eq"  },
+            { name: 'goods_no', value: goods_no, op: "eq" }
+        ];
+        return '../../service/bzbhInfo/Wz_Ownergoods/findStockDistribution?customSearchFilters='+formatSearchParames(parmsArray);
+    };
+    var getStockDistribution = function () {
+        var attList = [];//库区属性
+        var qtyList = [];//数量
+        $.ajax({
+            url : getStockDistributionUrl(),
+            data : '',
+            async : false,
+            type : "POST",
+            success:function(dataObj){
+                hideLoading();
+                if (dataObj.resultDataFull.length > 0){
+                    for(var i = 0; i < dataObj.resultDataFull.length; i++) {
+                        attList.push(dataObj.resultDataFull[i].attribute);
+                        qtyList.push(dataObj.resultDataFull[i].qty);
+                    }
+                    getStockDistributionLoad(attList,qtyList);
+                }else{
+                    FailResultDataToTip(dataObj);
+                }
+
+            }
+        });
+    }
+
+    var getStockDistributionLoad = function (attList,qtyList) {
+        var attribute = [];
+        for(var i = 0; i < attList.length; i++) {
+            attribute.push(globalAttributeArray[parseInt(attList[i])-1].dicText);//转换成属性名称
+        }
+        var option = {
+            title : {
+                text: '库存分布',
+                subtext: '参考数据',
+                x:'center'
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            legend: {
+                orient : 'vertical',
+                x : 'left',
+                data:attribute
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    mark : {show: true},
+                    dataView : {show: true, readOnly: false},
+                    restore : {show: true},
+                    saveAsImage : {show: true}
+                }
+            },
+            calculable : true,
+            series : [
+                {
+                    name:'访问来源',
+                    type:'pie',
+                    radius : '55%',
+                    center: ['50%', '60%'],
+                    data :(function() {
+                        var res = [];
+                        var len = attribute.length;
+                        while(len--) {
+                            res.push({
+                                name : attribute[len],
+                                value : qtyList[len]
+                            });
+                        }
+                        return res;
+                    })(),
+                    itemStyle: {
+                        normal:{
+                            label:{
+                                show:true,
+                                formatter: '{b} : {c} \n ({d}%)'
+                            },
+                            labelLine:{
+                                show:true
+                            }
+                        },
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+        var myChart = echarts.init(document.getElementById('StockDistribution'));
+        myChart.setOption(option);
+    }
+
+
+    //未收货入库
+    var Loadnoreceipt = function () {
+        $('.pop-close').click(function () {
+            $('.bgPop,.pop').hide();
+        });
+        $('#NoReceipt').click(function () {
+            $('.bgPop,.pop').show();
+            loadNoRelLocQtyList();
+        });
+    }
+
+    //未执行交付
+    var Loadnodeliver = function () {
+        $('.pop-close').click(function () {
+            $('.bgPop,.pop').hide();
+        });
+        $('#NoDeliver').click(function () {
+            $('.bgPop,.pop').show();
+            loadNoDeliverQtyList();
+        });
+    }
+
+
+    var getSearchGridUrl_1 = function () {
+        var parmsArray = [
+            { name: 'p.owner_code', value:owner_code, op: "eq"  },
+            { name: 'd.goods_no', value: goods_no, op: "eq" }
+        ];
+        return '../../service/bzbhInfo/Wz_Ownergoods/findNoRelLocQtyGrid?customSearchFilters='+formatSearchParames(parmsArray)+'&t='+Math.random();
+    }
+
+    //未收货入库数量清单
+    var loadNoRelLocQtyList = function () {
+        $("#gridTable_1").jqGrid("GridUnload");
+        $("#gridTable_1").jqGrid({
+            url: getSearchGridUrl_1(),
+            datatype: "json",
+            width: "100%",
+            colNames: ['内码','仓储中心','单号','数量'],
+            colModel: [
+                { name: 'within_code', index: 'within_code', align: 'center',hidden:true, sorttype: 'string',search: true, sortable: true, width: 50 },
+                { name: 'whcenter', index: 'whcenter',align: 'center', hidden:true,sorttype: 'string',search: true, sortable: true, width: 80/* ,formatter: function(value, grid, rows){return rows.whcenter+"--"+rows.name;} */},
+                { name: 'sheet_id', index: 'sheet_id', align: 'center',sorttype: 'string',key:true,search: true, sortable: true, width: 200 },
+                { name: 'qty', index: 'qty', align: 'center',sorttype: 'string',search: true, sortable: true, width: 100 }
+            ],
+            cellsubmit: 'clientArray',
+            shrinkToFit: false,
+            altRows: true,
+            altclass: 'gridSpacingClass',
+            forceFit: true,
+            cellLayout: 0,
+            scroll: false,
+            autowidth: true,
+            sortname: 'whcenter',
+            sortorder: "asc",
+            loadonce: false,
+            mtype: "POST",
+            viewrecords: true,
+            rownumbers: true,
+            multiselect : false,
+            rowNum: 15,
+            pginput:false,
+            pgbuttons:false,
+            loadonce : true,
+
+            //  height: 378,
+            // rowList: [999999],
+            pager: "#gridPager_1",
+            jsonReader: {
+                root: "rows",
+                total: "total",
+                page: "page",
+                records: "records",
+                repeatitems: false
+            },
+            gridComplete: function () {
+            },
+            loadComplete: function (xhr) {
+            },
+            onSelectRow: function (data) {
+            }
+        });
+        autoWidthHeight();
+    }
+
+    var getSearchGridUrl_2 = function () {
+        var parmsArray = [
+            { name: 'owner_code', value:owner_code, op: "eq"  },
+            { name: 'goods_no', value: goods_no, op: "eq" }
+        ];
+        return '../../service/bzbhInfo/Wz_Ownergoods/findNoDeliverQtyGrid?customSearchFilters='+formatSearchParames(parmsArray)+'&t='+Math.random();
+    }
+
+    //未未执行交付数量清单
+    var loadNoDeliverQtyList = function () {
+        $("#gridTable_1").jqGrid("GridUnload");
+        $("#gridTable_1").jqGrid({
+            url: getSearchGridUrl_2(),
+            datatype: "json",
+            width: "100%",
+            colNames: ['内码','仓储中心','订单号','计划交付日期','未交付数量'],
+            colModel: [
+                { name: 'within_code', index: 'within_code', align: 'center',hidden:true, sorttype: 'string',search: true, sortable: true, width: 50 },
+                { name: 'whcenter', index: 'whcenter',align: 'center', hidden:true,sorttype: 'string',search: true, sortable: true, width: 80/* ,formatter: function(value, grid, rows){return rows.whcenter+"--"+rows.name;} */},
+                { name: 'order_no', index: 'order_no', align: 'center',sorttype: 'string',key:true,search: true, sortable: true, width: 200 },
+                { name: 'plan_date', index: 'plan_date', align: 'center',sorttype: 'string',key:true,search: true, sortable: true, width: 170 },
+                { name: 'qty', index: 'qty', align: 'center',sorttype: 'string',search: true, sortable: true, width: 100 }
+            ],
+            cellsubmit: 'clientArray',
+            shrinkToFit: false,
+            altRows: true,
+            altclass: 'gridSpacingClass',
+            forceFit: true,
+            cellLayout: 0,
+            scroll: false,
+            autowidth: true,
+            sortname: 'whcenter',
+            sortorder: "asc",
+            loadonce: false,
+            mtype: "POST",
+            viewrecords: true,
+            rownumbers: true,
+            multiselect : false,
+            rowNum: 15,
+            pginput:false,
+            pgbuttons:false,
+            loadonce : true,
+            pager: "#gridPager_1",
+            jsonReader: {
+                root: "rows",
+                total: "total",
+                page: "page",
+                records: "records",
+                repeatitems: false
+            },
+            gridComplete: function () {
+            },
+            loadComplete: function (xhr) {
+            },
+            onSelectRow: function (data) {
+            }
+        });
+        autoWidthHeight();
+    }
+
+    //订单预测
+    var getSearchGridUrl = function() {
+        var parmsArray = [
+            { name: 'owner_code', value:owner_code, op: "eq"  },
+            { name: 'goods_no', value: goods_no, op: "eq" },
+            { name: 'plan_date', value: "CONVERT(datetime,'"+$("#begin_date").textbox("getValue")+"',111)", op: "ge"  },
+            { name: 'plan_date', value: "CONVERT(datetime,'"+$("#end_date").textbox("getValue")+" 23:59:59',111)", op: "le" },
+            { name: 'order_no', value: $("#order_no").textbox("getValue"), op: "cn" }
+        ];
+        return '../../service/bzbhInfo/Wz_Ownergoods/findForecastOrderGrid?customSearchFilters='+formatSearchParames(parmsArray);
+    };
+    var loadForecastOrderList = function() {
+        $("#gridTable").jqGrid({
+            url : getSearchGridUrl(),
+            datatype : "json",
+            width : "none",
+            colNames :  ['紧急程度','订单编号','计划日期','数量','客户','收货地'],
+            colModel : [
+                { name:  "delivery_level", index:  "delivery_level", align: "center", isSort: false, width: 60, type: "string", search: true, frozen: false, searchoptions: { sopt: ["eq"]} },
+                { name:  "order_no", index:  "order_no", align: "left",key:true, isSort: false, width: 200, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn"]} },
+                { name: 'plan_date', index: 'plan_date', align: 'center', sortable: true, width: 170, search: true, searchoptions: { sopt : [ 'gt', 'lt' ], dataEvents : [ { type : 'click', data : {}, fn : function() { WdatePicker(); } } ] } },
+                { name:  "qty", index:  "qty", align: "right", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["eq"]} },
+                { name:  "cus_no", index:  "cus_no", align: "left", isSort: false, width: 150, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn"]} },
+                { name:  "receipt_code", index:  "receipt_code", align: "left", isSort: false, width: 180, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn"]} }
+            ],
+            cellsubmit: 'clientArray',
+            shrinkToFit: false,
+            altRows: true,
+            altclass: 'gridSpacingClass',
+            forceFit: true,
+            cellLayout: 0,
+            scroll: false,
+            autowidth: true,
+            sortname: 'plan_date',
+            sortorder: "asc",
+            loadonce: false,
+            mtype: "POST",
+            viewrecords: true,
+            rownumbers: true,
+            multiselect : false,
+            rowNum: 15,
+            pginput:false,
+            pgbuttons:false,
+            loadonce : true,
+            pager: "#gridPager",
+            jsonReader: {
+                root: "rows",
+                total: "total",
+                page: "page",
+                records: "records",
+                repeatitems: false
+            },
+            gridComplete: function () {
+            },
+            loadComplete: function (xhr) {
+            },
+            onSelectRow: function (data) {
+            }
+        });
+        setGridHeightWidth();
+    };
+
+    var searchData = function() {
+        $("#gridTable").jqGrid('setGridParam', {
+            url : getSearchGridUrl(),
+            datatype : 'json',
+            page : 1
+        }).trigger("reloadGrid");
+
+        ForecastOrderFoldlineLoad();
+    }
+    var ForecastOrderFoldlineLoad = function () {
+        var dateList = [];
+        var valueList = [];
+        var gridAllData = $("#gridTable").jqGrid("getRowData");
+        if (gridAllData.length == 0) {
+            $("#ForecastOrder").html('没有查询到数据');
+            return;
+        }
+        var by = function(plan_date){
+            return function(o, p){
+                var a, b;
+                if (typeof o === "object" && typeof p === "object" && o && p) {
+                    a = o[plan_date];
+                    b = p[plan_date];
+                    if (a === b) {
+                        return 0;
+                    }
+                    if (typeof a === typeof b) {
+                        return a < b ? -1 : 1;
+                    }
+                    return typeof a < typeof b ? -1 : 1;
+                }
+                else {
+                    throw ("error");
+                }
+            }
+        }
+        gridAllData.sort(by("plan_date"));//根据日期排序
+        for ( var i = 0; i < gridAllData.length; i++) {
+            dateList.push(gridAllData[i].plan_date);
+            valueList.push(gridAllData[i].qty);
+        }
+        getForecastOrderFoldline(dateList,valueList);
+    }
+    //订单预测折线图
+    var getForecastOrderFoldline = function (dateList,valueList) {
+        var option = {
+            title: {
+            },
+            color:["#EBFBFB"],
+            //鼠标查看效果
+            tooltip : {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross',
+                    label: {
+                        backgroundColor: '#8DE7E1'
+                    }
+                }
+            },
+            //右上切换图标等小功能
+            toolbox: {
+                show : true,
+                feature : {
+                    mark : {show: true},
+                    dataView : {show: true, readOnly: false},
+                    magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+                    restore : {show: true},
+                    saveAsImage : {show: true}
+                }
+            },
+            xAxis : [
+                {
+                    type : 'category',
+                    boundaryGap : false,
+                    data : dateList
+                }
+            ],
+            yAxis : [
+                {
+                    type : 'value'
+                }
+            ],
+            series : [{
+                name:'数量',
+                type:'line',
+                symbolSize:8,  //图标尺寸
+                itemStyle:{
+                    normal:{
+                        color: "#8DE7E1" //图标颜色
+                    }
+                },
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'top'
+                    }
+                },
+                areaStyle: {normal: {}},
+                lineStyle:{
+                    normal:{
+                        width:2,  //连线粗细
+                        color: "#8DE7E1"  //连线颜色
+                    }
+                },
+                data:valueList
+            }]
+        };
+        echarts.dispose(document.getElementById('ForecastOrder'));
+        var myChart = echarts.init(document.getElementById('ForecastOrder'));
+        $(window).resize(function () {
+            myChart.resize();
+        });
+        myChart.setOption(option);
+    }
+
+
+    //进出库记录日志
+    var getInOutRecordUrl = function() {
+        var parmsArray = [
+            { name: 'owner_code', value:owner_code, op: "eq"  },
+            { name: 'goods_no', value: goods_no, op: "eq" },
+            { name: 'operation_date', value: "CONVERT(datetime,'"+$("#begin_date_1").textbox("getValue")+"',111)", op: "ge"  },
+            { name: 'operation_date', value: "CONVERT(datetime,'"+$("#end_date_1").textbox("getValue")+" 23:59:59',111)", op: "le" }
+        ];
+        return '../../service/bzbhInfo/Wz_Ownergoods/findInOutRecord?customSearchFilters='+formatSearchParames(parmsArray);
+    };
+    var getInOutRecord = function(){
+        $.ajax({
+            url : getInOutRecordUrl(),
+            data : '',
+            async : false,
+            type : "POST",
+            success:function(dataObj){
+                hideLoading();
+                if (dataObj.resultDataFull.length > 0){
+                    $("#cd-timeline").css('min-height','500px');
+                    var a = 1;
+                    Enumerable.From(dataObj.resultDataFull).Where(function(i) {
+                        return true;
+                    }).ToArray().forEach(function(i) {
+                        if (a%2!=0){//奇数
+                            if(i.operation_name=='入库') {
+                                $("#cd-timeline").append('<div class="cd-timeline-block" style="left:35px;"><div class="cd-timeline-img"></div><div class="cd-timeline-content"><div class="timeline-title">'
+                                    +'<p class="first-line" style="display: inline; width :120px;">'+ i.operation_date +'</p><p style="display: inline;float:right;">数量：<strong>'+i.in_qty+'</strong></p>'
+                                    +'<p class="second-line">单号:'+i.sheet_id+'<span>'+i.operation_name+'</span></p></div>'
+                                    +'<ul class="timeline-list"><li><p>支付订单号：</p><span>'+i.order_no+'</span></li>'
+                                    +'<li><p style="display: inline;">批次：<strong>'+i.batch_id+'</strong></p><p style="display: inline;float:right;">操作人：<strong>'+i.operation_by+'</strong></p></li>'
+                                    +'<li><p>货主：</p><span>'+isNUll(i.owner_code)+'/'+isNUll(i.owner_name)+'</span></li>'
+                                    +'</ul></div></div>'
+                                );
+                            } else {
+                                $("#cd-timeline").append('<div class="cd-timeline-block" style="left:35px;"><div class="cd-timeline-img"></div><div class="cd-timeline-content"><div class="timeline-title">'
+                                    +'<p class="first-line" style="display: inline; width :120px;">'+ i.operation_date +'</p><p style="display: inline;float:right;">数量：<strong>'+i.out_qty+'</strong></p>'
+                                    +'<p class="second-line">单号:'+i.sheet_id+'<span>'+i.operation_name+'</span></p></div>'
+                                    +'<ul class="timeline-list"><li><p>支付订单号：</p><span>'+i.order_no+'</span></li>'
+                                    +'<li><p style="display: inline;">批次：<strong>'+i.batch_id+'</strong></p><p style="display: inline;float:right;">操作人：<strong>'+i.operation_by+'</strong></p></li>'
+                                    +'<li><p>货主：</p><span>'+isNUll(i.owner_code)+'/'+isNUll(i.owner_name)+'</span></li>'
+                                    +'</ul></div></div>'
+                                );
+                            }
+                        } else {//偶数
+                            if (i.operation_name=='入库') {
+                                $("#cd-timeline").append('<div class="cd-timeline-block" style="left:95px; top:50px;"><div class="cd-timeline-img cd-timeline-img2"></div><div class="cd-timeline-content cd2"><div class="timeline-title">'
+                                    +'<p class="first-line" style="display: inline; width :120px;">'+ i.operation_date +'</p><p style="display: inline;float:right;">数量：<strong>'+i.in_qty+'</strong></p>'
+                                    +'<p class="second-line">单号:'+i.sheet_id+'<span>'+i.operation_name+'</span></p></div>'
+                                    +'<ul class="timeline-list"><li><p>支付订单号：</p><span>'+i.order_no+'</span></li>'
+                                    +'<li><p style="display: inline;">批次：<strong>'+i.batch_id+'</strong></p><p style="display: inline;float:right;">操作人：<strong>'+i.operation_by+'</strong></p></li>'
+                                    +'<li><p>货主：</p><span>'+isNUll(i.owner_code)+'/'+isNUll(i.owner_name)+'</span></li>'
+                                    +'</ul></div></div>'
+                                );
+                            } else {
+                                $("#cd-timeline").append('<div class="cd-timeline-block" style="left:95px; top:50px;"><div class="cd-timeline-img cd-timeline-img2"></div><div class="cd-timeline-content cd2"><div class="timeline-title">'
+                                    +'<p class="first-line" style="display: inline; width :120px;">'+ i.operation_date +'</p><p style="display: inline;float:right;">数量：<strong>'+i.out_qty+'</strong></p>'
+                                    +'<p class="second-line">单号:'+i.sheet_id+'<span>'+i.operation_name+'</span></p></div>'
+                                    +'<ul class="timeline-list"><li><p>支付订单号：</p><span>'+i.order_no+'</span></li>'
+                                    +'<li><p style="display: inline;">批次：<strong>'+i.batch_id+'</strong></p><p style="display: inline;float:right;">操作人：<strong>'+i.operation_by+'</strong></p></li>'
+                                    +'<li><p>货主：</p><span>'+isNUll(i.owner_code)+'/'+isNUll(i.owner_name)+'</span></li>'
+                                    +'</ul></div></div>'
+                                );
+                            }
+                        }
+                        a++;
+                    });
+                }else{
+                    $("#cd-timeline").css('min-height','');
+                    $("#timeline1_1").css('display','block');
+                    FailResultDataToTip(dataObj);
+                }
+
+            }
+        });
+    }
+
+    var searchData_1 = function () {
+        $("#timeline1_1").css('display','none');
+        $("#cd-timeline").empty();
+        getInOutRecord();
+    }
+
+    //出库任务执行记录
+    var getOutDeliveryUrl = function() {
+        var parmsArray = [
+            { name: 'owner_code', value:owner_code, op: "eq"  },
+            { name: 'goods_no', value: goods_no, op: "eq" },
+            { name: 'create_date', value: "CONVERT(datetime,'"+$("#begin_date_2").textbox("getValue")+"',111)", op: "ge"  },
+            { name: 'create_date', value: "CONVERT(datetime,'"+$("#end_date_2").textbox("getValue")+" 23:59:59',111)", op: "le" }
+        ];
+        return '../../service/bzbhInfo/Wz_Ownergoods/findOutDelivery?customSearchFilters='+formatSearchParames(parmsArray);
+    };
+    //转换出库操作名称
+    var changeActionName = function (action_name) {
+        var AN = ['备货','拣货','拼托装箱','出库归位','出库单','运输','回收','取消交付','中途暂停'];
+        if (!AN[parseInt(action_name)-1]) {
+            return action_name;
+        }
+        return AN[parseInt(action_name)-1];
+    }
+    var getOutDelivery = function(){
+        $.ajax({
+            url : getOutDeliveryUrl(),
+            data : '',
+            async : false,
+            type : "POST",
+            success:function(dataObj){
+                hideLoading();
+                if (dataObj.resultDataFull.length > 0){
+                    $("#cd-timeline2").css('min-height','500px');
+                    var a = 1;
+                    Enumerable.From(dataObj.resultDataFull).Where(function(i) {
+                        return true;
+                    }).ToArray().forEach(function(i) {
+                        if (a%2!=0) {//奇数
+                            $("#cd-timeline2").append('<div class="cd-timeline-block" style="left:35px;"><div class="cd-timeline-img"></div><div class="cd-timeline-content"><div class="timeline-title">'
+                                +'<p class="first-line" style="display: inline; width :120px;">'+ i.create_date +'</p><p style="display: inline;float:right;">数量：<strong>'+i.qty+'</strong></p>'
+                                +'<p class="second-line">订单号:'+isNUll(i.order_no)+'<span>'+changeActionName(i.action_name)+'</span></p></div>'
+                                +'<li><p style="display: inline;">客户：<strong>'+i.cus_no+'</strong></p><p style="display: inline;float:right;">操作人：<strong>'+i.create_by+'</strong></p></li>'
+                                +'<li><p>货主：</p><span>'+isNUll(i.owner_code)+'/'+isNUll(i.owner_name)+'</span></li>'
+                                +'</ul></div></div>'
+                            );
+                        } else {//偶数
+                            $("#cd-timeline2").append('<div class="cd-timeline-block" style="left:95px; top:50px;"><div class="cd-timeline-img cd-timeline-img2"></div><div class="cd-timeline-content cd2"><div class="timeline-title">'
+                                +'<p class="first-line" style="display: inline; width :120px;">'+ i.create_date +'</p><p style="display: inline;float:right;">数量：<strong>'+i.qty+'</strong></p>'
+                                +'<p class="second-line">订单号:'+isNUll(i.order_no)+'<span>'+changeActionName(i.action_name)+'</span></p></div>'
+                                +'<li><p style="display: inline;">客户：<strong>'+i.cus_no+'</strong></p><p style="display: inline;float:right;">操作人：<strong>'+i.create_by+'</strong></p></li>'
+                                +'<li><p>货主：</p><span>'+isNUll(i.owner_code)+'/'+isNUll(i.owner_name)+'</span></li>'
+                                +'</ul></div></div>'
+                            );
+                        }
+                        a++;
+                    });
+                }else{
+                    $("#cd-timeline2").css('min-height','');
+                    $("#timeline2_2").css('display','block');
+                    FailResultDataToTip(dataObj);
+                }
+
+            }
+        });
+    }
+    var searchData_2 = function () {
+        $("#timeline2_2").css('display','none');
+        $("#cd-timeline2").empty();
+        getOutDelivery();
+    }
+
+    //库内移动日志
+    var getGoodsStockMoveUrl = function() {
+        var parmsArray = [
+            { name: 'owner_code', value:owner_code, op: "eq"  },
+            { name: 'goods_no', value: goods_no, op: "eq" },
+            { name: 'operation_date', value: "CONVERT(datetime,'"+$("#begin_date_3").textbox("getValue")+"',111)", op: "ge"  },
+            { name: 'operation_date', value: "CONVERT(datetime,'"+$("#end_date_3").textbox("getValue")+" 23:59:59',111)", op: "le" }
+        ];
+        return '../../service/bzbhInfo/Wz_Ownergoods/findGoodsStockMove?customSearchFilters='+formatSearchParames(parmsArray);
+    };
+    var getGoodsStockMove = function(){
+        $.ajax({
+            url : getGoodsStockMoveUrl(),
+            data : '',
+            async : false,
+            type : "POST",
+            success:function(dataObj){
+                hideLoading();
+                if (dataObj.resultDataFull.length > 0){
+                    $("#cd-timeline3").css('min-height','500px');
+                    var a = 1;
+                    Enumerable.From(dataObj.resultDataFull).Where(function(i) {
+                        return true;
+                    }).ToArray().forEach(function(i) {
+                        if (a%2!=0) {//奇数
+                            $("#cd-timeline3").append('<div class="cd-timeline-block" style="left:35px;"><div class="cd-timeline-img"></div><div class="cd-timeline-content"><div class="timeline-title">'
+                                +'<p class="first-line" style="display: inline; width :120px;">'+ i.operation_date +'</p><p style="display: inline;float:right;">数量：<strong>'+i.qty+'</strong></p>'
+                                +'<p class="second-line">单号:'+i.sheet_id+'<span>'+i.action_name+'</span></p></div>'
+                                +'<ul class="timeline-list"><li><p>批次：</p><span>'+i.batch_id+'</span></li>'
+                                +'<li><p>货主：</p><span>'+i.owner_code+'/'+isNUll(i.owner_name)+'</span></li>'
+                                +'<li><p>前库位：</p><span>'+i.first_loca+'('+globalAttributeArray[parseInt(i.first_attribute)-1].dicText+')'+'</span></li>'
+                                +'<li><p>后库位：</p><span>'+i.second_lode+'('+globalAttributeArray[parseInt(i.second_attribute)-1].dicText+')'+'</span></li></ul></div></div>'
+                            );
+                        } else {//偶数
+                            $("#cd-timeline3").append('<div class="cd-timeline-block" style="left:95px; top:50px;"><div class="cd-timeline-img cd-timeline-img2"></div><div class="cd-timeline-content cd2"><div class="timeline-title">'
+                                +'<p class="first-line" style="display: inline; width :120px;">'+ i.operation_date +'</p><p style="display: inline;float:right;">数量：<strong>'+i.qty+'</strong></p>'
+                                +'<p class="second-line">单号:'+i.sheet_id+'<span>'+i.action_name+'</span></p></div>'
+                                +'<ul class="timeline-list"><li><p>批次：</p><span>'+i.batch_id+'</span></li>'
+                                +'<li><p>货主：</p><span>'+i.owner_code+'/'+isNUll(i.owner_name)+'</span></li>'
+                                +'<li><p>前库位：</p><span>'+i.first_loca+'('+globalAttributeArray[parseInt(i.first_attribute)-1].dicText+')'+'</span></li>'
+                                +'<li><p>后库位：</p><span>'+i.second_lode+'('+globalAttributeArray[parseInt(i.second_attribute)-1].dicText+')'+'</span></li></ul></div></div>'
+                            );
+                        }
+                        a++;
+                    });
+                }else{
+                    $("#cd-timeline3").css('min-height','');
+                    $("#timeline3_3").css('display','block');
+                    FailResultDataToTip(dataObj);
+                }
+
+            }
+        });
+    }
+    var searchData_3 = function () {
+        $("#timeline3_3").css('display','none');
+        $("#cd-timeline3").empty();
+        getGoodsStockMove();
+    }
+
+
+    //入库波峰趋势
+    var getInTrendUrl = function() {
+        var parmsArray = [
+            { name: 'm.owner_code', value:owner_code, op: "eq"  },
+            { name: 'd.goods_no', value: goods_no, op: "eq" },
+            { name: 'm.arr_date', value: "CONVERT(datetime,'"+$("#begin_date_4").textbox("getValue")+"',111)", op: "ge"  },
+            { name: 'm.arr_date', value: "CONVERT(datetime,'"+$("#end_date_4").textbox("getValue")+" 23:59:59',111)", op: "le" }
+        ];
+        return '../../service/bzbhInfo/Wz_Ownergoods/findInTrend?customSearchFilters='+formatSearchParames(parmsArray);
+    };
+
+    var getInTrendLoad = function () {
+        var dateList = [];
+        var valueList = [];
+        $.ajax({
+            url : getInTrendUrl(),
+            data : '',
+            async : false,
+            type : "POST",
+            success:function(dataObj){
+                hideLoading();
+                if (dataObj.resultDataFull.length > 0){
+                    for(var i = 0; i < dataObj.resultDataFull.length; i++) {
+                        dateList.push(dataObj.resultDataFull[i].arr_date);
+                        valueList.push(dataObj.resultDataFull[i].real_qty);
+                    }
+                    getInTrend(dateList,valueList);
+                }else{
+                    FailResultDataToTip(dataObj);
+                    $("#InTrend").html('没有查询到数据');
+                }
+
+            }
+        });
+    }
+
+    var getInTrend = function (dateList,valueList) {
+        var option = {
+            title: {
+            },
+            color:["#EBFBFB"],
+            //鼠标查看效果
+            tooltip : {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross',
+                    label: {
+                        backgroundColor: '#8DE7E1'
+                    }
+                }
+            },
+            //右上切换图标等小功能
+            toolbox: {
+                show : true,
+                feature : {
+                    mark : {show: true},
+                    dataView : {show: true, readOnly: false},
+                    magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+                    restore : {show: true},
+                    saveAsImage : {show: true}
+                }
+            },
+            xAxis : [
+                {
+                    type : 'category',
+                    boundaryGap : false,
+                    data : dateList
+                }
+            ],
+            yAxis : [
+                {
+                    type : 'value'
+                }
+            ],
+            series : [{
+                name:'数量',
+                type:'line',
+                symbolSize:8,  //图标尺寸
+                itemStyle:{
+                    normal:{
+                        color: "#8DE7E1" //图标颜色
+                    }
+                },
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'top'
+                    }
+                },
+                areaStyle: {normal: {}},
+                lineStyle:{
+                    normal:{
+                        width:2,  //连线粗细
+                        color: "#8DE7E1"  //连线颜色
+                    }
+                },
+                data:valueList
+            }]
+        };
+        echarts.dispose(document.getElementById('InTrend'));//初始化容器
+        var myChart = echarts.init(document.getElementById('InTrend'));
+        $(window).resize(function () {
+            myChart.resize();
+        });
+        myChart.setOption(option);
+    }
+
+    var searchData_4 = function () {
+        getInTrendLoad();
+    }
+
+    //出库波峰趋势
+
+    var getOutTrendUrl = function() {
+        var parmsArray = [
+            { name: 'owner_code', value:owner_code, op: "eq"  },
+            { name: 'goods_no', value: goods_no, op: "eq" },
+            { name: 'plan_date', value: "CONVERT(datetime,'"+$("#begin_date_5").textbox("getValue")+"',111)", op: "ge"  },
+            { name: 'plan_date', value: "CONVERT(datetime,'"+$("#end_date_5").textbox("getValue")+" 23:59:59',111)", op: "le" }
+        ];
+        return '../../service/bzbhInfo/Wz_Ownergoods/findOutTrend?customSearchFilters='+formatSearchParames(parmsArray);
+    };
+
+    var getOutTrendLoad = function () {
+        var dateList = [];
+        var valueList = [];
+        $.ajax({
+            url : getOutTrendUrl(),
+            data : '',
+            async : false,
+            type : "POST",
+            success:function(dataObj){
+                hideLoading();
+                if (dataObj.resultDataFull.length > 0){
+                    for(var i = 0; i < dataObj.resultDataFull.length; i++) {
+                        dateList.push(dataObj.resultDataFull[i].plan_date);
+                        valueList.push(dataObj.resultDataFull[i].qty);
+                    }
+                    getOutTrend(dateList,valueList);
+                }else{
+                    FailResultDataToTip(dataObj);
+                    $("#OutTrend").html('没有查询到数据');
+                }
+
+            }
+        });
+    }
+
+    var getOutTrend = function (dateList,valueList) {
+        echarts.dispose(document.getElementById('OutTrend'));//初始化容器
+        var myChart = echarts.init(document.getElementById('OutTrend'));
+        $(window).resize(function () {
+            myChart.resize();
+        });
+        var option = {
+            title: {
+            },
+            color:["#EBFBFB"],
+            //鼠标查看效果
+            tooltip : {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross',
+                    label: {
+                        backgroundColor: '#8DE7E1'
+                    }
+                }
+            },
+            //右上切换图标等小功能
+            toolbox: {
+                show : true,
+                feature : {
+                    mark : {show: true},
+                    dataView : {show: true, readOnly: false},
+                    magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+                    restore : {show: true},
+                    saveAsImage : {show: true}
+                }
+            },
+            xAxis : [
+                {
+                    type : 'category',
+                    boundaryGap : false,
+                    data : dateList
+                }
+            ],
+            yAxis : [
+                {
+                    type : 'value'
+                }
+            ],
+            series : [{
+                name:'数量',
+                type:'line',
+                symbolSize:8,  //图标尺寸
+                itemStyle:{
+                    normal:{
+                        color: "#8DE7E1" //图标颜色
+                    }
+                },
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'top'
+                    }
+                },
+                areaStyle: {normal: {}},
+                lineStyle:{
+                    normal:{
+                        width:2,  //连线粗细
+                        color: "#8DE7E1"  //连线颜色
+                    }
+                },
+                data:valueList
+            }]
+        };
+        myChart.setOption(option);
+    }
+
+    var searchData_5 = function () {
+        getOutTrendLoad();
+    }
+
+    //判断空值处理
+    var isNUll = function (x) {
+        if (x==null || x=='') {
+            x='无';
+        }
+        return x ;
+    }
+</script>
+</body>
+</html>

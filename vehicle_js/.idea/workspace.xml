@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fb7608ed-92d8-470e-802b-ca88f6c7cb74" name="Default Changelist" comment="都市照片">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/application-onedev.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/logs/niu_debug.2020-01-02-0.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/logs/niu_debug.2020-01-03-0.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/logs/niu_debug.2020-01-08-0.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/logs/niu_debug.2020-06-08-0.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/niu_debug.2019-11-04-0.log" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/niu_debug.2019-11-05-0.log" beforeDir="false" />
@@ -14,14 +17,6 @@
       <change beforePath="$PROJECT_DIR$/logs/niu_debug.2019-11-12-0.log" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/niu_debug.2019-11-13-0.log" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/niu_debug.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/niu_debug.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bba/WebApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bba/WebApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/bba/xtgl/vo/SysUserVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bba/xtgl/vo/SysUserVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application-dev.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/xtgl/ISysUserDao.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/xtgl/ISysUserDao.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/Index/Login.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/Index/Login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/Index/Main.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/Index/Main.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vehicle_js.iml" beforeDir="false" afterPath="$PROJECT_DIR$/vehicle_js.iml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -217,7 +212,7 @@
   <component name="MavenRunner">
     <option name="skipTests" value="true" />
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="-7" />
     <option name="width" value="480" />
     <option name="height" value="520" />
@@ -271,7 +266,7 @@
     <property name="RequestMappingsPanelWidth1" value="75" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1591346314417" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1594175646586" />
     <property name="last_opened_file_path" value="E:/Idea project" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -581,14 +576,7 @@
       <workItem from="1591596775683" duration="2713000" />
       <workItem from="1591775848753" duration="128000" />
       <workItem from="1591775998495" duration="480000" />
-      <workItem from="1594173257358" duration="732000" />
-    </task>
-    <task id="LOCAL-00051">
-      <created>1568086204780</created>
-      <option name="number" value="00051" />
-      <option name="presentableId" value="LOCAL-00051" />
-      <option name="project" value="LOCAL" />
-      <updated>1568086204780</updated>
+      <workItem from="1594173257358" duration="2115000" />
     </task>
     <task id="LOCAL-00052">
       <created>1568112582224</created>
@@ -926,11 +914,18 @@
       <option name="project" value="LOCAL" />
       <updated>1590127701815</updated>
     </task>
-    <option name="localTasksCounter" value="100" />
+    <task id="LOCAL-00100" summary="基础">
+      <created>1594174230097</created>
+      <option name="number" value="00100" />
+      <option name="presentableId" value="LOCAL-00100" />
+      <option name="project" value="LOCAL" />
+      <updated>1594174230098</updated>
+    </task>
+    <option name="localTasksCounter" value="101" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2015623000" />
+    <option name="totallyTimeSpent" value="2017006000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -943,6 +938,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.7163743" visible="true" weight="0.22654584" />
       <window_info id="Structure" order="1" sideWeight="0.28362572" side_tool="true" weight="0.25053304" />
@@ -992,7 +988,8 @@
     <MESSAGE value="都市照片" />
     <MESSAGE value="配置文件修改" />
     <MESSAGE value="文档建设" />
-    <option name="LAST_COMMIT_MESSAGE" value="文档建设" />
+    <MESSAGE value="基础" />
+    <option name="LAST_COMMIT_MESSAGE" value="基础" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

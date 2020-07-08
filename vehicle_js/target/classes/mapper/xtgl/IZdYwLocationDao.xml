@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace：必须与对应的接口全类名一致 id:必须与对应接口的某个对应的方法名一致 -->
+<mapper namespace="com.bba.xtgl.dao.IZdYwLocationDao">
+
+	<select id="findList" resultType="com.bba.xtgl.vo.ZdYwLocationVO"
+			parameterType="com.bba.xtgl.vo.ZdYwLocationVO">
+		select * from zd_ywlocation
+		<where>
+			<trim prefixOverrides="and">
+				<if test="within_code!=null">within_code=#{within_code}</if>
+				<if test="state!=null">and state=#{state}</if>
+			</trim>
+		</where>
+
+	</select>
+
+	<insert id="insert" parameterType="com.bba.xtgl.vo.ZdYwLocationVO">
+		insert into ZD_YWLOCATION(within_code,code,name,logo,title,name_en,state,create_by,create_date)
+		values(
+			#{within_code},
+			#{code},
+			#{name},
+			#{ico},
+			#{title},
+			#{name_en},
+			#{state},
+			#{create_by},
+			sysdate
+		)
+	</insert>
+</mapper>

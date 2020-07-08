@@ -1,0 +1,394 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="UTF-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"/>
+    <link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+    <link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />    
+    <link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/moment/css/daterangepicker.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/fileUpload/css/fileUpload.css" />
+    <title>#{epLocation.field.code}</title>
+</head>
+<body>
+    <div id="toolbar" class="easyui-panel" style="padding: 4px; border-width: 0; border-bottom-width: 1px;">
+         #{PAGE_TOOLBAR_BUTTONROLE}
+    </div>
+    <div class="searchParamesPanel">
+        <table id="searchParamesTable">
+            <tr class="searchParamesTrShow">
+             	<td class="searchParamesTdTitle">
+                <label data-locale="epLocation.field.code"/>
+                </td>
+                <td class="searchParamesTdControl">
+                    <input type="text" name="ep_code" id="ep_code" class="easyui-textbox" />
+                </td>
+                <td class="searchParamesTdTitle">
+                 <label data-locale="epLocation.field.factory"/>
+                </td>
+                <td class="searchParamesTdControl">
+                    <input id="ep_plant" class="easyui-combobox" name="ep_plant" data-options="editable:false,panelHeight:'auto'"/>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="gridControl">
+        <table id="gridTable">
+        </table>
+        <div id="gridPager">
+        </div>
+    </div>
+     <div id="fileUpload" style="position: absolute; left: 50%; top: 50%; width: 600px;
+        height: 400px; margin-left: -300px; margin-top: -200px; display: none;">
+    </div>
+</body>
+<script type="text/javascript"	src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/upload.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/file.js"></script>
+<script language="javascript" type="text/javascript">
+    var sn1="";
+    var moduleId = 0;
+    var plantInnerHTML = {'' : '--#{epLocation.field.all}--'};
+    var moduleidAuthority = "";
+    $(function () {
+        var parms = getUrlParms();
+        moduleId = parms["moduleId"];
+        moduleidAuthority = parms["moduleId"];
+        initCodekeyDown();
+        initPlant();
+        initScript();
+        initData();
+    });
+
+    $(window).load(function () {
+        hideLoading();
+    });
+
+    var oldSetGridHeightWidth = setGridHeightWidth;
+    var setGridHeightWidth = function() {
+    	oldSetGridHeightWidth(40,170);
+    	oldSetGridHeightWidth(5, 128);
+    };
+    
+    var initCodekeyDown = function(){
+    	$('#ep_code').textbox({
+            inputEvents: $.extend({},$.fn.textbox.defaults.inputEvents,{
+            	keyup:function(event){
+            		if(event.keyCode == 13) {
+           				searchData();
+            		}
+            	}   
+         	})
+      	})
+    }
+    
+    var initPlant = function(){
+    	$("#ep_plant").combobox({
+  		  valueField: 'ex_code',  
+  		  textField: 'name',
+  		  loader:function(param,success,error){  
+                $.ajax({  
+                    url:"../../jcda/Zd_Location/findLocationByKind?t=" + Math.random()+"&kind=PLANT",
+                    dataType: 'json',  
+                    method:"GET",
+                    async : false,
+                    success: function(data){
+                    	data.forEach(function(item){
+                    		plantInnerHTML[item.ex_code] = item.name;
+                      	 });
+                    	data.unshift({ex_code:'',name:'--#{epLocation.field.all}--'});
+                    	success(data); //loader的success
+                    } 
+                }); 
+            },
+  		  onLoadSuccess: function () { //加载完成后,val[0]写死设置选中第一项
+  			  $(this).combobox("setValue", "--#{epLocation.field.all}--");
+            },
+            onChange : function(){
+          	  searchData();
+            }
+  		});
+    }
+    
+    var initScript = function () {
+    	showLog({id:"toolbar",operateModuleGlobal:"EPLocation",moduleId:moduleidAuthority});
+    	var v = 0;
+    	$(window).resize(function() {
+    		if (v == 0) {
+    			setTimeout(function() {
+    				setGridHeightWidth();
+    				v = 0;
+    			}, 200)
+    			v = 1;
+    		}
+    		setGridHeightWidth();
+    		setToolbarHeightWidth();
+    	});	
+    } 
+    var initData = function () {
+
+        loadList();   
+    }
+    
+	var initload_typeControl = function(jsonData) {
+		var formatData = {
+			data : jsonData,
+			needChooseAll : true,
+			chooseAllValue : "",
+			defaultValue : "1",
+			bindBoxName : "load_type",
+			bindControlPrefix : "load_type"
+		};
+		formatDefaultRadio_Local(formatData);
+	}
+	var initunload_typeControl = function(jsonData) {
+		var formatData = {
+			data : jsonData,
+			needChooseAll : true,
+			chooseAllValue : "",
+			defaultValue : "1",
+			bindBoxName : "unload_type",
+			bindControlPrefix : "unload_type"
+		};
+		formatDefaultRadio_Local(formatData);
+	}
+    function searchData() {
+        $("#gridTable").jqGrid('setGridParam', {
+            url: getSearchGridUrl(),
+            datatype: 'json',
+            postData: { "filters": "" },
+            page: 1
+        }).trigger("reloadGrid");
+    }
+
+    var getSearchGridUrl = function () {
+        return '../../scts/epLocation/find?t=' + Math.random() + '&customSearchFilters=' + encodeURI(getSearchFilters());
+    }
+
+    var getSearchFilters = function () {
+    	var val = $("#ep_plant").combobox("getValue");
+        var parmsArray = [
+          { name: 'ep_code', value: $("#ep_code").val(), op: "cn" },
+          { name: 'ep_plant', value: val.indexOf("--")==-1?val:"" , op: "eq" }
+        ];
+
+        return formatSearchParames(parmsArray);
+    }
+
+    var add = function () {
+        openDetail("");
+    }
+
+    var update = function () {
+        var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
+        if (selectRowItems.length > 1 || selectRowItems.length == 0) {
+            errorNotification({
+                SimpleMessage: $.i18n.prop('epLocation.message.oneValid')
+            });
+            return;
+        }
+
+        var rowData = $("#gridTable").jqGrid('getRowData', selectRowItems);
+        openDetail(rowData.sn);
+    }
+
+    var openDetail = function (sn) {
+    	showLoading("#{epLocation.loading}#{epLocation.page.detail}...");
+        var href = "../View/BaseInfo/EPLocationDetail.html?moduleId=" + moduleId+"&sn=" + sn;
+        openDialog({ title: $.i18n.prop('epLocation.page.detail'), id: 'EPLocationDetail', width: 500, height: 250, isResize: true, href: href, closable: true });
+    }
+
+    var remove = function() {
+    	var jsonList = [];
+    	var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
+    	if (selectRowItems.length == 0) {
+    		errorNotification({
+    			SimpleMessage : $.i18n.prop('epLocation.message.selectedValid')
+    		});
+    		return;
+    	}
+    	for ( var i = 0; i < selectRowItems.length; i++) {
+    		var rowData = $("#gridTable").jqGrid('getRowData',selectRowItems[i]);
+    		jsonList.push({sn : rowData.sn});
+    	}
+    	$.messager.confirm($.i18n.prop('epLocation.message.prompt'),'#{epLocation.message.deleteQuestion}?',
+				function(r) {
+					if (r) {
+						showLoading("#{epLocation.loading}#{epLocation.field.code}...");
+						$.ajax({url : "../../scts/epLocation/delete?t="+ Math.random(),
+									type : "POST",
+									data : "jsonData="
+											+ JSON.stringify(jsonList),
+									success : function(dataObj) {
+										if (isServerResultDataPass(dataObj)) {
+											correctNotification(dataObj.resultDataFull);
+											searchData(); // 删除时需要重新搜索
+										} else {
+											FailResultDataToTip(dataObj);
+										}
+										hideLoading();
+									},
+									error : function(message) {
+										console.log(message);
+										hideLoading();
+									}
+								});
+					}
+				});
+	}
+
+    var loadList = function () {
+        $("#gridTable").jqGrid({
+            url: getSearchGridUrl(),
+            datatype: "json",
+            width: "none",
+            colNames: [$.i18n.prop('epLocation.grid.field.sn'),$.i18n.prop('epLocation.grid.field.code'),$.i18n.prop('epLocation.grid.field.plant'),
+                       $.i18n.prop('epLocation.grid.field.type'),$.i18n.prop('epLocation.grid.field.gr'),
+                       $.i18n.prop('epLocation.grid.field.createBy'),$.i18n.prop('epLocation.grid.field.createDate'),$.i18n.prop('epLocation.grid.field.updateBy'),
+                       $.i18n.prop('epLocation.grid.field.updateDate')],
+            colModel: [
+            { name: 'sn', index: 'sn',  key: true,align: 'center', sorttype: 'int', search: false, sortable: false, width: 40, hidden: true },
+            { name: 'ep_code', index: 'ep_code', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+            { name: 'ep_plant', index: 'ep_plant', align: 'center', width: 120, type: 'string', search: true,stype:'select',searchoptions : { value : plantInnerHTML , sopt : ["eq"] }},
+            { name: 'ep_type', index: 'ep_type', align: 'center', width: 120, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+            { name: 'gr_location', index: 'gr_location', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+            { name: 'create_by', index: 'scts_create_by', align: 'center',hidden:true, width: 120, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+            { name: 'create_date', index: 'create_date', align: 'center', width: 150, type: 'string', search: true,searchoptions : { sopt : ['ge'] } },
+            { name: 'update_by', index: 'update_by', align: 'center', hidden:true,width: 160, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+            { name: 'update_date', index: 'update_date', align: 'center', width: 150,hidden:true, type: 'string', search: true, searchoptions : { sopt : ['ge'] } }
+            ],
+            shrinkToFit: false,
+            altRows: true,
+            altclass: 'gridSpacingClass',
+            forceFit: true,
+            cellLayout: 0,
+            scroll: false,
+            autowidth: true,
+            sortname: 'create_date',
+            sortorder: "desc", 
+            loadonce: false,
+            mtype: "POST",
+            viewrecords: true,
+            rownumbers: true,
+            multiselect: true,
+            rowNum: 15,
+            height: "100%",
+            rowList: [15, 20, 30, 50],
+            pager: "#gridPager",
+            jsonReader: {
+                root: "rows",
+                total: "total",
+                page: "page",
+                records: "records",
+                repeatitems: false
+            },
+            gridComplete: function () {
+                $(".cbox").shiftSelect();
+            },
+            ondblClickRow: function (code) {
+                showChildModule(code);
+            },
+            loadComplete: function (xhr) {
+                $('.gridViewPicLink').tooltip({
+                    position: 'bottom',
+                    content: $(this).attr("title"),
+                    onShow: function () {
+                        $(this).tooltip('tip').css({
+                            backgroundColor: '#FCF8E3',
+                            borderColor: '#FAEBCC'
+                        });
+                    }
+                });
+                FailResultDataToTip(xhr);
+            }
+        });
+
+        $("#gridTable").jqGrid('navGrid', '#gridPager', { add: false, edit: false, del: false, refresh: true }, {}, {}, {}, { multipleSearch: true, closeOnEscape: true, closeAfterSearch: true });
+        $("#gridTable").jqGrid('navButtonAdd', '#gridPager', {
+            caption: $.i18n.prop('epLocation.caption.reorderCol'),
+            title: $.i18n.prop('epLocation.caption.reorderCol'),
+            onClickButton: toggleGridColumns
+        });
+
+        $("#gridTable").jqGrid('navButtonAdd', '#gridPager', {
+            caption: $.i18n.prop('epLocation.caption.quickSearch'),
+            title: $.i18n.prop('epLocation.caption.quickSearch'),
+            onClickButton: toggleGridSearchToolbar
+        });
+        
+        $("#gridTable").jqGrid('navButtonAdd', '#gridPager', {
+            caption: $.i18n.prop('epLocation.caption.export'),
+            title: $.i18n.prop('epLocation.caption.export'),
+            buttonicon: "ui-icon-disk",
+            onClickButton: function(){
+           	 ExportToExcel.call(this, {
+           		 url : "../../scts/epLocation/export?t=" + Math.random()
+           	 }); 
+            }
+        });
+        setGridHeightWidth();
+    }
+
+    var showChildModule = function (code) {
+        var rowData = $("#gridTable").jqGrid('getRowData', code);
+        openDetail(rowData.sn);
+    };
+
+    var refreshCallerData_zdTruckType = function () {
+        searchData();
+    }
+    
+    var importData = function () {
+        var url = "../../scts/epLocation/importExcel?t=" + Math.random();
+        $("#fileUpload").zyUpload({
+            itemWidth: "60px", // 文件项的宽度
+            itemHeight: "60px", // 文件项的高度
+            url: url,
+            multiple: false, // 是否可以多个文件上传
+            dragDrop: true, // 是否���以拖动上传文件
+            del: true, // 是否可以删除文件
+            finishDel: false, // 是否在上传文件完成后删除预览
+            close: true,
+            fileTypeFilter: ['xls', 'xlsx'],
+            remark: "<p>#{epLocation.message.excelValid}</p>",
+            isDownModuleFile: true,
+            downModuleFileUrl: "../../scts/epLocation/exportExcelModel?t=" + Math.random(),
+            /* 外部获得的回调接口 */
+            onSelect: function (files, allFiles) { // 选择文件的回调方法
+            },
+            onDelete: function (file, surplusFiles) { // 删除一个文件的回调方法
+            },
+            onSuccess: function (file) { // 文件上传成功的回调方法
+            },
+            onFailure: function (file) { // 文件上传失败的回调方法
+            },
+            onComplete: function (responseInfo) { // 上传完成的回调方法
+            	hideLoading();
+                var dataObj = JSON.parse(responseInfo);
+                if (isServerResultDataPass(dataObj)) {
+                	 searchData();
+                	 hideLoading();
+                     correctNotification(dataObj.resultDataFull);
+                } else {
+                    FailResultDataToTip(dataObj);
+                }
+                $("#fileUpload").empty();
+                $("#fileUpload").hide();
+            }
+        });
+    }
+  </script>
+</html>

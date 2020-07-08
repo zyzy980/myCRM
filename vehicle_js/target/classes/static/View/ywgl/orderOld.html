@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="">
+
+<link href="css/style.css" rel="stylesheet">
+<link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+<link id="EasyuiTheme" type="text/css" rel="stylesheet"	href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+<link id="JqgridTheme" type="text/css" rel="stylesheet"	href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+<link type="text/css" rel="stylesheet"	href="../../Resource/js/easyUI/themes/icon.css" />
+<link type="text/css" rel="stylesheet"	href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+
+<title>订单操作</title>
+</head>
+
+<body>
+
+	<div id="toolbar" class="easyui-panel" style="padding: 4px; border-width: 0; border-bottom-width: 1px;">
+        <a href="javascript:save();" id="save" class="easyui-linkbutton"  plain="true" iconcls="icon-save" style="display:none;">保存</a>
+        <a href="javascript:insert();" id="insert" class="easyui-linkbutton"  plain="true" iconcls="icon-add">新增</a>
+        <a href="#;" id="cancel" class="easyui-linkbutton"  plain="true" iconcls="icon-remove"> 撤销</a>
+        <a href="#;" id="back" class="easyui-linkbutton"  plain="true" iconcls="icon-back">撤回</a> 
+        <a href="#;" id="paiqian" class="easyui-linkbutton"  plain="true" iconcls="icon-view"> 派遣任务</a>
+    </div>
+
+	<div class="container">
+
+		
+		<!--第一部分-->
+		<div id="mask" class="mask" style="display:none;width:100%;height:100%">
+			<div class="part1 fix">
+				<div class="part-left height1">
+					<img src="images/icon1.png">
+					<p>货物</p>
+				</div>
+
+				<div class="part-right">
+					<table class="order-table"
+						style="padding-left: 40px; cellpadding: 0px; cellspacing: 10px; width: 100%;">
+						<tbody>
+							<tr>
+								<td align="right" class="filltitle">车次号</td>
+								<td><select name="detail.trainNo" id="trainNo" class="field">
+										<option>B1001</option>
+										<option>B1002</option>
+										<option>B1003</option>
+								</select></td>
+								<td align="right" class="filltitle">委托时间</td>
+								<td><input class="form-style field" placeholder=""
+									name="detail.orderMostly.businessDate" id="businessDate"></td>
+								<td align="right" class="filltitle">回单要求</td>
+								<td><select>
+										<option></option>
+										<option></option>
+										<option></option>
+								</select></td>
+							</tr>
+
+							<tr>
+								<td align="right" class="filltitle">货主委托号</td>
+								<td><input class="form-style" placeholder=""></td>
+								<td align="right" class="filltitle">货物名称</td>
+								<td><input class="form-style field" placeholder=""
+									name="detail.goodsName"></td>
+								<td align="right" class="filltitle">包装方��</td>
+								<td><select>
+										<option></option>
+										<option></option>
+										<option></option>
+								</select></td>
+							</tr>
+
+							<tr>
+								<td align="right" class="filltitle">件数</td>
+								<td><input class="form-style field" placeholder=""
+									name="detail.qty"></td>
+								<td align="right" class="filltitle">体积(M3)</td>
+								<td><input class="form-style field" placeholder=""
+									name="detail.vol"></td>
+								<td align="right" class="filltitle">重量(KG)</td>
+								<td><input class="form-style field" placeholder=""
+									name="detail.gwt"></td>
+							</tr>
+
+							<tr>
+								<td align="right" class="filltitle">收货短信通知</td>
+								<td>
+									<div class="way">
+										<label><input type="radio" name="def"><i>✓</i><em
+											class="xz">是</em></label>
+									</div>
+
+									<div class="way">
+										<label><input type="radio" name="def"><i>✓</i><em
+											class="xz">否</em></label>
+									</div>
+								</td>
+
+								<td align="right" class="filltitle">易碎品</td>
+								<td>
+									<div class="way">
+										<label><input type="radio" name="def"><i>✓</i><em
+											class="xz">是</em></label>
+									</div>
+
+									<div class="way">
+										<label><input type="radio" name="def"><i>✓</i><em
+											class="xz">否</em></label>
+									</div>
+								</td>
+
+
+								<td align="right" class="filltitle">运输方式</td>
+								<td>
+									<div class="way">
+										<label><input type="radio"
+											name="detail.transportType" value="0"><i>✓</i><em class="xz">汽运</em></label>
+									</div>
+
+									<div class="way">
+										<label><input type="radio"
+											name="detail.transportType" value="1"><i>✓</i><em class="xz">快运</em></label>
+									</div>
+
+									<div class="way">
+										<label><input type="radio"
+											name="detail.transportType" value="2"><i>✓</i><em class="xz">铁路</em></label>
+									</div>
+
+									<div class="way">
+										<label><input type="radio"
+											name="detail.transportType" value="3"><i>✓</i><em class="xz">水路</em></label>
+									</div>
+
+									<div class="way">
+										<label><input type="radio"
+											name="detail.transportType" value="4"><i>✓</i><em class="xz">联运</em></label>
+									</div>
+								</td>
+
+
+							</tr>
+
+						</tbody>
+					</table>
+				</div>
+
+			</div>
+
+			<!--结束-->
+
+
+			<!--第二部分-->
+			<div class="part1 fix" style="border-top: none;">
+				<div class="part-left height2">
+					<img src="images/icon2.png">
+					<p>发货</p>
+				</div>
+
+				<div class="part-right">
+					<table class="order-table"
+						style="padding-left: 45px; cellpadding: 0px; cellspacing: 10px; width: 100%;">
+						<tbody>
+							<tr>
+								<td align="right" class="filltitle">计划提货日期</td>
+								<td><input type="text" id="planshipmentData" value="javascript:dateFormat(new Date())" name="detail.orderMostly.planshipmentData" class="easyui-datebox field" data-options="editable:false"/></td>
+								<td align="right" class="filltitle">联系人</td>
+								<td><input class="form-style field" placeholder=""
+									name="detail.orderMostly.location.beginLocalMan"></td>
+
+							</tr>
+
+							<tr>
+								<td align="right" class="filltitle">发货人信息</td>
+								<td><select class="form-style2 field" id="beginLocalAddress"
+									name="detail.orderMostly.location.beginLocalAddress" >
+										<option></option>
+										<option></option>
+										<option></option>
+								</select> <span class="place"><a href="javascript:model.fn.openMap('beginLocalAddress')">选择地点</a></span></td>
+								<td align="right" class="filltitle"></td>
+								<td></td>
+							</tr>
+
+						</tbody>
+					</table>
+
+				</div>
+			</div>
+			<!--结束-->
+
+
+			<!--第三部分-->
+			<div class="part1 fix" style="border-top: none;">
+				<div class="part-left height2">
+					<img src="images/icon3.png">
+					<p>收货</p>
+				</div>
+
+				<div class="part-right">
+					<table class="order-table"
+						style="padding-left: 45px; cellpadding: 0px; cellspacing: 10px; width: 100%;">
+						<tbody>
+							<tr>
+								<td align="right" class="filltitle">计划收货日期</td>
+								<td><input type="text" id="planjiaofuData" value="javascript:dateFormat(new Date())" name="detail.orderMostly.planjiaofuData" class="easyui-datebox field" data-options="editable:false"/></td>
+								<td align="right" class="filltitle">联系人</td>
+								<td><input class="form-style field" placeholder=""
+									name="detail.orderMostly.location.endLocalMan"></td>
+
+							</tr>
+
+							<tr>
+								<td align="right" class="filltitle">收货人信息</td>
+								<td><select class="form-style2 field" id="endLocalAddress"
+									name="detail.orderMostly.location.endLocalAddress" >
+										<option></option>
+										<option></option>
+										<option></option>
+								</select> <span class="place"><a href="javascript:model.fn.openMap('endLocalAddress')">选择地点</a></span></td>
+								<td align="right" class="filltitle"></td>
+								<td></td>
+							</tr>
+
+						</tbody>
+					</table>
+
+				</div>
+			</div>
+			<!--结束-->
+
+
+			<!--第四部分-->
+			<div class="part1 fix" style="border-top: none;">
+				<div class="part-left height4">
+					<img src="images/icon4.png">
+					<p>费用</p>
+				</div>
+
+				<div class="part-right">
+					<table class="order-table"
+						style="padding-left: 55px; cellpadding: 0px; cellspacing: 10px; width: 61%;">
+						<tbody>
+							<tr>
+								<td align="right" class="filltitle">收款总金额</td>
+								<td><input class="form-style field" placeholder=""
+									name="detail.orderMostly.shoukuan"></td>
+								<td align="right" class="filltitle">付款总金额</td>
+								<td><input class="form-style field" placeholder=""
+									name="detail.orderMostly.fukuan"></td>
+							</tr>
+
+						</tbody>
+					</table>
+
+				</div>
+			</div>
+			<!--结束-->
+			<div class="operation fix">
+				<a href="javascript:back()">
+					<div class="back">
+						<p>返回</p>
+					</div>
+				</a>
+			</div>
+			
+		</div>
+
+
+		<div class="order-list">
+			<ul>
+				<li
+					style="background: #f5f8f9; color: #556e98; font-weight: bold; border: none;">
+					<div class="w11">&nbsp;</div>
+					<div class="w12">货物明细名称</div>
+					<div class="w13">单位</div>
+					<div class="w14">件数</div>
+					<div class="w15">毛重</div>
+					<div class="w16">体积</div>
+					<div class="w17">详情内容</div>
+				</li>
+				<!--列表展开内容-->
+			</ul>
+
+
+		</div>
+		<!--第二部分结束-->
+
+	</div>
+	<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+	<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+	<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+	<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+	<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+	<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+	<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+	<script type="text/javascript" src="../../Resource/js/cookie/jquery.cookie.js"></script>
+	<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+	<script type="text/javascript" src="js/util/Const.js"></script>
+	<script type="text/javascript" src="js/util/util.js"></script>
+	<script type="text/javascript" src="js/order/control.js"></script>
+	<script type="text/javascript" src="js/order/innerHTML.js"></script>
+	<script type="text/javascript" src="js/order/orderModel.js"></script>
+	<script type="text/javascript" src="js/order/order.js"></script>
+</body>
+</html>

@@ -1,0 +1,402 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <link id="CustomThemeStylelink" type="text/css" rel="stylesheet" href="../Resource/css/index/customLightBlue.css" />
+    <style>
+		.itab ul li{
+		    overflow: hidden;
+		}
+		
+	 	.itab ul li.chaochu a{
+		
+			    width: 100%;
+    padding-left: 0px;
+    padding-right: 0px;
+    text-align: center;
+			 text-overflow: ellipsis;
+			          word-wrap:break-word;
+			 
+		}
+		.itab ul li.chaochu a.selected{
+			    width: 100%;
+    padding-left: 0px;
+    padding-right: 0px;
+    text-align: center;
+     text-overflow: ellipsis;
+         word-wrap:break-word;
+     
+		} 
+    </style>
+</head>
+<body>
+    <div>
+        <div id="verticalMenuBar">
+            <div class="toggle">
+                <a href="javascript:hideVerticalMenuBar();">
+                    <img src="../Resource/images/index/toright.png" />
+                </a>
+            </div>
+            <div class="shortCutPanel">
+                <ul id="shortCutLinkUl">
+                </ul>
+            </div>
+        </div>
+        <div id="contextMenu" style="display: none;">
+            <ul>
+                <li id="closeCurrent">&nbsp;&nbsp;&nbsp;<label data-locale="RIGHT_CLOSE_CURRENT"/></li>
+                <li id="closeOther">&nbsp;&nbsp;&nbsp;<label data-locale="RIGHT_CLOSE_OTHER"/></li>
+                <li id="closeRight">&nbsp;&nbsp;&nbsp;<label data-locale="RIGHT_CLOSE_RIGHT"/></li>
+                <li id="closeAll">&nbsp;&nbsp;&nbsp;<label data-locale="RIGHT_CLOSE_ALL"/></li>
+            </ul>
+        </div>
+        <div id="usual1" class="usual" style="float: left;">
+            <div class="itab">
+                <ul>
+                    <li id="tabMain" class="liselected"><a href="#tab1" class="selected" onclick="tabChanged($.i18n.prop('RIGHT_MAIN_PAGE'),'tabMain')"><label data-locale="RIGHT_MAIN_PAGE"/></a></li>
+                </ul>
+            </div>
+            <div id="tab1" class="tabson">
+                <iframe name="frameTabHomePage" id="frameTabHomePage" src="HomePage.html" frameborder="0" width="100%" height="450px"></iframe>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="../Resource/js/jquery-2.0.0.min.js"></script>
+    <script type="text/javascript" src="../Resource/js/jquery.i18n.properties.js"></script>
+    <script type="text/javascript" src="../Resource/js/cookie/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../Resource/js/base/commonControl.js"></script>
+    <script type="text/javascript" src="../Resource/js/index/jquery.idTabs.min.js"></script>
+    <script type="text/javascript" src="../Resource/js/index/jquery.contextmenu.r2.js"></script>
+    <script language="javascript" type="text/javascript">
+    	var lang="zh";
+        var iheight = 450;
+        var isVerticalMenuBarDisplay = false;
+        $(window).resize(function () {
+            setIFrameHeight();
+            SetNavShowWidth();
+            showVerticalMenuBar();
+        });
+
+        var loadCustom = function () {
+
+            if ($.cookie('abisIsMaxDisplay') == "1") {
+                var mainFrame = window.parent.frames["mainFrame"];
+                var topMain = window.parent.frames["Main"];
+                $(mainFrame).attr("cols", "0,*"); // 左侧隐藏
+                $(topMain).attr("rows", "0,*"); // 顶端隐藏
+                isVerticalMenuBarDisplay = true;
+            }
+            showVerticalMenuBar();
+        }
+
+        function showVerticalMenuBar() {
+            if (isVerticalMenuBarDisplay) {
+                // 设置左侧竖菜单高度
+                $("#verticalMenuBar").css("display", "block");
+                $("#verticalMenuBar").css("height", $(window).height());
+                $("#usual1").css("width", $(window).width() - 51);
+            } else {
+                $("#verticalMenuBar").css("display", "none");
+                $("#usual1").css("width", $(window).width());
+            }
+        }
+
+        function hideVerticalMenuBar() {
+            var leftFrame = window.parent.frames["leftFrame"];
+            leftFrame.setLeftDisplay(false);
+        }
+
+        function setIFrameHeight() {
+            // 设置每个iframe的高度
+            iheight = $(window).height() - 40;
+            var tabsonList = $("#usual1 .tabson");
+            $(tabsonList).each(function () {
+                $(this).find("iframe").attr("height", iheight + "px");
+            });
+        }
+
+        var bindEventsContextMenu = function () {
+            $('.itab ul li:gt(0)').contextMenu('contextMenu', {
+                menuStyle: {
+                    listStyle: 'none',
+                    padding: '1px',
+                    margin: '0px',
+                    backgroundColor: '#EDF6FA',
+                    border: '1px solid #D3D3D3',
+                    width: '100px'
+                },
+                itemStyle: {
+                    fontFamily: '微软雅黑',
+                    backgroundColor: 'white',
+                    color: 'black',
+                    border: 'none',
+                    padding: '1px',
+                    height: '20px'
+                },
+                //                itemHoverStyle: {
+                //                    color: 'white',
+                //                    backgroundColor: '#3EAFE0',
+                //                    border: 'none'
+                //                },
+                itemHoverStyle: {
+                    color: 'white',
+                    backgroundColor: '#3EAFE0',
+                    border: 'none'
+                },
+                bindings: {
+                    'closeCurrent': function (t) {
+                        var tabObj = $(t).find("div:first");
+                        var tabId = $(t).find("div:first").attr("lang");
+                        TabClose(tabObj[0], tabId);
+                    },
+                    'closeOther': function (t) {
+                        $(".itab ul li[id!='tabMain']").each(function () {
+                            var currentTagObj = $(t);
+                            var tagObj = $(this);
+                            if (currentTagObj.attr("liId") != tagObj.attr("liId")) {
+                                TabClose(tagObj[0], tagObj.attr("liId"));
+                            }
+                        });
+                    },
+                    'closeRight': function (t) {
+                        var arr = $(".itab ul li[id!='tabMain']:gt("+($(t).index()-1)+")");
+                        for(var i = arr.length - 1; i >= 0; i--){
+	                        TabClose(arr[i], arr.eq(i).attr("liId"));
+                        }
+                    },
+                    'closeAll': function (t) {
+                        $(".itab ul li[id!='tabMain']").each(function () {
+                            var tagObj = $(this);
+                            TabClose(tagObj[0], tagObj.attr("liId"));
+                        });
+                    }
+                }
+            });
+        }
+        var loadShortCut = function () {
+        }
+
+        function TabCreate(title, url) {
+            window.parent.frames["rightFrame"].AddTab(title, url);
+            sessionStorage.clear();
+        }
+
+        var bTabChange = true;
+        var initIndex = 1;
+        function AddTab(title, url) {
+            initIndex = initIndex + 1;
+           	if (CheckSelected(title, url)){
+           		hideLoading();
+                 return;
+           	}
+            
+            // 临时为了演示
+            if (url.indexOf("LineVisual") > 0) {
+            } else {
+                showLoading("#{RIGHT_LOADING} " + title + "...");
+            }
+
+            bTabChange = false;
+            var str = "<li liId=\"tab" + initIndex + "\" class=\"liselected\"><div onclick=\"TabClose(this,'tab" + initIndex + "')\" class=\"TabCloseBg\" lang=\"tab" + initIndex + "\">×</div><a href=\"#tab" + initIndex + "\" onclick='tabChanged(\"" + title + "\",\"tab" + initIndex + "\")' title=\""+title+"\">" + title + "</a></li>";
+            $(".itab ul").append(str);
+            // 为li添加鼠标效果
+            $("li[liId='tab" + initIndex + "']").hover(function () {
+                //if ($(this).find("a").attr("class") != "selected") {
+                $(this).find("a").toggleClass("hovered");
+                // }
+            }, function () {
+                // if ($(this).find("a").attr("class") != "selected") {
+                $(this).find("a").removeClass("hovered");
+                // }
+            });
+            var strWin = "<div id=\"tab" + initIndex + "\" class=\"tabson\">";
+            strWin += "<iframe src=\"" + url + "\" frameborder=\"0\" id=\"frame" + initIndex + "\"  width=\"100%\" height=\"" + iheight + "px\"></iframe>";
+            strWin += "</div>";
+            $(".usual").append(strWin);
+            $("#usual1 ul").idTabs("tab" + initIndex);
+
+            SetNavShowWidth();
+            bTabChange = true;
+            bindEventsContextMenu();
+        }
+
+        function tabChanged(itemText, liObjId) {
+            $(".itab ul li").removeClass("liselected");
+            
+            if (itemText != "主页") {
+                $("li[liId='" + liObjId + "']").addClass("liselected");
+                if (bTabChange) {
+                    window.parent.frames["leftFrame"].setLeftMenuBg(itemText);
+                }
+	            //每次切换菜单时如果窗口内有表格排版方法就调用
+	            var data_iframe = window.getContentWindow($(".tabson#"+liObjId).find("iframe")[0]);
+	            if(data_iframe && data_iframe.setGridHeightWidth){
+	            	setTimeout(data_iframe.setGridHeightWidth, 50);
+	            }
+               
+            } else {
+                $("li[id='" + liObjId + "']").addClass("liselected");
+            }
+            sessionStorage.clear();
+        }
+        
+
+        function CheckSelected(title, url) {
+            var bResult = false;
+            $(".itab ul li").each(function (i) {
+                var tabA = $(this).find("a");
+                // $(tabA).fadeOut();
+                $(this).removeClass("liselected");
+                $(tabA).removeAttr("class");
+                //$(tabA).fadeIn();
+                if ($(tabA).text() == title) {
+                    var tabson = $("#usual1 .tabson");
+                    var temp_iframe = $(tabson[i]).find("iframe");
+                    if (temp_iframe.attr("src") == url) {
+                        $(this).addClass("liselected");
+                        $(tabA).attr("class", "selected");
+                        bResult = true;
+
+                        //Clear win
+                        $(tabson).css("display", "none");
+                        $(tabson[i]).css("display", "block");
+                        var data_iframe = window.getContentWindow(temp_iframe[0]);
+                        if(data_iframe && data_iframe.setGridHeightWidth){
+                        	setTimeout(data_iframe.setGridHeightWidth, 50);
+                        }
+                    }
+                    //nav menu show s
+                    if ($(this).css("display") == "none") {
+                        var bDisplay = false;
+                        var navWidth = $("#usual1 .itab").width();
+                        var sumWidth = 0;
+                        $(".itab ul li").each(function () {
+                            if ($(this).attr("id") != "tabMain") {
+                                $(this).removeAttr("style");
+                                $(this).attr("style", "display:none");
+                                if ($(this).find("a").text() == title) {
+                                    $(this).removeAttr("style");
+                                    $(this).attr("style", "display:block");
+                                    sumWidth = $(this).width();
+                                    bDisplay = true;
+                                }
+                                else {
+                                    if (bDisplay) {
+                                        sumWidth = sumWidth + $(this).width() + 1;
+                                        if (sumWidth <= navWidth) {
+                                            $(this).removeAttr("style");
+                                            $(this).attr("style", "display:block");
+                                        }
+                                        else {
+                                            $(this).removeAttr("style");
+                                            $(this).attr("style", "display:none");
+                                        }
+                                    }
+                                }
+                            }
+                            //SetNavShowWidth();
+                        });
+                    }
+                    //nav menu show e
+                }
+            });
+            return bResult;
+        }
+
+        function TabClose(t, winId) {
+            var selLi = $(t).closest("li");
+            //var selclass = $.trim($(selLi).find("a").attr("class"));
+            if (!($(selLi).find("a").hasClass("selected"))) {
+                $(selLi).remove();
+                $("#" + winId).remove();
+                SetNavShowWidth();
+                return;
+            }
+            //Pre Tab
+            var sIndex = 0;
+            var itabLi = $("#usual1 .itab ul li");
+            var tabson = $("#usual1 .tabson");
+            $(itabLi).each(function (ii) {
+                var href = $(this).find("a").attr("href");
+                if (href == ("#" + winId)) {
+                    sIndex = ii;
+                }
+            });
+
+            if (sIndex == 0) sIndex = 1;
+            $(selLi).remove();
+            $("#" + winId).remove();
+            selLi = $(tabson[sIndex - 1]).attr("id");
+            $("#usual1 ul").idTabs(selLi);
+            var newLi = $("div[lang='" + selLi + "']").closest("li");
+            var selTit = newLi.find("a").html();
+            tabChanged(selTit, newLi.attr("liid"));
+            SetNavShowWidth();
+        }
+
+        function SetNavShowWidth() {
+            var itabLi = $("#usual1 .itab ul li");
+            for(var i = 0; i < itabLi.length; i++){
+            	itabLi.eq(i).removeClass("chaochu");
+            	itabLi.eq(i).removeAttr("style");
+            }
+         	var currentWidth = 0;
+            for(var i = 0; i < itabLi.length; i++){
+            	currentWidth += itabLi.eq(i).width();
+            }
+            var sjWidth = $(window).width() - itabLi.length;
+            var arr = [];
+            if(currentWidth > sjWidth){
+            	var js_width = 0;
+            	for(var i = 0; i < itabLi.length; i++){
+            		var bfb = itabLi.eq(i).width() / currentWidth;
+            		var newWidth = Number((sjWidth * bfb).toFixed(4));
+            		if((i+1) == itabLi.length && Number((js_width+newWidth).toFixed()) >= sjWidth){
+            			newWidth = Number((sjWidth - js_width).toFixed(0)) - 2;
+            		}else{
+	            		js_width += newWidth;
+            		}
+            		arr.push(newWidth + "px");
+                }
+            	for(var i = 0; i < itabLi.length; i++){
+            		itabLi.eq(i).width(arr[i]);
+	            	itabLi.eq(i).addClass("chaochu");
+                }
+            }
+        }
+
+
+        var initStyle = function () {
+
+        }
+
+        var initData = function () {
+            loadShortCut();
+            loadCustom();
+        }
+
+        var initScript = function () {
+            $("#usual1 ul").idTabs();
+            setIFrameHeight();
+            bindEventsContextMenu();
+        }
+
+        $(window).load(function () {
+            hideLoading();
+        });
+
+        $(function() {
+        	var parms = getUrlParms();
+        	if(parms["lang"]==undefined || parms["lang"]==null || parms["lang"]=="" || parms["lang"]=="zh")
+        	{   
+        		lang="en";
+        	}
+            initScript();
+            initData();
+            initStyle();
+        });
+    </script>
+</body>
+</html>

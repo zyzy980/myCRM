@@ -1,0 +1,356 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:height="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+    <link id="EasyuiTheme" type="text/css" rel="stylesheet"
+        href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+    <link id="JqgridTheme" type="text/css" rel="stylesheet"
+        href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/fileUpload/css/fileUpload.css" />
+    <link type="text/css" rel="stylesheet" href="../../View/ywgl/css/planExec.css" />
+    <link type="text/css" rel="stylesheet" href="../../View/ywgl/css/print.css" />
+    <style type="text/css">
+        td {
+            width: 10%;
+            border-bottom: 1px dashed #CDCDC1;
+            height: 28px;
+        }
+    </style>
+</head>
+
+<body style="overflow:hidden">
+    <!-- <div id="toolbar" class="easyui-panel" style="padding: 4px; border-width:0; border-bottom-width:1px;">
+        #{PAGE_TOOLBAR_BUTTONROLE}
+    </div> -->
+    <div style="width:649px;height:978px;margin: auto;position:relative">
+
+        <div>
+            <!--右上角时间-->
+            <!--<div id="printTime" style="float: right">-->
+            <!--2019-05-06 13:48-->
+            <!--</div>-->
+
+            <!-- 大标题 -->
+            <div style="text-align: center;font-size: 30px">
+                <b>民生运输派车单</b>
+            </div>
+
+            <!--车次信息-->
+            <div id="trainInfo" style="margin-top: 10px">
+                <div style="display: flex;font-size: xx-small">
+                    <div style="width:30%;display: flex">
+                        车次号：
+                        <p id='trainNo'></p>
+                    </div>
+
+                    <div style="width:20%;display: flex">
+                        车牌：
+                        <p id='truckNo'></p>
+                    </div>
+
+                    <div style="width:30%;display: flex">
+                        司机：
+                        <p id=driverInfo></p>
+                    </div>
+
+                    <div style="width:20%;display: flex">
+                        车型：
+                        <p id=truckType></p>
+                    </div>
+                </div>
+
+                <div style="border:1px solid #CDCDC1;margin-top: 2px" />
+            </div>
+
+            <!--车次详情-->
+            <div style="display: flex;margin-top: 15px">
+                <!--文字-->
+                <div style="width: 83%">
+
+                    <!--提货信息-->
+                    <div>
+                        <div style="display: flex">
+                            <div style="display: flex">
+                                <b>要求提货时间：</b>
+                                <p id='beginTime' style="margin-top: 2px"></p>
+                            </div>
+
+                            <div style="display: flex;margin-left: 10%">
+                                <b>提货联系人：</b>
+                                <p id='beginLinkMan'></p>
+                            </div>
+                        </div>
+
+                        <div style="display: flex">
+                            <b>提货点：</b>
+                            <p id='beginAddressName'></p>
+                        </div>
+
+                        <div style="display: flex;">
+                            <b>提货地址：</b>
+                            <P id='beginAddress'></P>
+                        </div>
+                    </div>
+
+                    <!--交付信息-->
+                    <div style="margin-top: 40px">
+                        <div style="display: flex">
+                            <div style="display: flex">
+                                <b>要求交付时间：</b>
+                                <p id='endTime' style="margin-top: 2px"></p>
+                            </div>
+
+                            <div style="display: flex;margin-left: 10%">
+                                <b>收货联系人：</b>
+                                <p id='endLinkMan'></p>
+                            </div>
+                        </div>
+
+                        <div style="display: flex">
+                            <b>收货点：</b>
+                            <p id='endAddressName'></p>
+                        </div>
+
+                        <div style="display: flex;">
+                            <b>收货地址：</b>
+                            <P id='endAddress'></P>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!--一二维码-->
+                <div>
+                    <div>
+                        <img id='svgcode' style="width: 150px" />
+                    </div>
+
+                    <div style="margin-top: 20px;width: 100px;height: 100px;" id='qrcode'></div>
+                </div>
+            </div>
+
+            <br/>
+            <br/>
+            <br/>
+
+            <!--货物明细-->
+            <div style="margin-top: 30px">
+                <div style="display: flex">
+                    <p>请确认以下货物/件数（共 &nbsp&nbsp&nbsp</p>
+                    <p id='detailCount' style="margin-top: 2px"></p>
+                    <p> &nbsp&nbsp&nbsp件）正确</p>
+                </div>
+
+                <div style="margin-top: 5px">
+                    <table style="text-align: center;width: 100%;" border="0" cellpadding="0" cellspacing="0"
+                        id="detailTable">
+                        <tr>
+                            <td style="height: 50px;"><b>序号</b></td>
+                            <td style="height: 50px;"><b>订单号</b></td>
+                            <td style="height: 50px;"><b>货物编码</b></td>
+                            <td style="height: 50px;"><b>货物名称</b></td>
+                            <td style="height: 50px;"><b>数量</b></td>
+                            <td style="height: 50px;"><b>体积</b></td>
+                            <td style="height: 50px;"><b>重量</b></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+
+            <!--打印人信息-->
+            <div style="position:absolute;bottom:0;width: 100%">
+
+                <div style="display: flex">
+                    <div style="display: flex;width: 33%">
+                        <b>制单人：</b>
+                        <p id='createBy'></p>
+                    </div>
+
+                    <div style="display: flex;width: 33%">
+                        <b>司机：</b>
+                        <p></p>
+                    </div>
+
+                    <div style="display: flex">
+                        <b>发货方：</b>
+                        <p></p>
+                    </div>
+                </div>
+
+                <div style="display: flex">
+                    <div style="display: flex;width: 33%">
+                        <b>日期：</b>
+                        <p id='nowTime' style="margin-top: 2px"></p>
+                    </div>
+
+                    <div style="display: flex;width: 33%">
+                        <b>日期：</b>
+                        <p style="margin-top: 2px"></p>
+                    </div>
+
+                    <div style="display: flex">
+                        <b>日期：</b>
+                        <p style="margin-top: 2px"></p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/upload.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/file.js"></script>
+<script type="text/javascript" src="../../Resource/js/cookie/jquery.cookie.js"></script>
+<script type="text/javascript" src="../../Resource/js/bCode/JsBarcode.all.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/bCode/qrcode.min.js"></script>
+
+<script type="text/javascript">
+
+    var trainno = '';
+
+    $(function () {
+        var parms = getUrlParms();
+		trainno = parms["trainno"];
+
+        searchTrain();
+    });
+
+
+    //查询车次信息
+    var searchTrain = function () {
+        $.ajax({
+            url: '../../train/printTruckPlan?t=' + Math.random() + '&trainno=' + trainno,
+            method: 'post',
+            success: function (dataObj) {
+                console.log(dataObj);
+
+                //打印人
+                $('#createBy').text(dataObj.resultDataFull.current);
+
+                setPlanInfo(dataObj.resultDataFull.plan);
+                bCode(dataObj.resultDataFull.plan.trainNo);
+                addRow(dataObj.resultDataFull.detail);
+
+                setTimeout(() => {
+                    print();
+                }, 1000);
+            }
+        })
+    };
+
+    //条形码及二维码
+    var bCode = function (trainno) {
+
+        JsBarcode('#svgcode', trainno, {
+            lineColor: '#000',
+            displayValue: false
+        });
+
+        var qrcode = new QRCode("qrcode", {
+            text: trainno,
+            width: 143,
+            height: 143,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+        });
+    }
+
+    //设置车次信息
+    var setPlanInfo = function (plan) {
+
+        //顶上车次信息
+        $('#trainNo').text(plan.trainNo);
+        $('#truckNo').text(plan.trucknoq);
+        $('#driverInfo').text(plan.driverName + '/' + plan.driverTel);
+        $('#truckType').text(plan.trainType != null ? plan.trainType: '');
+
+        //上面提货收货地
+        $('#beginTime').text(plan.beginDate != null? plan.beginDate.split(" ")[0]:'');
+        $('#beginLinkMan').text(plan.beginLinkMan + '/' + plan.beginLinkTel);
+        $('#beginAddress').text(plan.beginAddress);
+        $('#endTime').text(plan.endDate != null ? plan.endDate.split(" ")[0]:plan.endDate);
+        $('#endLinkMan').text(plan.endLinkMan + '/' + plan.endLinkTel);
+        $('#endAddress').text(plan.endAddress);
+
+
+        //中间总间数
+        $('#detailCount').text(plan.sumPcs);
+
+
+        //底部
+        $('#nowTime').text(formatDate().split(" ")[0]);
+
+
+
+
+
+    }
+
+    //添加表格数据
+    var addRow = function (list) {
+
+        for (let i = 0; i < list.length; i++) {
+            const element = list[i];
+
+            var ywId = '';
+            if (element.BUSINESS_YW_ID != null){
+                ywId = element.BUSINESS_YW_ID;
+            }
+
+            var tb = '<tr>' +
+                '<td>' + (i + 1) + '</td>' +
+                '<td>' + ywId+ '</td>' +
+                '<td>' + element.CONT_ID + '</td>' +
+                '<td>' + element.GOODS_NAME + '</td>' +
+                '<td>' + element.QTY + '</td>' +
+                '<td>' + element.VOL + '</td>' +
+                '<td>' + element.GWT + '</td>' +
+                '</tr>';
+            $('#detailTable').append(tb);
+        }
+    }
+
+    //时间格式化
+    function formatDate() {
+        var date = new Date();
+
+        var year = date.getFullYear(),
+            month = date.getMonth() + 1,//月份是从0开始的
+            day = date.getDate(),
+            hour = date.getHours(),
+            min = date.getMinutes(),
+            sec = date.getSeconds();
+        var newTime = year + '-' +
+            (month < 10 ? '0' + month : month) + '-' +
+            (day < 10 ? '0' + day : day) + ' ' +
+            (hour < 10 ? '0' + hour : hour) + ':' +
+            (min < 10 ? '0' + min : min) + ':' +
+            (sec < 10 ? '0' + sec : sec);
+
+        return newTime;
+    }
+
+</script>
+</body>
+
+</html>

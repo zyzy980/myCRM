@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bba.dz.dao.IPayPlanDao">
+
+    <sql id="begin_page"><if test="isPage == true">SELECT * FROM (SELECT t.*, ROWNUM RN FROM (</if></sql>
+    <sql id="end_page">
+        <if test="isPage == true">
+            <if test="filters!=null and filters!=''">where ${filters}</if>
+        </if>
+        ) t where ROWNUM &lt;= ${page} * ${rows}) WHERE RN &gt;=((${page} - 1) * ${rows} + 1)
+    </sql>
+
+    <select id="getListForGrid" parameterType="com.bba.util.JqGridParamModel" resultType="com.bba.dz.vo.Tr_Payment_PlanVO">
+        <include refid="begin_page"/>
+        select * from TR_PAYMENT_PLAN
+        <include refid="end_page"/>
+    </select>
+
+    <select id="getListForGridCount" parameterType="com.bba.util.JqGridParamModel" resultType="java.lang.Integer">
+        select count(*) from TR_PAYMENT_PLAN
+        <if test="filters!=null and filters!=''">where ${filters}</if>
+    </select>
+
+
+    <select id="findSumDataList_normal" parameterType="java.util.List" resultType="com.bba.dz.vo.Tr_Payment_PlanVO">
+        <!--正常付款
+        6、预付的使用预付模板；
+        正常的使用正常付款模板，冲预付栏为空；冲预付的，正常付款栏为空，冲预付栏填入含税金额。
+        -->
+        select
+        CARRIER_NO,
+        CARRIER_NAME,
+        JS_NO,
+        INVOICE_NO,
+        INVOICE_TAX,
+        contract_no,
+        sum(TAX_AMOUNT) TAX_AMOUNT,
+        sum(NOT_TAX_AMOUNT) NOT_TAX_AMOUNT,
+        sum(TAX_AMOUNT)-sum(NOT_TAX_AMOUNT) TAX_DIFFERENCE, <!--税额-->
+        wm_concat(DISTINCT REMARK) REMARK
+        from TR_PAYMENT_PLAN
+        where
+        <foreach collection="list" index="index" item="item" separator="or">
+            id=#{item.id}
+        </foreach>
+        group by
+        CARRIER_NO,
+        CARRIER_NAME,
+        JS_NO,
+        INVOICE_NO,
+        contract_no,
+        INVOICE_TAX
+        order by INVOICE_NO asc
+    </select>
+
+    <select id="findSumDataList_expect" parameterType="java.util.List" resultType="com.bba.dz.vo.Tr_Payment_PlanVO">
+        <!--预付款 = 5、根据单位，合同号，发票号，月份，税率汇总 -->
+        select
+        carrier_no,
+        carrier_name,
+        contract_no,
+        pay_expect,
+        invoice_no,
+        data_type,
+        wm_concat(distinct remark) remark,
+        sum(tax_amount) tax_amount
+        from tr_payment_plan
+        where
+        <foreach collection="list" index="index" item="item" separator="or">
+            id=#{item.id}
+        </foreach>
+        group by
+        carrier_no,
+        carrier_name,
+        contract_no,
+        pay_expect,
+        invoice_no,
+        data_type
+        order by invoice_no asc
+    </select>
+
+</mapper>

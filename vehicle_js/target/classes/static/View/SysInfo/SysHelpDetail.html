@@ -1,0 +1,208 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+    <link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />    
+    <link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/validform/style.css" />
+    <title>帮助管理明细</title>
+</head>
+<body>
+    <div id="toolbar" class="easyui-panel" style="padding: 4px; border-width:0; border-bottom-width:1px;">
+        <a href="javascript:reset();" id="reset" class="easyui-linkbutton" style="display: none;"
+            plain="true" iconcls="icon-reload">重置</a> <a href="javascript:save();" id="save"
+                class="easyui-splitbutton" style="display: none;" data-options="menu:'#moreSave',iconCls:'icon-save'">
+                保存</a><a href="javascript:close();" id="close" class="easyui-linkbutton" style="display: inline-block;"
+                    plain="true" iconcls="icon-cancel"> 关闭</a>
+    </div>
+    <div id="moreSave" style="width: 180px;">
+        <div onclick="saveAndAddClear()" data-options="iconCls:'icon-save'">
+            保存并新增(清空)</div>
+        <div onclick="saveAndAddCopy()" data-options="iconCls:'icon-save'">
+            保存并新增(复制)</div>
+    </div>
+    <form id="addForm" class="easyui-form" method="post" data-options="novalidate:true">
+    <input type="hidden" id="hidSn" name="hidSn" />
+    <input type="hidden" id="hidOperateType" name="hidOperateType" />
+    <input type="hidden" id="hidParentSn" name="hidParentSn" />
+    <table class="editTable">
+        <tr>
+            <td class="editRequiredTitle">
+                名称:
+            </td>
+            <td class="editControl" colspan="2">
+                <input type="text" missingmessage="类别名称不能为空" data-options="required:true" name="txtTypeName"
+                    id="txtTypeName" class="easyui-textbox" />
+            </td>
+        </tr>
+        <tr>
+            <td class="editRequiredTitle">
+                编码:
+            </td>
+            <td class="editControl" colspan="2">
+                <input type="text" name="txtTypeCode" id="txtTypeCode" missingmessage="类别编码不能为空"
+                    data-options="required:true" class="easyui-textbox" />
+            </td>
+        </tr>
+    </table>
+    </form>
+</body>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/validform/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="../../Resource/js/cookie/jquery.cookie.js"></script>
+<script language="javascript" type="text/javascript">
+    var afterSave = "close";
+    var sn = null;
+    var parentSn = null;
+    var operateType = null;
+
+    $(function () {
+        var parms = getUrlParms();
+        operateType = parms["operateType"];
+        if (operateType == "edit") {
+            sn = parms["sn"];
+        } else {
+            sn = "0";
+            parentSn = parms["sn"];
+        }
+
+        initScript();
+        initData();
+        initStyle();
+    });
+
+    $(window).load(function () {
+        hideLoading();
+    });
+
+    var initStyle = function () {
+    }
+
+    var initScript = function () {
+        loadform();
+    }
+
+    var initData = function () {
+        if (sn != "0") {
+        } else {
+            $("#hidSn").val("0");
+            $("#hidParentSn").val(parentSn);
+        }
+    }
+
+    var close = function () {
+        closeDialog("SysHelpDetail");
+    }
+
+    var reset = function () {
+        if (sn == "0") {
+            $('form').form('clear');
+        } else {
+            showLoading();
+        }
+    }
+
+    var saveValidationPass = function () {
+        var validated = $("#addForm").form('enableValidation').form('validate');
+        if (!validated) {
+            errorNotification({
+                SimpleMessage: "保存操作中部分数据���证不通过"
+            });
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    var save = function () {
+        if (!saveValidationPass()) {
+            return;
+        }
+
+        $.messager.confirm('提示', '确定保存吗?', function (r) {
+            if (r) {
+                showLoading();
+                afterSave = "close";
+                $("#addForm").submit();
+            }
+        });
+    }
+
+    var saveAndAddClear = function () {
+        if (!saveValidationPass()) {
+            return;
+        }
+        $.messager.confirm('提示', '确定保存吗?', function (r) {
+            if (r) {
+                showLoading();
+                afterSave = "clear";
+                $("#addForm").submit();
+            }
+        });
+    }
+
+    var saveAndAddCopy = function () {
+        if (!saveValidationPass()) {
+            return;
+        }
+        $.messager.confirm('提示', '确定保存吗?', function (r) {
+            if (r) {
+                showLoading();
+                afterSave = "copy";
+                $("#addForm").submit();
+            }
+        });
+
+    }
+
+    var afterSaveOperate = function () {
+        switch (afterSave) {
+            case "close":
+                getCurrentTab().afterSaveRefreshData();
+                close();
+                break;
+            case "clear":
+                $('form').form('clear');
+                $("#hidSn").val("0");
+                $("#hidParentSn").val(parentSn);
+                getCurrentTab().afterSaveRefreshData();
+                break;
+            case "copy":
+                $("#hidSn").val("0");
+                $("#hidParentSn").val(parentSn);
+                getCurrentTab().afterSaveRefreshData();
+                break;
+        }
+    }
+
+    function loadform() {
+        $('#addForm').form({
+            url: "../../ServiceHandler/SysInfo/SysHelp.ashx?action=SaveDetail&" + Math.random(),
+            onSubmit: function () {
+            },
+            success: function (data) {
+                var dataObj = eval('(' + data + ')');
+                if (isServerResultDataPass(dataObj)) {
+                    correctNotification(dataObj.ResultDataFull);
+                    hideLoading();
+                    afterSaveOperate();
+                } else {
+                    hideLoading();
+                    FailResultDataToTip(dataObj);
+                }
+            }
+        });
+    }
+</script>
+</html>

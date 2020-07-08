@@ -1,0 +1,217 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link id="CustomTheme" type="text/css" rel="stylesheet"	href="../../Resource/css/index/customLightBlue.css" />
+    <link id="EasyuiTheme" type="text/css" rel="stylesheet"	href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+    <link id="JqgridTheme" type="text/css" rel="stylesheet"	href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/fileUpload/css/fileUpload.css" />
+    <link type="text/css" rel="stylesheet" href="../../View/ywgl/css/planExec.css" />
+    <style type="text/css">
+        .datagrid {
+            background: #EBEFF3;
+            overflow: hidden;
+            text-align: left;
+            margin: 0;
+            border: 0;
+            -moz-border-radius: 0 0 0 0;
+            -webkit-border-radius: 0 0 0 0;
+            border-radius: 0 0 0 0;
+            float: left;
+            margin-right: 15px;
+        }
+    </style>
+    <title>#{supplier.detail.thisPage}</title>
+</head>
+<body style="overflow:hidden;" id="body">
+<div id="toolbar" class="easyui-panel" style="padding: 6px; border-width:0; border-bottom-width:1px;">
+    #{PAGE_TOOLBAR_BUTTONROLE}
+</div>
+<form id="addForm" class="easyui-form" method="post" data-options="novalidate:true">
+    <table class="editTable">
+        <tr>
+            <td class="editTitle" >
+                通知类型:
+            </td>
+            <td class="editControl">
+                <input class="easyui-combobox" id="noticeGroup" name="noticeGroup"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="editTitle" >
+                用户分类:
+            </td>
+            <td class="editControl">
+                <div>
+                    <input type="radio" name="checkbox" id="isOp" value="isOp" checked="checked"/><label for="isOp">是否内部管理员</label>
+                    <input type="radio" name="checkbox" id="isContractor" value="isContractor" /><label for="isContractor">是否承运商</label>
+                    <input type="radio" name="checkbox" id="isCus" value="isCus" /><label for="isCus">是否客户</label>
+                    <input type="radio" name="checkbox" id="is_q_site" value="isQSite" /><label for="is_q_site">是否起运站点</label>
+                    <input type="radio" name="checkbox" id="is_p_site" value="isPSite" /><label for="is_p_site">是否配送站点</label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="editTitle"></td>
+            <td class="editControl">
+                <div id="dataList" style="width: 200px;height: 300px;float: left;"></div>
+                <div id="localList" style="width: 200px;height: 300px;float: left;"></div>
+            </td>
+        </tr>
+    </table>
+</form>
+<script type="text/javascript" src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/upload.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/file.js"></script>
+<script type="text/javascript" src="../../Resource/js/cookie/jquery.cookie.js"></script>
+<script language="javascript" type="text/javascript">
+
+    $(function(){
+        loadDataList();
+        loadLocalList();
+        loadNoticeType();
+        searchData();
+        $("input[name='checkbox']").bind('click',function(){
+            searchData();
+        });
+    });
+
+    hideLoading();
+
+    var loadDataList = function() {
+        $("#dataList").datalist({
+            valueField: 'id',
+            textField: 'name',
+            onClickRow : changeData
+        });
+    }
+    var loadLocalList = function() {
+        $("#localList").datalist({
+           valueField: 'id',
+           textField: 'name',
+           onClickRow : changeLocalData
+        });
+    }
+
+    var searchData = function() {
+        $("#dataList").datalist({
+            url : getAllUser(),
+            datatype: 'json',
+            valueField: 'id',
+            textField: 'name'
+        }).trigger("reloadGrid");
+    }
+
+    var getAllUser = function() {
+        var val = $("input[name='checkbox']:checked").val();
+        return '../../setRecipients/getUserInfoByType?t=' + Math.random() + "&userType=" + val;
+    }
+
+    var changeData = function(rowIndex,rowData) {
+        $('#dataList').datalist('deleteRow', rowIndex);
+        $('#localList').datalist('appendRow',rowData);
+    }
+
+    var changeLocalData = function(rowIndex, rowData) {
+        $("#localList").datalist('deleteRow', rowIndex);
+        $("#dataList").datalist('appendRow', rowData);
+    }
+
+    var loadNoticeType = function() {
+        $.ajax({
+            url: "../../sysInfo/dictionaryData/getDictionaryDataList?t=" + Math.random() + "&dicTypeCode=noticeMode",
+            type: "GET",
+            async: false,
+            success: function (dataObj) {
+                dataObj.unshift({dicValue: '', dicText: '请选择'});
+                $("#noticeGroup").combobox({
+                    valueField: 'dicValue',
+                    textField: 'dicText',
+                    loader: function(params, success, error) {
+                        success(dataObj);
+                    },
+                    onSelect: function(rowData) {
+                        loadLocalListJson(rowData.dicValue);
+                        searchData();
+                    }
+                })
+            }
+        });
+    }
+
+    var loadLocalListJson = function(dicValue) {
+        $("#localList").datalist({
+            url : getLocalUser(dicValue),
+            datatype: 'json',
+            valueField: 'id',
+            textField: 'name'
+        }).trigger("reloadGrid");
+    }
+
+    var getLocalUser = function(dicValue) {
+        return '../../setRecipients/getUserInfoByNoticeGroup?t=' + Math.random() + "&noticeGroup=" + dicValue;
+    }
+
+    var save = function() {
+        var rows = $("#localList").datagrid('getRows');
+        if(rows.length == 0) {
+            errorNotification({ SimpleMessage: '请先设置接收人'});
+            return;
+        }
+        var result = [];
+        var obj = {};
+        for(var i =0; i<rows.length; i++){
+           if(!obj[rows[i].id]){
+              result.push(rows[i]);
+              obj[rows[i].id] = true;
+           }
+        }
+        var str = "";
+        result.forEach(function(item){
+           str += item.id + ",";
+        });
+        var formData = {};
+        formData.noticeGroup = $("#noticeGroup").combobox('getValue');
+        if(formData.noticeGroup == "") {
+            errorNotification({ SimpleMessage: '请先选择通知分类'});
+            return
+        }
+        formData.noticeUser = str;
+        $.messager.confirm('提示', '确定要保存吗?', function(r){
+            if(r) {
+                $.ajax({
+                   url: '../../setRecipients/saveOrUpdate?t=' + Math.random(),
+                   type: 'POST',
+                   data: 'jsonData=' + JSON.stringify(formData),
+                   success: function(dataObj) {
+                       if (isServerResultDataPass(dataObj)) {
+                           correctNotification({ SimpleMessage : '保存成功'});
+                       } else {
+                           FailResultDataToTip(dataObj);
+                       }
+                   },
+                    error : function(message) {
+                        hideLoading();
+                    }
+                });
+            }
+        })
+    }
+
+</script>
+</body>
+</html>

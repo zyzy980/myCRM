@@ -1,0 +1,837 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+    <link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+    <link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/moment/css/daterangepicker.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/fileUpload/css/fileUpload.css" />
+    <title>VIP</title>
+</head>
+<body>
+<div id="toolbar" class="easyui-panel" style="padding:4px;border-width:0;border-bottom-width:1px;">
+    #{PAGE_TOOLBAR_BUTTONROLE}
+</div>
+<div class="searchParamesPanel">
+	<table id="searchParamesTable">
+		<tr class="searchParamesTrShow">
+            <td class="searchParamesTdControl">
+                <input type="text" id="common_sheet_title" class="easyui-textbox" style="width: 180px" />
+            </td>
+            <td width="20px;"></td>
+            <td class="searchParamesTdTitle">
+                运输方式:
+            </td>
+            <td class="searchParamesTdControl">
+                <input type="text" name="trans_mode" id="trans_mode" class="easyui-combobox" style="width: 110px" />
+            </td>
+            <td width="20px;"></td>
+            <td class="searchParamesTdTitle">
+                起运地:
+            </td>
+            <td class="searchParamesTdControl">
+                <input type="text" name="begin_address" id="begin_address" class="easyui-combobox" style="width: 110px" />
+            </td>
+            <td width="20px;"></td>
+            <td class="searchParamesTdTitle">
+                目的地:
+            </td>
+            <td class="searchParamesTdControl">
+                <input type="text" name="end_address" id="end_address" class="easyui-combobox" style="width: 110px" />
+            </td>
+            <td width="20px;"></td>
+            <td class="searchParamesTdTitle">
+                起运时间:
+            </td>
+            <td class="searchParamesTdControl">
+                <input type="text" name="begin_date_start" id="begin_date_start" class="easyui-datebox" style="width: 100px" />
+            </td>
+            <td class="searchParamesTdTitle">
+                -
+            </td>
+            <td class="searchParamesTdControl">
+                <input type="text" name="begin_date_end" id="begin_date_end" class="easyui-datebox" style="width: 100px" />
+            </td>
+            <td width="20px;"></td>
+            <td class="searchParamesTdTitle">
+                状态:
+            </td>
+            <td class="searchParamesTdControl">
+                <input type="text" id="js_state" class="easyui-combobox" style="width: 100px" />
+            </td>
+
+        </tr>
+    </table>
+</div>
+<div id="gridControl">
+    <table id="gridTable"></table>
+    <div id="gridPager"></div>
+</div>
+<div id="fileUpload" style="position: absolute; left: 50%; top: 50%;width: 600px; height: 400px; margin-left: -300px; margin-top: -200px; display: none;"></div>
+<form id="formExportFile" class="formExportFile" target="_blank" action="../../nosettlement/Js_Non_Down_Vehicle/exportData" method="post" style="display: none">
+    <input type="text" id="id" name="id" value="" />
+</form>
+
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/moment/js/moment.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/moment/js/jquery.daterangepicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/upload.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/file.js"></script>
+<script language="javascript" type="text/javascript">
+    var userlevel="";
+	$(function() {
+	    initScript();
+	    initData();
+	    initStyle();
+	});
+
+    $(window).load(function() {
+    	hideLoading();
+    });
+
+    var initStyle = function() {
+        $("#common_sheet_title").textbox({
+            prompt: "车架号/交接单号"
+        });
+    	enterTriggerEvent('searchParamesTable', 'searchData');
+    };
+
+    var initScript = function() {
+        $(window).resize(function() {
+            setGridHeightWidth();
+            setToolbarHeightWidth();
+        });
+        setTimeout(getUserLevel,10);
+    };
+    function getUserLevel() {
+        $.ajax({
+            url :"../../sysInfo/user/getUserLevel?t=" + Math.random(),
+            type:"get",
+            contentType:'application/json;charset=utf-8',
+            data:null,
+            success : function(dataObj){
+                if (isServerResultDataPass(dataObj)) {
+                    userlevel=dataObj.resultDataFull;
+                }
+            }
+        });
+    }
+
+    // 加载数据
+    var initData = function() {
+        getDictionaryData([{
+            //初始化结算状态数据字典
+            dicTypeCode : Global_DicType.NO_VEHICLE_DOWN_JS_STATE,
+            ADD_ALL: true,
+            callback : function(callbackData) {
+                window.JS_STATEMap = {};
+                for(var i = 0; i < callbackData.length; i++){
+                    JS_STATEMap[callbackData[i].dicvalue] = callbackData[i].dictext;
+                }
+                $("#js_state").combobox({
+                    valueField: 'dicvalue',
+                    textField: 'dictext',
+                    panelHeight: 200,
+                    editable: true,
+                    onSelect:function () {
+                        searchData();
+                    }
+                });
+                $("#js_state").combobox("loadData", callbackData);
+            }
+        },
+            {
+                //运输方式 - 数据字典
+                dicTypeCode : Global_DicType.TRANS_MODE,
+                ADD_ALL: true,
+                callback : function(callbackData) {
+                    window.TRANS_MODEMap = {};
+                    for(var i = 0; i < callbackData.length; i++){
+                        TRANS_MODEMap[callbackData[i].dicvalue] = callbackData[i].dictext;
+                    }
+                    $("#trans_mode").combobox({
+                        valueField: 'dicvalue',
+                        textField: 'dictext',
+                        panelWidth:170,
+                        panelHeight: 200,
+                        editable: true,
+                        onSelect:function () {
+                            searchData();
+                        }
+                    });
+                    $("#trans_mode").combobox("loadData", callbackData);
+                }
+            },
+            {
+                //起运地 - 数据字典
+                dicTypeCode : Global_DicType.CITY_ARCHIVE,
+                ADD_ALL: true,
+                callback : function(callbackData) {
+                    window.BEGIN_ADDRESSMap = {};
+                    for(var i = 0; i < callbackData.length; i++){
+                        BEGIN_ADDRESSMap[callbackData[i].dicvalue] = callbackData[i].dictext;
+                    }
+                    $("#begin_address").combobox({
+                        valueField: 'dicvalue',
+                        textField: 'dictext',
+                        panelHeight: 200,
+                        editable: true,
+                        onSelect:function () {
+                            searchData();
+                        }
+                    });
+                    $("#begin_address").combobox("loadData", callbackData);
+                }
+            },
+            {
+                //起运地 - 数据字典
+                dicTypeCode : Global_DicType.CITY_ARCHIVE,
+                ADD_ALL: true,
+                callback : function(callbackData) {
+                    window.END_ADDRESSMap = {};
+                    for(var i = 0; i < callbackData.length; i++){
+                        END_ADDRESSMap[callbackData[i].dicvalue] = callbackData[i].dictext;
+                    }
+                    $("#end_address").combobox({
+                        valueField: 'dicvalue',
+                        textField: 'dictext',
+                        panelHeight: 200,
+                        editable: true,
+                        onSelect:function () {
+                            searchData();
+                        }
+                    });
+                    $("#end_address").combobox("loadData", callbackData);
+                }
+            },
+            {
+                //初始化结算状态数据字典
+                dicTypeCode : Global_DicType.JS_NON_DOWN_DATA_TYPE,
+                ADD_ALL: true,
+                callback : function(callbackData) {
+                    window.JS_NON_DOWN_DATA_TYPEMap = {};
+                    for(var i = 0; i < callbackData.length; i++){
+                        JS_NON_DOWN_DATA_TYPEMap[callbackData[i].dicvalue] = callbackData[i].dictext;
+                    }
+                }
+            }
+
+        ]);
+
+        loadList();// 加载数据列表
+    };
+
+    // 查询数据
+    function searchData() {
+        $('#gridTable').jqGrid('setGridParam', {
+            url: getSearchGridUrl(),
+            datatype: 'json',
+            postData: { 'filters': '' },
+            page: 1
+        }).trigger('reloadGrid');
+    };
+
+    // 获取查询URL
+    var getSearchGridUrl = function() {
+    	var customSearchFilters = encodeURI(getSearchFilters());
+        return '../../nosettlement/Js_Non_Down_Vehicle/getListForGrid?' + Math.random() + '&customSearchFilters=' + customSearchFilters +"&contract_type="+$("[name=contract_type]:checked").val();
+    };
+
+    // 获取查询条件
+    var getSearchFilters = function() {
+        var begin_date_end=$('#begin_date_end').datebox('getValue');
+        if(begin_date_end!="")
+            begin_date_end=addDate(begin_date_end,1);
+        var parmsArray = [
+            [
+                { name: 'vin', value: $('#common_sheet_title').textbox('getValue'), op: 'cn'},
+                { name: 'handover_no', value: $('#common_sheet_title').textbox('getValue'), op: 'cn'}
+            ],
+            {name: 'type', value: '0', op: 'eq'},
+            {name: 'attribute', value: '0', op: 'eq'},
+            {name: 'trans_mode', value: $('#trans_mode').combobox('getValue'), op: 'eq'},
+            {name: 'begin_address', value: $('#begin_address').combobox('getValue'), op: 'eq'},
+            {name: 'end_address', value: $('#end_address').combobox('getValue'), op: 'eq'},
+            {name: 'begin_date', value: $('#begin_date_start').datebox('getValue'), op: 'ge'},
+            {name: 'begin_date', value: begin_date_end, op: 'le'},
+            {name: 'js_state', value: $('#js_state').combobox('getValue'), op: 'eq'}
+        ];
+        return formatSearchParames(parmsArray);
+    };
+
+    // 加载数据列表
+    var loadList = function() {
+        $('#gridTable').jqGrid({
+            url: getSearchGridUrl(),
+            datatype: 'json',
+            width: 'none',
+            colNames: [
+                "状态","数据类型","属性","账单编号","交车单号","车架号","承运商","合同编号","合同类型","发运日期","收车日期","服务类型","运输方式","运输车型","承运数量","计费数量","起运地","目的地",
+                "计费标准","计费元/台","不含税运费","不含税其他费用","不含税费用合计","含税费用合计","税率","备注","type","id"
+            ],
+            colModel: [
+                 { name:  "js_state", index:  "js_state", align: "center", isSort: false, width: 60, type: "string", search: true, frozen: false, searchoptions: { sopt: ["eq"]}
+                    ,formatter:function(value,grid,rows){
+                        return window.JS_STATEMap[value];
+                    }
+                 },
+                { name:  "js_data_type", index:  "js_data_type", align: "center", isSort: false, width: 60, type: "string", search: true, frozen: false, searchoptions: { sopt: ["eq"]}
+                    ,formatter:function(value,grid,rows){
+                        return window.JS_NON_DOWN_DATA_TYPEMap[value];
+                    }
+                },
+                { name: "attribute", index: "attribute", align: "center", sorttype: "string", search: false, sortable: false, width: 60, frozen: false
+                    ,formatter:function(value,grid,rows){
+                        var attributeStr="体系外";
+                        if(rows.attribute=="0")
+                            attributeStr="体系内";
+                        return attributeStr;
+                    }
+                },
+                { name:  "bill_number", index:  "bill_number", align: "left", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+                { name:  "handover_no", index:  "handover_no", align: "left", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+                { name:  "vin", index:  "vin", align: "left", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+                { name:  "carrier_name", index:  "carrier_name", align: "left", isSort: false, width: 120, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+
+                { name: 'contract_no', index: 'contract_no', align: 'left', width: 90, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'contract_type', index: 'contract_type', align: 'center', width: 90, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+                    ,formatter: function (value, grid, rows) {
+                        var res="";
+                        if(rows.contract_type=="0")
+                            res="临时合同";
+                        else if(rows.contract_type=="1")
+                            res="正式合同";
+                        else if (rows.contract_type=="2")
+                            res="预估合同";
+                        return res;
+                    }
+                },
+                { name:  "begin_date", index:  "begin_date", align: "left", isSort: false, width: 120, type: "string", search: true, frozen: false, searchoptions: { sopt: ["eq"]}
+                    ,formatter:"date",formatoptions: {srcformat:'Y-m-d H:i:s',newformat:'Y-m-d'}},
+                { name:  "receipt_date", index:  "receipt_date", align: "left", isSort: false, width: 120, type: "string", search: true, frozen: false, searchoptions: { sopt: ["eq"]}
+                    ,formatter:"date",formatoptions: {srcformat:'Y-m-d H:i:s',newformat:'Y-m-d'}},
+                { name:  "service_type", index:  "service_type", align: "left", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+                { name:  "trans_mode", index:  "trans_mode", align: "left", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]}
+                    ,formatter:function(value,grid,rows){
+                        var trans_mode= window.TRANS_MODEMap[value];
+                        if(trans_mode==null || trans_mode==undefined)
+                            trans_mode=rows.trans_mode;
+                        return trans_mode;
+                    }
+                },
+                { name:  "car_type", index:  "car_type", align: "left", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+                { name:  "shipment_qty", index:  "shipment_qty", align: "right", isSort: false, width: 80, type: "string", search: true, frozen: false, searchoptions: { sopt: ["eq"]} },
+                { name:  "js_qty", index:  "js_qty", align: "right", isSort: false, width: 80, type: "string", search: true, frozen: false, searchoptions: { sopt: ["eq"]} },
+                { name:  "begin_address", index:  "begin_address", align: "left", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+                { name:  "end_address", index:  "end_address", align: "left", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+                { name:  "freight_basis", index:  "freight_basis", align: "right", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+                { name:  "not_tax_price", index:  "not_tax_price", align: "right", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+                { name:  "not_tax_freight", index:  "not_tax_freight", align: "right", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+                { name:  "not_tax_other_amount", index:  "not_tax_other_amount", align: "right", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+                { name:  "not_tax_amount", index:  "not_tax_amount", align: "right", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+                { name:  "tax_amount", index:  "tax_amount", align: "right", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+                { name:  "tax_rate", index:  "tax_rate", align: "right", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]}
+                    ,formatter:function(value,grid,rows){
+                        var tax_rate= rows.tax_rate;
+                        if(tax_rate!="") {
+                            if(tax_rate.substring(0,1)=="."){
+                                tax_rate="0"+tax_rate;
+                            }
+                            tax_rate=(parseFloat(tax_rate) * 100) +"%";
+                        }
+                        return tax_rate;
+                    }
+                },
+                { name:  "remark", index:  "remark", align: "left", isSort: false, width: 100, type: "string", search: true, frozen: false, searchoptions: { sopt: ["cn", "eq", "ne"]} },
+                { name: "type", index: "type", align: "left", sorttype: "string", search: false, sortable: false, width: 40, frozen: false, hidden: true },
+                { name: "id", index: "id", align: "left", sorttype: "string", search: false, sortable: false, width: 40, frozen: false  }
+            ],
+            shrinkToFit: false,
+            altRows: true,
+            altclass: 'gridSpacingClass',
+            forceFit: true,
+            cellLayout: 0,
+            scroll: false,
+            autowidth: true,
+            sortname: 'create_date',
+            sortorder: 'desc',
+            loadonce: false,
+            mtype: 'POST',
+            viewrecords: true,
+            rownumbers: true,
+            multiselect: true,
+            rowNum: 15,
+            height: '100%',
+            rowList: [15, 20, 30, 50],
+            pager: '#gridPager',
+            jsonReader: {
+                root: 'rows',
+                total: 'total',
+                page: 'page',
+                records: 'records',
+                repeatitems: false
+            },
+            gridComplete: function() {
+                $('.cbox').shiftSelect();
+                afterRedRow();
+            },
+            loadComplete: function(xhr) {
+                FailResultDataToTip(xhr);
+            }
+        });
+        $('#gridTable').jqGrid('navGrid', '#gridPager',{
+        	add : false,
+        	edit : false,
+        	del : false,
+        	refresh : true
+        }, {}, {}, {}, {
+        	multipleSearch : true,
+        	closeOnEscape : true,
+        	closeAfterSearch : true
+        });
+        $('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+        	caption : '设置列',
+        	title : 'Set Columns',
+        	onClickButton : toggleGridColumns
+        });
+        $('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+        	caption : '快速搜索',
+        	title : 'Quick Search',
+        	onClickButton : toggleGridSearchToolbar
+        });
+        $('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+            caption: '导出数据',// 导出数据
+            title: 'Export Datas',
+            buttonicon: 'ui-icon-disk',
+            onClickButton : function () {
+                exportData();
+            }
+        });
+        setGridHeightWidth();
+    };
+
+    //jqGrid加载
+    function afterRedRow() {
+        var ids = $("#gridTable").jqGrid("getDataIDs");
+        for (var i = 0; i < ids.length; i++) {
+            var rowData = $("#gridTable").getRowData(ids[i]);
+            //预估合同标注为红色
+            if (rowData.contract_type == '预估合同') {
+                $('#gridTable #' + ids[i]).find("td").css('color', "#8B0000");
+            }
+            else if(rowData.js_data_type == '预付' || rowData.js_data_type == '3') {
+                $('#gridTable #' + ids[i]).find("td").css('color', "#00dede");
+            }
+
+        }
+    }
+
+
+
+
+    //LTJ:2019-07-24
+    function GetSelArrrow()
+    {
+        var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
+        if (selectRowItems.length == 0) {
+            errorNotification({
+                SimpleMessage : "请至少选择一行数据行进行操作。"
+            });
+            return null;
+        }
+        return selectRowItems;
+    }
+
+    function GetSelDataList(selectRowItems,stateStr)
+    {
+        var dataList="";
+        var dataList_error="";
+        for(var i=0;i<selectRowItems.length;i++)
+        {
+            var rowData = $("#gridTable").jqGrid("getRowData", selectRowItems[i]);
+            if(stateStr!="" && rowData.js_state!=stateStr){
+                dataList_error+=rowData.vin+",";
+            }else{
+                dataList+=rowData.id+",";
+            }
+        }
+        if (dataList_error != "") {
+            errorNotification({
+                SimpleMessage : "选中数据不是“"+stateStr+"”状态；VIN:"+dataList_error
+            });
+            return null;
+        }
+        dataList=dataList.substring(0,dataList.length-1);
+        return dataList;
+    }
+
+
+
+
+
+
+
+
+    //结算
+    function settlement(){
+        var selectRowItems = GetSelArrrow();
+        if(selectRowItems==null)
+            return;
+        var dataList=GetSelDataList(selectRowItems,"正常");
+        if(dataList==null)
+            return;
+
+        $.messager.confirm('提示', '确认对选择数据进行结算操作?', function (r) {
+            if (r) {
+                showLoading();
+                $.ajax({
+                    url :"../../nosettlement/Js_Non_Down_Vehicle/settlement?t=" + Math.random(),
+                    type:"POST",
+                    contentType:'application/json;charset=utf-8',
+                    data:JSON.stringify({"id":encodeURI(dataList)}),
+                    success : function(dataObj){
+                        hideLoading();
+                        if (isServerResultDataPass(dataObj)) {
+                            correctNotification(dataObj.resultDataFull);
+                            searchData();
+                        } else {
+                            FailResultDataToTip(dataObj);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    //撤回
+    function un_settlement(){
+        var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
+        if (selectRowItems.length == 0) {
+            errorNotification({
+                SimpleMessage : "请至少选择一行数据行进行操作"
+            });
+            return;
+        }
+
+        var requestParam = [];
+        var error="";
+        for(var i = 0; i < selectRowItems.length; i++){
+            var rowData = $("#gridTable").jqGrid("getRowData", selectRowItems[i]);
+            if(rowData.js_state=="结算")
+            {
+                requestParam.push(rowData.id);
+            }else {
+                error=rowData.handover_no+",";
+            }
+        }
+        if(error!="")
+        {
+            errorNotification({
+                SimpleMessage : "选中数据不是“结算”状态，交车单号："+error
+            });
+            return;
+        }
+
+        $.messager.confirm('提示', '确认对选择数据进行撤回操作?', function (r) {
+            if (r) {
+                showLoading();
+                $.ajax({
+                    url :"../../nosettlement/Js_Non_Down_Vehicle/un_settlement?t=" + Math.random(),
+                    contentType: "application/json",
+                    data: JSON.stringify(requestParam),
+                    type: "POST",
+                    success : function(dataObj){
+                        hideLoading();
+                        if (isServerResultDataPass(dataObj)) {
+                            correctNotification(dataObj.resultDataFull);
+                            searchData();
+                        } else {
+                            FailResultDataToTip(dataObj);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    //业务审核
+    function yw_check()
+    {
+        var selectRowItems = GetSelArrrow();
+        if(selectRowItems==null)
+            return;
+        var dataList=GetSelDataList(selectRowItems,"结算");
+        if(dataList==null)
+            return;
+        data_check(dataList,"2","1","check");
+    }
+    function yw_uncheck()
+    {
+        var selectRowItems = GetSelArrrow();
+        if(selectRowItems==null)
+            return;
+        var dataList=GetSelDataList(selectRowItems,"业务审核");
+        if(dataList==null)
+            return;
+        data_check(dataList,"1","2","uncheck");
+    }
+    //财务审核
+    function finance_check()
+    {
+        var selectRowItems = GetSelArrrow();
+        if(selectRowItems==null)
+            return;
+        var dataList=GetSelDataList(selectRowItems,"业务审核");
+        if(dataList==null)
+            return;
+        data_check(dataList,"3","2","check");
+    }
+    function finance_uncheck()
+    {
+        var selectRowItems = GetSelArrrow();
+        if(selectRowItems==null)
+            return;
+        var dataList=GetSelDataList(selectRowItems,"财务审核");
+        if(dataList==null)
+            return;
+        data_check(dataList,"2","3","uncheck");
+    }
+
+    //提交数据
+    function data_check(data,state,js_batch,kind){
+        var confirmStr="";
+        var simpleMessage="";
+        if(kind=='check'){
+            confirmStr='确认审核选中数据吗?';
+            simpleMessage="审核数据成功";
+        }else if(kind=='uncheck'){
+            confirmStr='确认反审核选中数据吗?';
+            simpleMessage="反审核数据成功";
+        }
+
+        $.messager.confirm('提示', confirmStr , function (r) {
+            if (r) {
+                showLoading();
+                $.ajax({
+                    url :"../../nosettlement/Js_Non_Down_Vehicle/data_check?t=" + Math.random(),
+                    type:"POST",
+                    contentType:'application/json;charset=utf-8',
+                    data:JSON.stringify({"id":encodeURI(data),"js_state":state,"js_batch":js_batch,"remark":kind}),
+                    success : function(dataObj){
+                        hideLoading();
+                        if (isServerResultDataPass(dataObj)) {
+                            correctNotification({
+                                SimpleMessage : simpleMessage
+                            });
+                            searchData();
+                        } else {
+                            FailResultDataToTip(dataObj);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+
+
+
+
+
+
+
+
+
+    //驳回数据
+    function replayData(){
+        var selectRowItems = GetSelArrrow();
+        if(selectRowItems==null)
+            return;
+
+        var stateStr="";
+        if(userlevel=='1'){//业务驳回
+            stateStr='结算';
+        }else if(userlevel=='2'){//财务驳回
+            stateStr='业务审核';
+        }
+
+        var dataList=GetSelDataList(selectRowItems,stateStr);
+        if(dataList==null)
+            return;
+
+
+        $.messager.confirm('提示', "确认驳回选中的数据吗？" , function (r) {
+            if (r) {
+                showLoading();
+                $.ajax({
+                    url :"../../nosettlement/Js_Non_Down_Vehicle/replayData?t=" + Math.random(),
+                    type:"POST",
+                    contentType:'application/json;charset=utf-8',
+                    data:JSON.stringify({"id":encodeURI(dataList)}),
+                    success : function(dataObj){
+                        hideLoading();
+                        if (isServerResultDataPass(dataObj)) {
+                            correctNotification({
+                                SimpleMessage : "驳回数据成功。"
+                            });
+                            searchData();
+                        } else {
+                            FailResultDataToTip(dataObj);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+
+
+
+
+    //导出对帐单
+    //业务审核
+    function exportData()
+    {
+        var selectRowItems = GetSelArrrow();
+        if(selectRowItems==null)
+            return;
+        var data=GetSelDataList(selectRowItems,"");
+        $.messager.confirm('提示', "确认导出选中数据吗？" , function (r) {
+            if (r) {
+                $("#formExportFile #id").val(data);
+                $("#formExportFile").submit();
+            }
+        });
+    }
+
+
+
+    function setcontract_no(){
+        var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
+        if (selectRowItems.length == 0) {
+            errorNotification({
+                SimpleMessage : "请至少选择一行数据行进行操作"
+            });
+            return;
+        }
+        var requestParam = [];
+        var error="";
+        for(var i = 0; i < selectRowItems.length; i++){
+            var rowData = $("#gridTable").jqGrid("getRowData", selectRowItems[i]);
+            if(rowData.js_state=="正常" || (rowData.js_state=="台账" && rowData.contract_type=="预估合同"))
+            {
+                requestParam.push(rowData.id);
+            }else {
+                error=rowData.handover_no+",";
+            }
+        }
+        if(error!="")
+        {
+            errorNotification({
+                SimpleMessage : "选中数据不是“正常”状态或“台账”状态且“预估合同”合同类型，车架号："+error
+            });
+            return;
+        }
+
+        $.messager.confirm('提示', '确认对选择数据进行匹配合同?', function (r) {
+            if (r) {
+                showLoading();
+                $.ajax({
+                    url :"../../nosettlement/Js_Non_Down_Vehicle/setcontract_no?t=" + Math.random(),
+                    contentType: "application/json",
+                    type: "POST",
+                    data: JSON.stringify(requestParam),
+                    success : function(dataObj){
+                        hideLoading();
+                        if (isServerResultDataPass(dataObj)) {
+                            correctNotification(dataObj.resultDataFull);
+                            searchData();
+                        } else {
+                            FailResultDataToTip(dataObj);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    //预付申请
+    function expect_apply()
+    {
+        var selectRowItems = GetSelArrrow();
+        if(selectRowItems==null)
+            return;
+
+        var dataList="";
+        var dataList_error="";
+        for(var i=0;i<selectRowItems.length;i++)
+        {
+            var rowData = $("#gridTable").jqGrid("getRowData", selectRowItems[i]);
+            if(rowData.js_state!="承运商审核")
+            {
+                dataList_error+="选中交车单号("+rowData.handover_no+")状态不是“承运商审核”；";
+            }
+            if(rowData.js_data_type!="预付")
+            {
+                dataList_error+="选中交车单号("+rowData.handover_no+")数据类型不是“预付”；";
+            }
+            dataList+=rowData.id+",";
+        }
+        if (dataList_error != "") {
+            errorNotification({
+                SimpleMessage : "预付申请必须是“承运商审核”状态且“预付”数据类型；<br>"+dataList_error
+            });
+            return;
+        }
+        dataList=dataList.substring(0,dataList.length-1);
+        $.messager.confirm('提示', '确认预付申请吗?', function (r) {
+            if (r) {
+                showLoading();
+                $.ajax({
+                    url :"../../nosettlement/Js_Non_Down_Vehicle/expect_apply?t=" + Math.random(),
+                    type:"POST",
+                    contentType:'application/json;charset=utf-8',
+                    data:JSON.stringify({"id":encodeURI(dataList),"type":"0"}),
+                    success : function(dataObj){
+                        hideLoading();
+                        if (isServerResultDataPass(dataObj)) {
+                            correctNotification(dataObj.resultDataFull);
+                            searchData();
+                        } else {
+                            FailResultDataToTip(dataObj);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

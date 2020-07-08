@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="">
+
+<link href="css/style.css" rel="stylesheet">
+<link href="css/util/pagination.css" rel="stylesheet">
+<link id="CustomTheme" type="text/css" rel="stylesheet"	href="../../Resource/css/index/customLightBlue.css" />
+<link id="EasyuiTheme" type="text/css" rel="stylesheet"	href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+<link id="JqgridTheme" type="text/css" rel="stylesheet"	href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+<link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+<link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+<title>#{SysModuleManage_Page_Title}</title>
+</head>
+<body>
+	<div id="toolbar" class="easyui-panel"
+		style="padding: 4px; border-width: 0; border-bottom-width: 1px;">
+		#{PAGE_TOOLBAR_BUTTONROLE}</div>
+	<div class="container">
+		<!--第一部分-->
+		<div class="order-detail">
+
+			<table class="order-table"
+				style="padding-left: 60px; width: 100%; cellpadding: 0; cellspacing: 10">
+				<tbody>
+					<tr>
+						<td align="right" class="filltitle">车次号</td>
+						<td><input class="form-style field" placeholder=""
+							name="trainNo" readonly="readonly"></td>
+						<td align="right" class="filltitle">客户单号</td>
+						<td><input class="form-style field" placeholder=""
+							name="cusWeituo" readonly="readonly"></td>
+						<td align="right" class="filltitle">状态</td>
+						<td><select name="state" class="field" id="state">
+						</select></td>
+					</tr>
+
+					<tr>
+						<td align="right" class="filltitle">客户</td>
+						<td><input class="form-style field" placeholder=""
+							name="cusNo"></td>
+						<td align="right" class="filltitle">计划起运时间</td>
+						<td><input  class="easyui-datebox field" style="width: 192px; height: 30" placeholder=""
+							name="planBeginDate" id="planBeginDate" data-options="onChange:time,editable:false" ></td>
+						<td align="right" class="filltitle">运输方式</td>
+						<td>
+							<div class="way">
+								<label><input type="radio" name="transportType"
+									value="0"><i>✓</i><em class="xz">汽运</em></label>
+							</div>
+
+							<div class="way">
+								<label><input type="radio" name="transportType"
+									value="1"><i>✓</i><em class="xz">快运</em></label>
+							</div>
+
+							<div class="way">
+								<label><input type="radio" name="transportType"
+									value="2"><i>✓</i><em class="xz">铁路</em></label>
+							</div>
+
+							<div class="way">
+								<label><input type="radio" name="transportType"
+									value="3"><i>✓</i><em class="xz">水路</em></label>
+							</div>
+
+							<div class="way">
+								<label><input type="radio" name="transportType"
+									value="4"><i>✓</i><em class="xz">联运</em></label>
+							</div>
+						</td>
+					</tr>
+
+					<tr>
+						<td align="right" class="filltitle">起运城市</td>
+						<td><input id="tipinputbegin" class="form-style field" placeholder=""
+							name="beginCity"/></td>
+						<td align="right" class="filltitle">目的城市</td>
+						<td><input id="tipinputend"  class="form-style field" placeholder="" name="endCity"></td>
+						<td align="right" class="filltitle">车型</td>
+						<td>
+							<input id="trainType" style="width: 192px;height: 30px;" data-options="editable:false" class="easyui-combobox field" name="trainType"  />
+						</td>
+					</tr>
+
+					<tr>
+						<td align="right" class="filltitle">承运商</td>
+						<td><input class="form-style field" placeholder=""
+							name="contractorName"></td>
+						<td align="right" class="filltitle">车牌</td>
+						<td><input class="form-style field" placeholder=""
+							name="trucknoq"></td>
+						<td align="right" class="filltitle">司机</td>
+						<td><input class="form-style field" placeholder=""
+							name="driverName"></td>
+					</tr>
+
+				</tbody>
+			</table>
+
+		</div>
+		<!--结束-->
+
+		<div class="order-list">
+			<ul>
+
+
+			</ul>
+		</div>
+		<!--第二部分结束-->
+	</div>
+
+	<!-- 分页 -->
+	<div id="pageContainer" style="width: 100%; text-align: center;">
+		<div id="Pagination" class="pagination">
+			<!-- 这里显示分页 -->
+		</div>
+	</div>
+</body>
+
+
+<script type="text/javascript">
+	var time = function(date){
+		$("[name=planBeginDate]").val(date);
+	}
+	
+	
+	
+	
+	 var afterSave = "close";
+	    var code = "";
+	    var sn="";
+	    var callerId = "";
+	    var callerType = "";
+	    var callbackFlag = "";
+	    var originalFormData = "";
+	    var lang = "zh";
+	    var globalStateArray=null; // 全局状态变量
+	  	//从cookie获取当前业务地点
+		var ywlocation = $.cookie("OSUN_whcenter");
+	    $(function () {
+	    	/*  $("#type_name").textbox('textbox').attr("readonly","true"); */
+	        var parms = getUrlParms();
+	        code = parms["code"];
+	        sn= parms["sn"];
+	        lang= parms["lang"];
+	        moduleId = parms["moduleId"];
+	        callerId = parms["callerId"];
+	        callerType = parms["callerType"];
+	        callbackFlag = parms["callbackFlag"];
+	        initCombType();
+	        initData();
+	     // 初始化客户下拉框
+	    	$("#cusNo").combobox({
+	    		valueField : "code",
+	    		textField : "name",
+	    		method : "GET",
+	    		loader:function(param,success,error){  
+	                $.ajax({  
+	                    url:"../../dictionary/getCustomerByYwlocation?ywlocation="+ywlocation,
+	                    dataType: 'json',  
+	                    method:"GET",
+	                    success: function(data){
+	                    	success(data.resultDataFull); 
+	                    } 
+	                }); 
+	            },
+	            onChange:function(param,success,error){
+	            	 $.ajax({  
+	                     url:"../../dictionary/getCustomerByYwlocation?ywlocation="+ywlocation,
+	                     dataType: 'json',  
+	                     method:"GET",
+	                     success: function(data){
+	                     	success(data.resultDataFull); 
+	                     } 
+	                 }); 
+	            }
+	    	});
+	     // 运输方式单选框绑定事件
+	    	/* $("input[name=transportType]").click(function() {
+	    		$("input[name=transportType]").removeClass("field");
+	    	 $(this).addClass("field"); 
+	    	}); */
+
+	    	// 初始化下拉框
+	    	/* $.each(dictionary.stateText, function(key, value) {
+	    		$("#state").append(generalOption(key, value));
+	    	}); */
+	    	var map = new AMap.Map('container', {
+	    		resizeEnable : true,
+	    		zoom : 12,
+	    		center : [ 118.756376, 32.052573 ]
+	    	});
+
+	    	// 初始化车型下拉框
+	    	$("#trainType").combobox({
+	    		valueField : "code",
+	    		textField : "name",
+	    		method : "GET",
+	    		loader:function(param,success,error){  
+	                $.ajax({  
+	                    url:"../../dictionary/findTruckType",
+	                    dataType: 'json',  
+	                    method:"GET",
+	                    success: function(data){
+	                    	success(data.resultDataFull); 
+	                    } 
+	                }); 
+	            }
+	    	});
+
+	    	// 自定义窗体
+	    	var infowindow;
+	    	map.plugin('AMap.AdvancedInfoWindow', function() {
+	    		infowindow = new AMap.AdvancedInfoWindow({
+	    			panel : 'panel',
+	    			placeSearch : true,
+	    			asOrigin : true,
+	    			asDestination : true
+	    		});
+	    	});
+
+	    	// 起运城市与目的城市分别绑定高德地图城市查询API
+	    	$("#tipinputbegin").focus(function() {
+	    		tipinput("tipinputbegin");
+	    	});
+
+	    	$("#tipinputend").focus(function() {
+	    		tipinput("tipinputend");
+	    	});
+
+	    	function tipinput(tipinput) {
+	    		var autoOptions = new AMap.Autocomplete({
+	    			input : tipinput
+	    		});
+	    		// 城市搜索
+	    		var auto = new AMap.Autocomplete(autoOptions);
+	    		var placeSearch = new AMap.PlaceSearch({
+	    			map : map
+	    		}); // 构造地点查询类
+	    		/*
+	    		 * AMap.event.addListener(auto, "select", select);//注册监听，当选中某条记录时会触发
+	    		 */function select(e) {
+	    			placeSearch.setCity(e.poi.adcode);
+	    			placeSearch.search(e.poi.name); // 关键字查询查询
+	    		}
+	    	}
+	    });
+	    $(window).load(function () {
+	        hideLoading();
+	    });
+	    var time = function(date){
+			$("[name=planBeginDate]").val(date);
+		}
+	    
+	    var getSearchFilters = function() {
+			var parmsArray = [
+			{ name: 'sn', value: sn, op: "cn" }
+	        ];
+	        return formatSearchParames(parmsArray);
+	    };
+	    
+	    var getSearchGridUrl = function() {
+	        return '../../bussiness/planExec/findTrainsListing?t=' + Math.random() + '&customSearchFilters=' + encodeURI(getSearchFilters());
+	    };
+	    var initData = function () {
+
+	    	
+	        if (code != "") {
+	            loadDetail();
+	        } else {
+	            $("#sn").val("0");
+	            originalFormData = $('#addForm').serialize();
+	        }
+	    }
+	    
+	    var initCombType = function(){
+	    	
+	    	var dicText = "dicText";
+	    	
+	    	if(lang=="en"){
+	    		dicText = "dicText_en"
+	    	}
+	    	
+	    	$("#type").combobox({
+	    	  url:"../../sysInfo/dictionaryData/getDictionaryDataList?t=" + Math.random()+"&dicTypeCode=SCTS_BASIC",
+	  		  valueField: dicText,  
+	  		  textField: 'dicValue',
+	  		  method:"GET",
+	  		  onChange : function(){
+	  			  var val = $(this).combobox('getText');
+	  			  if(val.indexOf("--")==-1){
+	  				var text = $(this).combobox('getValue');
+	  				$("#type_name").textbox("setValue",text);
+	  			  }
+	  		  },
+	  		  onLoadSuccess: function () { 
+	  			$(this).combobox("setValue","--#{basic.switch}--");
+	  			$.extend($.fn.validatebox.defaults.rules, {
+	    	        selectValueRequired: {
+	    	            validator: function(value,param){
+	    	               	if(value.indexOf("--")!=-1){
+	    	               		return false;
+	    	               	}
+	    	                return true;
+	    	            },
+	    	            message: '#{basic.message.typeValid}.'
+	    	        }
+	    	    });
+	          }
+	  		});
+	    }
+	  
+	    var reset = function() {
+	    	var isReadOnly = $("#code").textbox('textbox').attr("readonly");
+	    	if(isReadOnly==undefined){
+	    		$("#code").textbox("setValue", "");
+	    	}
+			$("#values1").textbox("setValue", "");
+			$("#type_name").textbox("setValue", "");
+			$("#type").combobox("setValue","--#{basic.switch}--");
+			$("#remark").val("");
+		}
+
+	    var validate = function () {
+	        var validated = $("#addForm").form('enableValidation').form('validate');
+	        if (!validated) {
+	            errorNotification({
+	                SimpleMessage: "#{basic.message.saveValid}"
+	            });
+	            return false;
+	        }
+	        var newFormData = $('#addForm').serialize();
+	        if (newFormData == originalFormData) {
+	            errorNotification({
+	                SimpleMessage: "#{business.message.notChange}"
+	            });
+	            return false;
+	        }
+	        return true;
+	    }
+
+	    var save = function () {
+	        if (!validate()) {
+	            return;
+	        }
+
+	        $.messager.confirm('#{business.message.prompt}', '#{business.message.saveQuestion}', function (r) {
+	            if (r) {
+	            	showLoading();
+	                afterSave = "close";
+	                save2();
+	            }
+	        });
+	    }
+
+	    var close = function(){
+	    	closeDialog("planExecDetail");
+	    }
+	    
+	    var afterSaveOperate = function () {
+	        switch (afterSave) {
+	            case "edit":
+				code = $("#code").textbox("getValue");
+				refreshCallerData();
+				openDetail(code);
+				break;
+	            case "close":
+	                refreshCallerData();
+	                close();
+	                break;
+	            case "clear":
+	                $('form').form('clear');
+	                $("#sn").val("0");
+	                $("input", $("#code").next("span")).removeAttr("readonly");
+	                refreshCallerData();
+	                break;
+	            case "copy":
+	                $("#sn").val("0");
+	                $("input", $("#code").next("span")).removeAttr("readonly");
+	                $("#code").textbox('setValue', '');
+	                refreshCallerData();
+	                break;
+	        }
+	    }
+	    
+	    var refreshCallerData = function () {
+	        if (callerType == Global_Constant.Global_Constant_CallerType_Dialog) {
+	            //此callerId此时为dialog的id
+	            getDialog(callerId).refreshCallerData_zdTruckType(callbackFlag);
+	        } else {
+	            //此callerId此时为frame的id
+	            getCurrentTab(callerId).refreshCallerData_zdTruckType(callbackFlag);
+	        }
+	    }
+	    
+	    	//加载车次详情
+	        var loadDetail = function () {
+	            showLoading();
+	            var planExecVO = {};
+	            planExecVO.sn = sn;
+	            var serverUrl = "../../bussiness/planExec/getPlanExecVO?t="+ Math.random();
+	            $.ajax({
+	    			type : "POST",
+	    			url : serverUrl,
+	    			data :sn,
+	    			contentType : 'application/json;charset=utf-8', // 设置请求头信息
+	    			success : function(dataObj) {
+	    				if (isServerResultDataPass(dataObj)){
+	                    $("#state").combobox('select', dataObj.resultDataFull.state);
+	                    $("#trainNo").val(dataObj.resultDataFull.trainNo);
+	                    $("#cusWeituo").val(dataObj.resultDataFull.cusWeituo);
+	                    $("#cusNo").combobox('setValue',dataObj.resultDataFull.cusNo);
+	                    $("#planBeginDate").datebox("setValue",dataObj.resultDataFull.planBeginDate);
+	                    $(":radio[name='transportType'][value='" + dataObj.resultDataFull.transportType + "']").prop("checked", "checked");
+	                    $("[name=beginCity]").val(dataObj.resultDataFull.beginCity);
+	                    $("[name=endCity]").val(dataObj.resultDataFull.endCity);
+	                    $("#trainType").combobox('setValue',dataObj.resultDataFull.trainType);
+	                    $("#contractorName").val(dataObj.resultDataFull.contractorName);
+	                    $("#trucknoq").val(dataObj.resultDataFull.trucknoq);
+	                    $("#driverName").val(dataObj.resultDataFull.driverName);
+	                    originalFormData = $('#addForm').serialize();
+	                } else {	
+	                    FailResultDataToTip(dataObj);
+	                }
+	                hideLoading();
+	    			},
+	            });
+	        }
+		
+		var getFormSerializeData = function() {
+			originalFormData = $('#addForm').serialize();
+		}
+
+	    var save2 =function(){
+	    	planExecVO = FormUtils.toJSONObject($("#addForm"));
+	    	planExecVO.sn = sn;
+	    	var url = "";
+	    	if(sn==-1){
+	    		url = "../../bussiness/planExec/addPlanExec?t=";
+	    	}else{
+	    		url = "../../bussiness/planExec/updatePlanExec?t=";
+	    	}
+	    	$.ajax({
+	    		url : url+ Math.random(),
+			    contentType : 'application/json;charset=utf-8',
+				type : 'POST',
+				data : JSON.stringify(planExecVO),
+	            success : function(dataObj) {
+					if (isServerResultDataPass(dataObj)) {
+						correctNotification(dataObj.resultDataFull);
+						hideLoading();
+						afterSaveOperate();
+					} else {
+						hideLoading();
+						FailResultDataToTip(dataObj);
+					}
+				}
+	    	})
+	    }
+</script>
+</html>

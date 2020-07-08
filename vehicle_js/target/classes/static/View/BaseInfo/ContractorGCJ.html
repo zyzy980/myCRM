@@ -1,0 +1,489 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+    <link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />    
+    <link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+  	<link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+	<link type="text/css" rel="stylesheet" 	href="../../Resource/js/fileUpload/css/fileUpload.css" />
+    <title>#{Page}</title>
+</head>
+<body>
+  <div id="toolbar" class="easyui-panel" style="padding: 4px; border-width: 0; border-bottom-width: 1px;">
+         #{PAGE_TOOLBAR_BUTTONROLE}
+    </div>
+    <div class="searchParamesPanel">
+        <table id="searchParamesTable">
+            <tr class="searchParamesTrShow">
+                <td class="searchParamesTdTitle">#{CarrierID:}</td>
+                <td class="searchParamesTdControl">
+                    <input type="text" name="code" id="code" class="easyui-textbox" />
+                </td>
+                <td class="searchParamesTdTitle">#{CarrierName:}</td>
+                <td class="searchParamesTdControl">
+                    <input type="text" name="name" id="name" class="easyui-textbox" />
+                </td>
+                <td class="editTitle">&nbsp;&nbsp;#{SupplyMode:}</td>
+				<td class="editControl" colspan="2">
+						<input type="text"  name="supply_method" id="supply_method" class="easyui-combobox" data-options="multiple:true"/>
+				</td>
+			</tr>
+        </table>
+    </div>
+    <div id="gridControl">
+        <table id="gridTable">
+        </table>
+        <div id="gridPager">
+        </div>
+    </div>
+    <div id="fileUpload" style="position: absolute; left: 50%; top: 50%; width: 600px; 
+    	height: 400px; margin-left: -300px; margin-top: -200px; display: none;">
+	</div>
+	<div id="fileUploadByContacts" style="position: absolute; left: 50%; top: 50%; width: 600px;
+        height: 400px; margin-left: -300px; margin-top: -200px; display: none;">
+    </div>
+</body>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/regex/regex.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/upload.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/file.js"></script>
+<script language="javascript" type="text/javascript">
+    var moduleId = 0;
+    var opts;
+    var globalStateArray;
+    var supplyModeInnerHTML = {'':'--#{All}--'};
+    var moduleidAuthority = "";
+    $(function () {
+        var parms = getUrlParms();
+        moduleId = parms["moduleId"];
+        moduleidAuthority = parms["moduleId"];
+        initScript();
+        initData();
+        initStyle();
+        
+    });
+
+    $(window).load(function () {
+        hideLoading();
+    });
+
+    var initStyle = function () {
+    	$(":radio").click(function(){
+			searchData();
+		  });
+        enterTriggerEvent("searchParamesTable", "searchData");
+    }
+    var oldSetGridHeightWidth = setGridHeightWidth;
+    var setGridHeightWidth = function() {
+    	oldSetGridHeightWidth(40,170);
+    	oldSetGridHeightWidth(5, 128);
+    };
+
+    var initScript = function () {
+    	showLog({id:"toolbar",operateModuleGlobal:"承运商档案",moduleId:moduleidAuthority});
+    	var v = 0;
+    	$(window).resize(function() {
+    		if (v == 0) {
+    			setTimeout(function() {
+    				setGridHeightWidth();
+    				v = 0;
+    			}, 200)
+    			v = 1;
+    		}
+    		setGridHeightWidth();
+    		setToolbarHeightWidth();
+    	});	
+    }
+    var initData = function () {
+
+		loadSupplyMethod();
+        loadList();
+    }
+
+    function searchData() {
+        $("#gridTable").jqGrid('setGridParam', {
+            url: getSearchGridUrl(),
+            datatype: 'json',
+            postData: { "filters": "" },
+            page: 1
+        }).trigger("reloadGrid");
+    }
+
+    var getSearchGridUrl = function () {
+    	return "../../jcda/contractor/find?t="+Math.random()+"&customSearchFilters=" + encodeURI(getSearchFilters());
+    }
+
+    var getSearchFilters = function () {
+    	
+    	var sm = $("#supply_method").combobox("getValues");
+    	
+    	var supplyMethodParam = [];
+    	
+    	if(sm!=undefined){
+    		for(var i = 0 ; i < sm.length ; i++){
+    			if(sm[i].indexOf("--")==-1){
+    				supplyMethodParam.push(sm[i]);
+    			}
+    		}
+    	}
+        var parmsArray = [
+		  { name: 'c.code', value: $("#code").val(), op: "cn" },
+          { name: 'c.name', value: $("#name").val(), op: "cn" },
+          { name: 'c.supply_method', value: supplyMethodParam, op: "cn" },
+        ];
+        
+
+        return formatSearchParames(parmsArray);
+    }
+
+    var add = function () {
+        openDetail("","");
+    }
+    
+    var remove = function () {
+        var roleidArray = [];
+        var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
+        if (selectRowItems.length == 0) {
+            errorNotification({
+                SimpleMessage: $.i18n.prop('SelectOneInfo')
+            });
+
+            return;
+        }
+        $.messager.confirm($.i18n.prop('Prompt'), $.i18n.prop('DeleteInfos'), function (r) {
+            if (r) {
+                showLoading("#{Loading}#{Page}...");
+                var rolelist = [];
+                for (var i = selectRowItems.length-1; i >= 0; i--) {
+                    var curRowData = $("#gridTable").jqGrid("getRowData", selectRowItems[i]);
+                   	rolelist.push({
+                   		sn : curRowData.sn,
+                   		code : curRowData.code
+                   	});
+                }
+                if (rolelist.length > 0) {
+                	$.ajax({
+                		url : "../../jcda/contractor/delete",
+                		data:"jsonData="+JSON.stringify(rolelist),
+                		type:"POST",
+                		success:function(data){
+                			  if (isServerResultDataPass(data)) {
+                	                searchData();
+                	                correctNotification({
+                	                    SimpleMessage: data.resultDataFull,
+                	                    MoreMessage: data.resultDataFull
+                	                });
+                	            } else {
+                	                FailResultDataToTip(data);
+                	            }
+                	            hideLoading();
+                		}
+                	});
+                }
+            }
+        });
+    }
+    
+	var showChildModule = function(rowid) {
+		var rowData = $("#gridTable").jqGrid('getRowData', rowid);
+		openDetail(rowData.sn,rowData.code);
+	};
+	
+    var edit = function () {
+        var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
+        if (selectRowItems.length > 1 || selectRowItems.length == 0) {
+            errorNotification({
+                SimpleMessage: $.i18n.prop('SelectOneInfo')
+            });
+            return;
+        }
+
+        var rowData = $("#gridTable").jqGrid('getRowData', selectRowItems);
+        openDetail(rowData.sn,rowData.code);
+    }
+
+    var openDetail = function (userId,code) {
+        showLoading("#{Loading}#{PageDetail}...");
+        var href = "../View/BaseInfo/ContractorGCJDetail.html?userId=" +userId+"&code="+code;
+        openDialog({ title: $.i18n.prop('GCJDetail'), id: 'ContractorDetail', width:800, height: 480, isResize: true, href: href, closable: true });
+    }
+    
+    var refreshCallerData = function () {
+        searchData();
+    }
+
+    function loadList() {
+        $("#gridTable").jqGrid({
+            url: getSearchGridUrl(),
+            datatype: "json",
+            width: "none",
+            colNames: [$.i18n.prop('Preview'),$.i18n.prop('PrimaryKey'),$.i18n.prop('InternalCode'),$.i18n.prop('CarrierNumber'),$.i18n.prop('CarrierName'),$.i18n.prop('CarrierAbbreviation'),
+                       $.i18n.prop('SupplyMode'),$.i18n.prop('Address'),$.i18n.prop('Remark'),$.i18n.prop('CreateBy'),$.i18n.prop('CreateDate'),$.i18n.prop('UpdateBy'),$.i18n.prop('UpdateDate')
+                       ],
+				colModel: [
+                       {
+                           name: 'ViewDetail',
+                           index: 'ViewDetail',
+                           align: 'center',
+                           fixed: true,
+                           width: 50,
+                           search: false,
+                           sortable: false,
+                           formatter: function (value, grid, rows) {
+                               var detail = getDriverDetail(rows);
+                               return "<a href=\"javascript:void(0)\" class=\"gridViewPicLink\"  title=\"" + detail + "\"></a>";
+                           }
+                       },
+				{ name: 'sn', index: 'c.sn', align: 'center', sortable: true, hidden :true,  width: 120, key: true, search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+	            { name: 'within_code', index: 'c.within_code', align: 'center', hidden : true, sortable: true, width: 120,  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+	            { name: 'code', index: 'c.code', align: 'center', sortable: true, width: 120,  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+	            { name: 'name', index: 'c.name', align: 'left', sortable: true, width: 220,  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+	            { name: 'shortname', index: 'c.shortname', align: 'center', sortable: true, width: 120,  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+	            { name: 'supply_method', index: 'c.supply_method', align: 'center', sortable: true, width: 120,  search: true, stype:'select',searchoptions : { value : supplyModeInnerHTML , sopt : ["eq"] }},
+	            { name: 'address', index: 'address', align: 'center', sortable: true, width: 120,  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+	            { name: 'remark', index: 'remark', align: 'center', sortable: true, width: 180,  search: true, searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+	            { name: 'create_by', index: 'create_by', align: 'center', sortable: true, width: 120,  search: true, hidden :true,searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+	            { name: 'create_date', index: 'create_date', align: 'center', sortable: true, width: 120,  search: true, hidden :true,searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+	            { name: 'update_by', index: 'update_by', align: 'center', sortable: true, width: 120,  search: true, hidden :true,searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+	            { name: 'update_date', index: 'update_date', align: 'center', sortable: true, width: 120,  search: true, hidden :true,searchoptions: { sopt: ['cn', 'eq', 'ne']} },
+				
+	           
+            ],
+            shrinkToFit: false,
+            altRows: true,
+            altclass: 'gridSpacingClass',
+            forceFit: true,
+            cellLayout: 0,
+            scroll: false,
+            autowidth: true,
+            sortname: 'create_date',
+            sortorder: "desc",
+            loadonce: false,
+            mtype: "POST",
+            viewrecords: true,
+            rownumbers: true,
+            multiselect: true,
+            rowNum: 15,
+            height: "100%",
+            rowList: [15, 20, 30, 50],
+            pager: "#gridPager",
+            jsonReader: {
+                root: "rows",
+                total: "total",
+                page: "page",
+                records: "records",
+                repeatitems: false
+            },
+            gridComplete: function () {
+                $(".cbox").shiftSelect();
+            },
+        	// /双击时编辑
+			ondblClickRow : function(code) {
+				showChildModule(code);
+			},
+/* 			onCellSelect : function(rowid, iCol, cellcontent, e) {
+				checkboxJqgrid(rowid, iCol, cellcontent, e);
+			}, */
+            loadComplete: function (xhr) {
+                $('.gridViewPicLink').tooltip({
+                    position: 'bottom',
+                    content: $(this).attr("title"),
+                    onShow: function () {
+                        $(this).tooltip('tip').css({
+                            backgroundColor: '#FCF8E3',
+                            borderColor: '#FAEBCC'
+                        });
+                    }
+                });
+                FailResultDataToTip(xhr);
+            },
+        });
+        $("#gridTable").jqGrid('navGrid', '#gridPager', { add: false, edit: false, del: false, refresh: true }, {}, {}, {}, { multipleSearch: true, closeOnEscape: true, closeAfterSearch: true });
+        $("#gridTable").jqGrid('navButtonAdd', '#gridPager', {
+            caption: $.i18n.prop('SetColumn'),
+            title: "Reorder Columns",
+            onClickButton: toggleGridColumns
+        });
+        $("#gridTable").jqGrid('navButtonAdd', '#gridPager', {
+            caption: $.i18n.prop('Quick search'),
+            title: "",
+            onClickButton: toggleGridSearchToolbar
+        });
+        $("#gridTable").jqGrid('navButtonAdd', '#gridPager', {
+            caption: $.i18n.prop('ExportData'),
+            buttonicon: "ui-icon-disk",
+            onClickButton: function(){
+            	ExportToExcel.call(this, {
+            		 url : '../../jcda/contractor/export?t=' + Math.random()
+           	 	}); 
+            }
+        });
+        setGridHeightWidth();
+    }
+
+    var getDriverDetail = function (rows) {
+        var detailStr = "<table class=\'gridDetailTable\'>";
+        detailStr += "<tr><td class=\'gridDetailTitle\'>#{CarrierID:}</td><td class=\'gridDetailContent\'>" + formatStr(rows.code) + "</td><td class=\'gridDetailTitle\'>#{CarrierName:}</td><td>" + formatStr(rows.name) + "</td><td class=\'gridDetailTitle\'>#{CarrierProfile}</td><td class=\'gridDetailContent\'>" + formatStr(rows.shortname) + "</td></tr>";
+        detailStr += "<td class=\'gridDetailTitle\'>#{Address}</td><td class=\'gridDetailContent\'>" + formatStr(rows.address) + "</td></tr>";
+        detailStr += "<tr><td class=\'gridDetailTitle\'>#{Remark}</td><td class=\'gridDetailContent\'>" + formatStr(rows.remark);
+        detailStr += "</table>";
+        return detailStr;
+    }
+    
+    var comboChange = function(){
+    	var comboList = $(this).combobox("getValues");
+        
+        var newComboList = [];
+        if(comboList!=null && comboList!=undefined){
+      	  for(var i = 0 ; i < comboList.length ; i++){
+      		  if(comboList[i].indexOf("--")==-1 && comboList[i]!=""){
+      			  newComboList.push(comboList[i]);
+      		  } else {
+      			  if(i!=0){
+      				  newComboList = ["--#{All}--"];
+      				  break;
+      			  }
+      		  }
+      	  }
+        }
+        if(newComboList.length<=0){
+        	newComboList = ["--#{All}--"];
+        }
+        $(this).combobox('setValues', newComboList);
+        searchData();
+    }
+    
+    // 加载“供应类型”下拉框
+    function loadSupplyMethod() {
+    	$("#supply_method").combobox({
+  		  valueField: 'code',  
+  		  textField: 'values1',
+  		  loader:function(param,success,error){  
+              $.ajax({  
+                  url:"../../scts/basic/findDictionaryByType?type=supplyMethod&t=" + Math.random(),
+                  dataType: 'json',  
+                  method:"GET",
+                  async : false,
+                  success: function(data){
+               	  	data.forEach(function(item){
+               		  supplyModeInnerHTML[item.code] = item.code;
+                   	});
+                  	data.unshift({code:'',values1:'--#{All}--'});
+                  	success(data); //loader的success
+                  },
+                  error :function(){
+                	  hideLoading();
+                  }
+              }); 
+          },
+  		  onLoadSuccess: function () { 
+          	$(this).combobox("setValue", "--#{All}--");
+          },
+          onChange : comboChange
+  		});
+    };
+    
+    var importContacts = function(){
+    	if($("#fileUpload").css("display")!="none"){
+    		$("#fileUpload").css("display","none");
+    		$("#fileUploadByContacts").css("display","block");
+    	}
+    	var url = '../../jcda/contractor/importUserMailExcel?t=' + Math.random();
+        $("#fileUploadByContacts").zyUpload({
+            itemWidth: "60px", // 文件项的宽度
+            itemHeight: "60px", // 文件项的高度
+            url: url,
+            multiple: false, // 是否可以多个文件上传
+            dragDrop: true, // 是否可以拖动上传文件
+            del: true, // 是否可以删除文件
+            finishDel: false, // 是否在上传文件完成后删除预览
+            close: true,
+            fileTypeFilter: ['xls', 'xlsx'],
+            remark: "<p>#{ExcelFormat}</p>",
+            isDownModuleFile: true,
+            downModuleFileUrl: '../../jcda/contractor/exportUserMailGCJExcel?t=' + Math.random(),
+            /* 外部获得的回调接口 */
+            onSelect: function (files, allFiles) { // 选择文件的回调方法
+            },
+            onDelete: function (file, surplusFiles) { // 删除一个文件的回调方法
+            },
+            onSuccess: function (file) { // 文件上传成功的回调方法
+            },
+            onFailure: function (file) { // 文件上传失败的回调方法
+            },
+            onComplete: function (responseInfo) { // 上传完成的回调方法
+            	hideLoading();
+                var dataObj = JSON.parse(responseInfo);
+                if (isServerResultDataPass(dataObj)) {
+                	 searchData();
+                	 hideLoading();
+                     correctNotification(dataObj.resultDataFull);
+                } else {
+                    FailResultDataToTip(dataObj);
+                }
+                $("#fileUploadByContacts").empty();
+                $("#fileUploadByContacts").hide();
+            }
+        });
+    }
+    
+    var importData = function () {
+    	
+    	if($("#fileUploadByContacts").css("display")!="none"){
+    		$("#fileUploadByContacts").css("display","none");
+    		$("#fileUpload").css("display","block");
+    	}
+    	
+        var url = "../../jcda/contractor/importExcel?t="+ Math.random();
+        $("#fileUpload").zyUpload({
+            itemWidth: "60px", // 文件项的宽度
+            itemHeight: "60px", // 文件项的高度
+            url: url,
+            multiple: false, // 是否可以多个文件上传
+            dragDrop: true, // 是否可以拖动上传文件
+            del: true, // 是否可以删除文件
+            finishDel: false, // 是否在上传文件完成后删除预览
+            close: true,
+            fileTypeFilter: ['xls', 'xlsx'],
+            remark: "<p>#{ExcelFormat}</p>",
+            isDownModuleFile: true,
+            downModuleFileUrl: "../../jcda/contractor/exportGCJExcel?t=" + Math.random(),
+            /* 外部获得的回调接口 */
+            onSelect: function (files, allFiles) { // 选择文件的回调方法
+            },
+            onDelete: function (file, surplusFiles) { // 删除一个文件的回调方法
+            },
+            onSuccess: function (file) { // 文件上传成功的回调方法
+            },
+            onFailure: function (file) { // 文件上传失败的回调方法
+            },
+            onComplete: function (responseInfo) { // 上传完成的回调方法
+            	hideLoading();
+                var dataObj = JSON.parse(responseInfo);
+                if (isServerResultDataPass(dataObj)) {
+                	 searchData();
+                	 hideLoading();
+                     correctNotification(dataObj.resultDataFull);
+                } else {
+                    FailResultDataToTip(dataObj);
+                }
+                $("#fileUpload").empty();
+                $("#fileUpload").hide();
+            }
+        });
+    }
+</script>
+</html>

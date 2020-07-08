@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bba.ht.dao.Non_Ht_CarrierDao">
+
+    <sql id="begin_page"><if test="isPage == true">SELECT * FROM (SELECT t.*, ROWNUM RN FROM (</if></sql>
+    <sql id="end_page">
+        <if test="isPage == true">
+            <if test="filters!=null and filters!=''">where ${filters}</if>
+        </if>
+        ) t where ROWNUM &lt;= ${page} * ${rows}) WHERE RN &gt;=((${page} - 1) * ${rows} + 1)
+    </sql>
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.bba.ht.vo.Non_Ht_CarrierVO">
+        <id column="id" property="id" />
+        <result column="sheet_no" property="sheet_no" />
+        <result column="contract_no" property="contract_no" />
+        <result column="carrier_no" property="carrier_no" />
+        <result column="carrier_name" property="carrier_name" />
+        <result column="contract_type" property="contract_type" />
+        <result column="xunjia_no" property="xunjia_no" />
+        <result column="contract_name" property="contract_name" />
+        <result column="begin_date" property="begin_date" />
+        <result column="end_date" property="end_date" />
+        <result column="remark" property="remark" />
+        <result column="state" property="state" />
+        <result column="create_by" property="create_by" />
+        <result column="create_date" property="create_date" />
+        <result column="check_by" property="check_by" />
+        <result column="check_date" property="check_date" />
+        <result column="cus_contract_no" property="cus_contract_no" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ID, SHEET_NO, CONTRACT_NO, CUS_NO, CUS_NAME, CONTRACT_TYPE, XUNJIA_NO, CONTRACT_NAME, BEGIN_DATE, END_DATE, REMARK, STATE, CREATE_BY, CREATE_DATE, CHECK_BY, CHECK_DATE, CUS_CONTRACT_NO
+    </sql>
+
+    <select id="getListForGrid" parameterType="com.bba.util.JqGridParamModel" resultMap="BaseResultMap">
+        <include refid="begin_page"/>
+        select * from NON_HT_CARRIER
+        <include refid="end_page"/>
+    </select>
+
+    <select id="getListForGridCount" parameterType="com.bba.util.JqGridParamModel" resultType="java.lang.Integer">
+        select count(*) from NON_HT_CARRIER
+        <if test="filters!=null and filters!=''">where ${filters}</if>
+    </select>
+
+
+</mapper>

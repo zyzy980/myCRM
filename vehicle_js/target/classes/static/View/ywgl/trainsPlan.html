@@ -1,0 +1,2223 @@
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<style>
+	.searchParamesPanel #searchParamesTable td {
+		word-break: keep-all;
+		white-space: nowrap;
+	}
+
+	.tab-title {
+		float: right;
+		margin-bottom: -1px;
+		overflow-x: hidden;
+	}
+
+	.tab-title .item-cur {
+		border: 1px solid #02c5bb !important;
+		color: #02c5bb !important;
+		border-bottom: none;
+	}
+
+	#gridTable_1120.tablediv {
+		padding: 10px;
+	}
+
+	.tab-title .item {
+		/*width: 100px;*/
+		/*height: 40px;*/
+		/*line-height: 39px;*/
+		text-align: center;
+		display: block;
+		float: left;
+		border: 1px solid #c3d3ea;
+		margin-left: 4px;
+		border-top-left-radius: 4px;
+		border-top-right-radius: 4px;
+		font-size: 12px;
+		color: #666;
+		width: 90px;
+		height: 32px;
+		line-height: 32px;
+		border-bottom: none;
+	}
+
+	p {
+		margin: 0 0;
+	}
+
+	/*.table-con{ margin:0px 16px 16px;}*/
+	.table-list {
+		width: 45%;
+		font-family: "微软雅黑";
+		background: #fff;
+	}
+
+	.table-list tr {
+		margin: 0;
+		color: #666;
+		/*font-size: 12px;*/
+		height: 20px;
+		background-color: #fff;
+	}
+
+	.table-title {
+		margin: 0;
+		background-color: #fff;
+		/*font-size: 12px;*/
+		color: #666;
+		border-bottom: 1px solid #eaeaea;
+		height: 20px;
+	}
+
+	.url_a {
+		color: #0D9BF2 !important;
+		/*text-underline: underline;*/
+		text-decoration: underline
+	}
+</style>
+
+<head>
+	<link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+	<link id="EasyuiTheme" type="text/css" rel="stylesheet"
+		href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+	<link id="JqgridTheme" type="text/css" rel="stylesheet"
+		href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+	<link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+	<link type="text/css" rel="stylesheet" href="../../Resource/js/moment/css/daterangepicker.css" />
+	<link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+	<link type="text/css" rel="stylesheet" href="../../Resource/js/fileUpload/css/fileUpload.css" />
+	<title></title>
+</head>
+
+<body>
+	<div id="toolbar" class="easyui-panel" style="padding:0px;border-width:0; border-bottom-width:1px;">
+		#{PAGE_TOOLBAR_BUTTONROLE}
+
+		<a href="javascript:void(0)" id="mb" class="easyui-menubutton"
+			data-options="menu:'#mm',iconCls:'icon-more'"><label data-locale="more"/></a>
+		<div id="mm" style="width:150px;">
+			<div style="display: none" name='isCheck' data-options="iconCls:'icon-unlock'"><label data-locale="unCheck"/></div>
+			<div style="display: none" name='recall' data-options="iconCls:'icon-prev'"><label data-locale="recall"/></div>
+			<div style="display: none" name='cancel' data-options="iconCls:'icon-clear'"><label data-locale="tocancel"/></div>
+			<div style="display: none" name='transport' data-options="iconCls:'icon-ok'"><label data-locale="finish"/></div>
+			<div style="display: none" name='withdrawal' data-options="iconCls:'icon-undo'"><label data-locale="forceRecall"/></div>
+			<div style="display: none" name='cancellation' data-options="iconCls:'icon-no'"><label data-locale="logout"/></div>
+		</div>
+
+		<a id="btn" onclick="alertHelp()" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-help'"></a>
+
+
+		<div class="tab-title">
+			<a href="javascript:queryAll();" id="queryAll" class="item">
+				<p class="item1">所有</p>
+			</a>
+			<a href="javascript:nonstopPlan('TGP');" id="nonstopPlan" class="item">
+				<p class="item2">直达车次</p>
+			</a>
+			<a href="javascript:takeDeliveryPlan('T');" id="takeDeliveryPlan" class="item">
+				<p class="item2">提货车次</p>
+			</a>
+			<a href="javascript:mainProgram('G');" id="mainProgram" class="item">
+				<p class="item3">干线车次</p>
+			</a>
+			<a href="javascript:distributionPlan('P');" id="distributionPlan" class="item">
+				<p class="item4">配送车次</p>
+			</a>
+		</div>
+	</div>
+	<div class="searchParamesPanel">
+		<table id="searchParamesTable">
+			<tr class="searchParamesTrShow">
+				<td class="searchParamesTdTitle"><label data-locale="timeAndStop"/>：</td>
+				<td>
+					<input name="beginTime" id="beginTime" class="easyui-datebox" data-options="editable:false"
+						style="width:114px;" />
+				</td>
+				<td class="searchParamesTdTitle" style="text-align:center">-</td>
+				<td>
+					<input name="endTime" id="endTime" class="easyui-datebox" data-options="editable:false"
+						style="width:114px;" />
+				</td>
+				<td class="searchParamesTdTitle"><label data-locale="startAddress"/>：</td>
+				<td>
+					<input type="text" name="beginLocalAddress" id="tipinputbegin" class="easyui-combobox"
+						style="width:114px;" />
+				</td>
+				<td class="searchParamesTdTitle"><label data-locale="StopAddress"/>：</td>
+				<td>
+					<input type="text" name="endLocalAddress" id="tipinputend" class="easyui-combobox"
+						style="width:114px;" />
+				</td>
+				<!--<td class="searchParamesTdTitle"><label data-locale="businessAddress"/>:</td>
+       		<td>
+       			<input type="text" class="easyui-combobox"  name="ywLocation" id="ywLocation" style="width:114px;"/>
+       		</td>-->
+			</tr>
+			<tr>
+				<td class="searchParamesTdTitle"><label data-locale="orderNumber"/>：</td>
+				<td>
+					<input type="text" name="trainno" id="trainno" class="easyui-textbox" style="width:114px;" />
+				</td>
+				<td class="searchParamesTdTitle"><label data-locale="costomer"/>：</td>
+				<td>
+					<input type="text" name="cusNo" id="cusNo" data-options="panelWidth:'300'" class="easyui-combobox" style="width:114px;" />
+				</td>
+				<td class="searchParamesTdTitle"><label data-locale="state"/>：</td>
+				<td>
+					<input type="text" name="searchState" id="searchState" class="easyui-combobox"
+						style="width:114px;" />
+				</td>
+			</tr>
+		</table>
+	</div>
+	<!--     <div id="easyui-tabs" class="easyui-tabs" data-options="tabPosition:'top',fit:true,headerWidth:80,tabWidth:150"> -->
+	<!-- 	<div title='未制作车次计划的运单' style="padding: 0px;"> -->
+	<!-- 		<div id="gridControl"> -->
+	<!-- 			<table id="gridTable"></table> -->
+	<!-- 			<div id="gridPager"></div> -->
+	<!-- 		</div> -->
+	<!-- 	</div> -->
+	<!-- 	<div title='整车列表' style="padding: 0px" > -->
+	<!-- 		<div id="gridControl"> -->
+	<!-- 			<table id="gridTable"></table> -->
+	<!-- 			<div id="gridPager"></div> -->
+	<!-- 		</div> -->
+	<!-- 	</div> -->
+	<!-- 	</div> -->
+	<div id="gridControl">
+		<table id="gridTable">
+		</table>
+		<div id="gridPager">
+		</div>
+	</div>
+
+
+	<div id="in_city" style="display: none"></div>
+	<div class="contextMenu" id="menu" style="display: none">
+		<ul>
+			<li id="adjustTheTrains">调整车次</li>
+			<li id="queryTrainnoDetail">查看车次详情</li>
+		</ul>
+	</div>
+
+	<div id="fileUpload" style="position: absolute; left: 50%; top: 50%; width: 600px;
+        height: 400px; margin-left: -300px; margin-top: -200px; display: none;">
+	</div>
+
+	<div id="help" class="easyui-window" title="帮助" style="width:600px;height:300px"
+		 data-options="iconCls:'icon-help',modal:false">
+		<div>
+			<b>审核</b>：确认车次，进行运输流程。‘正常’状态才能点击审核。
+		</div>
+		<br/>
+		<div>
+			<b>反审核</b>：只有‘审核’状态才能操作反审核。
+		</div>
+		<br/>
+		<div>
+			<b>派遣</b>：用于派遣车次给承运商、司机、车牌。‘审核’状态才能操作派遣。
+		</div>
+		<br/>
+		<div>
+			<b>撤回</b>：撤回派遣功能，‘已计划派遣状态’才能操作撤回。
+		</div>
+		<br/>
+		<div>
+			<b>强制撤回</b>：运输途中，强制性撤回功能，‘运输中’状态才能操作。（强制撤回后，可继续派遣）。
+		</div>
+		<br/>
+		<div>
+			<b>中途取消</b>：运输途中取消车次，‘运输中’状态才能操作。
+		</div>
+		<br/>
+		<div>
+			<b>运输完成</b>：手动完成车次，‘运输中’状态才能操作。
+		</div>
+		<br/>
+		<div>
+			<b>注销</b>：‘正常’状态下才能操作。
+		</div>
+	</div>
+
+	<script type="text/javascript" src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+	<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+	<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+	<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+	<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+	<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+	<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+	<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+	<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+	<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+	<script type="text/javascript" src="../../Resource/js/fileUpload/js/upload.js"></script>
+	<script type="text/javascript" src="../../Resource/js/fileUpload/js/file.js"></script>
+	<script type="text/javascript" src="API/AMap/js/maps.js"></script>
+	<script type="text/javascript" src="../../Resource/js/cookie/jquery.cookie.js"></script>
+	<script type="text/javascript" src="../../Resource/js/jquery.contextmenu.r2.js"></script>
+	<script type="text/javasctipt" src="../../Resource/js/base/cityTemplate.js"></script>
+	<script language="javascript" type="text/javascript">
+		var moduleId = 0;
+		var originalFormData = "";
+		var globalStateArray = null; // 全局状态变量
+		var nowDate = new Date();
+		var trainNo = null;
+		var customerInnerHtml = [];
+		var stateInnerHtml = [];
+		var transportTypeInnerHtml = [];
+		var cityInnerHtml = [];
+		var contractorNameInnerHtml = [];
+		var payStateText = [];
+		var payStateValue = [];
+		var getStateText = [];
+		var getStateValueObj = [];
+		var stateTextObj = [];
+		var truckTypeInnerHtml = [];
+		var stateValueObj = [];
+		var routeType = '';
+		var userDicType = [];
+		var names = [];
+        var cusNoInnerHtml = [];
+
+
+		$(function () {
+
+			$('#help').window('close');
+
+			var parms = getUrlParms();
+			moduleId = parms['moduleId'];
+			var planExecVO = {};
+			var sn = null;
+			var trainno = null;
+			initScript();
+            loadData();
+			queryAll();
+
+			initData();
+			initStyle();
+
+			//隐藏外面的按钮
+			setTimeout(() => {
+				initButton();
+			}, 20);
+
+			setTimeout(() => {
+				moreButton();
+			}, 50);
+
+			setTimeout(() => {
+				for (let i = 0; i < names.length; i++) {
+					const element = names[i];
+					// document.getElementById(element).style.display = 'none';
+					$('#' + element).remove()
+				}
+			}, 100);
+
+
+		});
+		
+		//多更按钮的提示
+		var alertHelp  = function () {
+			$('#help').window('open');
+		};
+
+		//更多按钮对应点击事件
+		var moreButton = function () {
+			$('#mm').menu({
+				onClick: function (item) {
+					switch (item.name) {
+						case 'isCheck':
+							isCheck();
+							break;
+						case 'recall':
+							recall();
+							break;
+						case 'cancel':
+							cancel();
+							break;
+						case 'transport':
+							transport();
+							break;
+						case 'withdrawal':
+							withdrawal();
+							break;
+						case 'cancellation':
+							cancellation();
+							break;
+					}
+				}
+			})
+		};
+
+		// 重写按钮排列
+		var initButton = function () {
+			//获取所有的按钮
+			var buttons = $.i18n.prop('PAGE_TOOLBAR_BUTTONROLE');
+
+			//获取菜单按钮下的按钮名称
+			var menu = document.getElementById("mm");
+			var divs = menu.getElementsByTagName('div');
+
+			for (let i = 0; i < divs.length; i++) {
+				const div = divs[i];
+				const element = div.getAttribute('name');
+				if (element !== null) {
+					//生成正则表达式
+					var parrt = new RegExp('id="' + element + '"');
+
+					//判断改按钮是否有权限显示
+					var flag = parrt.test(buttons);
+
+					if (flag) {
+						//菜单里按钮的显示
+						div.style.display = "block";
+					}
+
+					//外面的按钮隐藏
+					names.push(element)
+				}
+			}
+		}
+
+
+        var loadData = function(){
+            $.ajax({
+                url: "../../jcda/ZdCus/findAllList?t=" + Math.random(),
+                type: 'get',
+                async: true,
+                contentType: 'application/json;charset=utf-8',
+                success: function (res) {
+                    var opts = [{Value: "", Text: $.i18n.prop('wayBillForm_pleaseChoose')}];
+                    var datas = res.resultDataFull;
+                    if (datas && datas.length > 0) {
+                        for (var i = 0; i < datas.length; i++) {
+                            opts.push({Value: datas[i].code, Text: datas[i].shortname});
+                            cusNoInnerHtml[datas[i].code] = datas[i].shortname;
+                        }
+                    }
+                    $('#cus_no').combobox({
+                        data: opts,
+                        valueField: 'Value',
+                        textField: 'Text',
+                        editable: false,
+                        onSelect: searchData
+                    });
+                }
+            });
+            $.ajax({
+                url: "../../sysInfo/dictionaryData/getDictionaryDataList?dicTypeCode=sheet_yw_order_detail_state&t=" + Math.random(),
+                type: 'get',
+                async: true,
+                contentType: 'application/json;charset=utf-8',
+                success: function (datas) {
+                    var opts = [{Value: "", Text: $.i18n.prop('wayBillForm_pleaseChoose')}];
+                    if (datas && datas.length > 0) {
+                        for (var i = 0; i < datas.length; i++) {
+                            opts.push({Value: datas[i].dicValue, Text: datas[i].dicText});
+                        }
+                    }
+                    $('#state').combobox({
+                        data: opts,
+                        valueField: 'Value',
+                        textField: 'Text',
+                        editable: false,
+                        onSelect: searchData
+                    });
+                }
+            });
+
+            $.ajax({
+                url: "../../jcda/Zd_Location/findList?t=" + Math.random(),
+                type: 'get',
+                async: true,
+                contentType: 'application/json;charset=utf-8',
+                success: function (res) {
+                    var opts = [{Value: "", Text: $.i18n.prop('wayBillForm_pleaseChoose')}];
+                    var datas = res.resultDataFull;
+                    if (datas && datas.length > 0) {
+                        for (var i = 0; i < datas.length; i++) {
+                            opts.push({Value: datas[i].code, Text: datas[i].name});
+                        }
+                    }
+                    $('#begin_local').combobox({
+                        data: opts,
+                        valueField: 'Value',
+                        textField: 'Text',
+                        panelWidth: 270,
+                        onSelect: searchData
+                    });
+                    $('#end_local_site').combobox({
+                        data: opts,
+                        valueField: 'Value',
+                        textField: 'Text',
+                        panelWidth: 270,
+                        onSelect: searchData
+                    });
+                }
+            });
+        }
+
+		$(window).load(function () { hideLoading(); });
+
+		var initStyle = function () {
+			enterTriggerEvent('searchParamesTable', 'searchData');
+		};
+
+		var oldSetGridHeightWidth = setGridHeightWidth;
+		var setGridHeightWidth = function () {
+			oldSetGridHeightWidth(40, 170);
+			oldSetGridHeightWidth(5, 148);
+			//     	 $(".ui-jqgrid-bdiv").css("height","521px");
+			//          $("#gview_gridTable").css("height","545px");
+		};
+
+		var initScript = function () {
+			var v = 0;
+			$(window).resize(function () {
+				if (v == 0) {
+					setTimeout(function () { setGridHeightWidth(); v = 0; }, 200)
+					v = 1;
+				}
+				setGridHeightWidth();
+				setToolbarHeightWidth();
+			});
+		};
+		var initData = function () {
+			searchDic();
+			loadCitySelector();
+			loadTransportType();
+			loadState();
+			getCus();
+			loadTruckType();
+			loadContractorName();
+			getPayState();
+			getState();
+			loadList();
+			        loadAddress();
+
+
+
+		};
+
+		//读取用户数据字典
+		var searchDic = function () {
+			$.ajax({
+				url: "../../sysInfo/dictionary/getZdDicData?t=" + Math.random() + '&customSearchFilters=%7B%22groupOp%22:%22AND%22,%22rules%22:%5B%7B%22field%22:%22typeCode%22,%22op%22:%22eq%22,%22data%22:%22transportType%22%7D%5D%7D',
+				type: 'POST',
+				success: function (dataObj) {
+					userDicType = dataObj.rows;
+					hideLoading();
+				},
+				error: function (message) {
+					hideLoading();
+				}
+			});
+		}
+
+		var defaultTime = function () {
+			$("#beginTime").datebox("setValue", nowDate.toLocaleDateString());
+			$("#endTime").datebox("setValue", nowDate.toLocaleDateString());
+		}
+		// 查询数据
+		function searchData() {
+			$('#gridTable').jqGrid('setGridParam', {
+				url: getSearchGridUrl(),
+				datatype: 'json',
+				postData: { 'filters': '' },
+				page: 1
+			}).trigger('reloadGrid');
+		}
+
+		// 获取查询访问路径
+		var getSearchGridUrl = function () {
+			return '../../bussiness/planExec/findTrainsListing?t=' + Math.random() + '&customSearchFilters=' + encodeURI(getSearchFilters());
+		};
+
+		var getSearchOrderListFilters = function () {
+			var parmsArray = [
+				{ name: 'a.trainno', value: trainno, op: "eq" },
+			];
+			return formatSearchParames(parmsArray);
+		};
+
+		// 获取查询条件
+		var getSearchFilters = function () {
+			var cusName = $("#cusNo").combobox("getValue");
+			if (cusName == $.i18n.prop('all')) {
+				cusName = "";
+			}
+			var searchState = $("#searchState").combobox('getValues');
+			if (searchState == $.i18n.prop('all')) {
+				searchState = "";
+			}
+			var plan_begin_date = "";
+			var plan_end_date = "";
+			plan_begin_date = $.trim($("#beginTime").textbox("getText"));// + " 00:00:00";
+			plan_end_date = $.trim($("#endTime").textbox("getText"));// + " 23:59:59";
+
+			var beginCity = $("#tipinputbegin").combobox('getValue');
+			if (beginCity == "所有") {
+				beginCity = "";
+			}
+
+			var endCity = $("#tipinputend").combobox('getValue');
+			if (endCity == "所有") {
+				endCity = "";
+			}
+
+			// var ywLocation = $("#ywLocation").combobox("getValues");
+			// if(ywLocation == $.i18n.prop('all')) {
+			// 	ywLocation =  "";
+			// }
+
+			var trainno = $("#trainno").textbox("getValue");
+			var parmsArray = [
+				{ name: 'a.route_type', value: routeType, op: 'eq' },
+				{ name: 'a.cus_no', value: cusName, op: "cn" },
+				{ name: 'a.state', value: searchState, op: "eq" },
+				{ name: 'a.plan_begin_date', value: plan_begin_date, op: "ge" },
+				{ name: 'a.plan_begin_date', value: plan_end_date, op: "le" },
+				{ name: 'a.begin_city', value: beginCity, op: 'cn' },
+				// { name: 'a.yw_location', value: ywLocation, op: 'eq'},
+				{ name: 'a.end_city', value: endCity, op: 'cn' },
+				{ name: 'a.trainno', value: trainno, op: 'cn' }
+			];
+			return formatSearchParames(parmsArray);
+		};
+
+		var add = function () {
+			//双击绑定车次信息
+			var sn = "";
+			openDetail(sn, "");
+		}
+
+		// 新增车次信息
+		var insert = function () {
+			var planExecVO = FormUtils.toJSONObject($("#addForm"));
+			if (planExecVO.cusNo == $.i18n.prop('please.choose')) {
+				planExecVO.cusNo == "";
+			}
+			if (planExecVO.trainType == $.i18n.prop('please.choose')) {
+				planExecVO.trainType == "";
+			}
+			planExecVO.state = 0;
+			$.messager.confirm($.i18n.prop('planExec_Prompt'), '#{business.message.saveQuestion}?', function (r) {// 提示, 确定保存数据项吗
+				if (r) {
+					showLoading();
+					$.ajax({
+						url: "../../bussiness/planExec/addPlanExec?t=" + Math.random(),
+						type: 'POST',
+						contentType: 'application/json;charset=utf-8',
+						data: JSON.stringify(planExecVO),
+						success: function (dataObj) {
+							if (isServerResultDataPass(dataObj)) {
+								correctNotification(dataObj.resultDataFull);
+								$("#addForm").form("clear")
+								/* $(".ui-jqgrid-bdiv").css("height","230px");
+								$("#gview_gridTable").css("height","254px"); */
+								searchData(); // 重新加载数据
+							} else {
+								FailResultDataToTip(dataObj);
+							}
+							hideLoading();
+						},
+						error: function (message) {
+							hideLoading();
+						}
+					});
+				}
+			});
+		}
+		//修改车次信息
+		var update = function () {
+			var selectRowItems = $('#gridTable').jqGrid('getGridParam', 'selarrrow');
+			if (selectRowItems.length != 1) {
+				errorNotification({ SimpleMessage: $.i18n.prop('planExecDetail_Prompt2Update') });// 请选择一行数据行进行操作
+				return;
+			}
+			var rowData = $('#gridTable').jqGrid('getRowData', selectRowItems[0]);
+
+			openDetail(rowData.sn, rowData.trainNo)
+		}
+
+		// 保存
+		var save = function () {
+			planExecVO = FormUtils.toJSONObject($("#addForm"));
+			/* if(planExecVO.sn==null||planExecVO.sn==undefined||planExecVO.sn==""){
+				insert();
+			}else{
+				planExecVO.sn = sn;
+				edit();
+			} */
+			if ($("#state").val() == null || $("#state").val() == "") {
+				insert();
+			} else {
+				edit();
+			}
+		};
+
+		var search = function () {
+			searchData();
+		}
+
+		//派遣
+		var dispatch = function () {
+			var selectRowItems = $('#gridTable').jqGrid('getGridParam', 'selarrrow');
+			if (selectRowItems.length != 1) {
+				errorNotification({ SimpleMessage: '请选择一行数据行进行操作' });//  没有选择数据，不能进行操作
+				return;
+			}
+			var trainnoList = [];
+			for (var i = 0; i < selectRowItems.length; i++) {
+				var rowData = $("#gridTable").jqGrid("getRowData", selectRowItems[i]);
+				var state = rowData.state = stateValueObj[rowData.state];
+				if (state == 2) {
+					errorNotification({ SimpleMessage: $.i18n.prop('supplier.examinePropmt2') });
+					return;
+				}
+				if (state != 1) {
+					errorNotification({ SimpleMessage: $.i18n.prop('supplier.examinePropmt1') });
+					return;
+				}
+				trainnoList.push(rowData.trainNo);
+			}
+			/* var selectRowItems = $('#gridTable').jqGrid('getGridParam', 'selarrrow');
+			if (selectRowItems.length!=1) {
+				errorNotification({ SimpleMessage : $.i18n.prop('planExecDetail_Prompt2Update') });// 请选择一行数据行进行操作
+				return;
+			}
+			var rowData = $('#gridTable').jqGrid('getRowData', selectRowItems[0]);
+			var state = rowData.state = stateValueObj[rowData.state];
+			if(rowData.state != 1) {
+				errorNotification({ SimpleMessage : $.i18n.prop('supplier.examinePropmt1') });
+				return;
+			}
+			if(rowData.state == 2) {
+				errorNotification({ SimpleMessage : $.i18n.prop('supplier.examinePropmt2') });
+				return;
+			} */
+			var href = '../View/ywgl/dispatch.html?trainNo=' + trainnoList + "&state=" + 1 + '&routeType=' + rowData.routeType;
+			//     	var href = '../View/ywgl/dispatch.html?mostlyGuid=' + rowData.guid + '&sn=' + rowData.sn+"&contractorName="+rowData.contractorName+"&trucknoq="+rowData.trucknoq+"&driverName="+rowData.driverName+"&state="+rowData.state + "&trainNo=" + rowData.trainNo;
+			openDialog({ title: $.i18n.prop('order_dispatch'), id: 'planExecDetail', width: 500, height: 300, isResize: true, href: href, closable: true });
+		}
+
+		//审核
+		var examine = function () {
+			var selectRowItems = $('#gridTable').jqGrid('getGridParam', 'selarrrow');
+			if (selectRowItems.length != 1) {
+				errorNotification({ SimpleMessage: $.i18n.prop('planExecDetail_Prompt2Update') });// 请选择一行数据行进行操作
+				return;
+			}
+			var rowData = $('#gridTable').jqGrid('getRowData', selectRowItems[0]);
+			if (rowData.state == 1) {
+				errorNotification({ SimpleMessage: $.i18n.prop('planExec_examine_stateError') });
+				return;
+			}
+			$.messager.confirm($.i18n.prop('planExec_Prompt'), '#{planExec_examine}?', function (r) {// 提示, 确定审核选中的数据项吗
+				if (r) {
+					showLoading();
+					$.ajax({
+						url: '../../bussiness/planExec/examine?t=' + Math.random() + "&sn=" + rowData.sn + "&trainNo=" + rowData.trainNo,
+						type: 'POST',
+						data: "",
+						success: function (dataObj) {
+							if (isServerResultDataPass(dataObj)) {
+								correctNotification(dataObj.resultDataFull);
+								searchData(); // 删除时需要重新搜索
+							} else {
+								FailResultDataToTip(dataObj);
+							}
+							hideLoading();
+						},
+						error: function (message) {
+							hideLoading();
+						}
+					});
+				}
+			});
+		}
+
+		var queryAll = function () {
+			$("#queryAll").addClass('item-cur');
+			$("#nonstopPlan").removeClass('item-cur');
+			$("#takeDeliveryPlan").removeClass('item-cur');
+			$("#mainProgram").removeClass('item-cur');
+			$("#distributionPlan").removeClass('item-cur');
+			routeType = "";
+			searchData();
+		}
+
+		var nonstopPlan = function (routeTypeParams) {
+			$("#queryAll").removeClass('item-cur');
+			$("#nonstopPlan").addClass('item-cur');
+			$("#takeDeliveryPlan").removeClass('item-cur');
+			$("#mainProgram").removeClass('item-cur');
+			$("#distributionPlan").removeClass('item-cur');
+			routeType = routeTypeParams;
+			searchData();
+		}
+
+		var takeDeliveryPlan = function (routeTypeParams) {
+			$("#queryAll").removeClass('item-cur');
+			$("#nonstopPlan").removeClass('item-cur');
+			$("#takeDeliveryPlan").addClass('item-cur');
+			$("#mainProgram").removeClass('item-cur');
+			$("#distributionPlan").removeClass('item-cur');
+			routeType = routeTypeParams;
+			searchData();
+		}
+
+		var mainProgram = function (routeTypeParams) {
+			$("#queryAll").removeClass('item-cur');
+			$("#nonstopPlan").removeClass('item-cur');
+			$("#takeDeliveryPlan").removeClass('item-cur');
+			$("#mainProgram").addClass('item-cur');
+			$("#distributionPlan").removeClass('item-cur');
+			routeType = routeTypeParams;
+			searchData();
+		}
+
+		var distributionPlan = function (routeTypeParams) {
+			$("#queryAll").removeClass('item-cur');
+			$("#nonstopPlan").removeClass('item-cur');
+			$("#takeDeliveryPlan").removeClass('item-cur');
+			$("#mainProgram").removeClass('item-cur');
+			$("#distributionPlan").addClass('item-cur');
+			routeType = routeTypeParams;
+			searchData();
+		}
+
+
+		var afterSaveOperate = function () {
+			switch (afterSave) {
+				case "edit":
+					code = $("#code").textbox("getValue");
+					refreshCallerData();
+					break;
+				case "close":
+					refreshCallerData();
+					close();
+					break;
+				case "clear":
+					$('form').form('clear');
+					$("#sn").val("0");
+					$("input", $("#code").next("span")).removeAttr("readonly");
+					refreshCallerData();
+					break;
+				case "copy":
+					$("#sn").val("0");
+					$("input", $("#code").next("span")).removeAttr("readonly");
+					$("#code").textbox('setValue', '');
+					refreshCallerData();
+					break;
+			}
+		}
+
+		var refreshCallerData_zdTruckType = function () {
+			searchData();
+		}
+
+		// 撤回
+		var withdraw = function () {
+			var jsonList = [];
+			var selectRowItems = $('#gridTable').jqGrid('getGridParam', 'selarrrow');
+			if (selectRowItems.length == 0) {
+				errorNotification({ SimpleMessage: $.i18n.prop('planExecDetail_Prompt2Update') });// 请至少选择一行数据行进行操作
+				return;
+			}
+
+			for (var i = 0; i < selectRowItems.length; i++) {
+				var rowData = $('#gridTable').jqGrid('getRowData', selectRowItems[i]);
+				if (rowData.state == 4) {
+					errorNotification({ SimpleMessage: $.i18n.prop('planExec_withdraw_stateError') });
+					return;
+				}
+				jsonList.push({ sn: rowData.sn, state: getStateValue(rowData.state), cusWeituo: rowData.cusWeituo });
+			}
+			$.messager.confirm($.i18n.prop('planExec_Prompt'), '#{planExec_withdraw}?', function (r) {// 提示, 确定撤回选中的数据项吗
+				if (r) {
+					showLoading();
+					$.ajax({
+						url: '../../bussiness/planExec/withdraw?t=' + Math.random(),
+						type: 'POST',
+						data: "jsonData=" + JSON.stringify(jsonList),
+						success: function (dataObj) {
+							if (isServerResultDataPass(dataObj)) {
+								correctNotification(dataObj.resultDataFull);
+								searchData(); // 删除时需要重新搜索
+							} else {
+								FailResultDataToTip(dataObj);
+							}
+							hideLoading();
+						},
+						error: function (message) {
+							hideLoading();
+						}
+					});
+				}
+			});
+		};
+
+		// 注销车次
+		var cancellation = function () {
+			var jsonList = [];
+			var selectRowItems = $('#gridTable').jqGrid('getGridParam', 'selarrrow');
+			if (selectRowItems.length == 0) {
+				errorNotification({ SimpleMessage: $.i18n.prop('planExecDetail_Prompt2Update') });// 请选择一行数据行进行操作
+				return;
+			}
+			for (var i = 0; i < selectRowItems.length; i++) {
+				var rowData = $('#gridTable').jqGrid('getRowData', selectRowItems[i]);
+				var state = rowData.state = stateValueObj[rowData.state];
+				rowData.payState = payStateValue[rowData.payState];
+				rowData.getState = getStateValueObj[rowData.getState];
+				if (rowData.state != 0) {
+					errorNotification({ SimpleMessage: $.i18n.prop('planExec_cancellation_stateError') });
+					return;
+				}
+				jsonList.push({ sn: rowData.sn, state: rowData.state, trainNo: rowData.trainNo });
+			}
+			$.messager.confirm($.i18n.prop('planExec_Prompt'), '#{planExec_cancellation}?', function (r) {// 提示, 确定注销选中的数据项吗
+				if (r) {
+					showLoading();
+					$.ajax({
+						url: '../../bussiness/planExec/cancellation?t=' + Math.random(),
+						type: 'POST',
+						data: "jsonData=" + JSON.stringify(jsonList),
+						success: function (dataObj) {
+							if (isServerResultDataPass(dataObj)) {
+								correctNotification(dataObj.resultDataFull);
+								searchData(); // 删除时需要重新搜索
+							} else {
+								FailResultDataToTip(dataObj);
+							}
+							hideLoading();
+						},
+						error: function (message) {
+							hideLoading();
+						}
+					});
+				}
+			});
+		};
+
+		// 加载列表数据
+		var loadList = function () {
+			$('#gridTable').jqGrid({
+				url: getSearchGridUrl(),
+				datatype: 'json',
+				width: 'none',
+				colNames: [
+					$.i18n.prop('sn'), $.i18n.prop('guid'), $.i18n.prop('state'), $.i18n.prop('routeType'),$.i18n.prop('cusWeituo'), $.i18n.prop('cusNo'), $.i18n.prop('cusName'), $.i18n.prop('withinCode'),
+					$.i18n.prop('taskValidation'), $.i18n.prop('trainNo'), $.i18n.prop('planBeginDate'), $.i18n.prop('beginDate'), $.i18n.prop('endDate'), $.i18n.prop('weituoType'),
+					$.i18n.prop('transportType'), '#{sumPcs} /件', '#{sumGwt} /KG', '#{sumVol} /m³', $.i18n.prop('beginCity'), $.i18n.prop('endCity'),
+					$.i18n.prop('trainType'), $.i18n.prop('planTruckType'), $.i18n.prop('contractorName'), $.i18n.prop('contractorCode'), $.i18n.prop('truckType'),
+					$.i18n.prop('tbPlanBeginDate'), $.i18n.prop('tbCreateDate'), $.i18n.prop('trucknoq'), $.i18n.prop('trucknog'), $.i18n.prop('driverCode'), $.i18n.prop('driverName'),
+					$.i18n.prop('driverTel'), $.i18n.prop('currentLocationDate'), $.i18n.prop('currentLocation'), $.i18n.prop('carrierState'), $.i18n.prop('isabnormal'),
+					$.i18n.prop('ywLocation'), $.i18n.prop('getState'), $.i18n.prop('payState'), $.i18n.prop('getMode'), $.i18n.prop('payMode'), $.i18n.prop('trainnoType'), $.i18n.prop('fareData'), $.i18n.prop('createBy'), $.i18n.prop('createDate')
+				],
+				colModel: [
+					{ name: 'sn', index: 'a.sn', key: true, align: 'center', sorttype: 'string', search: false,  width: 40, hidden: true },
+					{ name: 'guid', index: 'a.guid', key: true, align: 'center', sorttype: 'string', search: false,  width: 40, hidden: true },
+					{
+						name: 'state', index: 'a.state', align: 'center', sorttype: 'string', stype: 'select', search: true,  width: 60,
+						formatter: function (value, grid, rows) {
+							return stateInnerHtml[value];
+						},
+						searchoptions: {
+							value: stateInnerHtml, sopt: ['cn']
+						}
+
+					},
+					{ name: 'routeType', index: 'a.route_type', align: 'center', sorttype: 'string', sorable: false, width: 100},
+					{ name: 'cusWeituo', index: 'a.cus_weituo', key: true, align: 'center', sorttype: 'string',  width: 80 , hidden: true},
+					{ name: 'cusName', index: 'a.cus_no', align: 'center', stype: 'select', search: true, width: 130, searchoptions: { value: customerInnerHtml, sopt: ['cn', 'eq', 'ne'] } },
+					{ name: 'cusNo', index: 'a.cusNo', align: 'center', stype: 'select', type: 'string',  hidden: true, search: true, width: 80 },
+					{ name: 'withinCode', index: 'a.within_code', key: true, align: 'center', sorttype: 'string', search: false,  width: 40, hidden: true },
+					{ name: 'task_validation', index: 'a.task_validation', key: true, align: 'center', sorttype: 'string', search: false,  width: 80, hidden: true,
+						formatter: function (value, grid, rows) {
+							return value === 'Y'? '是':'否';
+						} 
+					},
+					{ name: 'trainNo', index: 'a.trainno', key: true, align: 'center', sorttype: 'string', search: true,  width: 130, searchoptions: { sopt: ['cn'] } },
+					{
+						name: 'planBeginDate', index: 'a.plan_begin_date', align: 'center', width: 80, search: true, type: 'string',
+						searchoptions: {
+							dataInit: function (elem) {
+								jQuery(elem).click(function () {
+									WdatePicker({
+										onpicked: function () { jQuery(elem).change(); searchData() },
+										onclearing: function () { jQuery(elem).val(""); searchData(); }
+									});
+								});
+							}, attr: { title: 'Select Date' }, sopt: ['cn']
+						},
+						formatter: 'date',
+						formatoptions: { srcformat: 'Y-m-d', newformat: 'Y-m-d' },
+					},
+					{ name: 'beginDate', index: 'a.begin_date', align: 'center', search: true, type: 'string', searchoptions: { sopt: ['cn', 'eq', 'ne'] }, hidden: true },
+					{ name: 'endDate', index: 'a.end_date', align: 'center', search: true, type: 'string', searchoptions: { sopt: ['cn', 'eq', 'ne'] }, hidden: true },
+					{ name: 'weituoType', index: 'a.weituo_type', key: true, align: 'center', sorttype: 'string', search: false,  width: 40, hidden: true },
+					{
+						name: 'transportType', index: 'a.transport_type', align: 'center', stype: 'select', type: 'string', search: true, width: 80,
+						/* searchoptions : {value : { '' : $.i18n.prop('SctsUserMail_Txt_All'), 'Y' : 'Yes', 'N' : 'No' }, sopt : [ 'eq' ]}, */
+						formatter: function (value, grid, rows) {
+							// switch (value) {
+							// 	case "0":
+							// 		return $.i18n.prop('Steam transportation');
+							// 	case "1":
+							// 		return $.i18n.prop('Express');
+							// 	case "2":
+							// 		return $.i18n.prop('Railway transportation');
+							// 	case "3":
+							// 		return $.i18n.prop('waterway');
+							// 	case "4":
+							// 		return $.i18n.prop('Intermodal transport');
+							// }
+							var text = "";
+							for (var i = 0; i < userDicType.length; i++) {
+								var item = userDicType[i];
+								if (item.dicvalue === value) {
+									text = item.dictext;
+									break;
+								}
+							}
+							return text;
+						},
+						searchoptions: {
+							value: transportTypeInnerHtml, sopt: ['eq']
+						}
+					},
+					{ name: 'sumPcs', index: 'a.sum_pcs', key: true, align: 'center', sorttype: 'string', search: false,  width: 60 },
+					{ name: 'sumGwt', index: 'a.sum_gwt', key: true, align: 'center', sorttype: 'string', search: false,  width: 60 },
+					{ name: 'sumVol', index: 'a.sum_vol', key: true, align: 'center', sorttype: 'string', search: false,  width: 60 },
+					{ name: 'beginAddress', index: 'a.begin_address', align: 'center', width: 300, search: true, type: 'string' },
+					{ name: 'endAddress', index: 'a.end_address', align: 'center', width: 300, type: 'string', search: true },
+					{ name: 'trainType', index: 'a.train_type', align: 'center', width: 60, search: true, stype: 'select', type: 'string', searchoptions: { value: truckTypeInnerHtml, sopt: ['cn', 'eq', 'ne'] } },
+					{ name: 'planTruckType', index: 'a.plan_trucktype', key: true, align: 'center', sorttype: 'string', search: false,  width: 40, hidden: true },
+					{
+						name: 'contractorName', index: 'a.contractor_name', width: 220, align: 'left', stype: 'select', search: true,
+						searchoptions: {
+							value: contractorNameInnerHtml, sopt: ['eq']
+						}
+					},
+					{ name: 'truckType', index: 'a.truckType', key: true, align: 'center', sorttype: 'string', search: false,  width: 40, hidden: true },
+					{ name: 'contractorCode', index: 'a.contractor_code', key: true, align: 'center', sorttype: 'string', search: false,  width: 40, hidden: true },
+					{ name: 'tbPlanBeginDate', index: 'a.tb_plan_begin_date', key: true, align: 'center', sorttype: 'string', search: false,  width: 40, hidden: true },
+					{ name: 'tbCreateDate', index: 'a.tb_create_date', key: true, align: 'center', sorttype: 'string', search: false,  width: 40, hidden: true },
+					{ name: 'trucknoq', index: 'a.trucknoq', key: true, align: 'center', sorttype: 'string', search: false,  width: 80 },
+					{ name: 'trucknog', index: 'a.trucknog', key: true, align: 'center', sorttype: 'string', search: false,  width: 40, hidden: true },
+					{ name: 'driverCode', index: 'a.driver_code', key: true, align: 'center', sorttype: 'string', search: false,  width: 40, hidden: true },
+					{ name: 'driverName', index: 'a.driver_name', key: true, align: 'center', sorttype: 'string', search: false,  width: 80 },
+					{ name: 'driverTel', index: 'a.driver_tel', key: true, align: 'center', sorttype: 'string', search: false,  width: 40, hidden: true },
+					{ name: 'currentLocationDate', index: 'a.current_location_date', key: true, align: 'center', sorttype: 'string', search: false,  width: 40, hidden: true },
+					{ name: 'currentLocation', index: 'a.current_location', key: true, align: 'center', sorttype: 'string', search: false,  width: 40, hidden: true },
+					{ name: 'carrierState', index: 'a.carrier_state', key: true, align: 'center', sorttype: 'string', search: false,  width: 40, hidden: true },
+					{ name: 'isabnormal', index: 'a.isabnormal', key: true, align: 'center', sorttype: 'string', search: false,  width: 40, hidden: true },
+					{ name: 'ywLocation', index: 'a.yw_location', key: true, align: 'center', sorttype: 'string', search: false,  width: 40, hidden: true },
+					{
+						name: 'getState', index: 'a.get_state', key: true, align: 'center', sorttype: 'string', search: false,  width: 70, hidden: true,
+						formatter: function (value, grid, rows) {
+							return getStateText[value];
+						}
+					},
+					{
+						name: 'payState', index: 'a.pay_state', key: true, align: 'center', sorttype: 'string', search: false,  width: 70, hidden: true,
+						formatter: function (value, grid, rows) {
+							return payStateText[value];
+						}
+					},
+					{ name: 'getMode', index: 'a.get_mode', key: true, align: 'center', sorttype: 'string', search: false,  width: 40, hidden: true },
+					{ name: 'payMode', index: 'a.pay_mode', key: true, align: 'center', sorttype: 'string', search: false,  width: 40, hidden: true },
+					{ name: 'trainnoType', index: 'a.trainno_type', key: true, align: 'center', sorttype: 'string', search: false,  width: 40, hidden: true },
+					{ name: 'fareData', index: 'a.fare_data', key: true, align: 'center', sorttype: 'string', search: false,  width: 40, hidden: true },
+					{ name: 'createBy', index: 'a.create_by', key: true, align: 'center', sorttype: 'string', search: false,  width: 40, hidden: true },
+					{ name: 'createDate', index: 'a.create_date', key: true, align: 'center', sorttype: ' ', search: false,  width: 40, hidden: true }
+
+				],
+				shrinkToFit: false,
+				altRows: true,
+				autoScroll: true,
+				altclass: 'gridSpacingClass',
+				forceFit: true,
+				cellLayout: 0,
+				scroll: false,
+				autowidth: true,
+				sortname: 'a.create_date',
+				sortorder: 'desc',
+				loadonce: false,
+				mtype: 'POST',
+				viewrecords: true,
+				rownumbers: true,
+				multiselect: true,
+				subGrid: true,//开启子表格支持
+				rowNum: 15,
+				height: '100%',
+				rowList: [15, 20, 30, 50],
+				pager: '#gridPager',
+				jsonReader: {
+					root: 'rows',
+					total: 'total',
+					page: 'page',
+					records: 'records',
+					repeatitems: false
+				},
+				gridComplete: function () {
+					setGridHeightWidth();
+					$('.cbox').shiftSelect();
+				},
+				loadComplete: function (xhr) {
+					loadMune(this);
+				},
+				subGridRowExpanded: function (subgrid_id, row_id) {//加载子表格
+					//alert("添加详细列表")
+					var rowData = $("#gridTable").jqGrid('getRowData', row_id);
+					sn = rowData.sn;
+					trainno = rowData.trainNo;
+					cusNo = rowData.cusNo;
+					var subgrid_table_id;
+					subgrid_table_id = subgrid_id + "_t";   // (3)根据subgrid_id定义对应的子表格的table的id
+					var addText = $.i18n.prop('order_detail_add');
+					var delText = $.i18n.prop('order_detail_del');
+					var subgrid_pager_id;
+					subgrid_pager_id = subgrid_id + "_pgr"  // (4)根据subgrid_id定义对应的子表格的pager的id
+
+					// (5)动态添加子报表的table和pager
+					$("#" + subgrid_id).html("<table id='" + subgrid_table_id + "' class='scroll'></table><div id='" + subgrid_pager_id + "' class='scroll'></div>");
+
+					// (6)创建jqGrid对象
+					$("#" + subgrid_table_id).jqGrid({
+						url: '../../wayBill/getList?t=' + Math.random() + '&customSearchFilters=' + encodeURI(getSearchOrderListFilters()),  // (7)子表格数据对应的url，注意传入的contact.id参数
+						datatype: "json",
+                        mtype: 'post',
+						colNames: [
+							'', '', '', '','', $.i18n.prop('contId'), $.i18n.prop('state'), $.i18n.prop('costomer'), $.i18n.prop('businessDate'), $.i18n.prop('businessYwId'),
+							$.i18n.prop('wayBillForm_theAwb'), $.i18n.prop('planBeginDate'), $.i18n.prop('sumPcs'), '#{gwt} /KG', '#{vol} /m³',
+							$.i18n.prop('beginCity'), $.i18n.prop('endCity'), $.i18n.prop('contractorName'), $.i18n.prop('trucknoq'), $.i18n.prop('driverName'), $.i18n.prop('wayBillList_scheduledAdmissionTime')
+						],
+						colModel: [
+							{
+								name: '', index: '', align: 'center', hidden: false,search: false,
+								
+								formatter: function (value, gird, rows) {
+									return '<a href="javascript:void(0);" class="url_a" onclick="openOrderDetail(\'' + rows.MOSTLY_GUID + '\')">' + $.i18n.prop('mostlyDetail') + '</a>';
+								}
+							},
+							{
+								name: 'STATE', index: '', align: 'center', hidden: true,
+								formatter: function (value, gird, rows) {
+									return rows.STATE_NAME;
+								}
+							},
+							{
+								name: 'MOSTLY_GUID',
+								index: 'a.',
+								key: true,
+								align: 'center',
+								isSort: true,
+								sorttype: 'string',
+								search: true,
+								sortable: true,
+								hidden: true
+							},
+							{
+								name: 'DETAIL_GUID',
+								index: '',
+								align: 'center',
+								isSort: true,
+								sorttype: 'string',
+								search: true,
+								sortable: true,
+								hidden: true
+							},
+							{
+								name: 'SN',
+								index: 'sn',
+								align: 'center',
+								isSrot: true,
+								sorttype: 'string',
+								search: true,
+								sortable: true,
+								hidden: true
+							},
+							{
+								name: 'CONT_ID',
+								index: 'A.cont_id',
+								align: 'center',
+								isSort: true,
+								sorttype: 'string',
+								search: false,
+								
+								hidden: true
+							},
+							{
+								name: 'STATE_NAME',
+								index: 'e.dictext',
+								align: 'center',
+								isSort: true,
+								sorttype: 'string',
+								width: 80,
+								search: true,
+								sortable: true,
+								hidden: true,
+								formatter: function (value, grid, rows) {
+									let detailGuid = rows.DETAIL_GUID.split(',');
+									let state = rows.STATE_NAME;
+                                    return '<a href="javascript:void(0);" class="url_a" onclick="openOrderDetail(\'' + rows.MOSTLY_GUID + '\')">' + rows.STATE_NAME + '</a>';
+								},
+							},
+							{
+								name: 'CUS_NO',
+								index: 'B.cus_no',
+								align: 'left',
+								isSort: false,
+								sorttype: 'string',
+								width: 80,
+								search: false,
+								
+								hidden: true,
+								formatter: function (value, grid, rows) {
+									return cusNoInnerHtml[value];
+								}
+							},
+							{
+								name: 'BUSINESS_DATE',
+								index: 'b.business_date',
+								align: 'left',
+								isSort: false,
+								sorttype: 'string',
+								width: 125,
+								search: false,
+								
+								hidden: false
+							},
+							{
+								name: 'BUSINESS_YW_ID',
+								index: 'b.business_yw_id',
+								align: 'center',
+								isSort: false,
+								sorttype: 'string',
+								width: 120,
+								search: false,
+								
+								hidden: false
+							},
+							{
+								name: 'YW_ID',
+								index: 'b.yw_id',
+								align: 'center',
+								isSort: false,
+								sorttype: 'string',
+								width: 120,
+								search: false,
+								
+								hidden: true
+							},
+							{
+								name: 'PLANSHIPMENT_DATA',
+								index: 'b.PLANSHIPMENT_DATA',
+								align: 'center',
+								isSort: false,
+								sorttype: 'string',
+								width: 125,
+								search: false,
+								
+								hidden: true
+							},
+							{
+								name: 'QTY',
+								index: 'b.qty',
+								align: 'right',
+								isSort: false,
+								sorttype: 'string',
+								width: 60,
+								search: false,
+								
+								hidden: true
+							},
+							{
+								name: 'GWT',
+								index: 'b.gwt',
+								align: 'right',
+								isSort: false,
+								sorttype: 'string',
+								width: 60,
+								search: false,
+								
+								hidden: true
+							},
+							{
+								name: 'VOL',
+								index: 'b.vol',
+								align: 'right',
+								isSort: false,
+								sorttype: 'string',
+								width: 60,
+								search: false,
+								
+								hidden: true
+							},
+							{
+								name: 'BEGIN_LOCAL_ALL',
+								index: '',
+								align: 'left',
+								isSort: false,
+								search: false,
+								
+								hidden: false,
+								width: 200,
+								formatter: function (value, grid, rows) {
+
+									var ss = value.split('-')
+									return ss[1]
+								}
+							},
+							{
+								name: 'END_LOCAL_ALL',
+								index: '',
+								align: 'left',
+								isSort: false,
+								search: false,
+								
+								hidden: false,
+								width: 200,
+								formatter: function (value, grid, rows) {
+									var ss = value.split('-')
+									return ss[1]
+								},
+							},
+							{
+								name: 'CONTRACTOR_ALL',
+								index: '',
+								align: 'left',
+								isSort: false,
+								search: false,
+								
+								hidden: true,
+								width: 200
+							},
+							{
+								name: 'TRUCKNOQ',
+								index: '',
+								align: 'center',
+								isSort: false,
+								search: false,
+								
+								hidden: true,
+								width: 70
+							},
+							{
+								name: 'DRIVER_NAME',
+								index: '',
+								align: 'center',
+								isSort: false,
+								search: false,
+								
+								hidden: true,
+								width: 70
+							},
+							{
+								name: 'TB_PLAN_BEGIN_DATE',
+								index: '',
+								align: 'center',
+								isSort: false,
+								search: false,
+								
+								hidden: true,
+								width: 120
+							}
+
+						],
+						jsonReader: {   // (8)针对子表格的jsonReader设置
+							root: "rows",
+							records: "record",
+							repeatitems: false
+						},
+						prmNames: { search: "search" },
+						pager: subgrid_pager_id,
+						viewrecords: true,
+						height: "100%",
+						rowNum: 5,
+						ondblClickRow: function (row_id) {
+
+						},
+					}
+					);
+
+					var addBtn = $("#" + subgrid_table_id).parents(".tablediv:first").find("#add");
+					addBtn.parents("th").unbind("click").find("*").unbind("click");
+					addBtn.parents("th").bind("click", openTwoDetail)
+				}
+			});
+
+			$("#gridTable").jqGrid('navGrid', '#gridPager', { add: false, edit: false, del: false, refresh: true, search: false }, {}, {}, {}, { multipleSearch: false, closeOnEscape: true, closeAfterSearch: true });
+			$('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+				caption: $.i18n.prop('PlanExec_ReorderColumns'),// 设置列
+				title: 'Reorder Columns',
+				onClickButton: toggleGridColumns
+			});
+
+			$('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+				caption: $.i18n.prop('PlanExec_QuickSearch'),// 快捷搜索
+				title: 'Quick Search',
+				onClickButton: toggleGridSearchToolbar
+			});
+			$('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+				caption: $.i18n.prop('PlanExec_ExportDatas'),// 导出数据
+				title: 'Export Datas',
+				buttonicon: 'ui-icon-disk',
+				onClickButton: function () {
+					ExportToExcel.call(this, { title: $.i18n.prop('all.vehicle.depute') });
+				}
+			});
+			setGridHeightWidth();
+		};
+
+		var openTwoDetail = function () {
+			//alert("进入详���页面")
+			var rowid = $(this).parents("tr:last").prev().attr("id");
+			var rowData = $("#gridTable").jqGrid('getRowData', rowid);
+			var paramFilter = "&trainno=" + rowData.trainNo + "&sn=" + rowData.sn;
+			var href = "../View/ywgl/orderDetail.html?moduleId=" + moduleId + encodeURI(paramFilter);
+			//双击订单跳转订单详情页面
+			createNewTab($.i18n.prop('order.detail.title'), href);
+		}
+
+		// 新增、修改操作完成后调用的刷新方法
+		var refreshCallerData_List = function () {
+			searchData();
+		};
+
+		//修改添加表格JS
+		// 自定义窗体
+
+		// 初始化车型下拉框
+		$("#trainType").combobox({
+			valueField: "code",
+			textField: "name",
+			method: "GET",
+			loader: function (param, success, error) {
+				$.ajax({
+					url: "../../dictionary/findTruckType",
+					dataType: 'json',
+					method: "GET",
+					success: function (data) {
+						success(data.resultDataFull);
+					}
+				});
+			}
+		});
+		function getCus() {
+			$("#cusNo").combobox({
+				valueField: 'code',
+				textField: 'name',
+				loader: function (param, success, error) {
+					$.ajax({
+						url: "../../bussiness/planExec/findCusWithCurrentWithinCode?t=" + Math.random(),
+						dataType: 'json',
+						method: "GET",
+						success: function (data) {
+							customerInnerHtml = { '': $.i18n.prop('all') };
+							data.unshift({ code: '', 'name': $.i18n.prop('all') });
+							data.forEach(function (item) {
+								customerInnerHtml[item.code] = item.name;
+							});
+							success(data);
+						}
+					});
+				},
+				onLoadSuccess: comboDefault,
+				onChange: searchData
+			});
+		}
+		var comboDefault = function () {
+			$(this).combobox("setValue", $.i18n.prop('all'));
+		}
+
+		//用户选择时间后马上进行查询(前)
+		$('#beginTime').datebox({
+			onChange: function (date) {
+				if (date == "") {
+					$("#beginTime").datebox('setValue', '')
+					document.getElementById("search").click();
+				} else {
+					searchData();
+				}
+			},
+			onSelect: function (beginDate) {
+				$("#endTime").datebox().datebox("calendar").calendar({
+					validator: function (endDate) {
+						return beginDate <= endDate;
+					}
+				});
+			}
+		});
+		//用户选择时间后马上进行查询(后)
+		$('#endTime').datebox({
+			onChange: function (date) {
+				if (date == "") {
+					$("#endTime").datebox('setValue', '')
+					document.getElementById("search").click();
+				} else {
+					searchData();
+				}
+			}
+		});
+
+		function loadState() {
+			$.ajax({
+				url: "../../sysInfo/dictionary/getstate?t=" + Math.random(),
+				type: "POST",
+				data: "tableName=" + "sheet_yw_plan_exec_state",
+				success: function (dataObj) {
+					var data = dataObj.resultDataFull;
+					data.unshift({ dicText: '--所有--', dicValue: '' });
+					data.forEach(function (item) {
+						stateInnerHtml[item.dicValue] = item.dicText;
+						stateValueObj[item.dicText] = item.dicValue;
+					});
+
+					$("#searchState").combobox({
+						valueField: 'dicValue',
+						textField: 'dicText',
+						multiple: true,
+						labelSeparator: ',',
+						displaySeparator: ',',
+						valueSeparator: ',',
+						loader: function (params, success, error) {
+							success(data);
+							$("#searchState").combobox("setValue", '');
+						},
+						formatter: function (row) {
+							var opts = $(this).combobox("options");
+							return '<input type="checkbox" class="combobox-checkbox">' + row[opts.textField];
+						},
+						onLoadSuccess: function () {
+							$("#searchState").combobox("setValue", '');
+							var opts = $(this).combobox("options");
+							var target = this;
+							var values = $(target).combobox("getValues");
+							$.map(values, function (value) {
+								var el = opts.finder.getEl(target, value);
+								el.find('input.combobox-checkbox')._propAttr("checked", true);
+							})
+						},
+						onSelect: function (row) {
+							var opts = $(this).combobox('options');
+							$("#searchState").val($(this).combobox("getValues"));
+
+							var comboList = $(this).combobox("getValues");
+							var comboText = $(this).combobox("getText").split(",");
+							var newComboList = [];
+							if (comboList != null && comboList != undefined) {
+								for (var i = 0; i < comboList.length; i++) {
+									var code = comboList[i];
+									if (code == "") {
+										var el = opts.finder.getEl(this, code);
+										el.find('input.combobox-checkbox')._propAttr('checked', false);
+									}
+								}
+								for (var i = 0; i < comboList.length; i++) {
+									if (comboList[i].indexOf("--") == -1 && comboList[i] != "") {
+										newComboList.push(comboList[i]);
+									} else {
+										if (i != 0) {
+											var selectData = $(this).combobox("getData");
+											for (var i = 0; i < selectData.length; i++) {
+												var code = selectData[i].dicValue;
+												if (code != '') {
+													var el = opts.finder.getEl(this, code);
+													el.find('input.combobox-checkbox')._propAttr('checked', false);
+												}
+											}
+											newComboList = [""];
+											break;
+										}
+									}
+								}
+							}
+							if (newComboList.length <= 0) {
+								newComboList = [""];
+							}
+							$(this).combobox('setValues', newComboList);
+							var el = opts.finder.getEl(this, row[opts.valueField]);
+							el.find('input.combobox-checkbox')._propAttr('checked', true);
+							searchData();
+
+						},
+						onUnselect: function (row) {
+							var opts = $(this).combobox('options');
+							$(this).val($(this).combobox("getValues"));
+
+							var comboList = $(this).combobox("getValues");
+							var comboText = $(this).combobox("getText").split(",");
+							var newComboList = [];
+							if (comboList != null && comboList != undefined) {
+								for (var i = 0; i < comboList.length; i++) {
+									if (comboList[i].indexOf("--") == -1 && comboList[i] != "") {
+										newComboList.push(comboList[i]);
+									} else {
+										if (i != 0) {
+											newComboList = [""];
+
+											break;
+										}
+									}
+								}
+							}
+							if (newComboList.length <= 0) {
+								newComboList = [""];
+							}
+							$(this).combobox('setValues', newComboList);
+							var el = opts.finder.getEl(this, row[opts.valueField]);
+							el.find('input.combobox-checkbox')._propAttr('checked', false);
+							searchData();
+						}
+					});
+				}
+			});
+		}
+
+		//更改部分
+		var openDetail = function (sn, code) {
+			var href = "";
+			if (sn == undefined || sn == "") {
+				href = "../View/ywgl/orderDetail.html?moduleId=" + moduleId;
+			} else {
+				href = "../View/ywgl/orderDetail.html?moduleId=" + moduleId + "&sn=" + sn + "&trainNo=" + code;
+			}
+			showLoading("#{supplier.loading}...");
+			openDialog({ title: $.i18n.prop('supplier.page.detail.title'), id: 'SupplierDetail', width: 1150, height: 680, isResize: true, href: href, closable: true });
+		}
+
+		//打开运单明细
+        var openOrderDetail = function (mostlyGuid) {
+            console.log(mostlyGuid)
+			var href = "../View/ywgl/orderMostlyDetail.html?mostlyGuid=" + mostlyGuid;
+			showLoading("#{supplier.loadingDetail}...");
+			openDialog({ title: $.i18n.prop('supplier.page.mostlydetail.title'), id: 'SupplierDetail', width: 1180, height: 400, isResize: true, href: href, closable: true });
+        }
+
+		var getStateValue = function (value) {
+			switch (value) {
+				case $.i18n.prop('normal'):
+					return 0;
+				case $.i18n.prop('toExamine'):
+					return 1;
+				case $.i18n.prop('dispatched'):
+					return 2;
+				case $.i18n.prop('transportation'):
+					return 3;
+				case $.i18n.prop('transportationCompletion'):
+					return 4;
+				case $.i18n.prop('alreadyWrittenOff'):
+					return 5;
+				case $.i18n.prop('halfwayOff'):
+					return 6;
+			}
+		}
+
+		function addTrain(trainNo) {
+			var href = "../View/ywgl/trainsPlanDetailByAdd.html?trainNo=" + trainNo;
+			showLoading("#{supplier.loading}...");
+			createNewTab($.i18n.prop('supplier.page.detail.title'), href);
+		}
+
+		function updateTrain(trainNo) {
+			var href = "../View/ywgl/trainsPlanDetailByUpdate.html?trainNo=" + trainNo;
+			showLoading("#{supplier.loading}...");
+			openDialog({ title: $.i18n.prop('supplier.page.detail.title.edit'), id: 'TrainsPlanByUpdate', width: 1150, height: 620, isResize: true, href: href, closable: true });
+		}
+		//审核
+		function check() {
+			var selectRowItems = $('#gridTable').jqGrid('getGridParam', 'selarrrow');
+			if (selectRowItems.length == 0) {
+				errorNotification({ SimpleMessage: '没有选择数据，不能进行操作' });// 请选择一行数据行进行操作
+				return;
+			}
+			var trainnoList = [];
+			for (var i = 0; i < selectRowItems.length; i++) {
+				var rowData = $("#gridTable").jqGrid("getRowData", selectRowItems[i]);
+				var state = rowData.state = stateValueObj[rowData.state];
+				if (state != '0') {
+					errorNotification({ SimpleMessage: $.i18n.prop('supplier.examinePropmt3') });
+					return;
+				}
+				trainnoList.push(rowData.trainNo);
+			}
+			$.messager.confirm($.i18n.prop('planExec_Prompt'), '#{planExec_examine}?', function (r) {// 提示, 确定审核选中的数据项吗
+				if (r) {
+					$.ajax({
+						url: '../../order/countWaybill?t=' + Math.random(),
+						type: 'POST',
+						data: { trainno: trainnoList.join(",") },
+						success: function (dataObj) {
+							if (dataObj.resultCode == "3") {
+								errorNotification(dataObj.resultDataFull);
+								return;
+							} else {
+								showLoading();
+								$.ajax({
+									url: '../../bussiness/planExec/examine?t=' + Math.random() + "&trainNo=" + trainnoList.join(","),
+									type: 'POST',
+									data: "",
+									success: function (dataObj) {
+										if (isServerResultDataPass(dataObj)) {
+											correctNotification(dataObj.resultDataFull);
+											searchData(); // 删除时需要重新搜索
+										} else {
+											FailResultDataToTip(dataObj);
+										}
+										hideLoading();
+									},
+									error: function (message) {
+										hideLoading();
+									}
+								});
+							}
+						}
+					});
+				}
+			});
+		}
+		//反审核
+		function isCheck() {
+			var selectRowItems = $('#gridTable').jqGrid('getGridParam', 'selarrrow');
+			if (selectRowItems.length == 0) {
+				errorNotification({ SimpleMessage: '没有选择数据，不能反审核' });// 请选择一行数据行进行操作
+				return;
+			}
+			var trainnoList = [];
+			for (var i = 0; i < selectRowItems.length; i++) {
+				var rowData = $('#gridTable').jqGrid('getRowData', selectRowItems[i]);
+				var state = rowData.state = stateValueObj[rowData.state];
+				if (state != 1) {
+					errorNotification({ SimpleMessage: '只能反审核已经审核过的车次' });
+					return;
+				}
+				trainnoList.push(rowData.trainNo);
+			}
+			$.messager.confirm($.i18n.prop('planExec_Prompt'), '确定要反审核吗?', function (r) {// 提示, 确定保存数据项吗
+				if (r) {
+					$.ajax({
+						url: '../../bussiness/planExec/audit?t=' + Math.random(),
+						data: { trainNo: trainnoList.join(",") },
+						type: 'POST',
+						success: function (dataObj) {
+							if (isServerResultDataPass(dataObj)) {
+								correctNotification(dataObj.resultDataFull);
+								searchData();
+							} else {
+								FailResultDataToTip(dataObj);
+							}
+							hideLoading();
+						},
+						error: function (message) {
+							hideLoading();
+						}
+					})
+				}
+			})
+		}
+
+		//运输完成
+		function transport() {
+			var selectRowItems = $("#gridTable").jqGrid('getGridParam', 'selarrrow');
+			if (selectRowItems.length == 0) {
+				errorNotification({ SimpleMessage: '没有选择数据，无法操作!' });
+				return;
+			}
+			var rowDataList = [];
+			for (var i = 0; i < selectRowItems.length; i++) {
+				var rowData = $("#gridTable").jqGrid("getRowData", selectRowItems[i]);
+				var state = rowData.state = stateValueObj[rowData.state];
+				rowData.payState = payStateValue[rowData.payState];
+				rowData.getState = getStateValueObj[rowData.getState];
+				if (state != 3) {
+					errorNotification({ SimpleMessage: $.i18n.prop('planExecDetail_Prompt3Update') });
+					return;
+				}
+				rowDataList.push(rowData);
+			}
+			/* var rowData = $("#gridTable").jqGrid('getRowData',selectRowItems);
+			var state = rowData.state = stateValueObj[rowData.state];
+			if(state != 3) {
+				errorNotification({ SimpleMessage : $.i18n.prop('planExecDetail_Prompt3Update')});
+				return ;
+			} */
+			$.messager.confirm($.i18n.prop('planExec_Prompt'), '#{planExec.complete}?', function (r) {
+				if (r) {
+					showLoading();
+					$.ajax({
+						url: '../../train/complete?t=' + Math.random(),
+						data: 'jsonData=' + JSON.stringify(rowDataList),
+						type: 'POST',
+						success: function (dataObj) {
+							if (isServerResultDataPass(dataObj)) {
+								correctNotification(dataObj.resultDataFull);
+								searchData();
+							} else {
+								FailResultDataToTip(dataObj);
+							}
+							hideLoading();
+						},
+						error: function (message) {
+							hideLoading();
+						}
+					});
+				}
+			});
+		}
+
+		//注销
+		function cancellation() {
+			var selectRowItems = $("#gridTable").jqGrid('getGridParam', 'selarrrow');
+			if (selectRowItems.length != 1) {
+				errorNotification({ SimpleMessage: $.i18n.prop('planExecDetail_Prompt2Update') });
+				return;
+			}
+			var rowData = $("#gridTable").jqGrid('getRowData', selectRowItems);
+			var state = rowData.state = stateValueObj[rowData.state];
+			if (state != 0) {
+				errorNotification({ SimpleMessage: $.i18n.prop('planExec_cancellation_stateError') });
+				return;
+			}
+			$.messager.confirm($.i18n.prop('planExec_Prompt'), '#{planExec.complete}?', function (r) {
+				if (r) {
+					showLoading();
+					$.ajax({
+						url: '../../train/cancellation?t=' + Math.random(),
+						data: 'jsonData=' + JSON.stringify(rowData),
+						type: 'POST',
+						success: function (dataObj) {
+							if (isServerResultDataPass(dataObj)) {
+								correctNotification(dataObj.resultDataFull);
+								searchData();
+							} else {
+								FailResultDataToTip(dataObj);
+							}
+							hideLoading();
+						},
+						error: function (message) {
+							hideLoading();
+						}
+					});
+				}
+			});
+		}
+
+		//中途取消
+		function cancel() {
+			var selectRowItems = $("#gridTable").jqGrid('getGridParam', 'selarrrow');
+			if (selectRowItems.length == 0) {
+				errorNotification({ SimpleMessage: '没有选择数据，不能进行操作' });
+				return;
+			}
+			var rowDataList = [];
+			for (var i = 0; i < selectRowItems.length; i++) {
+				var rowData = $("#gridTable").jqGrid('getRowData', selectRowItems[i]);
+				var state = rowData.state = stateValueObj[rowData.state];
+				rowData.payState = payStateValue[rowData.payState];
+				rowData.getState = getStateValueObj[rowData.getState];
+				if (state != 2) {
+					errorNotification({ SimpleMessage: '只能取消已派车但未完成的车次' });
+					return;
+				}
+				rowDataList.push(rowData);
+			}
+			/* var rowData = $("#gridTable").jqGrid('getRowData',selectRowItems);
+			var state = rowData.state = stateValueObj[rowData.state];
+			if(state != 2) {
+				errorNotification({ SimpleMessage : '只能取消已派车但未完成的车次'});
+				return ;
+			} */
+			$.messager.confirm($.i18n.prop('planExec_Prompt'), '确定要中途取消吗？', function (r) {
+				if (r) {
+					showLoading();
+					$.ajax({
+						url: '../../train/cancel?t=' + Math.random(),
+						data: 'jsonData=' + JSON.stringify(rowDataList),
+						type: 'POST',
+						success: function (dataObj) {
+							if (isServerResultDataPass(dataObj)) {
+								correctNotification(dataObj.resultDataFull);
+								searchData();
+							} else {
+								FailResultDataToTip(dataObj);
+							}
+							hideLoading();
+						},
+						error: function (message) {
+							hideLoading();
+						}
+					});
+				}
+			})
+		}
+
+		//车次撤回
+		function withdrawal() {
+			var selectRowItems = $("#gridTable").jqGrid('getGridParam', 'selarrrow');
+			if (selectRowItems.length == 0) {
+				errorNotification({ SimpleMessage: '没有选择数据，无法操作' });
+				return;
+			}
+			var rowDataList = [];
+			for (var i = 0; i < selectRowItems.length; i++) {
+				var rowData = $("#gridTable").jqGrid("getRowData", selectRowItems[i]);
+				var state = rowData.state = stateValueObj[rowData.state];
+				rowData.payState = payStateValue[rowData.payState];
+				rowData.getState = getStateValueObj[rowData.getState];
+				if (state != 3) {
+					errorNotification({ SimpleMessage: '已开始运输但没有运输到达的运单才可以强制撤回' });
+					return;
+				}
+				rowDataList.push(rowData);
+			}
+			/* var rowData = $("#gridTable").jqGrid('getRowData',selectRowItems);
+			var state = rowData.state = stateValueObj[rowData.state];
+			if(state != 3) {
+				errorNotification({ SimpleMessage : '已开始运输但没有运输到达的运单才可以强制撤回'});
+				return ;
+			} */
+			$.messager.confirm($.i18n.prop('planExec_Prompt'), "确定要强制撤回吗？", function (r) {
+				if (r) {
+					showLoading();
+					$.ajax({
+						url: '../../train/forcedtowithdraw?t=' + Math.random(),
+						data: 'jsonData=' + JSON.stringify(rowDataList),
+						type: 'POST',
+						success: function (dataObj) {
+							if (isServerResultDataPass(dataObj)) {
+								correctNotification(dataObj.resultDataFull);
+								searchData();
+							} else {
+								FailResultDataToTip(dataObj);
+							}
+							hideLoading();
+						},
+						error: function (message) {
+							hideLoading();
+						}
+					});
+				}
+			});
+		}
+		//加载运输方式
+		function loadTransportType() {
+			$.ajax({
+				url: "../../jcda/ZdCus/queryDictionary?t=" + Math.random() + "&kind=transportType",
+				method: "GET",
+				async: false,
+				success: function (dataObj) {
+					let data = dataObj.resultDataFull;
+					transportTypeInnerHtml = { '': $.i18n.prop('all') };
+					data.forEach(function (item) {
+						transportTypeInnerHtml[item.dicValue] = item.dicText;
+					});
+				}
+			});
+		}
+
+		//加载车型
+		function loadTruckType() {
+			$.ajax({
+				url: "../../bussiness/planExec/findTruckTypeWithCurrentWithinCode?t=" + Math.random(),
+				method: "GET",
+				success: function (data) {
+					truckTypeInnerHtml = { '': $.i18n.prop('all') };
+					data.forEach(function (item) {
+						truckTypeInnerHtml[item.code] = item.name;
+					});
+				}
+			});
+		}
+
+		var loadAddress = function () {
+			$("#tipinputbegin,#tipinputend").combobox({
+				valueField: 'code',
+				textField: 'name',
+				loader: function (param, success, error) {
+					$.ajax({
+						url: '../../order/getlocation?t=' + Math.random(),
+						dataType: 'json',
+						method: 'POST',
+						success: function (data) {
+							var supArr = [];
+							supArr.unshift({ code: '', name: $.i18n.prop('all') });
+							cityInnerHtml = { '': $.i18n.prop('all') };
+							data.resultDataFull.forEach(function (item) {
+								supArr.push({ code: item.city, name: (item.cityZjm + "-" + item.city) });
+								cityInnerHtml[item.city] = item.cityZjm + "-" + item.city;
+							});
+							success(supArr);
+							$("#tipinputbegin,#tipinputend").combobox('setValue', "");
+						}
+					});
+				},
+				onChange: function(){
+					searchData();
+				}
+			});
+		}
+
+
+		var loadContractorName = function () {
+			$.ajax({
+				url: "../../jcda/contractor/findAllListWithLocation?&t=" + Math.random(),
+				method: "GET",
+				success: function (data) {
+					contractorNameInnerHtml = { '': $.i18n.prop('all') };
+					data.forEach(function (item) {
+						contractorNameInnerHtml[item.name] = item.name;
+					});
+				}
+			});
+		}
+
+		var recall = function () {
+			var selectRowItems = $('#gridTable').jqGrid('getGridParam', 'selarrrow');
+			if (selectRowItems.length == 0) {
+				errorNotification({ SimpleMessage: $.i18n.prop('planExecDetail_Prompt2Update') });// 请至少选择一行数据行进行操作
+				return;
+			}
+			var rowData = [];
+			for (var i = 0; i < selectRowItems.length; i++) {
+				var data = $('#gridTable').jqGrid('getRowData', selectRowItems[i]);
+				var state = data.state = stateValueObj[data.state];
+				data.payState = payStateValue[data.payState];
+				data.getState = getStateValueObj[data.getState];
+				if (state != 2) {
+					errorNotification({ SimpleMessage: '只能撤回已经派遣的车次' });
+					return;
+				}
+				rowData.push(data);
+			}
+			$.messager.confirm($.i18n.prop('planExec_Prompt'), '#{planExec_withdraw}?', function (r) {// 提示, ���定撤回选中的数据项吗
+				if (r) {
+					showLoading();
+					$.ajax({
+						url: '../../bussiness/planExec/withdraw?t=' + Math.random(),
+						type: 'POST',
+						data: "jsonData=" + JSON.stringify(rowData),
+						success: function (dataObj) {
+							if (isServerResultDataPass(dataObj)) {
+								correctNotification(dataObj.resultDataFull);
+								searchData();
+							} else {
+								FailResultDataToTip(dataObj);
+							}
+							hideLoading();
+						},
+						error: function (message) {
+							hideLoading();
+						}
+					});
+				}
+			});
+		};
+
+		var loadMune = function (gridTableObj) {
+			$("tr.jqgrow", gridTableObj).contextMenu('menu', {
+				bindings: { //右键菜单绑定的事件
+					"adjustTheTrains": function (trigger) {
+						var selectRowItems = $(gridTableObj).jqGrid("getGridParam", 'selarrrow');
+						/* if(selectRowItems.length != 1) {
+							errorNotification({ SimpleMessage : '请选择一行数据操作'});
+							return ;
+						}; */
+						var arr = [];
+						for (var i = 0; i < selectRowItems.length; i++) {
+							var rowData = $("#gridTable").jqGrid('getRowData', selectRowItems[i]);
+							var state = rowData.state = stateValueObj[rowData.state];
+							if (state == 3) {
+								errorNotification({ SimpleMessage: "运输中的车次不可以调整" });
+								return;
+							}
+							if (state == 4) {
+								errorNotification({ SimpleMessage: "运输完成的车次不可以调整" });
+								return;
+							}
+							if (state == 5) {
+								errorNotification({ SimpleMessage: "已注销的车次不可以调整" });
+								return;
+							}
+							if (state == 6) {
+								errorNotification({ SimpleMessage: "中途取消的车次不可以调整" });
+								return;
+							}
+							arr.push(rowData.trainNo);
+						}
+						//双击绑定车次信息
+						//trainNo = rowData.trainNo;
+						addTrain(arr.join(","));
+					},
+					"queryTrainnoDetail": function (trigger) {
+						var selectRowItems = $(gridTableObj).jqGrid("getGridParam", 'selarrrow');
+						if (selectRowItems.length != 1) {
+							errorNotification({ SimpleMessage: '请选择一行数据操作' });
+							return;
+						};
+						//双击绑定车次信息
+						var rowData = $("#gridTable").jqGrid('getRowData', selectRowItems);
+						rowData.state = stateValueObj[rowData.state];
+						openTrainDetail(rowData.sn, rowData.trainNo, rowData.state);
+					}
+				},
+				//重写onContextMenu和onShowMenu事件
+				onContextMenu: function (e) {//显示菜单
+					var rowId = $(e.target).closest("tr.jqgrow").attr("id");//获得RowID
+					if ($(e.target).attr("id") == "dontShow") {
+						return false;
+					} else {
+						return true;
+					}
+				},
+				onShowMenu: function (e, menu) {//显示菜单
+					return menu;
+				},
+				menuStyle: { //菜单样式
+					backgroundColor: '#fcfdfd',
+					border: '1px solid #a6c9e2',
+					maxWidth: '100px',// to be
+					width: '100%' // to have good width of the menu
+				},
+				itemHoverStyle: { //点击菜单上面���样式
+					border: '1px solid #79b7e7',
+					color: '#1d5987',
+					backgroundColor: '#d0e5f5'
+				}
+			});
+		}
+
+		//更改部分
+		var openTrainDetail = function (sn, code, state) {
+			var href = "";
+			if (sn == undefined || sn == "") {
+				href = "../View/ywgl/orderDetailList.html?moduleId=" + moduleId;
+			} else {
+				href = "../View/ywgl/orderDetailList.html?moduleId=" + moduleId + "&sn=" + sn + "&trainNo=" + code + "&state=" + state;
+			}
+			showLoading("#{supplier.loading}...");
+			openDialog({ title: $.i18n.prop('supplier.page.detail.title'), id: 'SupplierDetail', width: 1150, height: 600, isResize: true, href: href, closable: true });
+		}
+
+		var loadCitySelector = function () {
+			var city = $(".city_a_le1 a"); //城市
+			var beginCity = $("#tipinputbegin").textbox("textbox");
+			var endCity = $("#tipinputend").textbox("textbox");
+			inCity.width = "345";//城市选择框 宽
+			inCity.height = "auto"; //城市选择框高
+			inCity.id = "#in_city";  //城市选择框  父级ID
+			inCity.Children = '.city_a_le1';  //城市名box
+			// 初始化 城市HTML模板
+			$(inCity.id).prepend(inCity._template.join(''));
+
+			inCity.Hot(city);
+			//城市 导航
+			var apay = $(".screen a");
+
+			var placeThis; //当前选择标签
+			apay.click(function (obj) {  //城市导航
+				inCity.payment($(this));
+			})
+
+			inCity.place(beginCity); //出发地
+			inCity.destination(endCity);  //目的地
+			inCity.cityClick(city); //显示赋值城市
+		}
+
+		// 获取付款状态
+		var getPayState = function () {
+			$.ajax({
+				url: '../../sysInfo/dictionary/getstate?t=' + Math.random(),
+				type: 'POST',
+				data: "tableName=" + "sheet_yw_plan_exec_pay_state",
+				success: function (dataObj) {
+					var data = dataObj.resultDataFull;
+					data.forEach(function (item) {
+						payStateText[item.dicValue] = item.dicText;
+						payStateValue[item.dicText] = item.dicValue;
+					});
+				}
+			});
+		}
+		//getStateTextObj getStateValueObj
+		// 获取收款状态
+		var getState = function () {
+			$.ajax({
+				url: '../../sysInfo/dictionary/getstate?t=' + Math.random(),
+				type: 'POST',
+				data: "tableName=" + "sheet_yw_plan_exec_get_state",
+				success: function (dataObj) {
+					var data = dataObj.resultDataFull;
+					data.forEach(function (item) {
+						getStateText[item.dicValue] = item.dicText;
+						getStateValueObj[item.dicText] = item.dicValue;
+					});
+				}
+			});
+		}
+
+		var importTrainData = function () {
+			//"../../jcda/ZDTruckType/exportzdtruckExcel?t="
+			//var url = "../../bussiness/planExec/importData?t=" + Math.random();
+			var url = "../../train/importTrainData?t=" + Math.random();
+			$("#fileUpload").zyUpload({
+				itemWidth: "60px", // 文件项的宽度
+				itemHeight: "60px", // 文件项的高度
+				url: url,
+				multiple: false, // 是否可以多个文件上传
+				dragDrop: true, // 是否可以拖动上传文件
+				del: true, // 是否可以删除文件
+				finishDel: false, // 是否在上传文件完成后删除预览
+				close: true,
+				fileTypeFilter: ['xls', 'xlsx'],
+				remark: "<p>提示：最多导入一千条数据,只能上传xls/xlsx格式文件</p>",
+				isDownModuleFile: true,
+				downModuleFileUrl: "../../train/exportTrainExcelTemple?t=" + Math.random(),
+				/* 外部获得的回调接口 */
+				onSelect: function (files, allFiles) { // 选择文件的回调方法
+				},
+				onDelete: function (file, surplusFiles) { // 删除一个文件的回调方法
+				},
+				onSuccess: function (file) { // 文件上传成功的回调方法
+				},
+				onFailure: function (file) { // 文件上传失败的回调方法
+				},
+				onComplete: function (responseInfo) { // 上传完成的回调方法
+					hideLoading();
+					var dataObj = JSON.parse(responseInfo);
+					if (isServerResultDataPass(dataObj)) {
+						searchData();
+						hideLoading();
+						correctNotification(dataObj.resultDataFull);
+					} else {
+						FailResultDataToTip(dataObj);
+					}
+					$("#fileUpload").empty();
+					$("#fileUpload").hide();
+				}
+			});
+		}
+
+		var print = function () {
+			var selectRowItems = $('#gridTable').jqGrid('getGridParam', 'selarrrow');
+			if (selectRowItems.length != 1) {
+				errorNotification({ SimpleMessage: '请选择一行数据行进行操作' });//  没有选择数据，不能进行操作
+				return;
+			}
+
+			var rowData = $("#gridTable").jqGrid('getRowData', selectRowItems);
+
+			var href = "../View/ywgl/printTrainsPlan.html?trainno=" + rowData.trainNo;
+			openDialog({ title: "打印车次信息", id: 'printTrainsPlanDetail', width: 700, height: 600, isResize: true, href: href, closable: true });
+		}
+
+	</script>
+</body>
+
+</html>

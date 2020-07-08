@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bba.xtgl.dao.ISys_BaseOperator_LogDao">
+
+
+	<select id="findMapListBySql" resultType="java.util.Map">
+		${sql}
+	</select>
+	
+	<sql id="begin_page"><if test="isPage == true">SELECT * FROM (SELECT t.*, ROWNUM RN FROM (</if></sql>
+	<sql id="end_page">
+		<if test="isPage == true">
+			<if test="filters!=null and filters!=''">where ${filters}</if>
+		</if> 
+		) t where ROWNUM &lt;= ${page} * ${rows}) WHERE RN &gt;=((${page} - 1) * ${rows} + 1)
+	</sql>
+	
+
+
+	
+	
+	<select id="getListForGrid" resultType="com.bba.common.interceptor.Sys_BaseOperator_LogVO">
+		<include refid="begin_page"/>
+		select 
+			t.id,
+			t.create_by,
+			t.table_code,
+			t.table_name,
+			t.field_code,
+			t.field_name,
+			t.prev_data,
+			t.next_data,
+			t.primary_field,
+			t.primary_field_value,
+			to_char(t.create_date,'yyyy-MM-dd HH24:mi:ss') create_date
+		from sys_baseoperator_log t
+		<include refid="end_page"/>
+	</select>
+
+	<select id="getListForGridCount" resultType="java.lang.Integer">
+		select 
+			count(*)
+		from sys_baseoperator_log t
+		<if test="filters!=null and filters!=''">where ${filters}</if>
+	</select>
+	
+	<select id="getDetail" resultType="com.bba.common.interceptor.Sys_BaseOperator_LogVO" parameterType="com.bba.common.interceptor.Sys_BaseOperator_LogVO">
+		select 
+			t.id,
+			t.create_by,
+			t.table_code,
+			t.table_name,
+			t.field_code,
+			t.field_name,
+			t.prev_data,
+			t.next_data,
+			t.primary_field,
+			t.primary_field_value,
+			to_char(t.create_date, 'yyyy-MM-dd HH24:mi:ss') create_date
+		from sys_baseoperator_log t
+		where t.id = #{id}
+	</select>
+	
+	<insert id="batchInsertForSqlServer" parameterType="java.util.List">
+		insert into sys_baseoperator_log(
+			create_by,
+			table_code,
+			table_name,
+			field_code,
+			field_name,
+			prev_data,
+			next_data,
+			primary_field,
+			primary_field_value
+		)
+		<foreach collection="list" index="index" item="vo" separator="UNION ALL">
+		select			
+			#{vo.create_by,jdbcType=VARCHAR},
+			#{vo.table_code,jdbcType=VARCHAR},
+			#{vo.table_name,jdbcType=VARCHAR},
+			#{vo.field_code,jdbcType=VARCHAR},
+			#{vo.field_name,jdbcType=VARCHAR},
+			#{vo.prev_data,jdbcType=VARCHAR},
+			#{vo.next_data,jdbcType=VARCHAR},
+			#{vo.primary_field,jdbcType=VARCHAR},
+			#{vo.primary_field_value,jdbcType=VARCHAR}
+		</foreach>
+	</insert>
+	<insert id="batchInsertForOracle" parameterType="java.util.List">
+		insert into sys_baseoperator_log(
+			create_by,
+			table_code,
+			table_name,
+			field_code,
+			field_name,
+			prev_data,
+			next_data,
+			primary_field,
+			primary_field_value
+		)
+		<foreach collection="list" index="index" item="vo" separator="UNION ALL">
+		select			
+			#{vo.create_by,jdbcType=VARCHAR},
+			#{vo.table_code,jdbcType=VARCHAR},
+			#{vo.table_name,jdbcType=VARCHAR},
+			#{vo.field_code,jdbcType=VARCHAR},
+			#{vo.field_name,jdbcType=VARCHAR},
+			#{vo.prev_data,jdbcType=VARCHAR},
+			#{vo.next_data,jdbcType=VARCHAR},
+			#{vo.primary_field,jdbcType=VARCHAR},
+			#{vo.primary_field_value,jdbcType=VARCHAR}
+		from dual
+		</foreach>
+	</insert>
+
+</mapper>

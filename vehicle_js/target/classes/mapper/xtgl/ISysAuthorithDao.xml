@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace：必须与对应的接口全类名一致 id:必须与对应接口的某个对应的方法名一致 -->
+<mapper namespace="com.bba.xtgl.dao.ISysAuthorithDao">
+
+
+
+	<insert id="insertSys_authorith" parameterType="com.bba.xtgl.vo.SysAuthorithVO">
+		insert into sys_authorith(roleid,moduleid,buttonuse,within_code)
+		<foreach collection="list" index="" item="vo" separator="union all">
+			select
+				#{vo.roleId,jdbcType=VARCHAR},
+				#{vo.moduleId,jdbcType=VARCHAR},
+				#{vo.buttonUse,jdbcType=VARCHAR},
+				#{vo.within_code,jdbcType=BIGINT}
+			from dual
+		</foreach>
+	</insert>
+
+
+	<select id="findListSys_authorith" resultType="com.bba.xtgl.vo.SysAuthorithVO" parameterType="java.util.List">
+		select
+		id,
+		roleid,
+		moduleid,
+		buttonuse,
+		within_code
+		from sys_authorith
+		<where>
+			<if test="within_code!=null">and within_code=#{within_code}</if>
+			<if test="roleId!=null">and roleId=#{roleId}</if>
+			<if test="moduleId!=null">and moduleid=#{moduleId}</if>
+		</where>
+	</select>
+
+
+	<select id="findAuthorityByPropertyList" resultType="com.bba.xtgl.vo.SysAuthorithVO">
+		select a.* from sys_userdetailroles ur,sys_authorith a
+		where ur.within_code=a.within_code and ur.roleid=a.roleid
+		<foreach item="item" index="index" collection="list" open=" and (" close=")" separator="or">
+			<trim prefixOverrides="and">
+				<if test="item.userId!=null">and ur.userId=#{item.userId}</if>
+				<if test="item.roleId!=null">and a.roleId=#{item.roleId}</if>
+				<if test="item.moduleId!=null">and a.moduleId=#{item.moduleId}</if>
+				<if test="item.buttonUse!=null">and a.buttonUse=#{item.buttonUse}</if>
+			</trim>
+		</foreach>
+	</select>
+	
+	<select id="getAuthorityListById" resultType="com.bba.xtgl.vo.SysAuthorithVO"
+		parameterType="java.util.Map">
+		select c.ButtonUse,c.ButtonName,c.ButtonIcon from
+		(SELECT a.ButtonUse,b.ButtonName,b.ButtonIcon,b.ButtonOrder FROM
+		SYS_Authorith a
+		left join SYS_RoleButtons b on a.ModuleID=b.ModuleID
+		and a.ButtonUse=b.ButtonUse
+		and a.within_code=b.within_code  
+		WHERE a.within_code=#{within_code} and a.ModuleID=#{moduleId} and
+		a.RoleID in
+		(select RoleID from SYS_UserDetailRoles where UserId=#{userId})) c
+		group by c.ButtonUse,c.ButtonName,c.ButtonIcon,c.ButtonOrder
+		order by
+		c.ButtonOrder,c.ButtonUse,c.ButtonName,c.ButtonIcon
+	</select>
+
+	<select id="getAuthorityListByName" resultType="com.bba.xtgl.vo.SysAuthorithVO"
+		parameterType="java.util.Map">
+		select c.ButtonUse,c.ButtonName,c.ButtonIcon from (SELECT
+		a.ButtonUse,b.ButtonName,b.ButtonIcon,b.ButtonOrder FROM SYS_Authorith
+		a left join SYS_RoleButtons b on a.within_code=b.within_code and a.ModuleID=b.ModuleID and
+		a.ButtonUse=b.ButtonUse 
+		WHERE a.within_code=#{within_code} and a.ModuleID =(select max(ModuleID) from
+		sys_module where within_code=#{within_code} and ModuleName=#{moduleName,jdbcType=VARCHAR}) and a.RoleID in
+		(select RoleID from SYS_UserDetailRoles where within_code=#{within_code} and UserId=#{userId,jdbcType=VARCHAR})) c group by
+		c.ButtonUse,c.ButtonName,c.ButtonIcon,c.ButtonOrder order by
+		c.ButtonOrder,c.ButtonUse,c.ButtonName,c.ButtonIcon
+	</select>
+
+</mapper>

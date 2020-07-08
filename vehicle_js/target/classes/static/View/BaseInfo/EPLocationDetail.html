@@ -1,0 +1,314 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link id="CustomTheme" type="text/css" rel="stylesheet"
+	href="../../Resource/css/index/customLightBlue.css" />
+<link id="EasyuiTheme" type="text/css" rel="stylesheet"
+	href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+<link id="JqgridTheme" type="text/css" rel="stylesheet"
+	href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+<link type="text/css" rel="stylesheet"
+	href="../../Resource/js/easyUI/themes/icon.css" />
+<link type="text/css" rel="stylesheet"
+	href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+    <title>#{epLocation.detail.page}</title>
+</head>
+<body>
+    <div id="toolbar" class="easyui-panel" style="padding: 4px; border-width: 0; border-bottom-width: 1px;">
+         #{PAGE_TOOLBAR_BUTTONROLE}
+    </div>
+    <form id="addForm" class="easyui-form" method="post" data-options="novalidate:true">
+    <input type="hidden" id="sn" name="sn" />
+    <table class="editTable">
+        <tr>
+            <td class="editRequiredTitle">
+               <label data-locale="epLocation.detail.field.code"/>:
+            </td>
+            <td class="editControl">
+            	<input id="ep_code" class="easyui-textbox" name="ep_code" data-options="required:true"/>
+            </td>
+        </tr>
+         <tr>
+            <td class="editRequiredTitle">
+                <label data-locale="epLocation.detail.field.factory"/>:
+            </td>
+            <td class="editControl">
+            	<input id="ep_plant" class="easyui-combobox" name="ep_plant" validType="plantValid" data-options="editable:false,panelHeight:'80'"/>
+            </td>
+         </tr>
+        <tr>
+            <td class="editRequiredTitle">
+                <label data-locale="epLocation.detail.field.type"/>:
+            </td>
+            <td class="editControl">
+            	<input id="ep_type" class="easyui-combobox" name="ep_type" validType="typeValid" data-options="editable:false,panelHeight:'100'"/>
+            </td>
+        </tr>
+        <tr>
+           <td class="editTitle">
+              <label data-locale="epLocation.detail.field.gr"/>:
+            </td>
+            <td class="editControl">
+                <input type="text" name="gr_location" id="gr_location" class="easyui-textbox" />  
+            </td>
+         </tr>
+    </table>
+    </form>
+</body>
+<script type="text/javascript"
+	src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript"
+	src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript"
+	src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript"
+	src="../../Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+<script type="text/javascript"
+	src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript"
+	src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript"
+	src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript"
+	src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript"
+	src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript"
+	src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript"
+	src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript"
+	src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/regex/regex.js"></script>
+<script language="javascript" type="text/javascript">
+    var afterSave = "close";
+    var sn="";
+    var flag = true;
+    var type = "";
+    var plant = "";
+    var callerId = "";
+    var callerType = "";
+    var callbackFlag = "";
+    var originalFormData = "";
+    var globalStateArray=null; // 全局状态变量
+    $(function () {
+        var parms = getUrlParms();
+        sn= parms["sn"];
+        moduleId = parms["moduleId"];
+        callerId = parms["callerId"];
+        callerType = parms["callerType"];
+        callbackFlag = parms["callbackFlag"];
+        initCombType();
+        initCombPlant();
+        initCombValid();
+        initData();
+    });
+
+    $(window).load(function () {
+        hideLoading();
+    });
+
+    var initData = function () {
+
+    	
+        if (sn != "" && sn!=undefined && sn!=0) {
+            loadDetail();
+        } else {
+            $("#sn").val("0");
+            originalFormData = $('#addForm').serialize();
+        }
+    }
+    
+    var initCombValid = function(){
+    	$.extend($.fn.validatebox.defaults.rules, {
+    		typeValid: {
+  	          	validator: function(value,param){
+  	              if(value.indexOf("--")!=-1){
+  	            	  if(flag){
+  	            		return true;
+  	            	  }
+  	              	return false;
+  	              }
+  	              return true;
+  	          	},
+  	          	message: '#{epLocation.detail.message.typeValid}.'
+  	        },
+  	    	plantValid : {
+  	    		validator: function(value,param){
+  	    			if(value.indexOf("--")!=-1){
+  	    				 if(flag){
+  	  	            		return true;
+  	  	            	  }
+  	  	              	return false;
+  	  	              }
+  	  	            return true;
+  	  	         },
+  	  	         message: '#{epLocation.detail.message.plantValid}.'
+  	    	}
+  	  	});
+    }
+    
+    var initCombType = function(){
+    	$("#ep_type").combobox({
+    	  url:"../../scts/basic/findDictionaryByType?type=EPLocationType&t=" + Math.random(),
+  		  valueField: 'code',  
+  		  textField: 'values1',
+  		  method:"GET",
+  		  onLoadSuccess: function () { 
+  			  if(type==""){
+  	  			$(this).combobox("setValue","--#{epLocation.detail.switch}--");
+  			  }
+          }
+  		});
+    }
+    
+    var initCombPlant = function(){
+    	$("#ep_plant").combobox({
+    	  url:"../../jcda/Zd_Location/findLocationByKind?t=" + Math.random()+"&kind=PLANT",
+  		  valueField: 'ex_code',  
+  		  textField: 'name',
+  		  method:"GET",
+  		  onLoadSuccess: function () { 
+  			 if(plant==""){
+   	  			$(this).combobox("setValue","--#{epLocation.detail.switch}--");
+   			  }
+          }
+  		});
+    }
+  
+    var reset = function() {
+		$("#ep_code").textbox("setValue", "");
+		$("#ep_plant").combobox("setValue","--#{epLocation.detail.switch}--");
+		$("#ep_type").combobox("setValue","--#{epLocation.detail.switch}--");
+		$("#gr_location").textbox("setValue","");
+	}
+
+    var validate = function () {
+    	flag = false;
+        var validated = $("#addForm").form('enableValidation').form('validate');
+        if (!validated) {
+            errorNotification({
+                SimpleMessage: $.i18n.prop('epLocation.detail.message.saveValid')
+            });
+            return false;
+        }
+        var newFormData = $('#addForm').serialize();
+        if (newFormData == originalFormData) {
+            errorNotification({
+                SimpleMessage: $.i18n.prop('epLocation.detail.message.notChange')
+            });
+            return false;
+        }
+        return true;
+    }
+
+    var save = function () {
+        if (!validate()) {
+            return;
+        }
+
+        $.messager.confirm($.i18n.prop('epLocation.detail.message.prompt'), '#{epLocation.detail.message.saveQuestion}?', function (r) {
+            if (r) {
+            	showLoading("#{epLocation.detail.loading}#{epLocation.detail.thisPage}...");
+                afterSave = "close";
+                save2();
+            }
+        });
+    }
+
+    var close = function(){
+    	closeDialog("EPLocationDetail");
+    }
+    
+    var afterSaveOperate = function () {
+        switch (afterSave) {
+        	case "edit":
+				code = $("#code").textbox("getValue");
+				refreshCallerData();
+				openDetail(code);
+			break;
+            case "close":
+                refreshCallerData();
+                close();
+                break;
+            case "clear":
+                $('form').form('clear');
+                $("#sn").val("0");
+                $("input", $("#code").next("span")).removeAttr("readonly");
+                refreshCallerData();
+                break;
+            case "copy":
+                $("#sn").val("0");
+                $("input", $("#code").next("span")).removeAttr("readonly");
+                $("#code").textbox('setValue', '');
+                refreshCallerData();
+                break;
+        }
+    }
+
+    var refreshCallerData = function () {
+        if (callerType == Global_Constant.Global_Constant_CallerType_Dialog) {
+            //此callerId此时为dialog的id
+            getDialog(callerId).refreshCallerData_zdTruckType(callbackFlag);
+        } else {
+            //此callerId此时为frame的id
+            getCurrentTab(callerId).refreshCallerData_zdTruckType(callbackFlag);
+        }
+    }
+
+    var loadDetail = function () {
+        showLoading("#{epLocation.detail.loading}#{epLocation.detail.thisPage}...");
+        var edVO = {};
+        edVO.sn = sn;
+        var serverUrl = "../../scts/epLocation/getDetail?t="+ Math.random();
+        $.ajax({
+			type : "POST",
+			url : serverUrl,
+			data :JSON.stringify(edVO),
+			contentType : 'application/json;charset=utf-8', // 设置请求头信息
+			success : function(dataObj) {
+				if (isServerResultDataPass(dataObj)){
+                $("#sn").val(dataObj.resultDataFull.sn);  
+                $("#ep_code").textbox('setValue', dataObj.resultDataFull.ep_code); 
+                $("#ep_code").textbox('textbox').attr("readonly","true");
+                type = dataObj.resultDataFull.ep_type;
+                plant = dataObj.resultDataFull.ep_plant;
+                $("#ep_type").combobox('select', dataObj.resultDataFull.ep_type);
+                $("#ep_plant").combobox('select', dataObj.resultDataFull.ep_plant);
+                $("#gr_location").textbox('setValue', dataObj.resultDataFull.gr_location);
+                originalFormData = $('#addForm').serialize();
+            } else {	
+                FailResultDataToTip(dataObj);
+            }
+            hideLoading();
+			},
+        });
+    }
+	var getFormSerializeData = function() {
+		originalFormData = $('#addForm').serialize();
+	}
+
+    var save2 =function(){
+    	basicVO = FormUtils.toJSONObject($("#addForm"));
+    	$.ajax({
+    		url : "../../scts/epLocation/save?t="
+				+ Math.random(),
+		    contentType : 'application/json;charset=utf-8',
+			type : 'POST',
+			data : JSON.stringify(basicVO),
+            success : function(dataObj) {
+				if (isServerResultDataPass(dataObj)) {
+					correctNotification(dataObj.resultDataFull);
+					hideLoading();
+					afterSaveOperate();
+				} else {
+					hideLoading();
+					FailResultDataToTip(dataObj);
+				}
+			}
+    	})
+    }
+</script>
+</html>

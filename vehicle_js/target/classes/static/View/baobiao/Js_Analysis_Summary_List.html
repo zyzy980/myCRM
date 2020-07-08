@@ -1,0 +1,331 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+    <link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+    <link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/moment/css/daterangepicker.css" />
+    <title>结算分析汇总清单</title>
+</head>
+<body>
+<div id="toolbar" class="easyui-panel" style="padding:4px;border-width:0;border-bottom-width:1px;">
+    #{PAGE_TOOLBAR_BUTTONROLE}
+</div>
+<div class="searchParamesPanel">
+    <table id="searchParamesTable">
+        <tr class="searchParamesTrShow">
+            <td class="searchParamesTdControl">
+                <input type="text" id="common_sheet_title" class="easyui-textbox" style="width: 240px" />
+            </td>
+        </tr>
+    </table>
+</div>
+<div id="gridControl">
+    <table id="gridTable"></table>
+    <div id="gridPager"></div>
+</div>
+<form id="formExportFile" class="formExportFile" target="_blank" action="../../tzgl/LedgerController/exportExcel" method="post" style="display: none">
+    <input type="text" id="sheet_no" name="sheet_no" value="" />
+</form>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/moment/js/moment.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/moment/js/jquery.daterangepicker.js"></script>
+<script language="javascript" type="text/javascript">
+    $(function() {
+        var parms = getUrlParms();
+        moduleId = parms["moduleId"];
+        initScript();
+        initData();
+        initStyle();
+    });
+
+    $(window).load(function() {
+        hideLoading();
+    });
+
+    var initStyle = function() {
+        enterTriggerEvent('searchParamesTable', 'searchData');
+    };
+
+    var initScript = function() {
+        $("#common_sheet_title").textbox({
+            prompt: $.i18n.prop("COMMON_SHEET_TITLE")
+        });
+
+        $(window).resize(function() {
+            setGridHeightWidth();
+            setToolbarHeightWidth();
+        });
+    };
+
+    // 加载数据
+    var initData = function() {
+        loadList();// 加载数据列表
+    };
+
+    // 查询数据
+    function searchData() {
+        $('#gridTable').jqGrid('setGridParam', {
+            url: getSearchGridUrl(),
+            datatype: 'json',
+            postData: { 'filters': '' },
+            page: 1
+        }).trigger('reloadGrid');
+    };
+
+    // 获取查询URL
+    var getSearchGridUrl = function() {
+        var customSearchFilters = encodeURI(getSearchFilters());
+        return '../../bbgl/Js_Analysis_SummaryController/getListForGrid?' + Math.random() + '&customSearchFilters=' + customSearchFilters;
+    };
+
+    // 获取查询条件
+    var getSearchFilters = function() {
+        var parmsArray = [
+
+        ];
+        return formatSearchParames(parmsArray);
+    };
+
+    // 加载数据列表
+    var loadList = function() {
+        $('#gridTable').jqGrid({
+            url: getSearchGridUrl(),
+            datatype: 'json',
+            width: 'none',
+            colNames: ['ID','单号','部门','统计年份','统计月份','当月开票不含税收RMB总','当月开票含税收RMB总','USD收','当月开票不含税成本RMB总','当月开票含税成本RMB总','USD成本'
+             ,'无合同收入','无合同成本','有合同成本','单未回','暂不结算','待送/对账单','待开票','客户审核','小于30天 ','30-60天','60-90天','超90天'],
+            colModel: [
+                { name: 'id', index: 'id', align: 'center', sorttype: 'int', sortable: false, key: true, width: 40, hidden: true, search: false },
+                { name: 'sheet_no', index: 'sheet_no', align: 'left',  width: 150, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'department', index: 'department', align: 'left',width: 150, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'statistics_year', index: 'statistics_year', align: 'left',width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'month_ntax_up_total', index: 'month_ntax_up_total', align: 'left', width: 120, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+                    ,formatter: function (value, grid, rows) {
+                        return rows.month_ntax_up_total.toFixed(2);
+                    }
+                },
+                { name: 'month_tax_up_total', index: 'month_tax_up_total', align: 'left', width: 120, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+                    ,formatter: function (value, grid, rows) {
+                        return rows.month_tax_up_total.toFixed(2);
+                    }
+                },
+                { name: 'month_usd_up_total', index: 'month_usd_up_total', align: 'left', width: 120, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+                    ,formatter: function (value, grid, rows) {
+                        return rows.month_usd_up_total.toFixed(2);
+                    }
+                },
+                { name: 'month_ntax_down_total', index: 'month_ntax_down_total', align: 'left', width: 120, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+                    ,formatter: function (value, grid, rows) {
+                        return rows.month_ntax_down_total.toFixed(2);
+                    }
+                },
+                { name: 'month_tax_down_total', index: 'month_tax_down_total', align: 'left', width: 120, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+                    ,formatter: function (value, grid, rows) {
+                        return rows.month_tax_down_total.toFixed(2);
+                    }
+                },
+                { name: 'month_usd_down_total', index: 'month_usd_down_total', align: 'left', width: 120, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+                    ,formatter: function (value, grid, rows) {
+                        return rows.month_usd_down_total.toFixed(2);
+                    }
+                },
+                { name: 'no_contract_up_total', index: 'no_contract_up_total', align: 'left', width: 120, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+                    ,formatter: function (value, grid, rows) {
+                        return rows.no_contract_up_total.toFixed(2);
+                    }
+                },
+                { name: 'no_contract_down_total', index: 'no_contract_down_total', align: 'left', width: 120, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+                    ,formatter: function (value, grid, rows) {
+                        return rows.no_contract_down_total.toFixed(2);
+                    }
+                },
+                { name: 'contract_down_total', index: 'contract_down_total', align: 'left', width: 120, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+                    ,formatter: function (value, grid, rows) {
+                        return rows.contract_down_total.toFixed(2);
+                    }
+                },
+                { name: 'order_no_reback_total', index: 'order_no_reback_total', align: 'left', width: 120, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+                    ,formatter: function (value, grid, rows) {
+                        return rows.order_no_reback_total.toFixed(2);
+                    }
+                },
+                { name: 'not_sellement_total', index: 'not_sellement_total', align: 'left', width: 120, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+                    ,formatter: function (value, grid, rows) {
+                        return rows.not_sellement_total.toFixed(2);
+                    }
+                },
+                { name: 'dz_sheet_total', index: 'dz_sheet_total', align: 'left', width: 120, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+                    ,formatter: function (value, grid, rows) {
+                        return rows.dz_sheet_total.toFixed(2);
+                    }
+                },
+                { name: 'wait_invoice_total', index: 'wait_invoice_total', align: 'left', width: 120, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+                    ,formatter: function (value, grid, rows) {
+                        return rows.wait_invoice_total.toFixed(2);
+                    }
+                },
+                { name: 'cus_checking_total', index: 'cus_checking_total', align: 'left', width: 120, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+                    ,formatter: function (value, grid, rows) {
+                        return rows.cus_checking_total.toFixed(2);
+                    }
+                },
+                { name: 'lessthan_30_total', index: 'lessthan_30_total', align: 'left', width: 120, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+                    ,formatter: function (value, grid, rows) {
+                        return rows.lessthan_30_total.toFixed(2);
+                    }
+                },
+                { name: 'total_30_60', index: 'total_30_60', align: 'left', width: 120, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+                    ,formatter: function (value, grid, rows) {
+                        return rows.total_30_60.toFixed(2);
+                    }
+                },
+                { name: 'total_60_90', index: 'total_60_90', align: 'left', width: 120, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+                    ,formatter: function (value, grid, rows) {
+                        return rows.total_60_90.toFixed(2);
+                    }
+                },
+                { name: 'morethan_90_total', index: 'morethan_90_total', align: 'left', width: 120, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+                    ,formatter: function (value, grid, rows) {
+                        return rows.morethan_90_total.toFixed(2);
+                    }
+                },
+                { name: 'statistics_month', index: 'statistics_month', align: 'left', width: 120, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+                    ,formatter: function (value, grid, rows) {
+                        return rows.statistics_month.toFixed(2);
+                    }
+                }
+            ],
+            shrinkToFit: false,
+            altRows: true,
+            altclass: 'gridSpacingClass',
+            forceFit: true,
+            cellLayout: 0,
+            scroll: false,
+            autowidth: true,
+            sortname: 'id',
+            sortorder: 'desc',
+            loadonce: false,
+            mtype: 'POST',
+            viewrecords: true,
+            rownumbers: true,
+            multiselect: true,
+            rowNum: 15,
+            height: '100%',
+            rowList: [15, 20, 30, 50],
+            pager: '#gridPager',
+            jsonReader: {
+                root: 'rows',
+                total: 'total',
+                page: 'page',
+                records: 'records',
+                repeatitems: false
+            },
+            gridComplete: function() {
+                $('.cbox').shiftSelect();
+            },
+            ondblClickRow: showChildModule,
+            loadComplete: function(xhr) {
+                FailResultDataToTip(xhr);
+            }
+        });
+        $('#gridTable').jqGrid('navGrid', '#gridPager',{
+            add : false,
+            edit : false,
+            del : false,
+            refresh : true
+        }, {}, {}, {}, {
+            multipleSearch : true,
+            closeOnEscape : true,
+            closeAfterSearch : true
+        });
+        $('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+            caption : $.i18n.prop('TOGGLE_GRID_COLUMNS'),
+            title : 'Set Columns',
+            onClickButton : toggleGridColumns
+        });
+        $('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+            caption : $.i18n.prop('TOGGLE_GRID_SEARCH_TOOLBAR'),
+            title : 'Quick Search',
+            onClickButton : toggleGridSearchToolbar
+        });
+        $('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+            caption: $.i18n.prop('EXPORT_TO_EXCEL'),// 导出数据
+            title: 'Export Datas',
+            buttonicon: 'ui-icon-disk',
+            onClickButton: function () {
+                ExportToExcel.call(this, {
+                });
+            }
+        });
+        setGridHeightWidth();
+    };
+
+    // 双击数据触发的事件
+    var showChildModule = function(rowid) {
+        var rowData = $('#gridTable').jqGrid('getRowData', rowid);
+        showLoading();
+        window.parent.onIframeSelect(rowData.sheet_no);
+    };
+
+    function update(){
+        var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
+        if (selectRowItems.length == 0 || selectRowItems.length > 1) {
+            errorNotification({
+                SimpleMessage : "请选择一行数据行进行操作"
+            });
+            return;
+        }
+        showChildModule(selectRowItems[0]);
+    }
+
+    //导出
+    function exportData() {
+        var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
+        if (selectRowItems.length==0) {
+            errorNotification({
+                SimpleMessage : $.i18n.prop("selectLeastOneDataRowOperator")
+            });
+            return;
+        }
+        var data="";
+        for (var i = 0; i < selectRowItems.length; i++) {
+           var rowData = $("#gridTable").jqGrid('getRowData', selectRowItems[i]);
+           data+=rowData.sheet_no+",";
+        }
+        $.messager.confirm($.i18n.prop("PROMPT"), $.i18n.prop("SURETODO"), function (r) {
+            if (r) {
+                $("#formExportFile #sheet_no").val(data);
+                $("#formExportFile").submit();
+            }
+        });
+    }
+
+    //生成月数据
+    var create_month_data = function () {
+        showLoading();
+        var href = "../View/baobiao/Create_Month_Data.html?moduleId=" + moduleId;
+        openDialog({ title: "选择月份", id: 'Create_Month_Data', width:350, height: 300, isResize: true, href: href, closable: true });
+    }
+
+    function refreshCData() {
+        searchData();
+    }
+</script>
+</body>
+</html>

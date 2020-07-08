@@ -1,0 +1,684 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+    <link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />    
+    <link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+    <title>#{SysDictionary_title}</title>
+</head>
+<body>
+    <div style="display: table; width: 100%;">
+        <div style="display: table-cell;  height: 900px; width: 15%; padding: 0px;
+            padding-right: 7px; border-right: 1px solid #E8E8E8;">
+            <input type="hidden" id="hdDicTypeCode" value="" />
+            <input type="hidden" id="hdDicSn" value="" />
+            <div id="toolbarDic" class="easyui-panel" style="padding: 4px; border-width:0; border-bottom-width:1px;">
+            </div>
+            <ul id="treeDic" class="easyui-tree" style="width: 100%; height: 900px; overflow: auto; font-family: 微软雅黑; font-size: 14px;">
+            </ul>
+        </div>
+        <div style="display: table-cell; width: 1%;">
+            &nbsp;&nbsp;
+        </div>
+        <div style="display: table-cell; vertical-align: top; overflow: auto; height: 900px;
+            width: 84%;">
+            <div id="toolbarDicData" class="easyui-panel" style="padding: 4px; border-width:0; border-bottom-width:1px;">
+                <a href="javascript:add_DicData();" id="add_DicData" class="easyui-linkbutton" plain="true" iconcls="icon-add">新增行</a>
+                <a href="javascript:remove_DicData();" id="delete_DicData" class="easyui-linkbutton"  plain="true" iconcls="icon-remove">删除行</a>
+                <a href="javascript:save_DicData();" id="save_DicData" class="easyui-linkbutton" plain="true" data-options="iconCls:'icon-save'">保存</a>
+                <span id="remark" style="display: inline-block;color: red;margin:0px 4px 0px 24px;line-height: 24px;height: 24px;"></span>
+            </div>
+            <div style="height: 10px;">
+            </div>
+            <div id="gridControl">
+                <table id="gridTable">
+                </table>
+                <div id="gridPager">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/jsLinq/linq.js"></script>
+<script language="javascript" type="text/javascript">
+    var moduleId = 0;
+    var savedRow = null;
+    var savedCol = null;
+    var colNames = ['operateType','typeCode','sn','是否默认','字典值','字典名称','en','排序','备注(保费)'];
+    $(function () {
+        var parms = getUrlParms();
+        moduleId = parms["moduleId"];
+        initScript();
+        initData();
+ 
+    });
+
+    $(window).load(function() {
+    	$("#treeDic").height($(window).height()-40);
+    	hideLoading();
+    });
+
+ 
+
+    var initScript = function () {
+    	//showLog({id:"toolbarDicData",operateModuleGlobal:$.i18n.prop('sysDictionary_dataDictionaryManagement'),moduleId: moduleId });
+        $(window).resize(function () {
+        	$("#treeDic").height($(window).height()-40);
+        	setGridHeightWidth(0, 100);
+            setToolbarHeightWidth();
+        });
+    }
+
+    var initData = function () {
+        loadDicTree();
+        loadDicDataList();
+    }
+
+    	
+    var getSearchGridUrl1 = function () {
+    	var customSearchFilters = null;
+        return '../../sysInfo/dictionary/getListForGrid?t=' + Math.random() + '&customSearchFilters=' + customSearchFilters;
+    }
+
+   var search_Dic=function()
+   {
+	   $("#gridTable").clearGridData();  
+	   loadDicTree();
+   }
+
+    var loadDicTree = function () {
+        showLoading();
+        $.ajax({
+            url:getSearchGridUrl1(),
+            type:"POST",
+            success:function(dataObj){
+                if(isServerResultDataPass(dataObj)){
+                    var data = dataObj.resultDataFull;
+                    var all=['CITY_ARCHIVE','TRANS_MODE','CAR_TYPE','TRANS_FANGAN','DZ_CAR_TYPE']
+                    var tree_data = [{sn:1,typeName:'全部数据',typeCode:'dataall',parentSn:0}];
+                    for (var i = 0; i < data.length; i++) {
+                        if (all.indexOf(data[i].typeCode)>-1) {
+                            tree_data.push({sn:data[i].sn,typeName:data[i].typeName,typeCode:data[i].typeCode,parentSn:1});
+                        }
+                    }
+                    if (tree_data) {
+                        formatTree(tree_data);
+                    }
+                }else{
+                    setDicTree([]);
+                    FailResultDataToTip(dataObj);
+                }
+                hideLoading();
+            }
+        });
+    }
+
+    var formatTree = function (dataObj) {
+    	console.log(dataObj);
+        var dicList = [];
+        console.log(Enumerable.From(dataObj.resultDataFull)
+            .Where(function (i) { return i.parentSn == 0; })
+            .ToArray());
+        Enumerable.From(dataObj)
+        .Where(function (i) { return i.parentSn == 0; })
+        .ToArray()
+        .forEach(function (i) {
+            var fatherDic = {};
+            fatherDic.id = i.typeCode;
+            fatherDic.extend = i.sn;
+            fatherDic.text = i.typeName;
+            fatherDic.children = loadDicChild(dataObj, i.sn);
+            dicList.push(fatherDic);
+        });
+        setDicTree(dicList);
+    }
+
+    var setDicTree = function (dicList) {
+    	$('#treeDic').tree({
+            checkbox: false,
+            data: dicList,
+            animate: true,
+            open: false,
+            onClick: function (node) {
+                $('#hdDicSn').val(node.extend);
+                if (node.children == undefined) {
+                    showLoading();
+                    $('#hdDicTypeCode').val(node.id);
+                    //['CITY_ARCHIVE','TRANS_MODE','CAR_TYPE','TRANS_FANGAN','DZ_CAR_TYPE']
+                    if (node.id=='CITY_ARCHIVE') {
+                        $('#remark').html('城市档案：来源于业务数据中的【起运地】和【目的地】，合同中的【起运地】和【目的地】来源于此档案');
+                    } else if (node.id=='TRANS_MODE') {
+                        $('#remark').html('运输方式：来源于业务数据中的【运输方式】，合同中的【运输方式】来源于此档案');
+                    } else if (node.id=='CAR_TYPE') {
+                        $('#remark').html('小车车型：来源于商品车业务数据中【小车车型】，对下保费车型来源于此档案');
+                    } else if (node.id=='TRANS_FANGAN') {
+                        $('#remark').html('运输方案：来源于非商品车业务数据中的【运输方案】，合同中的【运输方案】来源于此档案');
+                    } else if (node.id=='DZ_CAR_TYPE') {
+                        $('#remark').html('对账车型：业务维护，对账单的车型匹配来源于此档案');
+                    }
+                    searchData();
+                }
+            },
+            onSelect: function (node) {
+                $(this).tree('expand', node.target);
+            }
+        });
+    }
+
+    var loadDicChild = function (dicJson, parentSn) {
+        var dicList = [];
+        Enumerable.From(dicJson)
+            .Where(function (i) { return i.parentSn == parentSn; })
+            .ToArray()
+            .forEach(function (i) {
+                var childDic = {};
+                childDic.id = i.typeCode;
+                childDic.extend = i.sn;
+                childDic.text = i.typeName;
+                var childNextDic = loadDicChild(dicJson, i.sn);
+                if (childNextDic.length > 0) {
+                    childDic.children = childNextDic;
+                }
+
+                dicList.push(childDic);
+            });
+
+        return dicList;
+    }
+
+    var verified = function () {
+        if ($('#hdDicTypeCode').val() == "") {
+            errorNotification({
+                SimpleMessage: $.i18n.prop('SysDictionary_checknopass'),
+                MoreMessage: $.i18n.prop('SysDictionary_selectkind')
+            });
+            return false;
+        }
+
+        var errorMessage = "";
+        var gridAllData = $("#gridTable").jqGrid("getRowData");
+        for (var i = 0; i < gridAllData.length; i++) {
+            if (gridAllData[i]["dictext"] == "") {
+                errorMessage += "<p>#{SysDictionary_di}" + (i + 1) + "#{SysDictionary_name_noempty}</p>";
+            }
+
+            if (gridAllData[i]["dicvalue"] == "") {
+                errorMessage += "<p>#{SysDictionary_di}" + (i + 1) + "#{SysDictionary_val_noempty}</p>";
+            }
+
+            if (gridAllData[i]["dicorder"] == "") {
+                errorMessage += "<p>#{SysDictionary_di}" + (i + 1) + "#{SysDictionary_order_noempty}</p>";
+            }
+        }
+
+        if (errorMessage.length != "") {
+            errorNotification({
+                SimpleMessage: $.i18n.prop('SysDictionary_invalid'),
+                MoreMessage: errorMessage
+            });
+
+            return false;
+        }
+
+        return true;
+    }
+
+    var save_DicData = function () {
+        loseGridFocus();
+        if (!verified()) {
+            return;
+        }
+
+        var defaultChooseNum = 0;
+        var gridAllData = $("#gridTable").jqGrid("getRowData");
+        
+        var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
+        var ids=[];
+        for (var i = 0; i < selectRowItems.length; i++) {
+            var rowData = $("#gridTable").jqGrid('getRowData', selectRowItems[i]);
+            ids.push(rowData.sn);
+        }
+        
+        for (var i = 0; i < gridAllData.length; i++) {
+              for(var j=0;j<ids.length;j++){
+            	if(gridAllData[i].sn==ids[j]){
+            		gridAllData[i].isDefault='Yes';
+            	}
+            }  
+        	if (gridAllData[i].isDefault == "Yes") {
+                defaultChooseNum++;
+            }
+            gridAllData[i].isDefault = gridAllData[i].isDefault == "Yes" ?Global_DicType.Global_DicType_BaseStateInValid  : Global_DicType.Global_DicType_BaseStateValid;
+        }
+        //判断提示选择多项
+        if (defaultChooseNum == 0) {
+            errorNotification({
+                SimpleMessage: $.i18n.prop('SysDictionary_selectoneitem')
+            });
+
+            return;
+        }
+       
+        
+        if (defaultChooseNum > 1) {
+            $.messager.confirm($.i18n.prop('SysDictionary_alert'), $.i18n.prop('SysDictionary_gotosave'), function (r) {
+                if (r) {
+                    save_DicData_request(gridAllData);
+                }
+            });
+        } else {
+            save_DicData_request(gridAllData);
+        }
+        
+    }
+
+    var save_DicData_request = function (gridAllData) {
+        showLoading();
+        var gridAllDataJson = JSON.stringify(gridAllData);
+        console.log(gridAllDataJson);
+        $.ajax({
+    		url: "../../sysInfo/dictionary/SaveDictionaryDataDetail?t=" + Math.random(),
+         	data:JSON.stringify(gridAllData),
+         	contentType:'application/json; charset=utf-8',
+         	type:"POST",
+         	success:function(dataObj){
+         		 if(isServerResultDataPass(dataObj)){
+         			searchData();
+         			correctNotification(dataObj.resultDataFull); 
+         		 }else{
+         			 searchData();
+         			 FailResultDataToTip(dataObj);//提示
+        		}
+        		hideLoading(); 
+         	},
+         	error:function(message){
+         		console.log(message);
+         		hideLoading();
+         	}
+         });
+        
+    }
+
+    var loseGridFocus = function () {
+        if (savedRow && savedCol) {
+            $('#gridTable').jqGrid('saveCell', savedRow, savedCol);
+        }
+    }
+
+    var add_DicData = function () {
+        if ($('#hdDicTypeCode').val() == "") {
+            errorNotification({
+                SimpleMessage: $.i18n.prop('SysDictionary_checknopass'),
+                MoreMessage: $.i18n.prop('SysDictionary_selectkind')
+            });
+
+            return;
+        }
+
+        loseGridFocus();
+        var ids = $("#gridTable").jqGrid('getDataIDs');
+        var rowid = Math.max.apply(Math, ids);
+        if (rowid == "-Infinity")
+            rowid = 0;
+        var newrowid = rowid + 1;
+
+        // 获取最大排序号
+        var orderArray = [];
+        for (var i = 0; i < ids.length; i++) {
+            var rowData = $("#gridTable").jqGrid('getRowData', ids[i]);
+            orderArray.push(rowData.dicorder);
+        }
+
+        var maxOrder = Math.max.apply(Math, orderArray);
+        if (maxOrder == "-Infinity") {
+            maxOrder = 0;
+        }
+
+        maxOrder = maxOrder + 1;
+        var dataRow = {
+            operateType: "add",
+            sn: newrowid,
+            isDefault: Global_DicType.Global_DicType_BaseStateInValid,
+            typeCode: $('#hdDicTypeCode').val(),
+            dictext: "",
+            dictext_en: "",
+            dicvalue: "",
+            dicorder: maxOrder,
+            remark: ""
+        };
+
+        $("#gridTable").jqGrid("addRowData", newrowid, dataRow, "last");
+    }
+
+    var remove_DicData = function () {
+        var dicDataArray = [];
+        var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
+        if (selectRowItems.length == 0) {
+            errorNotification({
+                SimpleMessage: $.i18n.prop('SysDictionary_selectone')
+            });
+
+            return;
+        }
+
+        for (var i = 0; i < selectRowItems.length; i++) {
+            var rowData = $("#gridTable").jqGrid('getRowData', selectRowItems[i]);
+            dicDataArray.push(rowData.sn);
+        }
+
+        $.messager.confirm($.i18n.prop('SysDictionary_alert'), $.i18n.prop('SysDictionary_delete'), function (r) {
+            if (r) {
+                showLoading();
+                var dicDataServerArray = [];
+                for (var i = 0; i < dicDataArray.length; i++) {
+                    var curRowData = $("#gridTable").jqGrid("getRowData", dicDataArray[i]);
+                    var operateType = curRowData["operateType"];
+                    // 此处不能用sn为0来判断，因为sn为0的话，将无法查询到任何行
+                    if (operateType == "add") {
+                        //说明是临时增加的，可删除
+                        $("#gridTable").jqGrid("delRowData", dicDataArray[i]);
+                    } else {
+                        dicDataServerArray.push("dicDataServerArray="+dicDataArray[i]);
+                    }
+                    
+                     
+                }
+
+                if (dicDataServerArray.length > 0) {
+                	$.ajax({
+                		url: "../../sysInfo/dictionary/deleteData?t=" + Math.random(),
+                     	data:dicDataServerArray.join("&"),
+                     	type:"POST",
+                     	success:function(dataObj){
+                     		if(isServerResultDataPass(dataObj)){
+                     			searchData();
+                     			correctNotification(dataObj.resultDataFull); 
+                    		}else{
+                    			FailResultDataToTip(dataObj);//提示
+                    		}
+                    		hideLoading();
+                     	},
+                     	error:function(message){
+                     		console.log(message);
+                     		hideLoading();
+                     	}
+                     });
+                     
+                }
+
+                hideLoading();
+            }
+        });
+    }
+
+    var searchData = function () {
+        $("#gridTable").jqGrid('setGridParam', {
+            url: getSearchGridUrl(),
+            datatype: 'json',
+            postData: { "filters": "" },
+            page: 1
+        }).trigger("reloadGrid");
+    }
+
+  
+    var getSearchGridUrl = function () {
+    	var customSearchFilters = encodeURI(getSearchFilters());
+    	return '../../sysInfo/dictionary/getListForGridSubordiById?t=' + Math.random()+'&customSearchFilters=' + customSearchFilters;
+    }
+    
+    var getSearchFilters = function () {
+        var parmsArray = [
+          { name: 'typeCode', value: $('#hdDicTypeCode').val() }
+        ];
+
+        return formatSearchParames(parmsArray);
+    }
+
+    var loadDicDataList = function () {
+        $("#gridTable").jqGrid({
+            url: "",
+            datatype: "json",
+            width: "100%",
+            colNames: colNames,
+            colModel: [
+                { name: 'operateType', index: 'operateType', width: 0, hidden: true },
+                { name: 'typeCode', index: 'typeCode', width: 0, hidden: true },
+                { name: 'sn', index: 'sn', editable: true, edittype: 'text', align: 'center', sorttype: 'int', search: false, sortable: true, hidden: true, width: 40, key: true },
+                { name: 'isDefault', index: 'isDefault', align: 'center', fixed: true, width: 70,search: false,
+                    formatter: 'checkbox', formatoptions: { value: Global_DicType.Global_DicType_BaseStateValid + ':False;' + Global_DicType.Global_DicType_BaseStateInValid + ':True', disabled: false }
+                },
+                
+                { name: 'dicvalue', index: 'dicvalue', editable: true, edittype: 'text', align: 'center', fixed: true, width: 100, search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+                , editoptions: {
+                    dataEvents: [{ type: 'focus', data: {}, fn: function () {
+                        $(this).select();
+                    }
+                    }]
+                }
+                },
+                { name: 'dictext', index: 'dictext', editable: true, edittype: 'text', align: 'center', sorttype: 'int', search: true, sortable: true, width: 100, key: true,
+                    editoptions: {
+                        dataEvents: [{ type: 'focus', data: {}, fn: function () {
+                            $(this).select();
+                        }
+                        }]
+                    }
+                },
+                { name: 'dictext_en', index: 'dictext_en', editable: true, edittype: 'text', align: 'center', sorttype: 'int', search: false, sortable: true, width: 100,
+                    editoptions: {
+                        dataEvents: [{ type: 'focus', data: {}, fn: function () {
+                                $(this).select();
+                            }
+                        }]
+                    },hidden: true
+                },
+                { name: 'dicorder', index: 'dicorder', editable: true, edittype: 'text', align: 'center', fixed: true, width: 100, search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+                , editoptions: {
+                    dataEvents: [{ type: 'focus', data: {}, fn: function () {
+                        $(this).select();
+                    }
+                    }]
+                }
+                },
+                { name: 'remark', index: 'remark', editable: true, edittype: 'text', align: 'center', fixed: true, width: 150, search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+                    , editoptions: {
+                        dataEvents: [{ type: 'focus', data: {}, fn: function () {
+                            $(this).select();
+                        }
+                        }]
+                    }
+                }
+            ],
+            cellEdit: true,
+            cellsubmit: 'clientArray',
+            shrinkToFit: false,
+            altRows: true,
+            altclass: 'gridSpacingClass',
+            forceFit: true,
+            cellLayout: 0,
+            scroll: false,
+            autowidth: true,
+            sortname: 'dicorder',
+            sortorder: "asc",
+            loadonce: false,
+            mtype: "POST",
+            viewrecords: true,
+            rownumbers: true,
+            multiselect: true,
+            rowNum: 15,
+            height: 378,
+            rowList: [15, 20, 30, 50],
+            pager: "#gridPager",
+            jsonReader: {
+                root: "rows",
+                total: "total",
+                page: "page",
+                records: "records",
+                repeatitems: false
+            },
+            gridComplete: function () {
+            },
+            loadComplete: function (xhr) {
+            	FailResultDataToTip(xhr);
+                hideLoading();
+            },
+            onSelectRow: function () {
+            },
+            beforeRequest: function () {
+ 
+            },onSelectAll: function(rowids,statue){
+            	for(var i=0;i<rowids.length;i++){
+ 
+            		if(statue){
+            			$("#gridTable").jqGrid('setRowData',rowids[i],{isDefault:true});
+            		}else{
+            			$("#gridTable").jqGrid('setRowData',rowids[i],{isDefault:false});
+            		}
+            	}
+            }
+        });
+
+        $('#gridTable').setGridParam({
+            beforeEditCell: function (rowid, cellname, value, iRow, iCol) {
+                savedRow = iRow;
+                savedCol = iCol;
+            }
+        });
+        $('#gridTable').jqGrid('navGrid', '#gridPager',{
+            add : false,
+            edit : false,
+            del : false,
+            refresh : true
+        }, {}, {}, {}, {
+            multipleSearch : true,
+            closeOnEscape : true,
+            closeAfterSearch : true
+        });
+        $('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+            caption : '设置列',
+            title : 'Set Columns',
+            onClickButton : toggleGridColumns
+        });
+        $('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+            caption : '快速搜索',
+            title : 'Quick Search',
+            onClickButton : toggleGridSearchToolbar
+        });
+        $('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+            caption: '导出数据',// 导出数据
+            title: 'Export Datas',
+            buttonicon: 'ui-icon-disk',
+            onClickButton: function () {
+                ExportToExcel.call(this, {
+                    title:"基础信息",
+                    FiledData: [{
+                        data_dictionary: Global_DicType.TRANS_MODE,
+                        filed: "trans_mode"
+                    }]
+                });
+
+            }
+        });
+        setGridHeightWidth(0, 100);
+    }
+
+    var add_Dic = function () {
+        // 必选选择类别节点
+        if ($('#hdDicSn').val() == "") {
+            errorNotification({
+                SimpleMessage: '验证不通过',
+                MoreMessage: '请先选择字典类别'
+            });
+            return;
+        }
+
+        openDetail($('#hdDicSn').val(), "add");
+    }
+
+    var edit_Dic = function () {
+        // 必选选择类别节点
+        if ($('#hdDicSn').val() == "") {
+            errorNotification({
+                SimpleMessage: '验证不通过',
+                MoreMessage: '请先选择字典类别'
+            });
+            return;
+        }
+
+        openDetail($('#hdDicSn').val(), "edit");
+    }
+
+    var remove_Dic = function () {
+        if ($('#hdDicSn').val() == "") {
+            errorNotification({
+                SimpleMessage: '验证不通过',
+                MoreMessage: '请先选择字典类别'
+            });
+            return;
+        }
+
+        $.messager.confirm($.i18n.prop('SysDictionary_alert'), $.i18n.prop('SysDictionary_delete'), function (r) {
+            if (r) {
+                var array = [];
+                array.push("array="+$("#hdDicSn").val());
+                if (array.length > 0) {
+                    showLoading();
+                    console.log(array);
+                    $.ajax({
+                		url: "../../sysInfo/dictionary/delete?t="+ Math.random(),
+                     	data:array.join("&")+"&typeCode="+$('#hdDicTypeCode').val(),
+                     	type:"POST",
+                     	success:function(dataObj){
+                     		if(isServerResultDataPass(dataObj)){
+                     			correctNotification(dataObj.resultDataFull); 
+                     			loadDicTree();
+                    		}else{
+                    			FailResultDataToTip(dataObj);//提示
+                    		}
+                    		hideLoading();
+                     	},
+                     	error:function(message){
+                     		console.log(message);
+                     		hideLoading();
+                     	}
+                     });
+                    
+                     
+                }
+            }
+        });
+    }
+
+    // dicSn：修改的sn，dicParentSn：新增时的父sn
+    var openDetail = function (dicSn, operateType) {
+        showLoading();
+        var href = "../View/SysInfo/SysDictionaryDetail.html?sn=" + dicSn + "&operateType=" + operateType;
+        openDialog({ title: $.i18n.prop('SysDictionary_detail'), id: 'SysDictionaryDetail', width: 460, height: 350, isResize: true, href: href, closable: true });
+    }
+
+    var afterSaveDicRefreshData = function () {
+        refresh_Dic();
+    }
+
+    var refresh_Dic = function () {
+        $('#hdDicTypeCode').val("");
+        $("#gridTable").jqGrid("clearGridData");
+        loadDicTree();
+    }
+</script>
+</html>

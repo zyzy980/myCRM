@@ -1,0 +1,345 @@
+.maxBox
+{
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 770px;
+    padding: 10px;
+    background-color: white;
+    border: 1px solid #CCCCCC;
+    -moz-box-shadow: 0px 5px 8px 1px DarkGray;
+    -webkit-box-shadow: 0px 5px 8px 1px DarkGray;
+    box-shadow: 0px 5px 8px 1px DarkGray;
+    filter: progid: DXImageTransform.Microsoft.Shadow(strength = 5, direction = 180, color = '#ff240d');
+    margin: auto auto;
+    height: 440px;
+}
+
+.maxBoxSure
+{
+    text-align: center;
+    line-height: 20px;
+    position: absolute;
+    top: 8px;
+    right: 60px;
+    height: 20px;
+    width: 40px;
+    cursor: pointer;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    background-color: #336699;
+    color: white;
+    font-weight:bold;
+    border: 1px solid #336699;
+}
+
+.maxBoxClose
+{
+    text-align: center;
+    line-height: 20px;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    height: 20px;
+    width: 40px;
+    cursor: pointer;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    background-color: #E54447;
+    font-weight:bold;
+    color: white;
+    border: 1px solid #E54447;
+}
+
+.LocationStorage
+{
+    height: 20px;
+    padding: 5px;
+    overflow: auto;
+    background-color: white;
+}
+
+.baseUl
+{
+    display: inline;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.baseLi
+{
+    display: inline;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.LocationStorageLi
+{
+    padding: 4px;
+    color: White;
+    font-size: 12px;
+    margin-left: 5px;
+    margin-top: 5px;
+}
+
+.LocationStorageLi_Province
+{
+    background-color: #0099CC;
+}
+
+.LocationStorageLi_City
+{
+    background-color: #336666;
+}
+
+.LocationStorageLi_Area
+{
+    background-color: #993333;
+}
+
+.LocationStorageLi_Towna
+{
+    background-color: #CC9933;
+}
+
+.LocationStorageLi_Site
+{
+    background-color: #666699;
+}
+
+.LocationStorageLiTitle
+{
+    width: 85%;
+    height: 25px;
+    border-right: 1px solid white;
+    padding: 2px;
+}
+
+.LocationStorageLiClose
+{
+    width: 15%;
+    height: 25px;
+    padding-left: 4px;
+    text-align: center;
+}
+
+.LocationStorageLiClose:hover
+{
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.LocationChooseMaxBox
+{
+    width: 100%;
+    height: 370px;
+    background-color: white;
+}
+
+.LocationChooseBox
+{
+    float: left;
+    position: relative;
+    height: 395px;
+    width: 20%;
+    background-color: white;
+    border-right: 1px solid #CCCCCC;
+    text-align: left;
+    vertical-align: top;
+}
+
+.LocationChooseFirstLetterBox
+{
+    width: 10%;
+    height: 360px;
+    text-align: right;
+    padding-top: 0px;
+    float: left;
+}
+
+.LocationChooseFirstLetterLi
+{
+    cursor: pointer;
+    font-size: 12px;
+    margin: 0;
+    padding: 0;
+    margin-top: -4px;
+    list-style: none;
+    text-align: center;
+}
+
+.LocationChooseFirstLetterLi:hover
+{
+    font-weight: bold;
+}
+
+.LocationChooseFirstLetterLi_Province
+{
+    color: #0099CC;
+}
+
+.LocationChooseFirstLetterLi_City
+{
+    color: #336666;
+}
+
+.LocationChooseFirstLetterLi_Area
+{
+    color: #993333;
+}
+
+.LocationChooseFirstLetterLi_Towna
+{
+    color: #CC9933;
+}
+
+.LocationChooseContentBox
+{
+    width: 80%;
+    height: 360px;
+    padding: 5px;
+    overflow: auto;
+    float: right;
+}
+
+.LocationChooseContentBoxLi
+{
+    display: block;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    height: 25px;
+}
+
+.LocationChooseContentBoxLi:hover
+{
+    background-color: #FDF5E6;
+}
+
+.LocationChooseContentBoxLi_Linked
+{
+    background-color: #FDF5E6;
+}
+
+.LocationChooseContentBoxLi_Province
+{
+    color: #0099CC;
+}
+
+.LocationChooseContentBoxLi_City
+{
+    color: #336666;
+}
+
+.LocationChooseContentBoxLi_Area
+{
+    color: #993333;
+}
+
+.LocationChooseContentBoxLi_Towna
+{
+    color: #CC9933;
+}
+
+.LocationChooseContentBoxLi_Site
+{
+    color: #666699;
+}
+
+.LocationChooseContentBoxLiTitle
+{
+    float: left;
+    display: block;
+    width: 78%;
+    height: 25px;
+    line-height: 25px;
+    padding-left: 2px;
+    overflow: hidden;
+}
+
+.LocationChooseContentBoxLiSelect
+{
+    float: right;
+    display: block;
+    width: 20px;
+    height: 20px;
+    background-size: 100%;
+    background-image: url('/Resource/js/locationsChoose/img/icon_box-empty.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: alpha(opacity=30); /*IE滤镜，透明度50%*/
+    -moz-opacity: 0.3; /*Firefox私有，透明度50%*/
+    opacity: 0.3; /*其他，透明度50%*/
+}
+
+.LocationChooseContentBoxLiSelect:hover
+{
+    float: right;
+    display: block;
+    width: 20px;
+    height: 20px;
+    background-size: 100%;
+    background-image: url('/Resource/js/locationsChoose/img/icon_box-checked.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: alpha(opacity=30); /*IE滤镜，透明度50%*/
+    -moz-opacity: 0.3; /*Firefox私有，透明度50%*/
+    opacity: 0.3; /*其他，透明度50%*/
+}
+
+.LocationChooseContentBoxLiSelected
+{
+    float: right;
+    display: block;
+    width: 20px;
+    height: 20px;
+    background-size: 100%;
+    background-image: url('/Resource/js/locationsChoose/img/icon_box-checked.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: alpha(opacity=30); /*IE滤镜，透明度50%*/
+    -moz-opacity: 0.3; /*Firefox私有，透明度50%*/
+    opacity: 0.3; /*其他，透明度50%*/
+}
+
+.ContentTitle
+{
+    height: 20px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+    border-bottom: 1px solid #CCCCCC;
+    margin-left: 8px;
+    margin-right: 8px;
+    cursor: pointer;
+    margin-bottom: 5px;
+}
+
+.ContentTitle_Province
+{
+    color: #0099CC;
+}
+
+.ContentTitle_City
+{
+    color: #336666;
+}
+
+.ContentTitle_Area
+{
+    color: #993333;
+}
+
+.ContentTitle_Towna
+{
+    color: #CC9933;
+}
+
+.ContentTitle_Site
+{
+    color: #666699;
+}

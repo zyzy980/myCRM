@@ -1,0 +1,180 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+<link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+<link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+<link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+<link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+<title>税率明细</title>
+</head>
+<body style="overflow:hidden">
+    <div id="toolbar" class="easyui-panel" style="padding: 4px; border-width:0; border-bottom-width:1px;">
+		<a href="javascript:create_month_data();" id="create_month_data" class="easyui-linkbutton" style="display: inline-block;" plain="true" iconcls="icon-large-chart">生成月数据</a>
+		<a href="javascript:close();" id="close" class="easyui-linkbutton" style="display:inline-block;" plain="true" iconcls="icon-cancel"> 关闭</a>
+    </div>
+    <form id="addForm" class="easyui-form" method="post" enctype="multipart/form-data">
+    <input type="hidden" id="id" name="id" />
+		<table class="editTable">
+			<tr>
+				<td class="editRequiredTitle">日期</td>
+				<td class="editControl">
+					<input type="text" id="tax_month" class="easyui-datebox" data-options="editable:false"/>
+				</td>
+			</tr>
+		</table>
+</form>
+<input id = "snValue" type="hidden" />
+
+	<div id="gridControl">
+		<table id="gridTable"></table>
+	</div>
+	<div id="gridPager">
+	</div>
+</body>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/regex/regex.js"></script>
+<script language="javascript" type="text/javascript">
+    var callerId = "";
+    var callerType = "";
+    var callbackFlag = "";
+    $(function () {
+        var parms = getUrlParms();
+        callerId = parms["callerId"];
+        callerType = parms["callerType"];
+        callbackFlag = parms["callbackFlag"];
+        initScript();
+        initData();
+        initStyle();
+    });
+
+    $(window).load(function () {
+        hideLoading();
+    });
+    function initStyle() {
+    }
+
+    function initScript() {
+    }
+
+    function initData() {
+        formatDate();
+    }
+
+    /**关闭*/
+    function close() {
+        closeDialog("Create_Month_Data");
+    }
+
+    //生成月数据
+    function create_month_data() {
+        var month = $("#tax_month").datebox("getValue");
+        $.messager.confirm($.i18n.prop("PROMPT"),'确定要生成'+month+'的结算汇总分析数据吗？', function (r) {
+            if (r) {
+                showLoading();
+                $.ajax({
+                    url : "../../bbgl/Js_Analysis_SummaryController/create_month_data?t="+Math.random()+"&type=0",
+                    data:month,
+                    type:"POST",
+                    success:function(dataObj){
+                        if (isServerResultDataPass(dataObj)) {
+                            correctNotification({ SimpleMessage:dataObj.resultDataFull.simpleMessage });
+                            close();
+                        } else {
+                            FailResultDataToTip(dataObj);
+                        }
+                        hideLoading();
+                    }
+                });
+            }
+        });
+    }
+
+    function refreshCallerData() {
+        if (callerType == Global_Constant.Global_Constant_CallerType_Dialog) {
+            //此callerId此时为dialog的id
+            getDialog(callerId).refreshCData(callbackFlag);
+        }
+        else {
+            //此callerId此时为frame的id
+            getCurrentTab(callerId).refreshCData(callbackFlag);
+        }
+    }
+
+    /**格式化日期*/
+    function formatDate() {
+        $('#tax_month').datebox({
+            //显示日趋选择对象后再触发弹出月份层的事件，初始化时没有生成月份层
+            onShowPanel: function () {
+                //触发click事件弹出月份层
+                span.trigger('click');
+                if (!tds)
+                //延时触发获取月份对象，因为上面的事件触发和对象生成有时间间隔
+                    setTimeout(function() {
+                        tds = p.find('div.calendar-menu-month-inner td');
+                        tds.click(function(e) {
+                            //禁止冒泡执行easyui给月份绑定的事件
+                            e.stopPropagation();
+                            //得到年份
+                            var year = /\d{4}/.exec(span.html())[0] ,
+                                //月份
+                                //之前是这样的month = parseInt($(this).attr('abbr'), 10) + 1;
+                                month = parseInt($(this).attr('abbr'), 10);
+
+                            //隐藏日期对象
+                            $('#tax_month').datebox('hidePanel')
+                            //设置日期的值
+                                .datebox('setValue', year + '-' + month);
+                        });
+                    }, 0);
+            },
+            //配置parser，返回选择的日期
+            parser: function (s) {
+                if (!s) return new Date();
+                var arr = s.split('-');
+                return new Date(parseInt(arr[0], 10), parseInt(arr[1], 10) - 1, 1);
+            },
+            //配置formatter，只返回年月 之前是这样的d.getFullYear() + '-' +(d.getMonth());
+            formatter: function (d) {
+                var currentMonth = (d.getMonth()+1);
+                var currentMonthStr = currentMonth < 10 ? ('0' + currentMonth) : (currentMonth + '');
+                return d.getFullYear() + '-' + currentMonthStr;
+            },
+            onChange : function () {
+            }
+        });
+
+        //日期选择对象
+        var p = $('#tax_month').datebox('panel'),
+            //日期选择对象中月份
+            tds = false,
+            //显示月份层的触发控件
+            span = p.find('span.calendar-text');
+        var curr_time = new Date();
+
+        //设置前当月
+        $("#tax_month").datebox("setValue", myformatter(curr_time));
+    };
+    //格式化日期
+    function myformatter(date) {
+        //获取年份
+        var y = date.getFullYear();
+        //获取月份
+        var m = date.getMonth() + 1;
+        return y + '-' + m;
+    }
+</script>
+</html>

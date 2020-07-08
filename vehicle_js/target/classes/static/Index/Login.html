@@ -1,0 +1,538 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1.0" />
+    <title></title>
+    <link rel="shortcut icon" href="../Index/images/favicon.ico1" />
+    <link rel="stylesheet" type="text/css" href="../Index/bootstrap.min.css" />
+    <link href="../Index/css/style.css" rel="stylesheet" />
+    <style>
+        .login-logo {
+            float: left;
+            margin-left: 30px;
+            padding-top: 20px;
+        }
+
+        .login-trig {
+            float: right;
+            position: relative;
+            right: 30px;
+            top: 20px;
+        }
+
+        .login-trig a {
+            font-size: 14px;
+            color: #666666;
+            margin-left: 20px;
+        }
+
+        .login-trig a:hover,
+        a:focus {
+            color: #23527c;
+            text-decoration: underline;
+        }
+
+        .verification {
+            padding-top: 1px;
+        }
+
+        .verification img {
+            width: 100%;
+            height: 100%;
+        }
+
+
+        /*仓储中心选择*/
+        .ywLocationBox {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            margin: auto;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 390px;
+            background-color: #D9E9F4;
+        }
+
+        .ywLocationClose {
+            width: 30px;
+            height: 30px;
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            cursor: pointer;
+        }
+
+        .ywLocationClose img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .ywLocationContent {
+            width: 50%;
+            height: 380px;
+            overflow: scroll;
+            margin: auto;
+            padding: 5px;
+            overflow-y: auto;
+            overflow-x: auto;
+        }
+
+        .ywLocationContentEach {
+            -moz-border-radius: 6px;
+            -webkit-border-radius: 6px;
+            border-radius: 6px;
+            background-color: white;
+            width: 146px;
+            height: 146px;
+            float: left;
+            padding: 2px;
+            margin: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ywLocationContentEach:hover {
+            -moz-border-radius: 6px;
+            -webkit-border-radius: 6px;
+            border-radius: 6px;
+            -moz-box-shadow: 0px 5px 8px 1px DarkGray;
+            -webkit-box-shadow: 0px 5px 8px 1px DarkGray;
+            box-shadow: 0px 5px 8px 1px DarkGray;
+            filter: progid: DXImageTransform.Microsoft.Shadow(strength=5, direction=180, color='#ff240d');
+            background-color: white;
+            width: 146px;
+            height: 146px;
+            float: left;
+            padding: 2px;
+            margin: 10px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ywLocationContentEach span {
+            margin: 5px;
+            width: 90%;
+            max-height: 46px;
+            overflow: hidden;
+            position: absolute;
+            z-index: 100;
+        }
+
+        .ywLocationContentEach div {
+            width: 100%;
+            height: 110px;
+            margin: 0 auto;
+            position: absolute;
+            top: 33px;
+            z-index: 99;
+        }
+
+        .ywLocationContentEach div img {
+            width: 97.5%;
+            height: 100%;
+        }
+
+        .ywLocationContentEach input.whcenter_cb {
+            padding: 0;
+            margin: 0;
+            position: absolute;
+            bottom: 5px;
+            right: 8px;
+            z-index: 105;
+        }
+    </style>
+</head>
+
+<body style=" overflow-y:hidden; ">
+    <div class="box">
+
+        <!--header-->
+<!--        <div class="header">
+            &lt;!&ndash;<div class="container2"> <img class="logo" src="http://www.cmscl.com/template/zh-cn/images/logo.png" /></div>&ndash;&gt;
+            <div class="login-top">
+                <div class="login-trig">
+                    <a data-locale-href="COMPANY_WEBSITE" target="_blank"><label data-locale="LOGIN_WEB"/></a>
+                    &lt;!&ndash;<a id="zh_en" target="_self" href="../Index/Login.html?lang=en">English</a>&ndash;&gt;
+                    &lt;!&ndash;<a><label data-locale="LOGIN_ABOUT"/></a>&ndash;&gt;
+                </div>
+            </div>
+        </div>-->
+        <!--header-->
+
+        <div class="login-detail container">
+
+            <!--login-box开始-->
+            <div class="login-box">
+                <div class="login-content ">
+                    <div class="form">
+                        <!--
+          <form action="#" method="post"> -->
+                        <p class="right-title"><label data-locale="LOGIN_SCTS_LOGIN"/></p>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="userId" data-locale-placeholder="LOGIN_ACCOUNT">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" class="form-control" id="password" data-locale-placeholder="LOGIN_PASSWORD">
+                        </div>
+                        <!--<div class="form-group fix" style="margin-bottom:0px;">-->
+                        <!--<input type="text" class="form-control form-control2" id="exampleInputPassword1" data-locale-placeholder="LOGIN_YZM">-->
+                        <!--<p class="verification"><a href="javascript:;" id="yzm"><img></a>-->
+                        <!--</div>-->
+                        <div class="form-group" style="margin-bottom:30px;">
+                            <div class="checkbox">
+                                <label style="padding-left:23px;">
+                                    <input type="checkbox" style="margin-left:-23px;" id="next_password">
+                                    <label data-locale="LOGIN_REMEMBE_PASSWORD"/> </label>
+                            </div>
+                            <p class="registered"><a href="javascript:;"></a></p>
+                        </div>
+                        <button type="submit" class="login-btn" id="loginButton"><label data-locale="LOGIN_LOGIN"/></button>
+                        <div id="msg" style="display: none; margin-top: 0px; color: rgb(153, 153, 153);">
+                            <img src="../Resource/images/index/right.png" style="vertical-align: middle;">
+                            <span
+                                style="display: inline; font-size: 12px; color: rgb(0, 102, 51);"><label data-locale="LOGIN_LOADING"/></span>
+                        </div>
+
+
+                        <!--      </form> -->
+                    </div>
+                </div>
+            </div>
+            <!--login-box结束-->
+        </div>
+        <div id="ywLocationBox" class="ywLocationBox">
+            <div id="ywLocationClose" class="ywLocationClose">
+                <img src="../Resource/images/index/close2.png" /></div>
+            <div class="ywLocationContent">
+            </div>
+        </div>
+        <!--footer -->
+        <div class="footer">
+            <div class="container2">
+                <!-- Copyright @ 2018 BMW (China) Co., Ltd. -->
+                <!--<p class="copyright"><label data-locale="LOGIN_COPY_RIGHT"/></p>-->
+                <p class="copyright">Copy Right@ 2018 南京市周小云办公室</p>
+            </div>
+        </div>
+
+        <!--footer -->
+
+    </div>
+
+    <script type="text/javascript" src="../Resource/js/jquery-2.0.0.min.js"></script>
+    <script type="text/javascript" src="../Resource/js/cookie/jquery.cookie.js"></script>
+    <script type="text/javascript" src="../Resource/js/base/commonControl.js"></script>
+    <script type="text/javascript" src="../Resource/js/jquery.i18n.properties.js"></script>
+
+    <script type="text/javascript">
+        var lang = "zh";
+        var langText = "中文";
+        var Token = "Token";
+        var within_code = "TMS";
+
+        $(function () {
+            initScript();
+            initData();
+
+
+
+            var parms = getUrlParms();
+            if (parms["lang"] == undefined || parms["lang"] == null || parms["lang"] == "" || parms["lang"] == "zh") {
+                lang = "en";
+                langText = "English";
+            } else {
+                $.ajax({
+                    url: "../admin/syslanguage/saveLocalLang?t=" + Math.random(),
+                    type: "POST",
+                    data: "lang=" + parms["lang"],
+                    async: false,
+                    success: function () {
+                    }
+                });
+            }
+            $.cookie("window.top.ModuleidLQ", parms["moduleid"]);
+            $("#zh_en").attr("href", "Login.html?lang=" + lang).text(langText);
+
+            if ($("#userId").val() == "") {
+                $("#userId").focus();
+            } else if ($("#password").val() == "") {
+                $("#password").focus();
+            }
+            // else if($("#exampleInputPassword1").val() == ""){
+            //    $("#exampleInputPassword1").focus();
+            // }
+            $("#yzm").bind("click", function () {
+                var img = $(this).find("img");
+                var src = img.attr("src");
+                img.attr("src", chgUrl(src));
+            });
+            $("#yzm img").attr("src", "../sysInfo/user/code.do");
+
+           /* $("#userId").val("admin");
+            $("#password").val("1");*/
+        });
+        function chgUrl(url) {
+            var timestamp = (new Date()).valueOf(); if ((url.indexOf("&") >= 0)) {
+                url = url + "&timestamp=" + timestamp;
+            } else {
+                url = url + "?timestamp=" + timestamp;
+            }
+            return url;
+        }
+
+
+        var initData = function () {
+            $("#userId").val($.cookie('OSUN_userId'));
+            $("#password").val($.cookie('OSUN_password'));
+            $("#within_code").val($.cookie('OSUN_within_code'));
+            if ($.cookie('OSUN_password')) {
+                $("#next_password").attr("checked","checked");
+            }
+        }
+
+        var initScript = function () {
+            //$("#userId").focus();
+
+            $(".login-btn").click(function () {
+                submitLogin();
+            });
+
+            $(this).keydown(function (e) {
+                if (e.which == '13') {
+                    submitLogin();
+                }
+            });
+
+             $("#userId,#password").bind("keyup", function(e){
+                 if(e.keyCode == "13"){
+                      $("#next_password").attr("checked","checked");
+                    submitLogin();
+                 }
+             });
+
+            $("#resetbtn").click(function () {
+                $("#userId").val("");
+                $("#password").val("");
+                $("#withinCode").val("");
+                $("#location").empty("");
+            });
+
+            $("#ywLocationClose").click(function () {
+                $(this).parent().animate({
+                    height: 'toggle'
+                });
+            });
+
+            $('body').keydown(function (e) {
+                if (e.keyCode == 13) {
+                    $("form").submit();
+                }
+            });
+        }
+
+        var massageDisplay = function (displayIco, displayContent, display, fontColor) {
+            $("#msg img").attr("src", "../Resource/images/index/" + displayIco);
+            $("#msg span").text(displayContent);
+            $("#msg span").css("color", fontColor);
+            $("#msg").css("display", display);
+        }
+
+        var submitVerified = function () {
+            if ($("#userId").val() == "") {
+                massageDisplay("error.png", $.i18n.prop('LOGIN_ACCOUNT_NOT_BLANK'), "block", "#CC0033");
+                $("#userId").focus();
+                return false;
+            }
+
+            if ($("#password").val() == "") {
+                massageDisplay("error.png", $.i18n.prop('LOGIN_PASSWORD_NOT_BLANK'), "block", "#CC0033");
+                $("#password").focus();
+                return false;
+            }
+            if ($("#exampleInputPassword1").val() == "") {
+                massageDisplay("error.png", $.i18n.prop('LOGIN_YZM_NOT_BLANK'), "block", "#CC0033");
+                $("#exampleInputPassword1").focus();
+                return false;
+            }
+            return true;
+        }
+
+        var submitLogin = function () {
+            if (!submitVerified()) {
+                return;
+            }
+            $(".ywLocationContent").empty();
+            $("#loginbtn").attr("disabled", "disabled");
+            $("#resetbtn").attr("disabled", "disabled");
+            massageDisplay("onLoad.gif", $.i18n.prop('LOGIN_LOADING'), "block", "#999999");
+            LoginServer();
+        }
+
+        // $("#userId").val($.cookie('OSUN_userId'));
+        // $("#password").val($.cookie('OSUN_password'));
+        // $("#within_code").val($.cookie('OSUN_within_code'));
+
+        var newLoadYwLocation = function (ywlocationList) {
+            $.cookie('OSUN_userId', $("#userId").val(), { path: '/', expires: 7 });
+            if ($("#next_password").prop("checked")) {
+                $.cookie('OSUN_password', $("#password").val(), { path: '/', expires: 7 });
+                $.cookie('OSUN_within_code', $("#withinCode").val(), { path: '/', expires: 7 });
+            } else {
+                $.cookie('OSUN_password', "", { path: '/', expires: 7 });
+            }
+
+            if (ywlocationList.length == 1) {
+                gotoYwLocation(ywlocationList[0].whcenter, ywlocationList[0].name, ywlocationList[0].name_en, ywlocationList[0].yw_title);
+                return;
+            } else if (ywlocationList.length == 0) {
+                var locationHref = "../Index/Main.html?lang=" + ((lang == "zh") ? "en" : "zh");
+                location.href = locationHref;
+                $(window.parent.document).find("a:contains(111)").prev().click()
+                createNewTab($.i18n.prop('111'), '../View/LoadingPlan/LoadingList.html');
+            }
+            for (var i = 0; i < ywlocationList.length; i++) {
+                ywlocationList[i].code = ywlocationList[i].whcenter;
+                ywlocationList[i].name = ywlocationList[i].name;
+            }
+
+            var length = ywlocationList.length + (4 - ywlocationList.length % 4);
+            length = length === 4 ? length + 4 : length;
+            var ywLocationStr = "<div>";
+            for (var i = 0; i < length; i++) {
+                // if(i == 0){
+                //     ywlocationList[i].logo = "../Resource/images/OSUN/nanjing.png";
+                // }else if(i == 1){
+                //     ywlocationList[i].logo = "../Resource/images/OSUN/png-1197.png";
+                // }else if(i == 2){
+                //     ywlocationList[i].logo = "../Resource/images/OSUN/png-1182.png";
+                // }else if(i == 3){
+                //     ywlocationList[i].logo = "../Resource/css/img/ico_logo_ICMS.png";
+                // }else if(i == 4){
+                //     ywlocationList[i].logo = "../Resource/images/OSUN/nanjing.png";
+                // }else if(i == 5){
+                //     ywlocationList[i].logo = "../Resource/images/OSUN/png-1197.png";
+                // }else if(i == 6){
+                //     ywlocationList[i].logo = "../Resource/images/OSUN/png-1182.png";
+                // }else if(i == 7){
+                //     ywlocationList[i].logo = "../Resource/css/img/ico_logo_ICMS.png";
+                // }
+                if (ywlocationList.length > i) {
+                    var wh_name = ((lang == "en") ? ywlocationList[i].name : ywlocationList[i].name_en);
+                    var tempHTML = " data-ywlocationcode=\"" + ywlocationList[i].whcenter + "\"";
+                    tempHTML += " data-ywlocationname=\"" + ywlocationList[i].name + "\"";
+                    tempHTML += " data-ywlocationname_en=\"" + ywlocationList[i].name_en + "\"";
+                    tempHTML += " data-ywlocationtitle=\"" + ywlocationList[i].yw_title + "\"";
+                    ywlocationList[i].logo = ywlocationList[i].logo ? 'https://www.niuhuoyun.cn/' + ywlocationList[i].logo : null;
+                    ywLocationStr += "<div class=\"ywLocationContentEach\" " + tempHTML + " onclick=\"gotoServerYwLocation(this)\" id=\"ywLocation\"><span >" + wh_name + "</span><divonclick=\"gotoServerYwLocation(this)\"><img alt=\"/" + wh_name + "\" src=\"" + ywlocationList[i].logo + "\" style=\"padding-top: 35px;width:141px;height:141px\"/></div><!--<input type=\"checkbox\" class=\"whcenter_cb\" />--></div>";
+                } else {
+                    ywLocationStr += "<div class=\"ywLocationContentEach\"> </div>";
+                }
+                if (i == ywlocationList.length + 1) {
+                    ywLocationStr += "</div>";
+                    ywLocationStr += "<div>";
+                }
+            }
+            // ywLocationStr += "<div class='fix'></div></div>";
+            // ywLocationStr +="<div style='text-align:center;margin-top:8px;'><input type='button' value='  确定  ' onclick='gotoServerYwLocation()' /></div>";
+            $("#ywLocationBox .ywLocationContent").append(ywLocationStr);
+            $("#ywLocationBox").animate({
+                height: 'toggle'
+            });
+
+        }
+
+        var gotoYwLocationForThis = function (_this) {
+            $(_this).closest(".ywLocationContentEach").find("input[type='checkbox'][class='whcenter_cb']").click();
+
+            return;
+            var ywLocationCode = $(_this).attr("data-ywlocationcode");
+            var ywLocationName = $(_this).attr("data-ywlocationname");
+            var ywlocationname_en = $(_this).attr("data-ywlocationname_en");
+            var ywLocationTitle = $(_this).attr("data-ywlocationtitle");
+            gotoYwLocation(ywLocationCode, ywLocationName, ywlocationname_en, ywLocationTitle);
+        };
+
+        var gotoServerYwLocation = function (_this) {
+            var ywLocationCode = $(_this).attr("data-ywlocationcode");
+            var ywLocationName = $(_this).attr("data-ywlocationname");
+            var ywlocationname_en = $(_this).attr("data-ywlocationname_en");
+            var ywLocationTitle = $(_this).attr("data-ywlocationtitle");
+
+            /*ywLocationCode=ywLocationCode.substring(0,ywLocationCode.length-1);
+            ywLocationName=ywLocationName.substring(0,ywLocationName.length-1);
+            ywlocationname_en=ywlocationname_en.substring(0,ywlocationname_en.length-1);
+            ywLocationTitle=ywLocationTitle.substring(0,ywLocationTitle.length-1);*/
+
+            gotoYwLocation(ywLocationCode, ywLocationName, ywlocationname_en, ywLocationTitle);
+
+        }
+
+        var gotoYwLocation = function (ywLocationCode, ywLocationName, ywLocationName_en, ywLocationTitle) {
+            $.cookie('OSUN_whcenter', ywLocationCode, { path: '/' });
+            $.cookie('OSUN_whcenter_name', ywLocationName, { path: '/' });
+            $.cookie('OSUN_whcenter_name_en', ywLocationName_en, { path: '/' });
+            var locationHref = "../Index/Main.html?lang=" + ((lang == "zh") ? "en" : "zh");
+            var serverUrl = "../sysInfo/user/setYwLocationSession?" + Math.random();
+            var data = { ywLocationCode: ywLocationCode, ywLocationName: ywLocationName, ywLocationName_en: ywLocationName_en, ywLocationTitle: ywLocationTitle };
+            $.ajax({
+                url: serverUrl,
+                type: "POST",
+                data: data,
+                success: function (dataObj) {
+                    if (dataObj != null && dataObj.resultCode == 0 && dataObj.resultDataFull != null) {
+                        location.href = locationHref;
+                        $(window.parent.document).find("a:contains(111)").prev().click()
+                        createNewTab($.i18n.prop('111'), '../View/LoadingPlan/LoadingList.html');
+                    } else {
+                        alert(dataObj.resultDataUi);
+                    }
+                }
+            });
+        }
+
+        var LoginServer = function () {
+            var url = "../sysInfo/user/loginIn";
+            url += "?userId=" + encodeURI($("#userId").val()) + "&password=" + encodeURI($("#password").val()) + "&within_code=" + encodeURI("TMS") + "&yzm=" + encodeURI($("#exampleInputPassword1").val()) + "&lang=" + (lang == "zh" ? "en" : "zh") + "&t=" + Math.random();
+            $.ajax({
+                url: url,
+                type: 'get', //GET
+                cache: false,//不缓存
+                data: null, //JSON.stringify(data),
+                timeout: 60000,  //超时时间
+                dataType: 'text', //返回的数据格式：json/xml/html/script/jsonp/text
+                contentType: 'text/plain;charset=utf-8', //'application/json',
+                success: function (dataObj) {
+                    var data = JSON.parse(dataObj);
+
+                    if (data != null && data.resultCode == 0 && data.resultDataFull != null) {
+                        location.href = "../Index/Main.html?lang=" + ((lang == "zh") ? "en" : "zh");
+                        $.cookie(Token, data.resultDataFull.Token, { expires: 7 * 24 * 60 * 60 * 1000, path: '/' });
+                        $.cookie("userlevel", data.resultDataFull.userlevel, { expires: 7 * 24 * 60 * 60 * 1000, path: '/' });
+                        $.cookie("OSUN_within_code", data.resultDataFull.within_code, { expires: 7 * 24 * 60 * 60 * 1000, path: '/' });
+                        massageDisplay("right.png", data.resultDataFull.msg, "block", "#006633");
+                        newLoadYwLocation(data.resultDataFull.ywlocationList)
+                    } else {
+                        massageDisplay("error.png", data.resultDataFull.simpleMessage, "block", "#CC0033");
+                    }
+
+                    $("#loginbtn").removeAttr("disabled");
+                    $("#resetbtn").removeAttr("disabled");
+                },
+                error: function (xhr, textStatus) {
+                    massageDisplay("error.png", $.i18n.prop('LOGIN_NETWORK_TIMEOUT'), "block", "#CC0033");
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

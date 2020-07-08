@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bba.jsyw.dao.ITr_Non_BusinessDao">
+	<sql id="begin_page">
+		<if test="isPage == true">select A.* from (select rownum rn, T.* from (</if>
+	</sql>
+	<sql id="end_page">
+		<if test="isPage == true">)T where rownum &lt; ${page*rows+1}) A where A.rn >
+			${(page-1)*rows}</if>
+	</sql>
+
+	<!--业务数据-->
+	<sql id="business_data">
+		  b.id
+		 ,b.attribute
+		 ,b.type
+		 ,b.handover_no
+		 ,b.service_type
+		 ,b.vin
+		 ,b.cus_no
+		 ,b.cus_name
+		 ,b.begin_date
+		 ,b.receipt_date
+		 ,b.trans_mode
+		 ,b.trans_fangan
+		 ,b.receipt_sheet_date
+		 ,b.car_type
+		 ,b.shipment_qty
+		 ,b.up_js_qty
+		 ,b.begin_city
+		 ,b.end_city
+		 ,b.begin_address
+		 ,b.end_address
+		 ,b.demand_sector
+		 ,b.applicant
+		 ,b.license_plate_flag
+		 ,b.peizai_info
+		 ,b.secrecy_flag
+		 ,b.begin_link
+		 ,b.begin_link_tel
+		 ,b.end_link
+		 ,b.end_link_tel
+		 ,b.remark
+		 ,b.data_from
+		 ,(select carrier_no from tr_non_business_carrier where m_id=b.id and rownum=1) carrier_no
+		 ,(select carrier_name from tr_non_business_carrier where m_id=b.id and rownum=1) carrier_name
+		 ,(select down_js_qty from tr_non_business_carrier where m_id=b.id and rownum=1) down_js_qty
+		 ,b.create_by
+		 ,b.create_date
+		 ,b.vehicle_project
+		 ,b.data_state
+		 ,b.car_no
+		 ,b.js_jiage
+		 ,b.upload_files
+		 ,b.check_by
+		 ,b.operator
+		 ,b.check_date
+		 ,b.operator_date
+		 from TR_NON_BUSINESS b
+	</sql>
+
+	<!-- 查询业务数据列表 -->
+	<select id="findListForGrid" resultType="com.bba.jsyw.vo.Tr_Non_BusinessVO" parameterType="com.bba.util.JqGridParamModel">
+		<include refid="begin_page" />
+		select t.* from (
+		select
+		<include refid="business_data" />
+		) t
+		<if test="filters!=null and filters!=''">where ${filters}</if>
+		<include refid="end_page" />
+	</select>
+
+	<!-- 查询业务数据数量 -->
+	<select id="findListForGridCount" resultType="int" parameterType="com.bba.util.JqGridParamModel">
+		select count(*) from (
+		select
+		<include refid="business_data" />
+		) t
+		<if test="filters!=null and filters!=''">where ${filters}</if>
+	</select>
+
+	<!--标注结算状态-->
+	<update id="updateJsState" parameterType="java.util.List">
+		<foreach item="vo" index="index" collection="list" open="begin" close="end;" separator="">
+			update tr_business
+			<choose>
+				<when test="vo.remark==1"><!-- 标注VIP -->
+					set up_js_flag ='Y' where id=#{vo.id};
+				</when>
+				<when test="vo.remark==2"><!-- 标注对下不结 -->
+					set down_js_flag ='Y' where id=#{vo.id};
+				</when>
+				<when test="vo.remark==3"><!-- 标注预付 -->
+					set yf_flag ='Y' where id=#{vo.id};
+				</when>
+				<when test="vo.remark==4"><!-- 标注普损 -->
+					set mass_loss_type ='1' where id=#{vo.id};
+				</when>
+				<when test="vo.remark==5"><!-- 标注重损 -->
+					set mass_loss_type ='2' where id=#{vo.id};
+				</when>
+				<when test="vo.remark==7"><!-- 推送至业务 -->
+					set data_state ='1' where id=#{vo.id};
+				</when>
+				<otherwise><!-- 重置 -->
+					set up_js_flag ='N',down_js_flag ='N',mass_loss_type='0',yf_flag='N' where id=#{vo.id};
+				</otherwise>
+			</choose>
+		</foreach>
+	</update>
+
+	<!--插入到对上结算表-->
+	<insert id="insertJs_non_vehicle" parameterType="com.bba.jsyw.vo.Tr_Non_BusinessVO">
+		insert into js_non_vehicle (attribute,type,handover_no,service_type,vin,cus_no,cus_name,begin_date,receipt_date,trans_mode,car_type,shipment_qty,js_qty,begin_address
+		,end_address,demand_sector,freight_basis,vehicle_project,data_from,create_by,trans_fangan,bus_id)
+		select attribute,type,handover_no,service_type,vin,cus_no,cus_name,begin_date,receipt_date,trans_mode,car_type,shipment_qty,up_js_qty,begin_city,end_city
+		,demand_sector,js_jiage,vehicle_project,data_from,#{create_by},trans_fangan,id
+		from tr_non_business where id=#{id} and data_state = '1'
+	</insert>
+
+	<!--插入到对下结算表-->
+	<insert id="insertJs_non_down_vehicle" parameterType="com.bba.jsyw.vo.Tr_Non_BusinessVO">
+		insert into js_non_down_vehicle (attribute,type,handover_no,service_type,vin,carrier_no,carrier_name,begin_date,receipt_date,trans_mode,car_type,shipment_qty,js_qty,begin_address
+			,end_address,freight_basis,vehicle_project,data_from,create_by,trans_fangan,bus_id,js_data_type)
+		select t.attribute,t.type,t.handover_no,t.service_type,t.vin,c.carrier_no,c.carrier_name,t.begin_date,t.receipt_date,c.trans_mode,t.car_type,
+		       t.shipment_qty,c.down_js_qty,c.begin_city,c.end_city,t.js_jiage,t.vehicle_project,t.data_from,#{create_by},c.trans_fangan,t.id,'0'
+		from tr_non_business t left join tr_non_business_carrier c on t.id = c.m_id
+		where t.id=#{id} and data_state = '1'
+	</insert>
+
+	<!--插入到对下保费表-->
+	<insert id="insertJs_vin_down_premium" parameterType="com.bba.jsyw.vo.Tr_Non_BusinessVO">
+		insert into js_vin_down_premium (vin,carrier_no,carrier_name,begin_city,end_city,trans_mode,car_type,begin_date,vehicle_project,create_by,bus_id)
+		 select vin,
+			    (select carrier_no from tr_non_business_carrier where m_id=b.id and rownum=1)
+			   ,(select carrier_name from tr_non_business_carrier where m_id=b.id and rownum=1)
+		       ,begin_city,end_city,trans_mode,car_type,begin_date,
+			   vehicle_project,#{create_by},id
+		from tr_non_business b where id=#{id} and data_state = '1'
+	</insert>
+
+</mapper>

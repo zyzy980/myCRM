@@ -1,0 +1,2108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link id="CustomTheme" type="text/css" rel="stylesheet"	href="../../Resource/css/index/customLightBlue.css" />
+<link id="EasyuiTheme" type="text/css" rel="stylesheet"	href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+<link id="JqgridTheme" type="text/css" rel="stylesheet"	href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+<link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+<link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+<link type="text/css" rel="stylesheet" href="../../Resource/js/fileUpload/css/fileUpload.css" />
+<link type="text/css" rel="stylesheet" href="../../View/ywgl/css/planExec.css" />
+<style type="text/css">
+
+</style>
+    <title>#{supplier.detail.thisPage}</title>
+</head>
+<body style="overflow:hidden;" id="body">
+	<div id="orderDetailChild">
+	<div id="childBtn" style="border-top:1px dotted #c5dbec;border-left:1px dotted #c5dbec;border-right:1px dotted #c5dbec;width:99.5%">
+    <!--<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add'" width="15" height="15" onclick="addChild('detailChildTableId')"><label data-locale="addRow"/></a>
+	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save'" onclick="saveChildTable()"><label data-locale="saveDetail"/></a> 
+    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="removn()"><label data-locale="closeTable"/></a>-->
+    </div>
+    <table id="detailChildTableId"></table>
+    
+    </div>
+    <div id="toolbar" class="easyui-panel" style="padding: 4px; border-width:0; border-bottom-width:1px;">
+      #{PAGE_TOOLBAR_BUTTONROLE}
+    </div>
+    <input type="hidden" id="sn" name="sn" />
+    <div id="tabLocation" class="easyui-tabs">
+    <form id="addForm" class="easyui-form" method="post" data-options="novalidate:true">
+    <table class="editTable">
+        <tr>
+            <td class="editTitle" >
+                <label data-locale="trainNo2"/>:
+            </td>
+            <td class="editControl">
+            	<input class="easyui-textbox" id="trainNo" name="trainNo" readonly="readonly" style="width: 153px;"/><span style="color:red">(*<label data-locale="trainMessage"/>)</span>
+            </td>
+            <td class="editTitle" >
+                <label data-locale="cusWeituo"/>:
+            </td>
+            <td class="editControl" >
+            	<input class="easyui-textbox" id="cusWeituo"  name="cusWeituo" autocomplete="off"  style="width: 153px;" />
+            </td>
+            <td class="editTitle">
+            	<label data-locale="orderDetail.form.weituoDate"/>:
+            </td>
+            <td class="editControl">
+            	<input class="easyui-datebox" id="weituoDate" name="weituoDate" style="width:153px;"/>
+            </td>
+        </tr>
+        <tr>
+            <td class="editTitle" >
+                <label data-locale="cusNo"/>:
+            </td>
+            <td class="editControl">
+            	<input id="cusNo" class="easyui-combobox" name="cusNo" style="width: 153px;" data-options="required:true,panelWidth:'300'"/>
+            	<span style="color:red;font-size:16px;text-align:center;">*</span>
+            </td>
+            <td class="editTitle" >
+                <label data-locale="planBeginDate"/>:
+            </td>
+            <td class="editControl">
+            	<input id="planBeginDate" class="easyui-datebox" name="planBeginDate" style="width: 153px;"  data-options="onChange:time,required:true"  />
+            	<span style="color:red;font-size:16px;text-align:center;">*</span>
+            </td>
+            <td class="editTitle" >
+                <label data-locale="transportType"/>:
+            </td>
+            <td style="text-align:left" class="editControl">
+	            <input  class="easyui-combobox" id="transportType" name="transportType" data-options="required:true" style="width: 153px;"/>
+	            <span style="color:red;font-size:16px;text-align:center;">*</span>
+       		</td>
+        </tr>
+        <tr>
+            <td class="editTitle" >
+                <label data-locale="beginLocalAddress2"/>:
+            </td>
+            <td class="editControl">
+            	<input  name="beginLocalAddressCode" id="historybeginAddress" class="easyui-combobox" style="width: 200px;" data-options="panelWidth:'300'" />
+                <input  name="beginLocalAddress" style="width:198px;height:20px;display:none;" id="tipinputbeginAddress"   /> 
+                <input name="isNewBeginAddress" style="display: none;" id="isNewBeginAddress" value="0"/>
+                <a href="javascript:void(0)" style="color:blue" id="newBeginAddress"><label data-locale="newAddress"/></a>  
+            </td>
+            <td class="editTitle" >
+                <label data-locale="addressDetail"/>:
+            </td>
+            <td class="editControl">
+          	<input id='begin_district' name="beginDistrict" class='easyui-combobox' data-options="panelWidth:'180'" style='width:100px'/>
+    		<input id='begin_city' name="beginCity" class='easyui-combobox' data-options="panelWidth:'180'" style='width:100px'/>
+    		<input id='begin_area' name="beginArea" class='easyui-combobox' data-options="panelWidth:'180'" style='width:100px'/>
+            </td>
+            <!--<td class="editTitle">
+            	<label data-locale="orderDetail.form.ywLocation"/>:
+            </td>
+            <td class="editControl">
+            	<input class="easyui-combobox" name="ywLocation" id="ywLocation" style="width:153px;"/> 
+            	<span style="color:red;font-size:16px;text-align:center;">*</span>
+            </td>-->
+        </tr>
+        <tr>
+             <td class="editTitle" >
+                <label data-locale="beginLocalAddress2"/><label data-locale="remark"/>:
+            </td>
+            <td class="editControl" colspan="2">
+               <input class="easyui-textbox" id="beginLocalRemark"  name="beginLocalRemark" style="width: 80%;"/>
+            </td>
+        </tr>
+        <tr>
+           <td class="editTitle" >
+                 <label data-locale="endLocalAddress2"/>:
+            </td>
+            <td class="editControl">
+                <input name="endLocalAddressCode" id="historyendAddress" class="easyui-combobox" style="width: 200px;" data-options="panelWidth:'300'" />
+                <input name="endLocalAddress" id="tipinputendAddress" autocomplete="off" style="width: 198px;height: 20px;display:none;" /> 
+                <input name="isNewEndAddress" id="isNewEndAddress" style="display:none;" value="0"/>
+                <a href="javascript:void(0)" style="color:blue" id="newEndAddress"><label data-locale="newAddress"/></a>  
+            </td>
+             <td class="editTitle" >
+                <label data-locale="addressDetail"/>:
+            </td>
+            <td class="editControl">
+               	<input id='end_district' name="endDistrict" class='easyui-combobox' data-options="panelWidth:'180'" style='width:100px'/>
+    			<input id='end_city' name="endCity" class='easyui-combobox' data-options="panelWidth:'180'" style='width:100px'/>
+    			<input id='end_area' name="endArea" class='easyui-combobox' data-options="panelWidth:'180'" style='width:100px'/> 
+            </td>
+            
+            <td class="editTitle" >
+               <label data-locale="trainType"/>:
+            </td>
+            <td class="editControl">
+            	<input id="trainType" class="easyui-combobox" name="trainType" style="width: 153px;"/>
+<!--             	<span style="color:red;font-size:16px;text-align:center;">*</span> -->
+            </td>
+            <!-- <td align="right" class="editTitle" ><label data-locale="trainType"/>:</td>
+			<td class="editControl">
+				<input id="trainType" style="width: 153px;" class="easyui-combobox" name="trainType"/>
+			</td> -->
+        </tr>
+        <tr>
+           <td class="editTitle" >
+                  <label data-locale="endLocalAddress2"/><label data-locale="remark"/>:
+            </td>
+            <td class="editControl" colspan="2">
+               <input class="easyui-textbox" id="endLocalRemark"  name="endLocalRemark" style="width: 80%"/>
+            </td>
+        </tr>
+        <tr>
+			<td class="editTitle"><label data-locale="contractorName"/>:</td>
+			<td class="editControl">
+                <input class="easyui-textbox" name="contractorName" id="contractorName" style="width: 153px;" data-options="editable:false"/>
+            </td>
+            <td class="editTitle" >
+                 <label data-locale="trucknoq"/>:
+            </td>
+            <td class="editControl">
+                <input class="easyui-textbox" name="trucknoq" id="trucknoq" style="width: 153px;" data-options="editable:false"/>
+            </td>
+            <td class="editTitle" >
+                 <label data-locale="driverName"/>:
+            </td>
+            <td class="editControl">
+                <input class="easyui-textbox" name="driverName" style="width: 153px;" id="driverName"  data-options="editable:false"/>
+            </td>
+        </tr>
+        <tr>
+        	<td class="editTitle" >
+                 <label data-locale="shoukuan"/>:
+            </td>
+            <td class="editControl">
+                <input class="easyui-textbox"  name="shoukuan"  style="width: 153px;" id="shoukuan"  data-options="editable:false"/>
+                <input type="radio" name="getMode" id="getModeForTrainno" value="1" checked/><label for="getModeForTrainno"><label data-locale="orderDetail.form.getType.trains"/></label>
+                <input type="radio" name="getMode" id="getModeForFree" value="2" /><label for="getModeForFree"><label data-locale="orderDetail.form.getType.free"/></label>
+            </td>
+            <td class="editTitle" >
+                 <label data-locale="fukuan"/>:
+            </td>
+            <td class="editControl">
+                <input class="easyui-textbox"  name="fukuan"  style="width: 153px;" id="fukuan"  data-options="editable:false"/>
+                <input type="radio" name="payMode" id="payModeForTrainno" value="1" checked/><label for="payModeForTrainno"><label data-locale="orderDetail.form.payType.trains"/></label>
+                <input type="radio" name="payMode" id="payModeForFree" value="2" /><label for="payModeForFree"><label data-locale="orderDetail.form.getType.free"/></label>
+            </td>
+            <td class="editTitle"><label data-locale="orderDetail.form.state"/></td>
+            <td class="editControl">
+               	<input id="state" class="easyui-textbox" name="state" style="width: 153px;" data-options="editable:false" />
+            </td>
+        </tr>	
+    
+    </table>
+    <div id="gridMostly">
+    	<div>
+    		<img onclick="addDetail()" src="../../Resource/images/btn_bg_edit.png" width="25" height="25"/>
+    	</div>
+	    <table id="gridMostlyTable"></table>
+	</div> 
+  </form>
+    </div>
+<script type="text/javascript" src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/upload.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/file.js"></script>
+<script type="text/javascript" src="API/AMap/js/maps.js"></script>
+<script type="text/javascript" src="../../Resource/js/cookie/jquery.cookie.js"></script>
+<script src="https://webapi.amap.com/maps?v=1.3&key=7defcebd378d7fcd05dbcb9298d20d2e&plugin=AMap.PolyEditor,AMap.CircleEditor,AMap.MouseTool,AMap.DistrictSearch"></script>
+<script type="text/javascript" src="http://cache.amap.com/lbs/static/addToolbar.js"></script>
+<script type="text/javascript" src="https://webapi.amap.com/demos/js/liteToolbar.js"></script>
+<script language="javascript" type="text/javascript">
+	var detailRowNumber = null;
+	var child = [];
+	var mostlyGuid=null;
+	var detailGuid=null;
+    var moduleId = 0;
+    var valve = 0;//用于判断增加还是修改的阀门值。0代表修改操作，1代表增加操作。
+    var savedRow1 = null;
+    var savedCol1 = null;
+    var savedMostlyRow1 = null;
+    var savedMostlyCol1 = null;
+    var savedChildRow1=null;
+    var savedChildCol1=null;
+    var trainNo = null;
+    var orderDetailList = []; //订单明细数组全局变量，保存订单明细，一次性提交后台
+    var orderDetail = []; //订单明细全局变量，用于在车次明细页面回显
+    var pleaseChoose = $.i18n.prop('please.choose');
+    var addressChoose = $.i18n.prop('switchAddress');
+    var newAddress = $.i18n.prop('newAddress');
+    var confirm = $.i18n.prop('confirm');
+    var historyAddress = $.i18n.prop('historyAddress')
+    var childCusNo = null;
+    var childCusName = null;
+    var state = null;
+    var sumVol = 0;  //保存体积的和
+    var sumGwt = 0; // 保存重量的和
+    var sumQty = 0; //保存件数的和
+    var curr_time = null;
+    var curDate = null;
+    var guid = "";
+    var unitInnerHtml = [];
+    var ywId = null;
+    var oldObj = null;
+    var beginidObj = {
+    		id : "begin",
+    		historyAddress : "historybeginAddress",
+    		tipinputAddress : "tipinputbeginAddress",
+    		district : "begin_district",
+    		city : "begin_city",
+    		area : "begin_area",
+    		localRemark : "beginLocalRemark"
+    };
+    var endidObj = {
+    		id : "end",
+    		historyAddress : "historyendAddress",
+    		tipinputAddress : "tipinputendAddress",
+    		district : "end_district",
+    		city : "end_city",
+    		area : "end_area",
+    		localRemark : "endLocalRemark",
+    };
+    var planBeginCityObj = {
+    		district : "tipinputbegin_district",
+    		city : "tipinputbegin_city",
+    		area : "tipinputbegin_area",
+    }
+    
+    var planEndCityObj = {
+    		district : "tipinputend_district",
+    		city : "tipinputend_city",
+    		area : "tipinputend_area",
+    }
+    
+    var cusNoTextObj = {};
+    var cusNoTextObj = {};
+    var cusNoValuObj = {};
+    $(function() {
+        var parms = getUrlParms();
+        var sn = parms["sn"];
+        var jsonList = [];
+        var orderDetailGuid = null;
+        trainNo = parent.trainNo;
+        loadYwLocation();
+        loadUnit(); 
+        loadTransType();
+        loadCus();
+        loadLocation();
+        loadTruckType();
+        initData();
+        initStyle();
+       	curr_time = new Date();   
+    	curDate = myformatter(curr_time);
+        initFormData();
+        setGridHeightWidth();
+        extendTab();
+        if (trainNo == "" || trainNo == null) {
+                $("#planBeginDate").datebox("setValue",curDate);
+        	return;
+		} else {
+        	loadMostly();
+		} 
+        
+        if(parent.identifier == '1') {
+        	$("#toolbar").hide();
+        }
+        $("#body").height(window.parent.height);
+    }); 
+    
+    $(window).load(function() { 
+    	hideLoading(); 
+    });
+    
+	//清空
+    var add = function(){
+    	$("#addForm").form("clear");
+
+    }
+	//清空明细主表
+	var clearDetail = function (){
+		$("#detailForm").form("clear");
+		initFormData();
+		mostlyGuid="";
+		detailGuid="";
+		$("#gridTable").jqGrid('GridUnload')
+		loadList();
+	}
+	
+	//加载form表单数据
+	var initFormData = function(){
+		loadSearchCus();
+    	$("#planshipmentData").datebox("setValue",curDate);
+    	$("#planjiaofuData").datebox("setValue",curDate);
+    	$("#businessDate").datebox("setValue",curDate);
+    	$("#weituoDate").datebox("setValue",curDate);
+    	
+    	$("#isNewBeginAddress").val("0");
+    	$("#isNewEndAddress").val("0");
+	}
+	
+	
+   //新增表体
+   var addTableRow = function (name) {
+		loseGridFocus();
+	    var ids = $("#"+name).jqGrid('getDataIDs');
+	    var rowid = Math.max.apply(Math, ids);
+	    if (rowid == "-Infinity"){
+	        rowid = 0;
+	    }
+	    var newrowid = rowid + 1;
+	    var dataRow = {
+	    	rowid: newrowid,
+	    };
+	    $("#"+name).jqGrid("addRowData", newrowid, dataRow, "last");
+	    setGridHeightWidth();
+	}
+   var loseMostlyGridFocus = function () {
+	    if (savedMostlyRow1 && savedMostlyCol1) {
+	        $('#gridMostlyTable').jqGrid('saveCell', savedMostlyRow1, savedMostlyCol1);
+	    }
+	}
+   var loseGridChindFocus = function () {
+	    if (savedChildRow1 && savedChildCol1) {
+	        $('#detailChildTableId').jqGrid('saveCell', savedChildRow1, savedChildCol1);
+	    }
+	}
+
+   //设置日期
+	var time = function(date){
+		$("[name=planBeginDate]").val(date);
+	}
+  
+    var initStyle = function() {
+        enterTriggerEvent('searchParamesTable', 'searchData');
+    };
+    var oldSetGridHeightWidth = setGridHeightWidth;
+    var setGridHeightWidth = function() {
+    	oldSetGridHeightWidth(5, 440,"gridTable");
+    };
+    var initScript = function() {
+    };
+    
+	// 查询数据
+    function searchData() {
+        $('#gridTable').jqGrid('setGridParam', {
+        	url : getSearchGridUrl(),
+        	datatype : 'json',
+        	postData : { 'filters' : '' },
+        	page : 1
+        }).trigger('reloadGrid');
+    }
+
+	// 获取查询访问路径
+    var getSearchGridUrl = function() {
+        return '../../order/findOrderDetial?t=' + Math.random() + '&customSearchFilters=' + encodeURI(getSearchFilters());
+    };
+
+ 	// 获取查询条件
+    var getSearchFilters = function() {
+		var parmsArray = [
+		{ 
+		  name: 'o.mostly_guid', value: mostlyGuid, op: "eq" }
+        ];
+        return formatSearchParames(parmsArray);
+    };
+    
+ 	// 保存新增车次信息
+    var save = function() {
+    	if (trainNo == null || trainNo == "") {
+    		insert();
+		}else {
+    		edit();
+		}
+    };
+    
+    var insert = function(){
+    	/*if(!validate()) {
+    		return ;
+    	}
+
+    	// 如果等于1 的话，就是新增一个起运地点，需要一个弹窗去给新建的业务地点创建联系方式以及地址编号
+    	if(isNewBeginAddress == 1) {
+
+        }
+        // 如果等于1 的话，就是新增一个目的地点，需要一个弹窗去给新建的业务地点创建联系方式以及地址编号
+    	if(isNewBeginAddress == 1) {
+
+        }*/
+    	
+    	var planExecVO = FormUtils.toJSONObject($("#addForm"));
+    	if (planExecVO.cusNo==pleaseChoose) {
+    		errorNotification({ SimpleMessage : $.i18n.prop('cusNoRequired')});
+    		return;
+		}
+    	if (planExecVO.trainType==pleaseChoose) {
+    		errorNotification({ SimpleMessage : $.i18n.prop('trainTypeRequired')});
+    		return;
+		}
+    	$.messager.confirm($.i18n.prop('planExec_Prompt'), '#{business.message.saveQuestion}?', function(r) {// 提示, 确定保存数据项吗
+			if (r) {
+				showLoading();
+				$.ajax({
+					url : "../../bussiness/planExec/addPlanExec?t=" + Math.random(),
+					type : 'POST',
+					data :"jsonData="+JSON.stringify(planExecVO),
+					success : function(dataObj) {
+						hideLoading();
+						if (isServerResultDataPass(dataObj)) {
+							trainNo = dataObj.resultDataFull;
+							correctNotification({ SimpleMessage : $.i18n.prop('prompt.success')});
+							parent.trainNo = trainNo;
+							//刷新父页面
+							parent.extendTab(trainNo);
+							getCurrentTab().searchData();
+							loadMostly();
+						} else {
+							FailResultDataToTip(dataObj);
+						}
+					},
+					error : function(message) {
+						hideLoading();
+					}
+				});
+			}
+		});
+    }
+    
+    var validate = function () {
+        var validated = $("#addForm").form('enableValidation').form('validate');
+        if (!validated) {
+            errorNotification({ SimpleMessage: $.i18n.prop('SomeDataVerificationFailsDuringTheSaveOperation') });
+            return false;
+        }
+        var cusNo = $("#cusNo").combobox("getValue");
+        if(cusNo == pleaseChoose) {
+            errorNotification({ SimpleMessage : $.i18n.prop('propmt.cusNo.required')}); //客户必填
+            return false;
+        }
+
+        var beginDate = $("planBeginDate").datebox("getValue");
+        if(beginDate == "") {
+            errorNotification({ SimpleMessage : $.i18n.prop('prommt.time.required')}); //计划起运时间必填
+            return false;
+        }
+        var transportType = $("#transportType").combobox("getValue");
+        if(transportType == pleaseChoose) {
+            errorNotification({ SimpleMessage : $.i18n.prop('propmt.transport.required')}); //运输方式必填
+            return false;
+        }
+
+        var beginProvince = $("#tipinputbegin_district").combobox("getValue");
+        if(beginProvince == pleaseChoose) {
+            errorNotification({ SimpleMessage : $.i18n.prop('propmt.beginProvince.required')}); //起运省份必填
+            return false;
+        }
+
+        var beginCity = $("#tipinputbegin_city").combobox("getValue");
+        if(beginCity == pleaseChoose) {
+            errorNotification({ SimpleMessage : $.i18n.prop('promt.beginCity.required')}); //起运城市必填
+            return false;
+        }
+
+        var beginArea = $("#tipinputbegin_area").combobox("getValue");
+        if(beginArea == pleaseChoose) {
+            errorNotification({ SimpleMessage : $.i18n.prop('propmt.beginArea.required')}); //起运区必填
+            return false;
+        }
+
+        var endProvince = $("#tipinputend_district").combobox("getValue");
+        if(endProvince == pleaseChoose) {
+            errorNotification({ SimpleMessage : $.i18n.prop('propmt.endProvince.required')}); //目的地省份必填
+            return false;
+        }
+
+        var endCity = $("#tipinputend_city").combobox("getValue");
+        if(endCity == pleaseChoose) {
+            errorNotification({ SimpleMessage : $.i18n.prop('propmt.endCity.required')}); //目的地城市必填
+            return false;
+        }
+
+        var endArea = $("#tipinputend_area").combobox("getValue");
+        if(endArea == pleaseChoose) {
+            errorNotification({SimpleMessage : $.i18n.prop('propmt.endArea.required')}); //目的地区必填
+            return false;
+        }
+        return true;
+    }
+    //修改车次信息
+    var edit = function(){
+    	if(state != 0) {
+    		errorNotification({ SimpleMessage : $.i18n.prop('propmt.condition')});
+    		return ;
+    	}
+    	planExecVO = FormUtils.toJSONObject($("#addForm"));
+    	planExecVO.sn = sn;
+    	planExecVO.state=chinese(planExecVO.state);
+		
+    	if(planExecVO.state>=3){
+    		errorNotification({ SimpleMessage : $.i18n.prop('planExec_edit_stateError') });
+    		return ;
+    	}
+    	planExecVO.orderMostly = orderDetailList;
+    	$.messager.confirm($.i18n.prop('planExec_Prompt'), '#{business.message.saveQuestion}?', function(r) {// 提示, 确定保存数据项吗
+			if (r) {
+				showLoading();
+				$.ajax({
+					url : "../../bussiness/planExec/updatePlanExec?t="+Math.random(),
+					type : 'POST',
+					data :"jsonData="+JSON.stringify(planExecVO),
+					success : function(dataObj) {
+						hideLoading();
+						if (isServerResultDataPass(dataObj)) {
+							trainNo = dataObj.resultDataFull;
+							correctNotification({ SimpleMessage : $.i18n.prop('prompt.success')});
+							//刷新父页面
+							getCurrentTab().searchData();
+							loadMostly();
+						} else {
+							FailResultDataToTip(dataObj);
+						}
+					},
+					error : function(message) {
+						hideLoading();
+					}
+				});
+			}
+		});
+    }
+
+	//获取车次表信息，作为修改的初始值
+	var loadMostly = function(){
+        var serverUrl = "../../bussiness/planExec/getPlanExecVODetail";
+        $.ajax({
+			type : "POST",
+			url : serverUrl,
+			data : {trainNo : trainNo},
+			dataType : 'json',
+			async : true,	
+			success : function(dataObj) {
+				if (isServerResultDataPass(dataObj)){
+                $("#state").textbox("setValue",english(dataObj.resultDataFull.state));
+                $("#trainNo").textbox("setValue",dataObj.resultDataFull.trainNo);
+                $("#cusWeituo").textbox("setValue",dataObj.resultDataFull.cusWeituo);
+                
+                $("#cusNo").combobox('setValue',dataObj.resultDataFull.cusNo);
+                $("#cusNo").combobox('setText',dataObj.resultDataFull.cusName);
+            	$("#cusNo").combobox("options").onSelect({
+            		code : dataObj.resultDataFull.cusNo
+            	});
+            	
+                $("#historybeginAddress").combobox("setValue",dataObj.resultDataFull.beginLocalCode);
+                				
+                $("#historybeginAddress").combobox("options").onSelect({
+                	code : dataObj.resultDataFull.beginLocalCode,
+                	address : dataObj.resultDataFull.beginAddress,
+                	province : dataObj.resultDataFull.beginProvince,
+                	city : dataObj.resultDataFull.beginCity,
+                	district : dataObj.resultDataFull.beginDistrict,
+                	linkman : dataObj.resultDataFull.beginLinkMan,
+                	linktel : dataObj.resultDataFull.beginLinkTel
+                });
+                
+                $("#historyendAddress").combobox("options").onSelect({
+                	code : dataObj.resultDataFull.endLocalCode,
+                	address : dataObj.resultDataFull.endAddress,
+                	province : dataObj.resultDataFull.endProvince,
+                	city : dataObj.resultDataFull.endCity,
+                	district : dataObj.resultDataFull.endDistrict,
+                	linkman : dataObj.resultDataFull.endLinkMan,
+                	linktel : dataObj.resultDataFull.endLinkTel
+                });
+                
+                $("#historyendAddress").combobox("setValue",dataObj.resultDataFull.endLocalCode);
+                $("#beginLocalRemark").textbox("setValue",dataObj.resultDataFull.beginAddress);
+                $("#endLocalRemark").textbox("setValue",dataObj.resultDataFull.endAddress);
+				readDistrictCityArea("begin", dataObj.resultDataFull.beginProvince, dataObj.resultDataFull.beginCity, 
+						dataObj.resultDataFull.beginDistrict);
+				readDistrictCityArea("end", dataObj.resultDataFull.endProvince, dataObj.resultDataFull.endCity, 
+						dataObj.resultDataFull.endDistrict);
+                $("#planBeginDate").datebox("setValue",dataObj.resultDataFull.planBeginDate);
+                $("#transportType").combobox('setValue',dataObj.resultDataFull.transportType);
+                $("#ywLocation").combobox("setValue",dataObj.resultDataFull.ywLocation);
+                $("#trainType").combobox('setValue',dataObj.resultDataFull.trainType);
+                $("#contractorName").textbox("setValue",dataObj.resultDataFull.contractorName);
+                $("#trucknoq").textbox("setValue",dataObj.resultDataFull.trucknoq);
+                $("#driverName").textbox("setValue",dataObj.resultDataFull.driverName);
+                $("#shoukuan").textbox("setValue", dataObj.resultDataFull.getAmount);
+                $("#fukuan").textbox("setValue", dataObj.resultDataFull.payAmount);
+                childCusNo = dataObj.resultDataFull.cusNo;
+                childCusName = dataObj.resultDataFull.cusName;
+                originalFormData = $('#addForm').serialize();
+                state = dataObj.resultDataFull.state;
+                guid = dataObj.resultDataFull.guid;
+                
+                extendTab(dataObj.resultDataFull.trainNo);
+                
+                oldObj = FormUtils.toJSONObject($("#addForm"));
+            } else {	
+                FailResultDataToTip(dataObj);
+            }
+            hideLoading();
+			},
+        });
+	}
+	
+	var extendTab = function(trainNo) {
+		if(trainNo == "" || trainNo == null || trainNo == undefined) {
+			$("ul li:eq(2)").click(function(){
+	   			errorNotification({ SimpleMessage : $.i18n.prop('propmt.get')});
+	   			return false;
+	    	});
+	    	$("ul li:eq(3)").click(function(){
+	   			errorNotification({ SimpleMessage : $.i18n.prop('propmt.pay')});
+	   			return false;
+	    	});
+			$("ul li:eq(1)").click(function(){
+				errorNotification({ SimpleMessage : $.i18n.prop('propmt.yw')});
+	   			return false;
+			});
+		} else {
+			$("ul li").unbind();
+		}
+		return;
+	}
+	
+	//明细删除
+	var delText = $.i18n.prop('order_detail_del');
+	var deleteRow = function(index,name){
+    	$.messager.confirm($.i18n.prop('planExec_mostly_detail_prompt'), '#{planExec_mostly_detail_message_deleteQuestion}?', function (r) {
+    		if(r){
+    			var rowData = $("#"+name).jqGrid('getRowData',index);
+    			var ids = $("#gridTable").jqGrid("getDataIDs");
+    			if (ids.length==1) {
+    			var	mainGuid = mostlyGuid
+				}
+    			if(rowData.guid!='' && rowData.guid!=undefined && rowData.guid!=null){
+    				showLoading($.i18n.prop('order.detail.loading'));
+                	$.ajax({
+                		url : "../../order/deleteOrderDetail?t="+Math.random(),
+                		data:{mostlyGuid:mainGuid,guid:rowData.guid},
+                		type:"POST",
+                		success:function(data){
+                			  if (isServerResultDataPass(data)) {
+                	                correctNotification({
+                	                    SimpleMessage: data.resultDataFull.simpleMessage
+                	                });
+                	                $("#"+name).delRowData(index);
+                	    	    	
+                	    	    	if($("#"+name).jqGrid("getRowData").length<=0){
+               	    	    			savedRow1 = null;
+               	    	                savedCol1 = null;
+                	    	    	}
+                	            } else {
+                	                FailResultDataToTip(data);
+                	            }
+                	            hideLoading();
+                		}
+                	});
+    			}else {
+    				$("#"+name).delRowData(index);
+        	    	if($("#"+name).jqGrid("getRowData").length<=0){
+       	    			savedRow1 = null;
+       	                savedCol1 = null;
+        	    	}
+    			}
+    		}
+    	});
+    }
+	//子明细删除
+	 var childDeleteRow = function(index,name){
+	    	$.messager.confirm($.i18n.prop('planExec_mostly_detail_prompt'), '#{planExec_mostly_detail_message_deleteQuestion}?', function (r) {
+	    		if(r){
+	    			var rowData = $("#"+name).jqGrid('getRowData',index);
+	    			if(rowData.guid!='' && rowData.guid!=undefined && rowData.guid!=null){
+	    				showLoading($.i18n.prop('order.detail.loading'));
+	                	$.ajax({
+	                		url : "../../order/deleteOrderDetailChildBySn?t="+Math.random(),
+	                		data:{guid:rowData.guid},
+	                		type:"POST",
+	                		success:function(data){
+	                			  if (isServerResultDataPass(data)) {
+	                	                correctNotification({
+	                	                    SimpleMessage: data.resultDataFull.simpleMessage
+	                	                });
+	                	                $("#"+name).delRowData(index);
+	                	    	    	
+	                	    	    	if($("#"+name).jqGrid("getRowData").length<=0){
+	               	    	    			savedRow1 = null;
+	               	    	                savedCol1 = null;
+	                	    	    	}
+	                	            } else {
+	                	                FailResultDataToTip(data);
+	                	            }
+	                	            hideLoading();
+	                		}
+	                	});
+	    			}else {
+	    				$("#"+name).delRowData(index);
+	        	    	
+	        	    	if($("#"+name).jqGrid("getRowData").length<=0){
+	       	    			savedRow1 = null;
+	       	                savedCol1 = null;
+	        	    	}
+	    			}
+	    		}
+	    	});
+	    }
+	// 加载列表数据
+	var loadList = function() {
+		 $('#gridTable').jqGrid({
+	         url : getSearchGridUrl(),
+	         async : true,
+	         datatype : 'json', /*<span class="l-btn-icon icon-save">&nbsp;</span>*/
+	         width : 'none',
+	         colNames : [
+	        	"<span class='l-btn-icon icon-add' onclick='addTableRow(\"gridTable\")'>#{button.addNew}</span>",$.i18n.prop('sn'),$.i18n.prop('guid'),$.i18n.prop('withinCode'),$.i18n.prop('createBy'),$.i18n.prop('createDate'),
+	         	$.i18n.prop('updateBy'),$.i18n.prop('updateDate'),$.i18n.prop('goodsName'),$.i18n.prop('mostlyGuid'),
+	         	$.i18n.prop('unit'),'#{vol} /m³', '#{gwt} /KG', $.i18n.prop('qty'),$.i18n.prop('button.edit.detail')
+	         ],
+	         colModel : [
+				{ name :'delete',width:40 , index : 'delete' , search: false, sortable: false ,align:'center',formatter:function(value,row,rowIndex){return "<a style='text-decoration:underline;color:blue;' name='deleteRow' href='javascript:deleteRow("+row.rowId+",\"gridTable\")'>"+delText+"</a>";"<a style='text-decoration:underline;color:blue;' name='deleteRow' href='javascript:deleteRow("+row.rowId+",\"gridTable\")'>"+delText+"</a>";}},
+	            { name : 'sn', index: 'o.sn', align: 'center', sorttype: 'string', search: false, sortable: false, width: 40 , hidden: true },
+	            { name : 'guid', index: 'o.guid',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+	            { name : 'withinCode', index: 'o.within_Code',  align : 'center', sorttype: 'string', sortable : false,hidden: true},
+	         	{ name : 'createBy', index: 'o.create_By', align : 'center', sorttype: 'string',sortable : false,hidden: true},
+	         	{ name : 'createDate', index: 'o.CREATE_DATE',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+	         	{ name : 'updateBy', index: 'o.UPDATE_BY',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+	         	{ name : 'updateDate', index : 'o.UPDATE_DATE', align : 'center', isSort : false,search : true, type : 'string',hidden: true},
+	         	{ name : 'goodsName', index : 'o.goods_name', editable: true, align: 'center',  width: 100},
+	         	{ name : 'mostlyGuid', index : 'o.MOSTLY_GUID', align : 'center', isSort : false,search : true, type : 'string', hidden: true },
+	         	{ name : 'unit', index : 'o.UNIT', editable: true, align: 'center',  width: 80, edittype: 'select', editoptions: {value : unitInnerHtml}},
+	         	{ name : 'vol', index : 'o.VOL', editable: true,  align: 'center',  width: 80},
+		        { name : 'gwt', index : 'o.GWT', editable: true,  align: 'center',  width: 80},
+		        { name : 'qty', index : 'o.qty', editable: true,  align: 'center', width: 80},
+	         	{ name : 'edit', index: 'edit',  align: 'center', width: 80,formatter:function(value,row,rowIndex){return "<a href='javascript:void(0)' onClick='MouseOver("+row.rowId+")'>"+'添加/修改'+"</a>";}}
+	         ],
+	         cellEdit: true,
+	         cellsubmit: 'clientArray',
+	         shrinkToFit: false,
+	         altRows: true,
+	         altclass: 'gridSpacingClass',
+	         forceFit: true,
+	         cellLayout: 0,
+	         scroll: true,
+	         autowidth: true,
+	         loadonce: false,
+	         mtype: "POST",
+	         viewrecords: true,
+	         rownumbers: true,
+	         rowNum: 100,
+	         height: "20%",
+	         rowList: [15, 20, 30, 50, 100],
+	         pager: "#gridPager",
+	         jsonReader: {
+	             root: "rows",
+	             total: "total",
+	             page: "page",
+	             records: "records",
+	             repeatitems: false
+	         },
+	         gridComplete : function() {
+	             $('.cbox').shiftSelect();
+	         },
+	         
+	         loadComplete: function (xhr) {
+	        	 $("#gbox_gridTable").find(".ui-jqgrid-bdiv").css("height","202px");
+	         },
+	         afterSaveCell : function(rowid, cellname, value, iRow, iCol) {
+	        	 
+	        	 var list = $("#gridTable").jqGrid("getRowData");
+	        	 var sumVol = 0;
+	        	 var sumGwt = 0;
+	        	 var sumQty = 0;
+	        	 
+	        	 for(var i = 0 ; i < list.length; i++) {
+	        		 sumVol += Number(list[i].vol);
+	        		 sumGwt += Number(list[i].gwt);
+	        		 sumQty += Number(list[i].qty);
+	        	 }
+	        	 if(cellname == "vol"){
+	        		 //sumVol += parseInt(value);
+	        		 $("#vol").textbox('setValue',sumVol);
+	        	 } else if(cellname == "gwt") {
+	        		 //sumGwt += parseInt(value);
+	        		 $("#gwt").textbox('setValue',sumGwt);
+	        	 } else if(cellname == "qty") {
+	        		// sumQty += parseInt(value);
+	        		 $("#qty").textbox('setValue',sumQty);
+	        	 }
+	         }
+	    });
+         $('#gridTable').setGridParam({
+             beforeEditCell: function (rowid, cellname, value, iRow, iCol) {
+                 savedRow1 = iRow;
+                 savedCol1 = iCol;
+             }
+         });
+         setGridHeightWidth();
+	};
+    //订单详情
+    var showPlanDetail = function(trainno){
+    	var href = '../View/ywgl/orderDetail.html?moduleId=' + moduleId + '&trainno=' + trainno;
+    }
+    
+    // 用户双击跳转车次物品清单
+    var showChildModule = function (trainno) { showPlanDetail(trainno); };
+
+   
+    // 新增、修改操作完成后调用的刷新方法
+    var refreshCallerData_List = function () {
+        searchData();
+    };
+    
+	var initData = function() {
+		clearDetail();
+		planLoadList();
+        readProvince();
+    };
+  
+  function chinese(state){
+	  var chinese="";
+    switch (state) {
+	case "正常":
+		chinese = "0"
+		break;
+	case $.i18n.prop('toExamine'):
+		chinese = "1"
+		break;
+	case $.i18n.prop('dispatched'):
+		chinese = "2"
+		break;
+	case $.i18n.prop('transportation'):
+		chinese = "3"
+		break;
+	case $.i18n.prop('transportationCompletion'):
+		chinese = "4"
+		break;
+	case $.i18n.prop('alreadyWrittenOff'):
+		chinese = "5"
+		break;
+	case $.i18n.prop('halfwayOff'):
+		chinese= "6"
+		break;
+	default:
+		break;
+	}
+    return chinese;
+    }
+  function english(state){
+	  var english="";
+    switch (state) {
+	case 0:
+		english = "正常"
+		break;
+	case 1:
+		english = $.i18n.prop('toExamine')
+		break;
+	case 2:
+		english = $.i18n.prop('dispatched')
+		break;
+	case 3:
+		english = $.i18n.prop('transportation')
+		break;
+	case 4:
+		english = $.i18n.prop('transportationCompletion')
+		break;
+	case 5:
+		english = $.i18n.prop('alreadyWrittenOff')
+		break;
+	case 6:
+		english= $.i18n.prop('halfwayOff')
+		break;
+	default:
+		break;
+	}
+    return english;
+    }
+  
+	// 获取查询条件
+  var getSearchMostlyFilters = function() {
+	  var  parameter = {trainNo: trainNo};
+      return parameter;
+  };
+	// 获取查询访问路径
+  var getSearchMostlyGridUrl = function() {
+      return '../../bussiness/planExec/findMostlyList?t=' + Math.random() + '&trainNo=' + encodeURI(trainNo);
+  };
+  
+//查询数据
+  function searchData() {
+      $('#gridMostlyTable').jqGrid('setGridParam', {
+      	url : getSearchMostlyGridUrl(),
+      	datatype : 'json',
+      	mtype : "POST",
+      	postData : { 'filters' : '' },
+      	page : 1
+      }).trigger('reloadGrid');
+  }
+  //获取mostly列表信息
+  var planLoadList =function (){
+	  $('#gridMostlyTable').jqGrid({
+          url : getSearchMostlyGridUrl(),
+          datatype : 'json',
+          width : 'none',
+          colNames : ['',
+          	$.i18n.prop('state'),$.i18n.prop('sn'),$.i18n.prop('guid'),$.i18n.prop('createBy'),$.i18n.prop('createDate'),$.i18n.prop('updateBy'),$.i18n.prop('withinCode'),
+          	$.i18n.prop('updateDate'),$.i18n.prop('cusNo'),$.i18n.prop('list.customerNumber'),$.i18n.prop('businessType'),$.i18n.prop('list.awb'),
+          	$.i18n.prop('businessDate'),$.i18n.prop('planshipmentData'), $.i18n.prop('shipmentData'), $.i18n.prop('planjiaofuData'),$.i18n.prop('jiaofuData'), 
+          	$.i18n.prop('beginLocal'),$.i18n.prop('endLocalSite'),$.i18n.prop('nextLocalCode'),$.i18n.prop('contractorCode'),
+          	$.i18n.prop('contractorName'),'#{vol} /m³','#{gwt} /KG',$.i18n.prop('qty'),$.i18n.prop('weituoType'),$.i18n.prop('transportTypePlan'),
+          	$.i18n.prop('transportTypeActual'),$.i18n.prop('isAbnormal'),$.i18n.prop('isDelay'),$.i18n.prop('currentLocalLng'),$.i18n.prop('currentLocalLat'),
+          	$.i18n.prop('currentLocalDate'),$.i18n.prop('currentLocalAddr'),$.i18n.prop('getState'),$.i18n.prop('payState'),
+          	$.i18n.prop('getMode'),$.i18n.prop('payMode'),$.i18n.prop('shoukuan'),$.i18n.prop('fukuan'),$.i18n.prop('ywLocation'),
+          	$.i18n.prop('existDetailChild'),$.i18n.prop('existMultipleTruck'),'','','','','','','','','','','','','',''
+          ],
+          colModel : [
+            { name :'delete',width:40 , index : 'delete' , search: false, sortable: false ,align:'center',formatter:function(value,row,rowIndex){return "<a style='text-decoration:underline;color:blue;' name='deleteRow' href='javascript:deleteParentRow("+row.rowId+",\"gridMostlyTable\")'>"+delText+"</a>";}},
+          	{ name: 'state', index: 'm.state',align: 'center', type: 'string', search: false, sortable: false, width: 40, hidden:true},
+            { name: 'sn', index: 'm.sn',align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+            { name: 'guid', index: 'm.guid',  align: 'center', type: 'string', search: false, sortable: false, width: 40, hidden: true },
+            { name : 'createBy', index: 'm.create_by',  align : 'center', type: 'string', sortable : false, hidden: true },
+          	{ name : 'createDate', index: 'm.create_date', align : 'center', type: 'string',sortable : false,hidden: true },
+          	{ name : 'updateBy', index: 'z.update_by', align : 'center', type: 'string',sortable : false,hidden:true},
+          	{ name: 'withinCode', index: 'm.WITHIN_CODE',  align: 'center', type: 'string', search: false, sortable: false, width: 40, hidden: true },
+          	{ name: 'updateDate', index: 'm.update_date',  align: 'center', type: 'string', search: false, sortable: false, width: 40, hidden: true },
+          	{ name : 'cusNo', index : 'm.cus_no', align : 'center', isSort : false,search : true, type : 'string',
+          		formatter: function (value, grid, rows) { 
+          			return cusNoTextObj[value];
+          		}	
+          	},
+          	{ name : 'businessYwId', index : 'm.business_yw_id', align : 'center', isSort : false,search : true, type : 'string'},
+          	{ name : 'businessType', index : 'm.business_type', align : 'center', isSort : false,search : true, type : 'string', hidden: true},
+          	{ name: 'ywId', index: 'm.yw_id',  align: 'center', type: 'string', search: false, sortable: false},
+          	{ name: 'businessDate', index: 'm.business_date',  align: 'center', type: 'string', search: false, sortable: false, width: 40, hidden: true },
+          	{ name : 'planshipmentData', index : 'm.planshipment_data', align : 'center', width : 100, search : true,type : 'string' ,hidden: true },
+	        { name : 'shipmentData', index : 'm.shipment_data', align : 'center', width : 80, stype : 'select', search : true,hidden: true},
+          	{ name : 'planjiaofuData', index : 'm.planjiaofu_data', align : 'center', width : 150, search : true,type : 'string'},
+          	{ name: 'jiaofuData', index: 'm.jiaofu_data',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+          	{ name : 'beginLocal', index : 'm.begin_local', align : 'center', isSort : false,stype : 'select',hidden: true },
+          	{ name: 'endLocalSite', index: 'm.end_local_site', align: 'center', sorttype: 'string', search: false, sortable: false,hidden: true},
+          	{ name: 'nextLocalCode', index: 'm.next_local_code',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+          	{ name: 'contractorCode', index: 'm.contractor_code',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+          	{ name: 'contractorName', index: 'm.contractor_name',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+          	{ name: 'vol', index: 'm.vol', align: 'center', sorttype: 'string', search: false, sortable: false, width: 100},
+          	{ name: 'gwt', index: 'm.gwt',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 100},
+          	{ name: 'qty', index: 'm.qty',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 100},
+          	{ name: 'weituoType', index: 'm.weituo_type',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+          	{ name: 'transportTypePlan', index: 'm.transport_type_plan',  align: 'center', sorttype: 'string', search: false, sortable: false ,hidden: true},
+          	{ name: 'transportTypeActual', index: 'm.transport_type_actual', align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+          	{ name: 'currentLocalAddr', index: 'm.current_local_addr',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+          	{ name: 'isDelay', index: 'm.is_delay', align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+          	{ name: 'currentLocalLng', index: 'm.current_local_lng',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+          	{ name: 'currentLocalLat', index: 'm.current_local_lat',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+          	{ name: 'currentLocalDate', index: 'm.current_local_date',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+          	{ name: 'isabnormal', index: 'm.isabnormal',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+          	{ name: 'getState', index: 'm.get_state',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+          	{ name: 'payState', index: 'm.pay_state',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+          	{ name: 'getMode', index: 'm.get_mode',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+          	{ name: 'payMode', index: 'm.pay_mode',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+          	{ name: 'shoukuan', index: 'm.shoukuan',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+          	{ name: 'fukuan', index: 'm.fukuan',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+          	{ name: 'ywLocation', index: 'm.yw_location',  align: 'center', sorttype: 'string', search: false, sortable: false,hidden: true},
+          	{ name: 'existDetailChild', index: 'm.exist_detail_child',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+          	{ name: 'existMultipleTruck', index: 'm.exist_multiple_truck',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+          	{ name: 'beginLocalRemark', index: 'ym.begin_local_address',hidden: true},
+          	{ name: 'beginLocalMan', index: 'ym.begin_local_man',hidden: true},
+          	{ name: 'beginLocalPhone',index: 'ym.begin_local_phone',hidden: true},
+          	{ name: 'beginDistrict', index: 'ym.begin_local_province', hidden: true},
+          	{ name: 'beginCity', index: 'ym.begin_local_city', hidden: true},
+          	{ name: 'beginLocalAddressCode', index: 'ym.begin_local_code',hidden: true},
+          	{ name: 'endLocalRemark',index: 'ym.end_local_address', hidden: true},
+          	{ name: 'endLocalMan', index: 'ym.end_local_man',hidden: true},
+          	{ name: 'endLocalPhone', index: 'ym.end_local_phone',hidden: true},
+          	{ name: 'endDistrict', index: 'ym.end_local_province',hidden:true},
+          	{ name: 'endCity', index: 'ym.end_local_city', hidden: true},
+          	{ name: 'endLocalAddressCode', index: 'ym.end_local_address_code', hidden: true},
+          	{ name: 'beginArea', index: 'ym.begin_local_district',hidden: true},
+          	{ name: 'endArea', index: 'ym.end_local_district',hidden: true}
+          ],
+          shrinkToFit: false,
+          altRows: true,
+          altclass: 'gridSpacingClass',
+          forceFit: true,
+          cellLayout: 0,
+          scroll: false,
+          autowidth: true,
+          sortname: 'sn',
+          sortorder: "desc",
+          loadonce: false,
+          mtype: "POST",
+          viewrecords: true,
+          rownumbers: true,
+          rowNum: 15,
+          height: "100%",
+          rowList: [100, 200, 300, 500],
+          pager: "#gridPager",
+          jsonReader: {
+              root: "rows",
+              total: "total",
+              page: "page",
+              records: "records",
+              repeatitems: false
+          }
+	  ,
+          gridComplete: function () {
+              $(".cbox").shiftSelect();
+              if(parent.identifier == '1') {
+            	 $("a[name='deleteRow']").hide();
+             }
+          },
+        ondblClickRow: function (code) {
+          	  var rowData = $("#gridMostlyTable").jqGrid('getRowData', code);
+				rowData.cusNo = cusNoValuObj[rowData.cusNo];
+          	  	mostlyGuid=rowData.guid;
+//           		$('#tabLocation').tabs('select',$.i18n.prop('supplier.detail.tab.title2'))
+				parent.addDetail(rowData.guid);
+          },
+          loadComplete: function (xhr) {
+        	  loseMostlyGridFocus();
+        	  //默认选中第一行;
+              FailResultDataToTip(xhr);
+              orderDetailList = $("#gridMostlyTable").jqGrid("getRowData");
+              for(var i = 0 ; i < orderDetailList.length; i++) {
+	              orderDetailList[i].cusNo = cusNoValuObj[orderDetailList[i].cusNo];
+	              orderDetailList[i].isNewBeginAddress = 0;
+	              orderDetailList[i].isNewEndAddress = 0;
+              }
+          }
+      });
+      $("#gview_gridMostlyTable").find(".ui-jqgrid-bdiv").css("height","272px");
+      $('#gridMostlyTable').setGridParam({
+          beforeEditCell : function (rowid, cellname, value, iRow, iCol) {
+              savedMostlyRow1 = iRow;
+              savedMostlyCol1 = iCol;
+          }
+      });
+      setGridHeightWidth();
+  }
+  
+  var loadDetailMostlyLocal = function(){
+	  	$("#planshipmentData").datebox("setValue",orderDetail.planshipmentData);
+		$("#beginLocalMan").textbox("setValue",orderDetail.beginLocalMan);
+		$("#beginLocalPhone").textbox("setValue",orderDetail.beginLocalPhone);
+		$("#historybeginAddress").combobox("setValue", orderDetail.beginLocalRemark);
+		$("#planjiaofuData").datebox("setValue",orderDetail.planjiaofuData);
+		$("#endLocalMan").textbox("setValue",orderDetail.endLocalMan);
+		$("#historyendAddress").combobox("setValue",orderDetail.endLocalRemark);
+		$("#endLocalPhone").textbox("setValue",orderDetail.endLocalPhone);
+		$("#businessDate").datebox("setValue",orderDetail.businessDate);
+		$("#businessYwId").textbox("setValue",orderDetail.businessYwId);
+		$("#beginLocalRemark").textbox("setValue",orderDetail.beginLocalRemark);
+		$("#endLocalRemark").textbox("setValue",orderDetail.endLocalRemark);
+		$("#vol").textbox("setValue",orderDetail.vol);
+		$("#gwt").textbox("setValue",orderDetail.gwt);
+		$("#qty").textbox("setValue",orderDetail.qty);
+// 		$("#historybeginAddress").combobox("setValue",orderDetail.beginLocalRemark);
+// 		$("#historyendAddress").combobox("setValue",orderDetail.endLocalRemark);
+		$("#begin_district").combobox("setValue",orderDetail.beginDistrict);
+		$("#begin_city").combobox("setValue",orderDetail.beginCity);
+		$("#begin_area").combobox("setValue",orderDetail.beginArea);
+		$("#end_district").combobox("setValue",orderDetail.endDistrict);
+		$("#end_city").combobox("setValue",orderDetail.endCity);
+		$("#end_area").combobox("setValue",orderDetail.endArea);
+  }
+  
+  var loadListLocal = function(){
+	  $('#gridTable').jqGrid({
+	         data : orderDetail.details,
+	         datatype : 'local',
+	         width : 'none',
+	         colNames : [
+	        	"<a href='#' onclick='addTableRow(\"gridTable\")'>#{button.addNew}</a>",$.i18n.prop('sn'),$.i18n.prop('guid'),$.i18n.prop('withinCode'),$.i18n.prop('createBy'),$.i18n.prop('createDate'),
+	         	$.i18n.prop('updateBy'),$.i18n.prop('updateDate'),$.i18n.prop('goodsName'),$.i18n.prop('mostlyGuid'),
+	         	$.i18n.prop('unit'),$.i18n.prop('vol'), $.i18n.prop('gwt'), $.i18n.prop('qty'),$.i18n.prop('button.edit.detail')
+	         ],
+	         colModel : [
+				{ name :'delete',width:40 , index : 'delete' , search: false, sortable: false ,align:'center',formatter:function(value,row,rowIndex){return "<a style='text-decoration:underline;color:blue;' href='javascript:deleteRow("+row.rowId+",\"gridTable\")'>"+delText+"</a>";"<a style='text-decoration:underline;color:blue;' href='javascript:deleteRow("+row.rowId+",\"gridTable\")'>"+delText+"</a>";}},
+	            { name : 'sn', index: 'o.sn', align: 'center', sorttype: 'string', search: false, sortable: false, width: 40 , hidden: true },
+	            { name : 'guid', index: 'o.guid',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+	            { name : 'withinCode', index: 'o.within_Code',  align : 'center', sorttype: 'string', sortable : false,hidden: true},
+	         	{ name : 'createBy', index: 'o.create_By', align : 'center', sorttype: 'string',sortable : false,hidden: true},
+	         	{ name : 'createDate', index: 'o.CREATE_DATE',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+	         	{ name : 'updateBy', index: 'o.UPDATE_BY',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+	         	{ name : 'updateDate', index : 'o.UPDATE_DATE', align : 'center', isSort : false,search : true, type : 'string',hidden: true},
+	         	{ name : 'goodsName', index : 'o.goods_name', editable: true, align: 'center',  width: 100},
+	         	{ name : 'mostlyGuid', index : 'o.MOSTLY_GUID', align : 'center', isSort : false,search : true, type : 'string', hidden: true },
+	         	{ name : 'unit', index : 'o.UNIT', editable: true, align: 'center',  width: 80},
+	         	{ name : 'vol', index : 'o.VOL', editable: true,  align: 'center',  width: 80},
+		        { name : 'gwt', index : 'o.GWT', editable: true,  align: 'center',  width: 80},
+		        { name : 'qty', index : 'o.qty', editable: true,  align: 'center', width: 80},
+	         	{ name : 'edit', index: 'edit',  align: 'center', width: 80,formatter:function(value,row,rowIndex){return "<a href='javascript:void(0)' onClick='MouseOver("+row.rowId+")'>"+'添加/修改'+"</a>";}}
+	         ],
+	         cellEdit: true,
+	         cellsubmit: 'clientArray',
+	         shrinkToFit: false,
+	         altRows: true,
+	         altclass: 'gridSpacingClass',
+	         forceFit: true,
+	         cellLayout: 0,
+	         scroll: false,
+	         autowidth: true,
+	         loadonce: false,
+	         mtype: "POST",
+	         viewrecords: true,
+	         rownumbers: true,
+	         rowNum: 100,
+	         height: "20%",
+	         rowList: [15, 20, 30, 50, 100],
+	         pager: "#gridPager",
+	         jsonReader: {
+	             root: "rows",
+	             total: "total",
+	             page: "page",
+	             records: "records",
+	             repeatitems: false
+	         },
+	         gridComplete : function() {
+	             $('.cbox').shiftSelect();
+	         },
+	         
+	         loadComplete: function (xhr) {
+	        	 $("#gbox_gridTable").find(".ui-jqgrid-bdiv").css("height","202px");
+	         }
+	    });
+      $('#gridTable').setGridParam({
+          beforeEditCell: function (rowid, cellname, value, iRow, iCol) {
+              savedRow1 = iRow;
+              savedCol1 = iCol;
+          }
+      });
+      setGridHeightWidth();
+  }
+  
+	function MouseOver(name){
+		var rowData = $("#gridTable").jqGrid('getRowData', name);
+		detailRowNumber =name;
+		detailGuid = rowData.guid;
+        $("#orderDetailChild").show();
+        listChild();
+	}
+//加载订单详情子明细
+	var listChild = function () {
+		$("#detailChildTableId").jqGrid('GridUnload')
+		$('#detailChildTableId').jqGrid({
+// 	        url : getDetailChild(),
+	        datatype : 'json',
+	        width : 'none',
+	        colNames : ['','sn',
+	        	$.i18n.prop('createBy'),
+	        	$.i18n.prop('createDate'),
+	        	$.i18n.prop('updateBy'),
+	        	$.i18n.prop('updateDate'),
+	        	$.i18n.prop('planExec_mostly_detailChild_Guid'),$.i18n.prop('planExec_mostly_detailChild_detailGuid'),
+	        	$.i18n.prop('planExec_mostly_detailChild_goodCode'),$.i18n.prop('planExec_mostly_detailChild_goodName'),
+	        	$.i18n.prop('planExec_mostly_detailChild_vol'), 
+	            $.i18n.prop('planExec_mostly_detailChild_gwt'), $.i18n.prop('planExec_mostly_detailChild_qty')
+	        ],
+	        colModel : [
+	        	{ name : 'delete',width:40 , index : 'delete' ,align:'center',formatter:function(value,row,rowIndex){return "<a style='text-decoration:underline;color:blue;' href='javascript:childDeleteRow("+row.rowId+",\"detailChildTableId\")'>"+delText+"</a>";}},
+	            { name : 'sn', index: 'sn',  key: true,align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+	            { name : 'createBy', index: 'odc.create_By', align : 'center', sorttype: 'string',sortable : false,hidden: true},
+	         	{ name : 'createDate', index: 'odc.CREATE_DATE',  lign: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+	         	{ name : 'updateBy', index: 'odc.UPDATE_BY',  align: 'center', sorttype: 'string', search: false, sortable: false, width: 40, hidden: true },
+	         	{ name : 'updateDate', index : 'odc.UPDATE_DATE', align : 'center', isSort : false,search : true, type : 'string',hidden: true},
+	         	{ name : 'guid', index: 'guid',  align : 'center', sorttype: 'string', sortable : false,hidden: true},
+	            { name : 'detailGuid', index: 'odc.DETAIL_GUID',  align : 'center', sorttype: 'string', sortable : false,hidden: true},
+	        	{ name : 'goodCode', index: 'odc.GOOD_CODE', align : 'center', sorttype: 'string',sortable : false,hidden: true},
+	        	{ name : 'goodName', index: 'odc.GOOD_NAME',  align: 'center', editable: true, edittype: 'text',   width: 150, },
+	        	{ name : 'vol', index: 'odc.VOL',  align: 'center', editable: true, edittype: 'text',   width: 70, },
+	        	{ name : 'gwt', index : 'odc.GWT', align : 'center', editable: true, edittype: 'text',  width: 70,},
+	        	{ name : 'qty', index : 'odc.QTY', align : 'center',editable: true, edittype: 'text',   width: 80,},
+	        ],
+	        cellEdit: true,
+	         cellsubmit: 'clientArray',
+	         shrinkToFit: false,
+	         altRows: true,
+	         altclass: 'gridSpacingClass',
+	         forceFit: true,
+	         cellLayout: 0,
+	         scroll: false,
+	         autowidth: true,
+	         loadonce: false,
+	         mtype: "POST",
+	         viewrecords: true,
+	         rownumbers: true,
+	         rowNum: 100,
+	         height: "100%",
+	         rowList: [15, 20, 30, 50, 100],
+	         pager: "#gridPager",
+	         jsonReader: {
+	             root: "rows",
+	             total: "total",
+	             page: "page",
+	             records: "records",
+	             repeatitems: false
+	         },
+	         gridComplete : function() {
+	             $('.cbox').shiftSelect();
+	         },
+	         loadComplete: function (xhr) {
+	            	
+	                FailResultDataToTip(xhr);
+	                hideLoading();
+	            }
+	   });
+	   
+	   $('#detailChildTableId').setGridParam({
+           beforeEditCell: function (rowid, cellname, value, iRow, iCol) {
+               savedChildRow1 = iRow;
+               savedChildCol1 = iCol;
+           }
+       });
+	   $("#gview_detailChildTableId").find(".ui-jqgrid-bdiv").css("height","100px");
+	   setGridHeightWidth();
+	}
+
+	var getSearchOrderDetialFilters = function(){
+		var parmsArray = [
+		          		{ name: 'odc.detail_Guid', value: detailGuid, op: "eq" },
+		                  ];
+		                  return formatSearchParames(parmsArray);
+	} 
+	
+	var getDetailChild = function(){
+		return url = "../../order/findOrderChildBydetailGuid?t="+ Math.random()+"&customSearchFilters=" + encodeURI(getSearchOrderDetialFilters());
+	}
+
+	var addChild = function (name) {
+		loseChildGridFocus();
+	    var ids = $("#"+name).jqGrid('getDataIDs');
+	    var rowid = Math.max.apply(Math, ids);
+	    if (rowid == "-Infinity"){
+	        rowid = 0;
+	    }
+	    var newrowid = rowid + 1;
+	    var dataRow = {
+	    	rowid: newrowid,
+	    };
+	    $("#"+name).jqGrid("addRowData", newrowid, dataRow, "last");
+	}
+	//订单明细添加后，在车次明细页面回显。
+	var i = 0;
+	var addDetailTable = function() {
+		jQuery("#gridMostlyTable").jqGrid('addRowData', i + 1, orderDetail);
+	}
+	var loseChildGridFocus = function () {
+	    if (savedRow1 && savedCol1) {
+	        $('#detailChildTableId').jqGrid('saveCell', savedRow1, savedCol1);
+	    }
+	}
+	function removn(){
+		 $("#orderDetailChild").hide();
+	}
+	
+	//占存子明细表的数据在域中
+	var saveChildTable =function (){
+		loseGridChindFocus();
+		var childAllData = $("#detailChildTableId").jqGrid("getRowData");
+		if (childAllData.length ==0) {
+			alert($.i18n.prop('orderDetailOneSave'))
+			return;
+		}else {
+			child.splice(0,child.length);//清空数组 
+		    for (var i = 0; i < childAllData.length; i++) {
+		    	var childs = {};
+		    	childs.detailRow=detailRowNumber;
+		    	childs.sn = childAllData[i].sn;
+		    	childs.guid = childAllData[i].guid;
+		    	childs.goodName = childAllData[i].goodName;
+		    	childs.vol = childAllData[i].vol;
+		    	childs.gwt= childAllData[i].gwt;
+		    	childs.qty = childAllData[i].qty;
+		    	child.push(childs);
+		    }
+		}
+	}
+	
+	//切换选项卡
+    var selectDetail = function(guid){
+    	loadDetailMostly(guid);
+    }
+	
+  	//绑定订单主表信息，作为修改的初始值
+    var loadDetailMostly = function(guid){
+    	$.ajax({
+    		url : '../../order/findOrderMostly?t='+ Math.random()+'&guid='+guid,
+    		type : 'POST',
+    		data : "",
+    		success : function(dataObj) {
+    			if (isServerResultDataPass(dataObj)) {
+    				var mostlyJson = dataObj.resultDataFull;
+    				$("#searchCusNo").combobox("setValue",mostlyJson.CUS_NO);
+    				$("#planshipmentData").datebox("setValue",mostlyJson.PLANSHIPMENT_DATA);
+    				$("#beginLocalMan").textbox("setValue",mostlyJson.BEGIN_LOCAL_MAN);
+    				$("#beginLocalPhone").textbox("setValue",mostlyJson.BEGIN_LOCAL_PHONE);
+    				
+    				setComboboxNotChangeFun($("#historybeginAddress"), mostlyJson.BEGIN_LOCAL_ADDRESS);
+    				setComboboxNotChangeFun($("#historyendAddress"), mostlyJson.END_LOCAL_ADDRESS);
+                    loadProvince("begin_district", mostlyJson.BEGIN_LOCAL_PROVINCE, 
+                    		mostlyJson.BEGIN_LOCAL_CITY, mostlyJson.BEGIN_LOCAL_DISTRICT);
+                    loadProvince("end_district", mostlyJson.END_LOCAL_PROVINCE, 
+                    		mostlyJson.END_LOCAL_CITY, mostlyJson.END_LOCAL_DISTRICT);
+                    
+    				$("[name=beginLocalAddress]").val(mostlyJson.BEGIN_LOCAL_ADDRESS);
+    				$("#beginLocalRemark").textbox('setValue',mostlyJson.BEGIN_LOCAL_ADDRESS);
+    				$("#endLocalRemark").textbox('setValue',mostlyJson.END_LOCAL_ADDRESS);
+    				$("#planjiaofuData").datebox("setValue",mostlyJson.PLANJIAOFU_DATA);
+    				$("#endLocalMan").textbox("setValue",mostlyJson.END_LOCAL_MAN);
+    				$("[name=endLocalAddress]").val(mostlyJson.END_LOCAL_ADDRESS);
+    				$("#endLocalPhone").textbox("setValue",mostlyJson.END_LOCAL_PHONE);
+    				$("#shoukuan").textbox("setValue",mostlyJson.SHOUKUAN);
+    				$("#fukuan").textbox("setValue",mostlyJson.FUKUAN);
+    				$("#guid").val(mostlyJson.GUID);
+    				$("#omlGuid").val(mostlyJson.omlGuid);
+    				$("#qty").textbox("setValue",mostlyJson.QTY);
+    				$("#gwt").textbox("setValue",mostlyJson.GWT);
+    				$("#vol").textbox("setValue",mostlyJson.VOL);
+    				$("#businessYwId").textbox("setValue",mostlyJson.BUSINESS_YW_ID);
+    				sumVol = mostlyJson.VOL;
+    				sumGwt = mostlyJson.GWT;
+    				sumQty = mostlyJson.QTY;
+    				ywId = mostlyJson.YW_ID;
+    				//correctNotification(dataObj.resultDataFull);
+    			} else {
+    				FailResultDataToTip(dataObj);
+    			}
+    			hideLoading();
+    		},
+    		error : function(message) {
+    			hideLoading();
+    		}
+    	});
+    }
+  	
+    var loadTruckType = function(){
+		 //车型下拉信息
+	    $("#trainType").combobox({
+			valueField : "code",
+			textField : "name",
+			method : "GET",
+			loader:function(param,success,error){  
+	            $.ajax({  
+	                url:"../../bussiness/planExec/findTruckTypeWithCurrentWithinCode?t=" + Math.random(),
+	                dataType: 'json',  
+	                method:"GET",
+	                success: function(data){
+	                	success(data); 
+	                } 
+	            }); 
+	        },
+	        onLoadSuccess : comboDefault
+		});
+	}
+    
+  
+    var currentAddress = {}; 
+    
+    function loadCus() {
+    	
+    	$("#cusNo").combobox({
+	  		valueField: 'code',  
+	  		textField: 'name',
+	  		data : [],
+	  		onSelect : function(row){
+	  			$("#historybeginAddress").combobox("setValue", "");
+	  			$("#historyendAddress").combobox("setValue", "");
+	  			loadLocationByCus(row.code);
+	  			
+	  			var fun = function(){
+	  				if(window.parent.frames[1] && window.parent.frames[1].changeCus){
+			  			window.parent.frames[1].changeCus(row.code);
+			  			clearInterval(fun_timer);
+		  			}
+	  			};
+	  			var fun_timer = setInterval(fun, 100);
+	  			fun();
+	  			
+	  		}
+    	});
+    	
+    	//初始化客户数据
+    	$.ajax({  
+            url:"../../bussiness/planExec/findCusWithCurrentWithinCode?t=" + Math.random(),
+            dataType: 'json',  
+            method:"GET",
+            success: function(data){
+            	for(var i = 0 ; i < data.length; i++) {
+            		cusNoTextObj[data[i].code] = data[i].name;
+            		cusNoValuObj[data[i].name] = data[i].code;
+            	}
+            	$("#cusNo").combobox("loadData",data);
+            } 
+        });     	
+    };
+    
+    function loadSearchCus(){
+    	//
+    }
+    
+    
+    var loadLocation = function(){
+    	$("#historybeginAddress").combobox({
+ 			valueField : "code",
+ 			textField : "address",
+ 	        onSelect : function(row){
+/*         		$("#beginLocalMan").textbox("setValue", currentAddress[address].linkman);
+        		$("#beginLocalPhone").textbox("setValue", currentAddress[address].linktel);
+ */        		
+ 	        	$("#beginLocalRemark").textbox("setValue", row.address);
+				readDistrictCityArea("begin", row.province, row.city, row.district);
+				setTimeout(function(){
+					window.parent.frames[1].changeBeginAddress(row);
+				},1000);
+ 	        }
+    	});
+    	$("#historyendAddress").combobox({
+ 			valueField : "code",
+ 			textField : "address",
+ 	        onSelect : function(row){
+ 	        	$("#endLocalRemark").textbox("setValue", row.address);
+				readDistrictCityArea("end", row.province, row.city, row.district);
+				setTimeout(function(){
+					window.parent.frames[1].changeEndAddress(row);
+				},1000)
+				
+ 	        }
+    	});
+    }
+    var loadLocationByCus = function(cusNo){  
+    	$.ajax({  
+            url:"../../bussiness/planExec/findLocationByCus?cusNo="+cusNo+"&t=" + Math.random(),
+            dataType: 'json',  
+            method:"GET",
+            success: function(data){
+            	for(var i = 0; i < data.length; i++){
+            		currentAddress[data[i].code]={};
+            		currentAddress[data[i].code].province=data[i].province;
+            		currentAddress[data[i].code].city=data[i].city;
+            		currentAddress[data[i].code].area=data[i].district;
+            		currentAddress[data[i].code].address=data[i].address;
+            		currentAddress[data[i].code].linkman=data[i].linkman;
+            		currentAddress[data[i].code].linktel=data[i].linktel;
+                    data[i].address = data[i].addressCode + '--' + data[i].address;
+            	}
+            	$("#historybeginAddress,#historyendAddress").combobox("loadData",data);
+           		/* if(data.length == 0){
+               		if($("#tipinputbeginAddress").is(":hidden")){
+   	            		$("#newBeginAddress,#newEndAddress").click();
+               		}
+               	} */
+            } 
+        }); 
+    
+    }
+
+    var readProvince = function(){
+    	
+    	//初始化省
+    	$("#begin_district").combobox({
+			valueField : "name",
+			textField : "name",
+    		data : [],
+			onSelect : function(row){
+				$("#begin_city").combobox("setValue","");
+				$("#begin_area").combobox("setValue","");
+				readCity($("#begin_city"),row.name);
+			},
+			onLoadSuccess : function(){
+			}
+		});
+    	$("#end_district").combobox({
+			valueField : "name",
+			textField : "name",
+    		data : [],
+			onSelect : function(row){
+				$("#end_city").combobox("setValue","");
+				$("#end_area").combobox("setValue","");
+				readCity($("#end_city"),row.name);
+			},
+			onLoadSuccess : function(){
+			}
+		});
+       	
+       	//初始化市
+       	$("#begin_city").combobox({
+			valueField : "name",
+			textField : "name",
+    		data : [],
+			onSelect : function(row){
+				$("#begin_area").combobox("setValue","");
+				readArea($("#begin_area"),row.name);
+			},
+			onLoadSuccess : function(){
+			}
+		});
+       	$("#end_city").combobox({
+			valueField : "name",
+			textField : "name",
+    		data : [],
+			onSelect : function(row){
+				$("#end_area").combobox("setValue","");
+				readArea($("#end_area"),row.name);
+			},
+			onLoadSuccess : function(){
+			}
+		});
+       	
+       	//初始化区
+       	$("#begin_area").combobox({
+			valueField : "name",
+			textField : "name",
+    		data : [],
+			onSelect : function(row){
+				//
+			},
+			onLoadSuccess : function(){
+			}
+		});
+       	$("#end_area").combobox({
+			valueField : "name",
+			textField : "name",
+			onSelect : function(row){
+				//
+			},
+			onLoadSuccess : function(){
+			}
+		});
+       	
+       	var opts = {
+   			subdistrict: 1,//返回下一级行政区
+   			showbiz:false  //最后一级返回街道信息
+   		};        	 
+		var district = new AMap.DistrictSearch(opts);
+        district.search("", function(status, result) {
+		  	if(result.info != undefined) {
+		  		var list = result.districtList[0].districtList;
+		 		$("#begin_district,#end_district").combobox("loadData",list);
+		  	}
+   		});
+    };
+    
+    var readCity = function(toObj, province){
+    	var opts = {
+    		subdistrict: 2,   //返回下一级行政区
+			showbiz:false  //最后一级返回街道信息
+		};        	 
+		var district = new AMap.DistrictSearch(opts);
+  	    district.search(province, function(status, result) {
+		  	if(result.info != undefined) {
+	  	    	var cityList = result.districtList[0].districtList;	
+	  	    	toObj.combobox("loadData",cityList);
+  	    	}
+		});    	   	 
+    	
+    };
+    
+    var readArea = function(toObj,city){
+    	var opts = {
+	 		subdistrict: 3,   //返回下一级行政区
+		    showbiz:false  //最后一级返回街道信息
+  	    };        	 
+		var district = new AMap.DistrictSearch(opts);
+		district.search(city, function(status, result) {
+		  	if(result.info != undefined) {
+				var list = [];
+		  		list = result.districtList[0].districtList;
+	  	    	toObj.combobox("loadData",list);
+		  	}
+		 });
+    };
+    
+    var comboDefault = function(){
+    	$(this).combobox("setValue", pleaseChoose);
+    }
+  
+    var addressDefault = function(data){
+   		if(data.length!=1){
+            $(this).combobox("setValue", pleaseChoose);
+       	} else if(data.length==1){
+       		$(this).combobox("select", data[0].code);
+       	}
+		
+    }
+    
+    var loadTransType = function(){
+    	$("#transportType").combobox({
+       	 	valueField : "dicValue",
+			textField : "dicText",
+			loader : function(param, success, error) {
+		    	$.ajax({
+		    		url : "../../jcda/ZdCus/queryDictionary?t=" + Math.random()+"&kind=transportType",
+		    		method : 'GET',
+		    		async : false,
+		    		success : function(dataObj) {
+		    		    var data = dataObj.resultDataFull;
+		    			data.unshift({'dicValue' : '', 'dicText' : pleaseChoose});
+		    			success(data);
+		    		}
+		    	});
+			}
+    	});
+    }
+    	
+    var addDetail=function (){
+    	if(trainNo == "" || trainNo == null || trainNo == undefined) {
+    		errorNotification({ SimpleMessage : $.i18n.prop('propmt.yw')});
+    		return ;
+    	}
+//     	$("ul li:eq(1)").attr("class","tabs-selected");
+    	parent.addDetail('');
+    	newAddDetail();
+    }
+    
+	tipinput("tipinputbeginAddress",beginidObj,$("#beginLocalRemark"));
+	tipinput("tipinputendAddress",endidObj,$("#endLocalRemark"));
+	
+    function tipinput(tipinput,obj,remark) {
+		AMap.plugin(['AMap.Autocomplete' ,'AMap.PlaceSearch' ],function(){
+			var autoOptions = {
+			    // 使用联想输入的input的id
+			    input: tipinput
+		  	};
+			var autocomplete = new AMap.Autocomplete(autoOptions);
+			
+			AMap.event.addListener(autocomplete,"select",function(e){
+				var placeSearch = new AMap.PlaceSearch({
+					  city: e.poi.adcode,
+					  children : 1
+				});
+
+				placeSearch.getDetails(e.poi.id, function (status, result) {
+					//获取匹配度最高的地址
+					var poi = result.poiList.pois[0];
+					var district =  poi.pname;
+					var city = poi.cityname;
+					var area = poi.adname;
+					remark.textbox("setValue",poi.name);
+					if(remark.attr("id") == "beginLocalRemark"){
+						readDistrictCityArea("begin", district, city, area);
+						window.parent.frames[1].changeBeginAddress({
+							address : poi.name,
+							province : district,
+							city : city,
+							district : area
+						});
+					}else{
+						readDistrictCityArea("end", district, city, area);
+						window.parent.frames[1].changeEndAddress({
+							address : poi.name,
+							province : district,
+							city : city,
+							district : area
+						});
+					}
+				});
+				
+			});
+		});
+	}
+    
+    var readDistrictCityArea = function(id, district, city, area){
+    	if(id == "begin"){
+    		$("#begin_district").combobox("setValue",district);
+    		$("#begin_district").combobox("options").onSelect({
+    			name : district	
+    		});
+            $("#begin_city").combobox("setValue",city);
+            $("#begin_city").combobox("options").onSelect({
+            	name : city	
+            });
+            $("#begin_area").combobox("setValue",area);
+    	}else{
+    		$("#end_district").combobox("setValue",district);
+    		$("#end_district").combobox("options").onSelect({
+    			name : district
+    		});
+            $("#end_city").combobox("setValue",city);
+            $("#end_city").combobox("options").onSelect({
+            	name : city
+            });
+            $("#end_area").combobox("setValue",area);
+    	}
+    };
+    
+    // 自定义窗体
+    var map = new AMap.Map('container', {
+    		resizeEnable : true,
+    		zoom : 12,
+    		center : [ 118.756376, 32.052573 ]
+    	});
+   	var infowindow;
+   	map.plugin('AMap.AdvancedInfoWindow', function() {
+   		infowindow = new AMap.AdvancedInfoWindow({
+   			panel : 'panel',
+   			placeSearch : true,
+   			asOrigin : true,
+   			asDestination : true
+   		});
+   	});
+   	
+   	$("#newBeginAddress").toggle(function(param){
+   		$("#"+param.currentTarget.id).text(historyAddress);
+   		$('#tipinputbeginAddress').val("");
+   		$('#historybeginAddress').next(".combo").hide();
+   		$('#tipinputbeginAddress').show();
+   		$('#isNewBeginAddress').val("1");
+   	},function(param){
+   		$("#"+param.currentTarget.id).text(addressChoose);
+   		$('#historybeginAddress').next(".combo").show();
+   		$('#historybeginAddress').combobox("setValue",pleaseChoose);
+   		$('#tipinputbeginAddress').hide();
+   		$('#isNewBeginAddress').val("0");
+   	});
+   	
+	$("#newEndAddress").toggle(function(param){
+		$("#"+param.currentTarget.id).text(historyAddress);
+   		$('#tipinputendAddress').val("");
+   		$('#historyendAddress').next(".combo").hide();
+   		$('#tipinputendAddress').show();
+   		$("#isNewEndAddress").val("1");
+   	},function(param){
+   		$("#"+param.currentTarget.id).text(addressChoose);
+   		$('#historyendAddress').next(".combo").show();
+   		$('#historyendAddress').combobox("setValue",pleaseChoose);
+   		$('#tipinputendAddress').hide();
+   		$("#isNewEndAddress").val("0");
+   	});
+	
+	//加载业务地点
+	var ywlocation = $.cookie("OSUN_whcenter");
+	var loadYwLocation = function() {
+		$("#ywLocation").combobox({
+			valueField : "CODE",
+			textField : "NAME",
+			onLoadSuccess : function(){
+			}
+		});
+		var currentYwLocation = ywlocation.split(",");
+		if(currentYwLocation.length == 1) {
+			$("#ywLocation").combobox("setValue",currentYwLocation[0]);
+		} else {
+			$("#ywLocation").combobox("setValue","");
+		} 
+		
+		$.ajax({
+			url : '../../bussiness/planExec/getywlocation?t=' + Math.random(),
+			type : 'POST',
+			success : function(data){
+				var data = data.resultDataFull;
+				var cookLocation = ywlocation.split(",");
+				var dataLocation = [];
+				for(var i = 0 ; i < cookLocation.length; i++) {
+					for(var j = 0 ; j < data.length; j++) {
+						if(cookLocation[i] == data[j].CODE) {
+							dataLocation[i] = data[j];
+						}
+					}
+				}
+				dataLocation.unshift({'CODE': '', 'NAME': pleaseChoose});
+				$("#ywLocation").combobox("loadData",dataLocation);				
+			}
+		});
+	}
+	
+	var examine = function() {
+		if(state != 0) {
+			errorNotification({ SimpleMessage : $.i18n.prop('list.examine.propmt') });
+   			return;
+		}
+		$.messager.confirm($.i18n.prop('orderList_Prompt'), '#{examine.propmt}?', function(r) {// 提示, 确定审核选中的数据项吗
+			if (r) {
+				$.ajax({
+					url : '../../order/countWaybill?t='+Math.random(),
+					type : 'POST',
+					data : {trainno : trainNo},
+					success : function(dataObj) {
+						if(dataObj.resultDataFull == 0) {
+							errorNotification({ SimpleMessage : $.i18n.prop('examine.null') });
+							return ;
+						} else {
+							showLoading();
+							$.ajax({
+								url : '../../bussiness/planExec/examine?t=' + Math.random() + "&trainNo=" + trainNo,
+								type : 'POST',
+								data :"",
+								success : function(dataObj) {
+									if (isServerResultDataPass(dataObj)) {
+										correctNotification(dataObj.resultDataFull);
+										loadMostly();
+									} else {
+										FailResultDataToTip(dataObj);
+									}
+									hideLoading();
+								},
+								error : function(message) {
+									hideLoading();
+								}
+							});
+						}
+					}
+				});
+			}
+		});
+	}
+	
+	var audit = function() {
+		if(state != 1) {
+			errorNotification({ SimpleMessage : $.i18n.prop('propmt.audit') });
+   			return;
+		}
+		$.messager.confirm($.i18n.prop('planExec_Prompt'), '#{audit.propmt}?', function(r) {// 提示, 确定保存数据项吗
+			if (r) {
+				$.ajax({
+					url : '../../bussiness/planExec/audit?t=' + Math.random(),
+					data : { trainNo : trainNo },
+					type : 'POST',
+					success : function(dataObj) {
+						if (isServerResultDataPass(dataObj)) {
+							correctNotification(dataObj.resultDataFull);
+							loadMostly();
+						} else {
+							FailResultDataToTip(dataObj);
+						}
+						hideLoading();
+					},
+					error : function(message) {
+						hideLoading();
+					}
+				})
+			}
+		});
+	}
+	
+	var dispatch = function() {
+		if(state != 1) {
+			errorNotification({ SimpleMessage : '#{dispatch.propmt}!' });
+   			return;
+		}
+		var href = '../View/ywgl/dispatch.html?mostlyGuid=' + guid + /* '&sn=' + rowData.sn+"&contractorName="+rowData.contractorName+"&trucknoq="+rowData.trucknoq+"&driverName="+rowData.driverName+*/ "&state=" + state +  "&trainNo=" + trainNo;
+        openDialog({ title : $.i18n.prop('trainsToSend'), id : 'planExecDetail', width : 500, height : 400, isResize : true, href : href, closable : true });
+	}
+	
+	var deleteParentRow = function(index , name) {
+		$.messager.confirm($.i18n.prop('orderList_Prompt'), '#{deleteSure}?', function (r) {
+    		if(r){
+    			var rowData = $("#" + name).jqGrid('getRowData' , index);
+    			if(rowData.guid != '' && rowData.guid != undefined && rowData.guid != null){
+    				showLoading($.i18n.prop('order.detail.loading'));
+                	$.ajax({
+                		url : "../../order/deletemostlyinfo?t="+Math.random(),
+                		data : {guid : rowData.guid},
+                		type : "POST",
+                		success : function(data){
+                			  if (isServerResultDataPass(data)) {
+                	                correctNotification({ SimpleMessage: data.resultDataFull.simpleMessage });
+                	                $("#"+name).delRowData(index);
+                	    	    	
+                	    	    	if($("#"+name).jqGrid("getRowData").length<=0){
+               	    	    			savedRow1 = null;
+               	    	                savedCol1 = null;
+                	    	    	}
+                	            } else {
+                	                FailResultDataToTip(data);
+                	            }
+                	            hideLoading();
+                		}
+                	});
+    			} else {
+    				$("#"+name).delRowData(index);
+        	    	if($("#"+name).jqGrid("getRowData").length<=0){
+       	    			savedRow1 = null;
+       	                savedCol1 = null;
+        	    	}
+    			}
+    		}
+    	});
+	}
+	
+	//保存订单主表信息
+	var saveDetail= function(){
+		loseGridFocus();
+		var orderMostlyVo = FormUtils.toJSONObject($("#detailForm"));
+		var detailAllData = $("#gridTable").jqGrid("getRowData");
+		if (detailAllData.length == 0) {
+			errorNotification({ SimpleMessage : $.i18n.prop('orderDetailOneSave')});
+			return;
+	 	}
+	  
+	 	var ids = $("#gridTable").jqGrid("getDataIDs");
+		orderMostlyVo.child =child;	  
+	 	orderMostlyVo.cusNo = $("#searchCusNo").combobox("getValue");
+	  
+		orderMostlyVo.details = [];
+    	for (var i = 0; i < detailAllData.length; i++) {
+    		var detail = {};
+	    	detail.row = ids[i];
+	    	detail.sn = detailAllData[i].rowId;
+	    	detail.guid = detailAllData[i].guid;
+	    	detail.goodsName = detailAllData[i].goodsName;
+	    	detail.vol = detailAllData[i].vol;
+	    	detail.gwt= detailAllData[i].gwt;
+	    	detail.qty = detailAllData[i].qty;
+	    	detail.contId = detailAllData[i].contId;
+	    	orderMostlyVo.details.push(detail);
+    	}
+    	orderMostlyVo.trainNo = trainNo;
+    	orderMostlyVo.weituoType = 0;
+    	orderMostlyVo.ywLocation = $("#ywLocation").combobox("getValue");
+    	orderMostlyVo.ywId = ywId;
+    	$.messager.confirm($.i18n.prop('orderList_Prompt'), '#{saveSure}?' , function(r){
+    		if(r) {
+		    	$.ajax({
+		    		url : '../../order/addmostly?t=' + Math.random(),
+		    		type : 'POST',
+		    		async : false,
+		    		data :"jsonData=" + JSON.stringify(orderMostlyVo),
+		    		success : function(dataObj) {
+		    			hideLoading();
+						if (isServerResultDataPass(dataObj)) {
+							correctNotification({ SimpleMessage : $.i18n.prop('prompt.success')});
+							mostlyGuid = dataObj.resultDataFull;
+							loadList();
+							planLoadList();
+							loadDetailMostly(mostlyGuid);
+						} else {
+							FailResultDataToTip(dataObj);
+						}
+		    		}
+		    	});
+    		}
+    	})
+    	/* $('#tabLocation').tabs('select',$.i18n.prop('supplier.detail.tab.title1'))
+   		clearDetail();
+    	addDetailTable();  */
+
+	}
+	
+	var copy = function() {
+		loseGridFocus();
+		var guid = $("#guid").val();
+		if(guid == null || guid == "" || guid == undefined) {
+			errorNotification({ SimpleMessage : $.i18n.prop('pleaseSaveAndCopy')});
+			return ; 
+		}
+		var orderMostlyVo = FormUtils.toJSONObject($("#detailForm"));
+		var detailAllData = $("#gridTable").jqGrid("getRowData");
+		if (detailAllData.length == 0) {
+			errorNotification({ SimpleMessage : $.i18n.prop('orderDetailOneSave')});
+			return;
+	 	}
+	  
+	 	var ids = $("#gridTable").jqGrid("getDataIDs");
+		orderMostlyVo.child =child;	  
+	 	orderMostlyVo.cusNo = $("#searchCusNo").combobox("getValue");
+	  
+		orderMostlyVo.details = [];
+    	for (var i = 0; i < detailAllData.length; i++) {
+    		var detail = {};
+	    	detail.row = ids[i];
+	    	detail.sn = detailAllData[i].rowId;
+	    	detail.guid = detailAllData[i].guid;
+	    	detail.goodsName = detailAllData[i].goodsName;
+	    	detail.vol = detailAllData[i].vol;
+	    	detail.gwt= detailAllData[i].gwt;
+	    	detail.qty = detailAllData[i].qty;
+	    	detail.contId = detailAllData[i].contId;
+	    	orderMostlyVo.details.push(detail);
+    	}
+    	orderMostlyVo.trainNo = trainNo;
+    	orderMostlyVo.weituoType = 0;
+    	orderMostlyVo.ywLocation = $("#ywLocation").combobox("getValue");
+    	orderMostlyVo.ywId = ywId;
+		$.messager.confirm($.i18n.prop('planExec_mostly_detail_prompt'), "#{orderDetail_copy}?", function(r){
+			if(r) {
+				$.ajax({
+					url : '../../order/copydetail?t=' + Math.random(),
+					type : 'POST',
+					async : false,
+					data : 'jsonData=' + JSON.stringify(orderMostlyVo),
+					success : function(dataObj) {
+						hideLoading();
+						if (isServerResultDataPass(dataObj)) {
+							correctNotification({SimpleMessage : $.i18n.prop('orderDetail_copySuccess')});
+							mostlyGuid = dataObj.resultDataFull;
+							loadList();
+							planLoadList();
+							loadDetailMostly(mostlyGuid);
+						} else {
+							FailResultDataToTip(dataObj);
+						}
+					}
+				});
+			}
+		});
+	}
+	
+	var loadUnit = function() {
+		$.ajax({
+			url : '../../bussiness/planExec/getunit?t=' + Math.random(),
+			type : 'POST',
+			async : false,
+			success : function(dataObj) {
+				dataObj.resultDataFull.forEach(function(item){
+					unitInnerHtml += item.UNITCODE + ":" + item.UNITNAME + ";";
+				});
+				unitInnerHtml = unitInnerHtml.substr(0,unitInnerHtml.length-1);
+			}
+		});
+	}
+	
+	var newAdd = function(){
+		$("#addForm").form("clear");
+		$("#planBeginDate").datebox("setValue",curDate);
+		$("#weituoDate").datebox("setValue", curDate);
+		/* loadTruckType();
+		loadTransType();
+		loadYwLocation(); */
+		$("input[name='payMode'][value='1']").attr("checked", true);
+		$("input[name='getMode'][value='1']").attr("checked", true);
+		$("#gridMostlyTable").jqGrid("clearGridData");
+		$("#isNewBeginAddress").val("0");
+		$("#isNewEndAddress").val("0");
+		trainNo = null;
+		extendTab(trainNo);
+	}
+	
+	var newAddDetail = function(){
+		$("#detailForm").form("clear");
+		$("#businessDate").datebox("setValue", curDate);
+		$("#planshipmentData").datebox("setValue", curDate);
+		$("#planjiaofuData").datebox("setValue", curDate);
+		$("#searchCusNo").combobox("setValue", $("#cusNo").combobox("getValue"));
+		$("#gridTable").jqGrid("clearGridData");
+		$("#isNewBeginAddress").val("0");
+    	$("#isNewEndAddress").val("0");
+	}
+	
+	var close = function(){
+		
+		$.messager.confirm($.i18n.prop('orderList_Prompt'),'#{closeSure}?', function(r){
+			if(r) {
+				closeDialog("SupplierDetail");
+			}
+		})
+		
+		/* var newObj = FormUtils.toJSONObject($("#addForm"));
+		if(oldObj === newObj) {
+			closeDialog("SupplierDetail");
+		} else {
+			$.messager.confirm('提示','您已经修改了内容,确定要关闭吗?', function(r){
+				if(r) {
+					closeDialog("SupplierDetail");
+				}
+			});
+		} */
+	}
+	
+</script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="UTF-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"/>
+    <link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+    <link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />    
+    <link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/moment/css/daterangepicker.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/fileUpload/css/fileUpload.css" />
+    <title>#{basic.page.this}</title>
+    <style type="">
+    	.textbox-text{
+    		padding-top:3px;
+    		padding-bottom : 3px;
+    		!important;
+    	}
+    </style>
+</head>
+<body>
+<div id="toolbar" class="easyui-panel" style="padding: 4px; border-width: 0; border-bottom-width: 1px;">
+         #{PAGE_TOOLBAR_BUTTONROLE}
+    </div>
+	<div id="tabLocation" class="easyui-tabs">
+        <div data-locale-title="trainOrderlist_trainsTheDetail" style="padding: 0px;" id="trainno">
+            <iframe scrolling="auto" id="trainDetail" name="trainDetail" frameborder="0"
+                src="../../View/ywgl/orderDetail.html" style="width: 100%;"></iframe>
+        </div>
+        <div data-locale-title="trainOrderList_theOrderdetails" style="padding: 0px;" id="order">
+            <iframe scrolling="auto" id="zoreOrder" name="zoreOrder" frameborder="0"
+                src="" style="width: 100%;"></iframe>
+        </div>
+       <!-- <div title='收款费用录入' style="padding: 0px;" id="shoukuanFare">
+            <iframe scrolling="auto" id="shoukuan" name='shoukuan' frameborder="0"
+                src="" style="width: 100%; ">
+            </iframe>
+        </div>
+        <div title='付款费用录入' style="padding: 0px" id="fukuanFare">
+            <iframe scrolling="auto" id="fukuan" name='fukuan' frameborder="0"
+                src="" style="width: 100%; ">
+            </iframe>
+        </div>-->
+	</div>
+</body>
+<script type="text/javascript"	src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/upload.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/file.js"></script>
+<script language="javascript" type="text/javascript">
+var detailRowNumber = null;
+	var child = [];
+	var mostlyGuid=null;
+	var detailGuid=null;
+    var moduleId = 0;
+    var valve = 0;//用于判断增加还是修改的阀门值。0代表修改操作，1代表增加操作。
+    var savedRow1 = null;
+    var savedCol1 = null;
+    var savedChildRow1=null;
+    var savedChildCol1=null;
+    var trainNo = null;
+    var sumVol = 0;  //保存体积的和
+    var sumGwt = 0; // 保存重量的和
+    var sumQty = 0; //保存件数的和
+    var orderDetailList = []; //订单明细数组全局变量，保存订单明细，一次性提交后台
+    var orderDetail = []; //订单明细全局变量，用于在车次明细页面回显
+    var pleaseChoose = $.i18n.prop('please.choose');
+    var addressChoose = $.i18n.prop('switchAddress');
+    var newAddress = $.i18n.prop('newAddress');
+    var confirm = $.i18n.prop('confirm');
+    var historyAddress = $.i18n.prop('historyAddress');
+    var guid = "";
+    var state = "";
+    var businessYwId = "";
+    var cusName = "";
+    var cusNo = "";
+    var guid = "";
+    var ywLocation = "";
+    var identifier = "";
+    var height = $(window).height();
+    $(function() {
+        var parms = getUrlParms();
+        trainNo = parms["trainNo"];
+        var sn = parms["sn"];
+        state = parms["state"];
+        identifier = parms["identifier"];
+        ywLocation = parms["ywLocation"];
+        extendTab(trainNo);
+        
+    	// if(identifier == '1') {
+    	// 	$('#tabLocation').tabs('getTab',"收款费用录入").panel('options').tab.hide();
+    	// 	$('#tabLocation').tabs('getTab',"付款费用录入").panel('options').tab.hide();
+    	// }
+        
+        var height = $(window).height();
+        $("iframe").each(function(){
+        	$(this).css("height", height + "px");
+        });
+		$("iframe").eq(1).attr("src", "../../View/ywgl/trainOrderDetail.html");
+    	$('#tabLocation').tabs({
+    		onSelect : function(title, index){
+    			if(index == 1){
+	   				 setTimeout(function(){
+	   					 $(window.frames[1].document).find("#toolbar").css("width", "100%");
+	   					 $(window.frames[1].document).find("#gbox_gridTableZero").removeAttr("style");
+	   					 window.frames[1].setGridHeightWidth();
+	   				 }, 100);
+	   			}
+   				
+        		if(!$("iframe").eq(index).attr("src")){
+        			 if(index == 2){
+        				$("iframe").eq(index).attr("src", "../../View/ywgl/orderPutEdit.html");
+        			} else if(index == 3){
+        				$("iframe").eq(index).attr("src", "../../View/ywgl/orderInEdit.html");
+        			}
+        		}
+        	}
+    	});
+    });
+    
+    var extendTab = function(trainNo){
+    	if(trainNo == "" || trainNo == null || trainNo == undefined) {
+			/*$("ul li:eq(2)").click(function(){
+	   			errorNotification({ SimpleMessage : "请先保存车次再录入收款"});
+	   			return false;
+	    	});
+	    	$("ul li:eq(3)").click(function(){
+	   			errorNotification({ SimpleMessage : "请先保存车次再录入付款"});
+	   			return false;
+	    	});*/
+			$("ul li:eq(1)").click(function(){
+				errorNotification({ SimpleMessage : $.i18n.prop('trainOrderList_valid')});
+	   			return false;
+			});
+		} else {
+			$("ul li").unbind();
+		}
+		return;
+    }
+
+    var addDetail = function(guid){
+    	window.guid = guid;
+    	if(window.frames[1].loadDetailMostly != null){
+    	    window.frames[1].guid = guid;
+	    	window.frames[1].loadDetailMostly(guid);
+	    	window.frames[1].searchData();
+    	}
+    	$('#tabLocation').tabs('select',$.i18n.prop('trainOrderList_theOrderdetails'));
+    }
+    </script>
+</html>

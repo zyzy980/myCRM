@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bba.ht.dao.Ht_Carrier_FreightDao">
+
+    <select id="findFreightByBusiness" resultType="com.bba.ht.vo.Ht_Carrier_FreightVO">
+        select t.*,c.contract_no,c.contract_type from HT_CARRIER_FREIGHT t,HT_CARRIER c
+        where t.SHEET_NO=c.SHEET_NO and c.state='1'
+        <if test="carrier_no!=null and carrier_no!=''">and c.carrier_no=#{carrier_no}</if>
+        <if test="begin_date!=null">and c.begin_date <![CDATA[ <= ]]> to_date(#{begin_date},'YYYY-mm-dd') and c.end_date >= to_date(#{begin_date},'YYYY-mm-dd')</if>
+        <if test="trans_mode!=null and trans_mode!=''">and t.trans_mode=#{trans_mode}</if>
+        <!--
+                <if test="car_type!=null and car_type!=''">and t.car_type=#{car_type}</if>
+        -->
+        <if test="begin_city!=null and begin_city!=''">and t.begin_city=#{begin_city}</if>
+        <if test="end_city!=null and end_city!=''">and t.end_city=#{end_city}</if>
+        order by c.contract_type desc
+    </select>
+
+
+    <select id="findFreightByBusiness_non_down" parameterType="com.bba.nosettlement.vo.Js_Non_Down_VehicleVO" resultType="com.bba.ht.vo.Non_Ht_Carrier_FreightVO">
+        select t.*,c.contract_no,c.contract_type from NON_HT_CARRIER_FREIGHT t,NON_HT_CARRIER c
+        where t.sheet_no=c.sheet_no and c.state='1'
+        <if test="carrier_no!=null and carrier_no!=''">and c.carrier_no=#{carrier_no}</if>
+        <if test="begin_date!=null">and c.begin_date <![CDATA[ <= ]]> to_date(#{begin_date},'YYYY-mm-dd') and c.end_date >= to_date(#{begin_date},'YYYY-mm-dd')</if>
+        <if test="trans_mode!=null and trans_mode!=''">and t.trans_mode=#{trans_mode}</if>
+        <if test="trans_fangan!=null and trans_fangan!=''">and t.trans_fangan=#{trans_fangan}</if>
+        <if test="begin_address!=null and begin_address!=''">and t.begin_city=#{begin_address}</if>
+        <if test="end_address!=null and end_address!=''">and t.end_city=#{end_address}</if>
+        order by c.contract_type desc
+    </select>
+
+</mapper>
