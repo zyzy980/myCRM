@@ -122,6 +122,36 @@
                 formatDefaultRadio_Local(formatData);
             }
         },{
+            //初始化优先级
+            dicTypeCode : Global_DicType.Global_DicType_BasePriority,
+            ADD_ALL: false,
+            callback : function(callbackData) {
+                window.priorityMap = {};
+                for(var i = 0; i < callbackData.length; i++){
+                    priorityMap[callbackData[i].dicvalue] = callbackData[i].dictext;
+                }
+               /* $("#priority").combobox({
+                    valueField: 'dicvalue',
+                    textField: 'dictext',
+                    //panelHeight: 200,
+                    //panelWidth: 250,
+                    editable: true
+                });
+                $("#priority").combobox("loadData", callbackData);*/
+            }
+        },{
+            dicTypeCode: Global_DicType.Global_DicType_CommonStateYesNo,
+            callback: function (callbackData) {
+                window.feedback_huaweiList = {};
+                for(var i = 0; i < callbackData.length; i++){
+                    feedback_huaweiList[callbackData[i].dicvalue] = callbackData[i].dictext;
+                }
+            /*    var formatData = { data: callbackData, needChooseAll: false, defaultValue: "N",
+                    bindBoxName: "divFeedback_huawei", bindControlPrefix: "feedback_huawei", onClick:function(){
+                    } };
+                formatDefaultRadio_Local(formatData);*/
+            }
+        },{
             dicTypeCode : Global_DicType.Questions_Type,
                 ADD_ALL: true,
                 callback : function(callbackData) {
@@ -221,12 +251,22 @@
             width: 'none',
             colNames: [
                 $.i18n.prop('ID'),
-                $.i18n.prop('STATE'),
-                $.i18n.prop('TYPE'),
                 $.i18n.prop('SHEET_NO'),
+                $.i18n.prop('QUESTION_DATE'),
+                $.i18n.prop('CONTACT_NAME'),
+                $.i18n.prop('HUAWEI_NO'),
+                $.i18n.prop('CONTACT_INFO'),
+                $.i18n.prop('ACCOUNT_MANAGER'),
+                $.i18n.prop('HANDLER'),
+                $.i18n.prop('TYPE'),
                 $.i18n.prop('MODULE'),
                 $.i18n.prop('QUESTION'),
                 $.i18n.prop('ANSWER'),
+                $.i18n.prop('STATE'),
+                $.i18n.prop('PRIORITY'),
+                $.i18n.prop('FEEDBACK_HUAWEI'),
+                $.i18n.prop('HUAWEI_ANSWER'),
+                $.i18n.prop('WORK_ORDER_NO'),
                 $.i18n.prop('USED_BY'),
                 $.i18n.prop('USED_DATE'),
                 $.i18n.prop('CREATE_BY'),
@@ -235,18 +275,33 @@
             ],
             colModel: [
                 { name: 'id', index: 'id', align: 'center', sorttype: 'int', sortable: false, key: true, width: 40, hidden: true, search: false },
-                { name: 'state', index: 'state', align: 'center', width: 65, search: false,formatter: function (value, grid, rows) {
-                        return window.Questions_StateMap[value];
-                    }},
+                { name: 'sheet_no', index: 'sheet_no', align: 'center',  width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'question_date', index: '_d_question_date', align: 'center', width: 100, search: true, type: 'string',
+                    searchoptions: { sopt: ['ge'], dataEvents: [ { type: 'click', data: {}, fn: function() { WdatePicker(); } } ] }},
+                { name: 'contact_name', index: 'contact_name', align: 'center',  width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'huawei_no', index: 'huawei_no', align: 'center',  width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'contact_info', index: 'contact_info', align: 'center',  width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'account_manager', index: 'account_manager', align: 'center',  width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'handler', index: 'handler', align: 'center',  width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
                 { name: 'type', index: 'type', align: 'center', width: 80, search: false,formatter: function (value, grid, rows) {
                         return window.Questions_TypeMap[value];
                     }},
-                { name: 'sheet_no', index: 'sheet_no', align: 'center',  width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
                 { name: 'module', index: 'module', align: 'center', width: 80, search: false,formatter: function (value, grid, rows) {
                         return window.Questions_ModuleMap[value];
                     }},
                 { name: 'question', index: 'question', align: 'left',width: 600, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
                 { name: 'answer', index: 'answer', align: 'left', width: 600, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'state', index: 'state', align: 'center', width: 65, search: false,formatter: function (value, grid, rows) {
+                        return window.Questions_StateMap[value];
+                    }},
+                { name: 'priority', index: 'priority', align: 'center',  width: 100, type: 'string', search: true, formatter: function (value, grid, rows) {
+                        return window.priorityMap[value];
+                    } },
+                { name: 'feedback_huawei', index: 'feedback_huawei', align: 'center',  width: 100, type: 'string', formatter: function (value, grid, rows) {
+                        return window.feedback_huaweiList[value];
+                    } },
+                { name: 'huawei_answer', index: 'huawei_answer', align: 'center',  width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'work_order_no', index: 'work_order_no', align: 'center',  width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
                 { name: 'used_by', index: 'used_by', align: 'left', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
                 { name: 'used_date', index: '_d_used_date', align: 'center', width: 100, search: true, type: 'string',
                     searchoptions: { sopt: ['le'], dataEvents: [ { type: 'click', data: {}, fn: function() { WdatePicker(); } } ] } },

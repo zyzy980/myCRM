@@ -77,6 +77,8 @@ var Global_DicType = {
 	Global_DicType_CheckState : "CheckState",
 	// 公共状态(有效/无效)
 	Global_DicType_BaseState : "BaseState",
+	//公共状态（低级/中级/高级）
+    Global_DicType_BasePriority : "PRIORITY",
 	// 公共状态(是/否)
 	Global_DicType_CommonStateYesNo : "CommonStateYesNo",
 	// (单号类别)

@@ -43,6 +43,42 @@
 				</td>
 			</tr>
 			<tr>
+				<td class="editTitle" style="width:125px;"><label data-locale="QUESTION_DATE"/></td>
+				<td class="searchParamesTdControl">
+					<input type="text" name="question_date" id="question_date" class="easyui-datebox" style="width: 13%" />
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle" style="width:125px;"><label data-locale="CONTACT_NAME"/></td>
+				<td class="searchParamesTdControl">
+					<input type="text" name="contact_name" id="contact_name" class="easyui-textbox" style="width: 25%;"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle" style="width:125px;"><label data-locale="HUAWEI_NO"/></td>
+				<td class="searchParamesTdControl">
+					<input type="text" name="huawei_no" id="huawei_no" class="easyui-textbox" style="width: 25%;"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle" style="width:125px;"><label data-locale="CONTACT_INFO"/></td>
+				<td class="searchParamesTdControl">
+					<input type="text" name="contact_info" id="contact_info" class="easyui-textbox" style="width: 25%;"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle" style="width:125px;"><label data-locale="ACCOUNT_MANAGER"/></td>
+				<td class="searchParamesTdControl">
+					<input type="text" name="account_manager" id="account_manager" class="easyui-textbox" style="width: 25%;"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle" style="width:125px;"><label data-locale="HANDLER"/></td>
+				<td class="searchParamesTdControl">
+					<input type="text" name="handler" id="handler" class="easyui-textbox" style="width: 25%;"/>
+				</td>
+			</tr>
+			<tr>
 				<td class="editTitle" style="width:125px;"><label data-locale="TYPE"/></td>
 				<td class="editControl">
 					<input type="text" name="type" id="type" data-options="required:true" class="easyui-combobox" style="width: 25%;"/>
@@ -64,6 +100,28 @@
 				<td class="editTitle" align="right"><label data-locale="ANSWER"/></td>
 				<td class="editControl">
 					<textarea id="answer" name="answer" style="width:99%"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle" style="width:125px;"><label data-locale="PRIORITY"/></td>
+				<td class="editControl">
+					<input type="text" name="priority" id="priority" class="easyui-combobox" style="width: 25%;"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle" style="width:125px;"><label data-locale="FEEDBACK_HUAWEI"/></td>
+				<td class="editControl"><div id="divFeedback_huawei"></div></td>
+			</tr>
+			<tr>
+				<td class="editTitle" align="right"><label data-locale="HUAWEI_ANSWER"/></td>
+				<td class="editControl">
+					<textarea id="huawei_answer" name="huawei_answer" style="width:99%"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle" style="width:125px;"><label data-locale="WORK_ORDER_NO"/></td>
+				<td class="searchParamesTdControl">
+					<input type="text" name="work_order_no" id="work_order_no" class="easyui-textbox" style="width: 25%;"/>
 				</td>
 			</tr>
 			<tr>
@@ -161,6 +219,24 @@
                 }
             }
         },{
+            //初始化优先级
+            dicTypeCode : Global_DicType.Global_DicType_BasePriority,
+            ADD_ALL: false,
+            callback : function(callbackData) {
+                window.priorityMap = {};
+                for(var i = 0; i < callbackData.length; i++){
+                    priorityMap[callbackData[i].dicvalue] = callbackData[i].dictext;
+                }
+                $("#priority").combobox({
+                    valueField: 'dicvalue',
+                    textField: 'dictext',
+                    //panelHeight: 200,
+                    //panelWidth: 250,
+                    editable: true
+                });
+                $("#priority").combobox("loadData", callbackData);
+            }
+        },{
             //初始化问题模块
             dicTypeCode : Global_DicType.Questions_Module,
             ADD_ALL: false,
@@ -186,6 +262,18 @@
                     }*/
                 });
                 $("#module").combobox("loadData", callbackData);
+            }
+        },{
+            dicTypeCode: Global_DicType.Global_DicType_CommonStateYesNo,
+            callback: function (callbackData) {
+                window.feedback_huaweiList = {};
+                for(var i = 0; i < callbackData.length; i++){
+                    feedback_huaweiList[callbackData[i].dicvalue] = callbackData[i].dictext;
+                }
+                var formatData = { data: callbackData, needChooseAll: false, defaultValue: "N",
+                    bindBoxName: "divFeedback_huawei", bindControlPrefix: "feedback_huawei", onClick:function(){
+                    } };
+                formatDefaultRadio_Local(formatData);
             }
         }]);
     };
@@ -262,6 +350,17 @@
                     var questionVO = dataObj.resultDataFull;
                     $("#state").textbox("setValue", window.Questions_StateMap[questionVO.state]);
                     $("#sheet_no").textbox("setValue", questionVO.sheet_no);
+
+                    $("#huawei_no").textbox("setValue", questionVO.huawei_no);
+                    $("#account_manager").textbox("setValue", questionVO.account_manager);
+                    $("#contact_info").textbox("setValue", questionVO.contact_info);
+                    $("#contact_name").textbox("setValue", questionVO.contact_name);
+                    $("#handler").textbox("setValue", questionVO.handler);
+                    $("#priority").combobox("setValue", window.priorityMap[questionVO.priority]);
+                    $("[name='feedback_huawei'][value='" + questionVO.feedback_huawei + "']").prop("checked", true);
+                    $("#huawei_answer").val(questionVO.huawei_answer);
+                    $("#work_order_no").textbox("setValue", questionVO.work_order_no);
+                    $("#question_date").textbox("setValue", questionVO.question_date);
                     $("#module").combobox("setValue", window.Questions_ModuleMap[questionVO.module]);
                     $("#type").combobox("setValue", window.Questions_TypeMap[questionVO.type]);
                     $("#question").val(questionVO.question);

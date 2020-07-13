@@ -40,6 +40,10 @@ public class QusetionsVO {
         private Date used_date;
 
         @TableId
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        private Date question_date;
+
+        @TableId
         private String create_by;
 
         @TableId
@@ -48,4 +52,31 @@ public class QusetionsVO {
         @TableId
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private Date create_date;
+
+        @TableId
+        private String huawei_no;
+
+        @TableId
+        private String account_manager;
+
+        @TableId
+        private String contact_info;
+
+        @TableId
+        private String contact_name;
+
+        @TableId
+        private String handler;
+
+        @TableId
+        private String priority;
+
+        @TableId
+        private String feedback_huawei;
+
+        @TableId
+        private String huawei_answer;
+
+        @TableId
+        private String work_order_no;
 }
