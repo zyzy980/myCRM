@@ -1,0 +1,505 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+    <link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+    <link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/moment/css/daterangepicker.css" />
+    <title>CP时时分析</title>
+</head>
+<body>
+<div id="toolbar" class="easyui-panel" style="padding:4px;border-width:0;border-bottom-width:1px;">
+    #{PAGE_TOOLBAR_BUTTONROLE}
+</div>
+<div class="searchParamesPanel">
+    <table id="searchParamesTable">
+        <tr class="searchParamesTrShow">
+            <td class="searchParamesTdControl">
+                <input type="text" id="common_sheet_title" class="easyui-textbox" style="width: 240px" />
+            </td>
+            <td width="20px;"></td>
+            <td class="searchParamesTdTitle">
+                创建日期:
+            </td>
+            <td class="searchParamesTdControl">
+                <input type="text" name="begin_date" id="begin_date" class="easyui-datebox" editable="false" style="width: 90px" />
+            </td>
+            <td class="searchParamesTdTitle">
+                -
+            </td>
+            <td class="searchParamesTdControl">
+                <input type="text" name="end_date" id="end_date" class="easyui-datebox" editable="false" style="width: 90px" />
+            </td>
+            <td width="20px;"></td>
+            <td class="searchParamesTdTitle">
+                类型:
+            </td>
+            <td class="searchParamesTdControl">
+                <input type="text" id="type" class="easyui-combobox"/>
+            </td>
+            <td width="20px;"></td>
+            <td class="searchParamesTdTitle">
+                模块:
+            </td>
+            <td class="searchParamesTdControl">
+                <input type="text" id="module" class="easyui-combobox" data-options="multiple:true"/>
+            </td>
+            <td width="20px;"></td>
+            <td class="searchParamesTdTitle">
+                状态:
+            </td>
+            <td class="searchParamesTdControl">
+                <div id="divStatus"></div>
+            </td>
+        </tr>
+    </table>
+</div>
+<div id="gridControl">
+    <table id="gridTable"></table>
+    <div id="gridPager"></div>
+</div>
+<form id="formExportFile" class="formExportFile" target="_blank" action="../../tzgl/LedgerController/exportExcel" method="post" style="display: none">
+    <input type="text" id="sheet_no" name="sheet_no" value="" />
+</form>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/moment/js/moment.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/moment/js/jquery.daterangepicker.js"></script>
+<script language="javascript" type="text/javascript">
+    $(function() {
+        initScript();
+        initData();
+        initStyle();
+    });
+
+    $(window).load(function() {
+        hideLoading();
+    });
+
+    var initStyle = function() {
+        enterTriggerEvent('searchParamesTable', 'searchData');
+    };
+
+    var initScript = function() {
+        $("#common_sheet_title").textbox({
+            prompt: $.i18n.prop("COMMON_SHEET_TITLE")
+        });
+
+        $(window).resize(function() {
+            setGridHeightWidth();
+            setToolbarHeightWidth();
+        });
+    };
+
+    // 加载数据
+    var initData = function() {
+        getDictionaryData([{
+            dicTypeCode : Global_DicType.Questions_State,
+            ADD_ALL: true,
+            callback : function(callbackData) {
+                window.Questions_StateMap = {};
+                for(var i = 0; i < callbackData.length; i++){
+                    Questions_StateMap[callbackData[i].dicvalue] = callbackData[i].dictext;
+                }
+                var formatData = { data: callbackData, needChooseAll: false, chooseAllValue: "", defaultValue: "0",
+                    bindBoxName: "divStatus", bindControlPrefix: "state", onClick:function(){
+                        searchData();
+                    } };
+                formatDefaultRadio_Local(formatData);
+            }
+        },{
+            //初始化优先级
+            dicTypeCode : Global_DicType.Global_DicType_BasePriority,
+            ADD_ALL: false,
+            callback : function(callbackData) {
+                window.priorityMap = {};
+                for(var i = 0; i < callbackData.length; i++){
+                    priorityMap[callbackData[i].dicvalue] = callbackData[i].dictext;
+                }
+               /* $("#priority").combobox({
+                    valueField: 'dicvalue',
+                    textField: 'dictext',
+                    //panelHeight: 200,
+                    //panelWidth: 250,
+                    editable: true
+                });
+                $("#priority").combobox("loadData", callbackData);*/
+            }
+        },{
+            dicTypeCode: Global_DicType.Global_DicType_CommonStateYesNo,
+            callback: function (callbackData) {
+                window.feedback_huaweiList = {};
+                for(var i = 0; i < callbackData.length; i++){
+                    feedback_huaweiList[callbackData[i].dicvalue] = callbackData[i].dictext;
+                }
+            /*    var formatData = { data: callbackData, needChooseAll: false, defaultValue: "N",
+                    bindBoxName: "divFeedback_huawei", bindControlPrefix: "feedback_huawei", onClick:function(){
+                    } };
+                formatDefaultRadio_Local(formatData);*/
+            }
+        },{
+            dicTypeCode : Global_DicType.Questions_Type,
+                ADD_ALL: true,
+                callback : function(callbackData) {
+                window.Questions_TypeMap = {};
+                for(var i = 0; i < callbackData.length; i++){
+                    Questions_TypeMap[callbackData[i].dicvalue] = callbackData[i].dictext;
+                }
+                $("#type").combobox({
+                    valueField: 'dicvalue',
+                    textField: 'dictext',
+                    panelHeight: 100,
+                    editable: true,
+                    onSelect:function(record){
+                        searchData();
+                    }
+                });
+                $("#type").combobox("loadData", callbackData);
+            }
+        },{
+            dicTypeCode : Global_DicType.Questions_Module,
+            ADD_ALL: true,
+            callback : function(callbackData) {
+                window.Questions_ModuleMap = {};
+                for(var i = 0; i < callbackData.length; i++){
+                    Questions_ModuleMap[callbackData[i].dicvalue] = callbackData[i].dictext;
+                }
+                $("#module").combobox({
+                    valueField: 'dicvalue',
+                    textField: 'dictext',
+                    panelHeight: 200,
+                    editable: true,
+                    onLoadSuccess: defaultSelect,
+                    labelSeparator:',',
+                    displaySeparator:',',
+                    valueSeparator:',',
+                    onSelect : comboChange,
+                    onUnselect : comboChange,
+                    onChange : function() {
+                        var vals = $(this).combobox("getValues");
+                        var datas = $(this).combobox("getData");
+                        for (var i = 0; i < vals.length; i++) {
+                            if (vals[i] == "") {
+                                return;
+                            }
+                        }
+                        for (var i = 0; i < vals.length; i++) {
+                            if (isInArray(datas, vals[i])) {
+                                /*  searchData(); */
+                                break;
+                            }
+                        }
+                    }
+                });
+                $("#module").combobox("loadData", callbackData);
+            }
+        }]);
+        loadList();// 加载数据列表
+    };
+
+    // 查询数据
+    function searchData() {
+        $('#gridTable').jqGrid('setGridParam', {
+            url: getSearchGridUrl(),
+            datatype: 'json',
+            postData: { 'filters': '' },
+            page: 1
+        }).trigger('reloadGrid');
+    };
+
+    // 获取查询URL
+    var getSearchGridUrl = function() {
+        var customSearchFilters = encodeURI(getSearchFilters());
+        return '../../wdgl/QuestionsController/getListForGrid?' + Math.random() + '&customSearchFilters=' + customSearchFilters;
+    };
+
+    // 获取查询条件
+    var getSearchFilters = function() {
+        var parmsArray = [
+            [
+                { name: 'question', value: $('#common_sheet_title').textbox('getValue'), op: 'cn' },
+                { name: 'sheet_no', value: $('#common_sheet_title').textbox('getValue'), op: 'cn' }
+            ],
+            getMultipleComboVal($('#module'),'module'),
+            { name: '_d_create_date', value: $('#begin_date').textbox('getValue'), op: 'ge' },
+            { name: '_d_create_date', value: $('#end_date').textbox('getValue'), op: 'le' },
+            { name: 'state', value: $("#divStatus [name=state]:checked").val(), op: "eq" },
+            { name: 'type', value: $('#type').combobox("getValue"), op: 'eq' }
+        ];
+        return formatSearchParames(parmsArray);
+    };
+
+    // 加载数据列表
+    var loadList = function() {
+        $('#gridTable').jqGrid({
+            url: getSearchGridUrl(),
+            datatype: 'json',
+            width: 'none',
+            colNames: [
+                $.i18n.prop('ID'),
+                $.i18n.prop('SHEET_NO'),
+                $.i18n.prop('CP_TYPE'),
+                $.i18n.prop('CP_NUMBER'),
+
+                $.i18n.prop('GEWEI_CURRENT'),
+                $.i18n.prop('GEWEI_NEXT'),
+                $.i18n.prop('GEWEI_BEFOR'),
+                $.i18n.prop('GEWEI_ACCURACY'),
+
+                $.i18n.prop('SHIWEI_CURRENT'),
+                $.i18n.prop('SHIWEI_NEXT'),
+                $.i18n.prop('SHIWEI_BEFOR'),
+                $.i18n.prop('SHIWEI_ACCURACY'),
+
+                $.i18n.prop('BAIWEI_CURRENT'),
+                $.i18n.prop('BAIWEI_NEXT'),
+                $.i18n.prop('BAIWEI_BEFOR'),
+                $.i18n.prop('BAIWEI_ACCURACY'),
+
+                $.i18n.prop('QIANWEI_CURRENT'),
+                $.i18n.prop('QIANWEI_NEXT'),
+                $.i18n.prop('QIANWEI_BEFOR'),
+                $.i18n.prop('QIANWEI_ACCURACY'),
+
+                $.i18n.prop('WANWEI_CURRENT'),
+                $.i18n.prop('WANWEI_NEXT'),
+                $.i18n.prop('WANWEI_BEFOR'),
+                $.i18n.prop('WANWEI_ACCURACY'),
+                $.i18n.prop('CREATE_DATE')
+            ],
+            colModel: [
+                { name: 'id', index: 'id', align: 'center', sorttype: 'int', sortable: false, key: true, width: 40, hidden: true, search: false },
+                { name: 'sheet_no', index: 'sheet_no', align: 'center',  width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'cp_type', index: 'cp_type', align: 'center',  width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'cp_number', index: 'cp_number', align: 'center',  width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'gewei_current', index: 'gewei_current', align: 'center',  width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'gewei_next', index: 'gewei_next', align: 'center',  width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'gewei_befor', index: 'gewei_befor', align: 'center',  width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'gewei_accuracy', index: 'gewei_accuracy', align: 'center',  width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+
+                { name: 'shiwei_current', index: 'shiwei_current', align: 'center',  width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'shiwei_next', index: 'shiwei_next', align: 'center',  width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'shiwei_befor', index: 'shiwei_befor', align: 'center',  width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'shiwei_accuracy', index: 'shiwei_accuracy', align: 'center',  width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+
+                { name: 'baiwei_current', index: 'baiwei_current', align: 'center',  width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'baiwei_next', index: 'baiwei_next', align: 'center',  width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'baiwei_befor', index: 'baiwei_befor', align: 'center',  width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'baiwei_accuracy', index: 'baiwei_accuracy', align: 'center',  width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+
+                { name: 'qianwei_current', index: 'qianwei_current', align: 'center',  width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'qianwei_next', index: 'qianwei_next', align: 'center',  width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'qianwei_befor', index: 'qianwei_befor', align: 'center',  width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'qianwei_accuracy', index: 'qianwei_accuracy', align: 'center',  width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+
+                { name: 'wanwei_current', index: 'wanwei_current', align: 'center',  width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'wanwei_next', index: 'wanwei_next', align: 'center',  width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'wanwei_befor', index: 'wanwei_befor', align: 'center',  width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'wanwei_accuracy', index: 'wanwei_accuracy', align: 'center',  width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'create_date', index: '_d_create_date', align: 'center', width: 100, search: true, type: 'string',
+                    searchoptions: { sopt: ['ge'], dataEvents: [ { type: 'click', data: {}, fn: function() { WdatePicker(); } } ] },hidden: true }
+
+            ],
+            shrinkToFit: false,
+            altRows: true,
+            altclass: 'gridSpacingClass',
+            forceFit: true,
+            cellLayout: 0,
+            scroll: false,
+            autowidth: true,
+            sortname: 'id',
+            sortorder: 'desc',
+            loadonce: false,
+            mtype: 'POST',
+            viewrecords: true,
+            rownumbers: true,
+            multiselect: true,
+            rowNum: 15,
+            height: '100%',
+            rowList: [15, 20, 30, 50],
+            pager: '#gridPager',
+            jsonReader: {
+                root: 'rows',
+                total: 'total',
+                page: 'page',
+                records: 'records',
+                repeatitems: false
+            },
+            gridComplete: function() {
+                $('.cbox').shiftSelect();
+                afterRedRow();
+            },
+            ondblClickRow: showChildModule,
+            loadComplete: function(xhr) {
+                FailResultDataToTip(xhr);
+            }
+        });
+        $('#gridTable').jqGrid('navGrid', '#gridPager',{
+            add : false,
+            edit : false,
+            del : false,
+            refresh : true
+        }, {}, {}, {}, {
+            multipleSearch : true,
+            closeOnEscape : true,
+            closeAfterSearch : true
+        });
+        $('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+            caption : $.i18n.prop('TOGGLE_GRID_COLUMNS'),
+            title : 'Set Columns',
+            onClickButton : toggleGridColumns
+        });
+        $('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+            caption : $.i18n.prop('TOGGLE_GRID_SEARCH_TOOLBAR'),
+            title : 'Quick Search',
+            onClickButton : toggleGridSearchToolbar
+        });
+        $('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+            caption: $.i18n.prop('EXPORT_TO_EXCEL'),// 导出数据
+            title: 'Export Datas',
+            buttonicon: 'ui-icon-disk',
+            onClickButton: function () {
+                ExportToExcel.call(this, {
+                    FiledData: [{
+                        data_dictionary: Global_DicType.Questions_State,
+                        filed: "state"
+                    },{
+                        data_dictionary: Global_DicType.Questions_Type,
+                        filed: "type"
+                    }]
+                });
+            }
+        });
+        setGridHeightWidth();
+    };
+
+    //jqGrid加载
+    function afterRedRow() {
+        var ids = $("#gridTable").jqGrid("getDataIDs");
+        for (var i = 0; i < ids.length; i++) {
+            var rowData = $("#gridTable").getRowData(ids[i]);
+            if (rowData.state == '已使用') {
+                $('#gridTable #' + ids[i]).find("td").css('color', "#8b2f2c");
+            }
+        }
+    }
+    // 双击数据触发的事件
+    var showChildModule = function(rowid) {
+        var rowData = $('#gridTable').jqGrid('getRowData', rowid);
+        showLoading();
+        window.parent.onIframeSelect(rowData.sheet_no);
+    };
+
+    function update(){
+        var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
+        if (selectRowItems.length == 0 || selectRowItems.length > 1) {
+            errorNotification({
+                SimpleMessage : "请选择一行数据行进行操作"
+            });
+            return;
+        }
+        showChildModule(selectRowItems[0]);
+    }
+
+    //暂时没有新增功能，看后面需求
+    function add(){
+        showLoading();
+        window.parent.onIframeSelect();
+    }
+
+    //导出
+    function exportData() {
+        var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
+        if (selectRowItems.length==0) {
+            errorNotification({
+                SimpleMessage : $.i18n.prop("selectLeastOneDataRowOperator")
+            });
+            return;
+        }
+        var data="";
+        for (var i = 0; i < selectRowItems.length; i++) {
+           var rowData = $("#gridTable").jqGrid('getRowData', selectRowItems[i]);
+           data+=rowData.sheet_no+",";
+        }
+        $.messager.confirm($.i18n.prop("PROMPT"), $.i18n.prop("SURETODO"), function (r) {
+            if (r) {
+                $("#formExportFile #sheet_no").val(data);
+                $("#formExportFile").submit();
+            }
+        });
+    }
+
+    /**批量使用*/
+    function check() {
+        commonFunction(1);
+    }
+
+    /**批量重置*/
+    function reset() {
+        commonFunction(2);
+    }
+
+    /**批量删除*/
+    function batchDelete() {
+        commonFunction(3);
+    }
+
+    //批量使用
+    function commonFunction(select) {
+        var url = select==1?"../../wdgl/QuestionsController/check?t="+Math.random():(select==2?"../../wdgl/QuestionsController/reset?t="+Math.random():"../../wdgl/QuestionsController/delete?t="+Math.random());
+        var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
+        if (selectRowItems.length==0) {
+            errorNotification({
+                SimpleMessage : $.i18n.prop("selectLeastOneDataRowOperator")
+            });
+            return;
+        }
+        var list=[];
+        var rowData = null;
+        for (var i = 0; i < selectRowItems.length; i++) {
+            rowData = $("#gridTable").jqGrid('getRowData', selectRowItems[i]);
+            /*if(rowData.state=="未使用") {*/
+            list.push({"id":rowData.id});
+       /*     } else {
+                errorNotification({SimpleMessage: $.i18n.prop("只有‘未使用’数据才可以操作")});
+                return;
+            }*/
+        }
+        $.messager.confirm($.i18n.prop("PROMPT"), $.i18n.prop("SURETODO"), function (r) {
+            if (r) {
+                showLoading();
+                $.ajax({
+                    url : url,
+                    data:JSON.stringify(list),
+                    type:"POST",
+                    contentType:'application/json; charset=utf-8',
+                    success:function(dataObj){
+                        if (isServerResultDataPass(dataObj)) {
+                            correctNotification({ SimpleMessage:dataObj.resultDataFull.simpleMessage });
+                            searchData();
+                        } else {
+                            FailResultDataToTip(dataObj);
+                        }
+                        hideLoading();
+                    }
+                });
+            }
+        });
+    }
+</script>
+</body>
+</html>

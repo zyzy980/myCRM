@@ -1,0 +1,348 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+    <link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+    <link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+    <link type="text/css" rel="stylesheet" href="../../Resource/js/moment/css/daterangepicker.css" />
+    <title>J进货管理</title>
+</head>
+<body>
+<div id="toolbar" class="easyui-panel" style="padding:4px;border-width:0;border-bottom-width:1px;">
+    #{PAGE_TOOLBAR_BUTTONROLE}
+</div>
+<div class="searchParamesPanel">
+    <table id="searchParamesTable">
+        <tr class="searchParamesTrShow">
+            <td class="searchParamesTdControl">
+                <input type="text" id="common_sheet_title" class="easyui-textbox" style="width: 240px" />
+            </td>
+            <td width="20px;"></td>
+            <td class="searchParamesTdTitle">
+                进货时间:
+            </td>
+            <td class="searchParamesTdControl">
+                <input type="text" name="begin_date" id="begin_date" class="easyui-datebox" editable="false" style="width: 90px" />
+            </td>
+            <td class="searchParamesTdTitle">
+                -
+            </td>
+            <td class="searchParamesTdControl">
+                <input type="text" name="end_date" id="end_date" class="easyui-datebox" editable="false" style="width: 90px" />
+            </td>
+        </tr>
+    </table>
+</div>
+<div id="gridControl">
+    <table id="gridTable"></table>
+    <div id="gridPager"></div>
+</div>
+<form id="formExportFile" class="formExportFile" target="_blank" action="../../tzgl/LedgerController/exportExcel" method="post" style="display: none">
+    <input type="text" id="sheet_no" name="sheet_no" value="" />
+</form>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/moment/js/moment.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/moment/js/jquery.daterangepicker.js"></script>
+<script language="javascript" type="text/javascript">
+    $(function() {
+        initScript();
+        initData();
+        initStyle();
+    });
+
+    $(window).load(function() {
+        hideLoading();
+    });
+
+    var initStyle = function() {
+        enterTriggerEvent('searchParamesTable', 'searchData');
+    };
+
+    var initScript = function() {
+        $("#common_sheet_title").textbox({
+            prompt: $.i18n.prop("COMMON_SHEET_TITLE")
+        });
+
+        $(window).resize(function() {
+            setGridHeightWidth();
+            setToolbarHeightWidth();
+        });
+    };
+
+    // 加载数据
+    var initData = function() {
+        loadList();// 加载数据列表
+    };
+
+    // 查询数据
+    function searchData() {
+        $('#gridTable').jqGrid('setGridParam', {
+            url: getSearchGridUrl(),
+            datatype: 'json',
+            postData: { 'filters': '' },
+            page: 1
+        }).trigger('reloadGrid');
+    };
+
+    // 获取查询URL
+    var getSearchGridUrl = function() {
+        var customSearchFilters = encodeURI(getSearchFilters());
+        return '../../cpgl/PurchaseManagerController/getListForGrid?' + Math.random() + '&customSearchFilters=' + customSearchFilters;
+    };
+
+    // 获取查询条件
+    var getSearchFilters = function() {
+        var parmsArray = [
+            [
+                { name: 'docking_man', value: $('#common_sheet_title').textbox('getValue'), op: 'cn' }
+            ],
+            { name: '_d_receive_date', value: $('#begin_date').textbox('getValue'), op: 'ge' },
+            { name: '_d_receive_date', value: $('#end_date').textbox('getValue'), op: 'le' }
+        ];
+        return formatSearchParames(parmsArray);
+    };
+
+    // 加载数据列表
+    var loadList = function() {
+        $('#gridTable').jqGrid({
+            url: getSearchGridUrl(),
+            datatype: 'json',
+            width: 'none',
+            colNames: [
+                $.i18n.prop('ID'),
+                $.i18n.prop('RECEIVE_DATE'),
+                $.i18n.prop('BOX_NUM'),
+                $.i18n.prop('BOX_PRICE'),
+                $.i18n.prop('BOX_TOTAL_PRICE'),
+                $.i18n.prop('FREIGHT'),
+                $.i18n.prop('TOTAL_FREIGHT'),
+                $.i18n.prop('DOCKING_MAN')
+            ],
+            colModel: [
+                { name: 'id', index: 'id', align: 'center', sorttype: 'int', sortable: false, key: true, width: 40, hidden: true, search: false },
+                { name: 'receive_date', index: '_d_receive_date', align: 'center', width: 120, search: true, type: 'string',
+                    searchoptions: { sopt: ['ge'], dataEvents: [ { type: 'click', data: {}, fn: function() { WdatePicker(); } } ] } },
+                { name: 'box_num', index: 'box_num', align: 'right', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'box_price', index: 'box_price', align: 'right', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+                    ,formatter: function (value, grid, rows) {
+                        return keepTwoPointData(rows.box_total_price);
+                    }},
+                { name: 'box_total_price', index: 'box_total_price', align: 'right', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+                    ,formatter: function (value, grid, rows) {
+                        return keepTwoPointData(rows.box_total_price);
+                    }},
+                { name: 'freight', index: 'freight', align: 'right', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+                    ,formatter: function (value, grid, rows) {
+                        return keepTwoPointData(rows.freight);
+                    }},
+                { name: 'total_freight', index: 'total_freight', align: 'right', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+                    ,formatter: function (value, grid, rows) {
+                        return keepTwoPointData(rows.total_freight);
+                    }},
+                { name: 'docking_man', index: 'docking_man', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } }
+
+            ],
+            shrinkToFit: false,
+            altRows: true,
+            altclass: 'gridSpacingClass',
+            forceFit: true,
+            cellLayout: 0,
+            scroll: false,
+            autowidth: true,
+            sortname: 'id',
+            sortorder: 'desc',
+            loadonce: false,
+            mtype: 'POST',
+            viewrecords: true,
+            rownumbers: true,
+            multiselect: true,
+            rowNum: 15,
+            height: '100%',
+            rowList: [15, 20, 30, 50],
+            pager: '#gridPager',
+            jsonReader: {
+                root: 'rows',
+                total: 'total',
+                page: 'page',
+                records: 'records',
+                repeatitems: false
+            },
+            gridComplete: function() {
+                $('.cbox').shiftSelect();
+                afterRedRow();
+            },
+            ondblClickRow: showChildModule,
+            loadComplete: function(xhr) {
+                FailResultDataToTip(xhr);
+            }
+        });
+        $('#gridTable').jqGrid('navGrid', '#gridPager',{
+            add : false,
+            edit : false,
+            del : false,
+            refresh : true
+        }, {}, {}, {}, {
+            multipleSearch : true,
+            closeOnEscape : true,
+            closeAfterSearch : true
+        });
+        $('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+            caption : $.i18n.prop('TOGGLE_GRID_COLUMNS'),
+            title : 'Set Columns',
+            onClickButton : toggleGridColumns
+        });
+        $('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+            caption : $.i18n.prop('TOGGLE_GRID_SEARCH_TOOLBAR'),
+            title : 'Quick Search',
+            onClickButton : toggleGridSearchToolbar
+        });
+        $('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+            caption: $.i18n.prop('EXPORT_TO_EXCEL'),// 导出数据
+            title: 'Export Datas',
+            buttonicon: 'ui-icon-disk',
+            onClickButton: function () {
+                ExportToExcel.call(this, {
+                    FiledData: [{
+                        data_dictionary: Global_DicType.Questions_State,
+                        filed: "state"
+                    },{
+                        data_dictionary: Global_DicType.Questions_Type,
+                        filed: "type"
+                    }]
+                });
+            }
+        });
+        setGridHeightWidth();
+    };
+
+    //jqGrid加载
+    function afterRedRow() {
+        var ids = $("#gridTable").jqGrid("getDataIDs");
+/*        for (var i = 0; i < ids.length; i++) {
+            var rowData = $("#gridTable").getRowData(ids[i]);
+            if (rowData.state == '已使用') {
+                $('#gridTable #' + ids[i]).find("td").css('color', "#8b2f2c");
+            }
+        }*/
+    }
+    // 双击数据触发的事件
+    var showChildModule = function(rowid) {
+        var rowData = $('#gridTable').jqGrid('getRowData', rowid);
+        showLoading();
+        window.parent.onIframeSelect(rowData.sheet_no);
+    };
+
+    function update(){
+        var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
+        if (selectRowItems.length == 0 || selectRowItems.length > 1) {
+            errorNotification({
+                SimpleMessage : "请选择一行数据行进行操作"
+            });
+            return;
+        }
+        showChildModule(selectRowItems[0]);
+    }
+
+    //暂时没有新增功能，看后面需求
+    function add(){
+        showLoading();
+        window.parent.onIframeSelect();
+    }
+
+    //导出
+    function exportData() {
+        var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
+        if (selectRowItems.length==0) {
+            errorNotification({
+                SimpleMessage : $.i18n.prop("selectLeastOneDataRowOperator")
+            });
+            return;
+        }
+        var data="";
+        for (var i = 0; i < selectRowItems.length; i++) {
+           var rowData = $("#gridTable").jqGrid('getRowData', selectRowItems[i]);
+           data+=rowData.sheet_no+",";
+        }
+        $.messager.confirm($.i18n.prop("PROMPT"), $.i18n.prop("SURETODO"), function (r) {
+            if (r) {
+                $("#formExportFile #sheet_no").val(data);
+                $("#formExportFile").submit();
+            }
+        });
+    }
+
+    /**批量使用*/
+    function check() {
+        commonFunction(1);
+    }
+
+    /**批量重置*/
+    function reset() {
+        commonFunction(2);
+    }
+
+    /**批量删除*/
+    function batchDelete() {
+        commonFunction(3);
+    }
+
+    //批量使用
+    function commonFunction(select) {
+        var url = select==1?"../../wdgl/QuestionsController/check?t="+Math.random():(select==2?"../../wdgl/QuestionsController/reset?t="+Math.random():"../../wdgl/QuestionsController/delete?t="+Math.random());
+        var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
+        if (selectRowItems.length==0) {
+            errorNotification({
+                SimpleMessage : $.i18n.prop("selectLeastOneDataRowOperator")
+            });
+            return;
+        }
+        var list=[];
+        var rowData = null;
+        for (var i = 0; i < selectRowItems.length; i++) {
+            rowData = $("#gridTable").jqGrid('getRowData', selectRowItems[i]);
+            /*if(rowData.state=="未使用") {*/
+            list.push({"id":rowData.id});
+       /*     } else {
+                errorNotification({SimpleMessage: $.i18n.prop("只有‘未使用’数据才可以操作")});
+                return;
+            }*/
+        }
+        $.messager.confirm($.i18n.prop("PROMPT"), $.i18n.prop("SURETODO"), function (r) {
+            if (r) {
+                showLoading();
+                $.ajax({
+                    url : url,
+                    data:JSON.stringify(list),
+                    type:"POST",
+                    contentType:'application/json; charset=utf-8',
+                    success:function(dataObj){
+                        if (isServerResultDataPass(dataObj)) {
+                            correctNotification({ SimpleMessage:dataObj.resultDataFull.simpleMessage });
+                            searchData();
+                        } else {
+                            FailResultDataToTip(dataObj);
+                        }
+                        hideLoading();
+                    }
+                });
+            }
+        });
+    }
+</script>
+</body>
+</html>
