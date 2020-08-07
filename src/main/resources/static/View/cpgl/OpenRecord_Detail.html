@@ -1,0 +1,452 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+	<link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+	<link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+	<link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+	<link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+	<link type="text/css" rel="stylesheet" href="../../Resource/js/fileUpload/css/fileUpload.css" />
+	<title>拆件明细</title>
+
+	<style type="text/css">
+		.editTable{
+			margin-top: 1px;
+			padding-top: 0px;
+			padding-left: 0px;
+			margin-left: 0px;
+		}
+		.editTable .datebox input[readonly="readonly"]{
+			background-color: initial;
+		}
+	</style>
+</head>
+<body>
+<div id="toolbar" class="easyui-panel" style="padding:4px;border-width:0;border-bottom-width:1px;">
+	#{PAGE_TOOLBAR_BUTTONROLE}
+</div>
+<div class="searchParamesPanel editTable">
+	<form class="easyui-form panel-noscroll" enctype="multipart/form-data">
+		<table class="editTable">
+			<tr>
+				<td class="editTitle" style="width:125px;"><label data-locale="SHEET_NO"/></td>
+				<td class="editControl">
+					<input type="text" name="sheet_no" id="sheet_no" class="easyui-textbox"  readonly="readonly" style="width: 15%;"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle" style="width:125px;"><label data-locale="STATE"/></td>
+				<td class="editControl">
+					<input type="text" name="state" id="state" class="easyui-combobox" style="width: 15%;"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle" style="width:125px;"><label data-locale="OPEN_DATE"/></td>
+				<td class="editControl">
+					<input type="text" name="open_date" id="open_date" class="easyui-datetimebox" style="width: 15%;"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle" style="width:125px;"><label data-locale="GOODS_TYPE"/></td>
+				<td class="editControl">
+					<input type="text" name="goods_type" id="goods_type" class="easyui-combobox" style="width: 15%;"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle" style="width:125px;"><label data-locale="GOODS_NAME"/></td>
+				<td class="editControl">
+					<input type="text" name="goods_name" id="goods_name" class="easyui-textbox" style="width: 15%;"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle" style="width:125px;"><label data-locale="BOX_SIZE"/></td>
+				<td class="editControl">
+					<input type="text" name="box_size" id="box_size" class="easyui-combobox" style="width: 15%;"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle" style="width:125px;"><label data-locale="BOX_VALUE"/></td>
+				<td class="editControl">
+					<input type="text" name="box_value" id="box_value" class="easyui-combobox" style="width: 15%;"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle" style="width:125px;"><label data-locale="KUAIDI_COMPANY"/></td>
+				<td class="editControl">
+					<input type="text" name="kuaidi_company" id="kuaidi_company" class="easyui-combobox" style="width: 15%;"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle" style="width:125px;"><label data-locale="DAMAGE"/></td>
+				<td class="editControl"><div id="divDamage"></div></td>
+			</tr>
+			<!-- 售出信息 -->
+			<tr>
+				<td class="editTitle" style="width:125px;"><label data-locale="SELL_MODE"/></td>
+				<td class="editControl">
+					<input type="text" name="sell_mode" id="sell_mode" class="easyui-combobox" style="width:15%;"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle" style="width:125px;"><label data-locale="SOLD"/></td>
+				<td class="editControl"><div id="divSold"></div></td>
+			</tr>
+			<tr>
+				<td class="editTitle" style="width:125px;"><label data-locale="SELL_NO"/></td>
+				<td class="editControl">
+					<input type="text" name="sell_no" id="sell_no" class="easyui-combobox" style="width: 15%;"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle" style="width:125px;"><label data-locale="SELL_DATE"/></td>
+				<td class="editControl">
+					<input type="text" name="sell_date" id="sell_date" class="easyui-datetimebox" style="width: 15%;"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle" style="width:125px;"><label data-locale="SOLD_DATE"/></td>
+				<td class="editControl">
+					<input type="text" name="sold_date" id="sold_date" class="easyui-datetimebox" style="width: 15%;"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle" style="width:125px;"><label data-locale="OUT_TIME"/></td>
+				<td class="editControl">
+					<input type="text" name="out_time" id="out_time" class="easyui-textbox" style="width: 15%;"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle" style="width:125px;"><label data-locale="GOODS_COST"/></td>
+				<td class="editControl">
+					<input type="text" name="goods_cost" id="goods_cost" class="easyui-numberbox" data-options="required:false,precision:2" style="width: 15%;"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle" style="width:125px;"><label data-locale="SELL_PRICE"/></td>
+				<td class="editControl">
+					<input type="text" name="sell_price" id="sell_price" class="easyui-numberbox" data-options="required:false,precision:2" style="width: 15%;"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle" style="width:125px;"><label data-locale="GOODS_PROFIT"/></td>
+				<td class="editControl">
+					<input type="text" name="goods_profit" id="goods_profit" class="easyui-numberbox" data-options="required:false,precision:2" style="width: 15%;"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle" style="width:125px;"><label data-locale="FREE_SHIPPING"/></td>
+				<td class="editControl"><div id="divFree_shipping"></div></td>
+			</tr>
+			<tr>
+				<td class="editTitle" style="width:125px;"><label data-locale="EXPRESS_FEE"/></td>
+				<td class="editControl">
+					<input type="text" name="express_fee" id="express_fee" class="easyui-numberbox" data-options="required:false,precision:2" style="width: 15%;"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle" style="width:125px;"><label data-locale="REMARK"/></td>
+				<td class="editControl">
+					<input type="text" name="remark" id="remark" class="easyui-textbox" style="width: 25%;"/>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/cookie/jquery.cookie.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/upload.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/file.js"></script>
+<script language="javascript" type="text/javascript">
+    $(function() {
+        initScript();
+        initStyle();
+        initData();
+        var parms = getUrlParms();
+        if(parms.sheet_no){
+            window.parent.onIframeSelect(parms.sheet_no);
+        }
+
+    });
+
+    $(window).load(function() { hideLoading(); });
+
+    function initStyle() {
+        $("#goods_cost,#express_fee,#sell_price").numberbox({
+            onChange : function (e) {
+                var goods_cost = $("#goods_cost").numberbox("getValue");
+                var express_fee = $("#express_fee").numberbox("getValue");
+                var sell_price = $("#sell_price").numberbox("getValue");
+                if (goods_cost!="" && express_fee!="" && sell_price!="") {
+                    var goods_profit = (Number(sell_price)-(Number(express_fee)+Number(goods_cost))).toFixed(2);
+                    $("#goods_profit").textbox("setValue",goods_profit);
+                }
+            }
+        })
+	}
+
+    var initScript = function() {};
+
+    // 加载数据
+    var initData = function() {
+        getDictionaryData([{
+            //初始化出售方式
+            dicTypeCode : Global_DicType.SellMode,
+            ADD_ALL: false,
+            callback : function(callbackData) {
+                window.docking_manMap = {};
+                $("#sell_mode").combobox({
+                    valueField: 'dicvalue',
+                    textField: 'dictext',
+                    //panelHeight: 200,
+                    //panelWidth: 250,
+                    editable: true
+                });
+                $("#sell_mode").combobox("loadData", callbackData);
+            }
+        },{
+            //初始化货物类型
+            dicTypeCode : Global_DicType.GoodsType,
+            ADD_ALL: false,
+            callback : function(callbackData) {
+                $("#goods_type").combobox({
+                    valueField: 'dicvalue',
+                    textField: 'dictext',
+                    //panelHeight: 200,
+                    //panelWidth: 250,
+                    editable: true
+                });
+                $("#goods_type").combobox("loadData", callbackData);
+            }
+        },{
+            //初始化货物价值
+            dicTypeCode : Global_DicType.BoxValue,
+            ADD_ALL: false,
+            callback : function(callbackData) {
+                $("#box_value").combobox({
+                    valueField: 'dicvalue',
+                    textField: 'dictext',
+                    //panelHeight: 200,
+                    //panelWidth: 250,
+                    editable: true
+                });
+                $("#box_value").combobox("loadData", callbackData);
+            }
+        },{
+            //初始化货物大小
+            dicTypeCode : Global_DicType.BoxSize,
+            ADD_ALL: false,
+            callback : function(callbackData) {
+                $("#box_size").combobox({
+                    valueField: 'dicvalue',
+                    textField: 'dictext',
+                    //panelHeight: 200,
+                    //panelWidth: 250,
+                    editable: true
+                });
+                $("#box_size").combobox("loadData", callbackData);
+            }
+        },{
+            //初始化快递
+            dicTypeCode : Global_DicType.Kuaidi,
+            ADD_ALL: false,
+            callback : function(callbackData) {
+                $("#kuaidi_company").combobox({
+                    valueField: 'dicvalue',
+                    textField: 'dictext',
+                    //panelHeight: 200,
+                    //panelWidth: 250,
+                    editable: true
+                });
+                $("#kuaidi_company").combobox("loadData", callbackData);
+            }
+        },{
+            //初始化状态
+            dicTypeCode : Global_DicType.GoodsState,
+            ADD_ALL: false,
+            callback : function(callbackData) {
+                $("#goods_state").combobox({
+                    valueField: 'dicvalue',
+                    textField: 'dictext',
+                    //panelHeight: 200,
+                    //panelWidth: 250,
+                    editable: true
+                });
+                $("#goods_state").combobox("loadData", callbackData);
+            }
+        },{
+            //初始化鱼号
+            dicTypeCode : Global_DicType.SellNo,
+            ADD_ALL: false,
+            callback : function(callbackData) {
+                $("#sell_no").combobox({
+                    valueField: 'dicvalue',
+                    textField: 'dictext',
+                    //panelHeight: 200,
+                    //panelWidth: 250,
+                    editable: true
+                });
+                $("#sell_no").combobox("loadData", callbackData);
+            }
+        },{
+            //初始化状态
+            dicTypeCode : Global_DicType.OpenState,
+            ADD_ALL: false,
+            callback : function(callbackData) {
+                $("#state").combobox({
+                    valueField: 'dicvalue',
+                    textField: 'dictext',
+                    //panelHeight: 200,
+                    //panelWidth: 250,
+                    editable: true
+                });
+                $("#state").combobox("loadData", callbackData);
+            }
+        },{
+            dicTypeCode: Global_DicType.Global_DicType_CommonStateYesNo,
+            callback: function (callbackData) {
+                var formatData = { data: callbackData, needChooseAll: false, defaultValue: "N",
+                    bindBoxName: "divSold", bindControlPrefix: "sold", onClick:function(){
+                    } };
+                var formatData2 = { data: callbackData, needChooseAll: false, defaultValue: "N",
+                    bindBoxName: "divDamage", bindControlPrefix: "damage", onClick:function(){
+                    } };
+                var formatData3 = { data: callbackData, needChooseAll: false, defaultValue: "N",
+                    bindBoxName: "divFree_shipping", bindControlPrefix: "free_shipping", onClick:function(){
+                    } };
+                formatDefaultRadio_Local(formatData);
+                formatDefaultRadio_Local(formatData2);
+                formatDefaultRadio_Local(formatData3);
+            }
+        }]);
+    };
+
+    function add() {
+        $.messager.confirm('提示', '确定打开一个新界面?', function (r) {
+            if (r) {
+                showLoading();
+                add_after();
+            }
+        });
+    };
+
+    function add_after(){
+        location.href = location.pathname;
+    }
+
+    var saveValidationPass = function () {
+        var validated = $("form").form('enableValidation').form('validate');
+        if (!validated) {
+            errorNotification({
+                SimpleMessage: "保存操作中部分数据验证不通过"
+            });
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    function save() {
+        loseGridFocus();
+        if (!saveValidationPass()) {
+            return;
+        }
+        $.messager.confirm('提示', '确定保存吗?', function (r) {
+            if(r){
+                showLoading();
+                save_after();
+            }
+        });
+    }
+
+    function save_after(){
+        loseGridFocus();
+        var requestParam = FormUtils.toJSONObject('form');
+        $.ajax({
+            url :"../../cpgl/openRecordController/saveDetail?t=" + Math.random(),
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(requestParam),
+            success : function(dataObj){
+                if (isServerResultDataPass(dataObj)) {
+                    loadDetail({
+                        sheet_no : dataObj.resultDataFull.sheet_no,
+                        msg : { simpleMessage : dataObj.resultDataFull.msg }
+                    });
+                } else {
+                    FailResultDataToTip(dataObj);
+                    hideLoading();
+                }
+            }
+        });
+    }
+
+    // 加载数据详细信息
+    var loadDetail = function(requestParam) {
+        showLoading();
+        $.ajax({
+            url: '../../cpgl/openRecordController/getDetail?t=' + Math.random(),
+            type: 'POST',
+            data: "sheet_no="+requestParam.sheet_no,
+            success : function(dataObj) {
+                if (isServerResultDataPass(dataObj)) {
+                    var dataVO = dataObj.resultDataFull;
+                    $("#sheet_no").textbox("setValue", dataVO.sheet_no);
+                    $("#open_date").datetimebox("setValue", dataVO.open_date);
+                    $("#goods_type").combobox("setValue", dataVO.goods_type);
+                    $("#goods_name").textbox("setValue", dataVO.goods_name);
+                    $("#box_size").combobox("setValue", dataVO.box_size);
+                    $("#box_value").combobox("setValue", dataVO.box_value);
+                    $("#state").combobox("setValue", dataVO.state);
+                    $("#kuaidi_company").combobox("setValue", dataVO.kuaidi_company);
+                    $("[name='damage'][value='" + dataVO.damage + "']").prop("checked", true);
+                    $("#sell_mode").combobox("setValue", dataVO.sell_mode);
+                    $("[name='sold'][value='" + dataVO.sold + "']").prop("checked", true);
+                    $("#sell_no").textbox("setValue", dataVO.sell_no);
+                    $("#sell_date").datetimebox("setValue", dataVO.sell_date);
+                    $("#sold_date").datetimebox("setValue", dataVO.sold_date);
+                    $("#out_time").textbox("setValue", dataVO.out_time);
+                    $("#goods_cost").textbox("setValue", dataVO.goods_cost);
+                    $("[name='free_shipping'][value='" + dataVO.free_shipping + "']").prop("checked", true);
+                    $("#express_fee").numberbox("setValue", dataVO.express_fee);
+                    $("#goods_profit").numberbox("setValue", dataVO.goods_profit);
+                    $("#sell_price").numberbox("setValue", dataVO.sell_price);
+                    $("#remark").textbox("setValue", dataVO.remark);
+                    if(requestParam.msg){
+                        correctNotification(requestParam.msg);
+                    }
+                } else {
+                    FailResultDataToTip(dataObj);
+                }
+                hideLoading();
+            }
+        });
+    };
+
+    var add_detail = function (vo) {
+        loseGridFocus();
+        $("#gridTable").common_add({
+            data : vo/*,
+            isFirstClick : true*/
+        });
+    };
+
+    function refreshCallerData() {
+        loadDetail();
+    }
+
+</script>
+</body>
+</html>

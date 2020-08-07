@@ -38,44 +38,44 @@
 			</tr>
 			<tr>
 				<td class="editTitle" style="width:125px;"><label data-locale="RECEIVE_DATE"/></td>
-				<td class="searchParamesTdControl">
-					<input type="text" name="receive_date" id="receive_date" class="easyui-datebox" style="width: 13%" />
+				<td class="editControl">
+					<input type="text" name="receive_date" id="receive_date" class="easyui-datetimebox" style="width: 13%" />
 				</td>
 			</tr>
 			<tr>
 				<td class="editTitle" style="width:125px;"><label data-locale="BOX_NUM"/></td>
-				<td class="searchParamesTdControl">
-					<input type="text" name="box_num" id="box_num" class="easyui-textbox" style="width: 25%;"/>
+				<td class="editControl">
+					<input type="text" name="box_num" id="box_num" class="easyui-numberbox" style="width:25%;"/>
 				</td>
 			</tr>
 			<tr>
 				<td class="editTitle" style="width:125px;"><label data-locale="BOX_PRICE"/></td>
-				<td class="searchParamesTdControl">
-					<input type="text" name="box_price" id="box_price" class="easyui-textbox" style="width: 25%;"/>
+				<td class="editControl">
+					<input type="text" name="box_price" id="box_price" class="easyui-numberbox" data-options="required:false,precision:2" data-options="required:true,precision:2" style="width: 25%;"/>
 				</td>
 			</tr>
 			<tr>
 				<td class="editTitle" style="width:125px;"><label data-locale="BOX_TOTAL_PRICE"/></td>
-				<td class="searchParamesTdControl">
-					<input type="text" name="box_total_price" id="box_total_price" class="easyui-textbox" style="width: 25%;"/>
+				<td class="editControl">
+					<input type="text" name="box_total_price" id="box_total_price" class="easyui-numberbox" data-options="required:false,precision:2" style="width: 25%;"/>
 				</td>
 			</tr>
 			<tr>
 				<td class="editTitle" style="width:125px;"><label data-locale="FREIGHT"/></td>
-				<td class="searchParamesTdControl">
-					<input type="text" name="freight" id="freight" class="easyui-textbox" style="width: 25%;"/>
+				<td class="editControl">
+					<input type="text" name="freight" id="freight" class="easyui-numberbox" data-options="required:false,precision:2" style="width: 25%;"/>
 				</td>
 			</tr>
 			<tr>
 				<td class="editTitle" style="width:125px;"><label data-locale="TOTAL_FREIGHT"/></td>
-				<td class="searchParamesTdControl">
-					<input type="text" name="total_freight" id="total_freight" class="easyui-textbox" style="width: 25%;"/>
+				<td class="editControl">
+					<input type="text" name="total_freight" id="total_freight" class="easyui-numberbox" data-options="required:false,precision:2" style="width: 25%;"/>
 				</td>
 			</tr>
 			<tr>
 				<td class="editTitle" style="width:125px;"><label data-locale="DOCKING_MAN"/></td>
-				<td class="searchParamesTdControl">
-					<input type="text" name="docking_man" id="docking_man" class="easyui-textbox" style="width: 25%;"/>
+				<td class="editControl">
+					<input type="text" name="docking_man" id="docking_man" class="easyui-combobox" style="width: 25%;"/>
 				</td>
 			</tr>
 			<tr>
@@ -116,96 +116,53 @@
 
     $(window).load(function() { hideLoading(); });
 
-    var initStyle = function() {};
+    function initStyle() {
+        $("#box_num,#box_price").numberbox({
+            onChange : function (e) {
+                var box_num = $("#box_num").numberbox("getValue");
+                var box_price = $("#box_price").numberbox("getValue");
+                if (box_num!="" && box_price!="") {
+                    var box_total_price = (box_num*box_price).toFixed(2);
+                    $("#box_total_price").textbox("setValue",box_total_price);
+                }
+            }
+        })
+
+        $("#box_total_price,#freight").numberbox({
+            onChange : function (e) {
+                var box_total_price = $("#box_total_price").numberbox("getValue");
+                var freight = $("#freight").numberbox("getValue");
+                if (freight!="" && box_total_price!="") {
+                    var total_freight = (Number(box_total_price)+Number(freight)).toFixed(2);
+                    $("#total_freight").textbox("setValue",total_freight);
+                }
+            }
+        })
+    }
 
     var initScript = function() {};
 
     // 加载数据
     var initData = function() {
-
         getDictionaryData([{
-            //初始化问题类型
-            dicTypeCode : Global_DicType.Questions_Type,
+            //初始化对接人
+            dicTypeCode : Global_DicType.MeetPeople,
             ADD_ALL: false,
             callback : function(callbackData) {
-                window.Questions_TypeMap = {};
+                window.docking_manMap = {};
                 for(var i = 0; i < callbackData.length; i++){
-                    Questions_TypeMap[callbackData[i].dicvalue] = callbackData[i].dictext;
+                    docking_manMap[callbackData[i].dicvalue] = callbackData[i].dictext;
                 }
-                $("#type").combobox({
-                    valueField: 'dicvalue',
-                    textField: 'dictext',
-                    //panelHeight: 200,
-                    //panelWidth: 250,
-                    editable: true
-           /*         onLoadSuccess:function(data){
-                        //默认选中第一个
-                        var array=$(this).combobox("getData");
-                        for(var item in array[0]){
-                            if(item=="dicvalue"){
-                                $(this).combobox('setValue',array[0][item]);
-                            }
-                        }
-                    }*/
-                });
-                $("#type").combobox("loadData", callbackData);
-            }
-        },{
-            //初始化问题状态
-            dicTypeCode : Global_DicType.Questions_State,
-            ADD_ALL: false,
-            callback : function(callbackData) {
-                window.Questions_StateMap = {};
-                for(var i = 0; i < callbackData.length; i++){
-                    Questions_StateMap[callbackData[i].dicvalue] = callbackData[i].dictext;
-                }
-            }
-        },{
-            //初始化优先级
-            dicTypeCode : Global_DicType.Global_DicType_BasePriority,
-            ADD_ALL: false,
-            callback : function(callbackData) {
-                window.priorityMap = {};
-                for(var i = 0; i < callbackData.length; i++){
-                    priorityMap[callbackData[i].dicvalue] = callbackData[i].dictext;
-                }
-                $("#priority").combobox({
+                $("#docking_man").combobox({
                     valueField: 'dicvalue',
                     textField: 'dictext',
                     //panelHeight: 200,
                     //panelWidth: 250,
                     editable: true
                 });
-                $("#priority").combobox("loadData", callbackData);
+                $("#docking_man").combobox("loadData", callbackData);
             }
-        },{
-            //初始化问题模块
-            dicTypeCode : Global_DicType.Questions_Module,
-            ADD_ALL: false,
-            callback : function(callbackData) {
-                window.Questions_ModuleMap = {};
-                for(var i = 0; i < callbackData.length; i++){
-                    Questions_ModuleMap[callbackData[i].dicvalue] = callbackData[i].dictext;
-                }
-                $("#module").combobox({
-                    valueField: 'dicvalue',
-                    textField: 'dictext',
-                    //panelHeight: 200,
-                    //panelWidth: 250,
-                    editable: true
-            /*        onLoadSuccess:function(data){
-                        //默认选中第一个
-                        var array=$(this).combobox("getData");
-                        for(var item in array[0]){
-                            if(item=="dicvalue"){
-                                $(this).combobox('setValue',array[0][item]);
-                            }
-                        }
-                    }*/
-                });
-                $("#module").combobox("loadData", callbackData);
-            }
-        },{
+        }/*,{
             dicTypeCode: Global_DicType.Global_DicType_CommonStateYesNo,
             callback: function (callbackData) {
                 window.feedback_huaweiList = {};
@@ -217,7 +174,7 @@
                     } };
                 formatDefaultRadio_Local(formatData);
             }
-        }]);
+        }*/]);
     };
 
     function add() {
@@ -262,7 +219,7 @@
         loseGridFocus();
         var requestParam = FormUtils.toJSONObject('form');
         $.ajax({
-            url :"../../wdgl/QuestionsController/saveDetail?t=" + Math.random(),
+            url :"../../cpgl/PurchaseManagerController/saveDetail?t=" + Math.random(),
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify(requestParam),
@@ -284,34 +241,21 @@
     var loadDetail = function(requestParam) {
         showLoading();
         $.ajax({
-            url: '../../wdgl/QuestionsController/getDetail?t=' + Math.random(),
+            url: '../../cpgl/PurchaseManagerController/getDetail?t=' + Math.random(),
             type: 'POST',
             data: "sheet_no="+requestParam.sheet_no,
             success : function(dataObj) {
                 if (isServerResultDataPass(dataObj)) {
-                    var questionVO = dataObj.resultDataFull;
-                    $("#state").textbox("setValue", window.Questions_StateMap[questionVO.state]);
-                    $("#sheet_no").textbox("setValue", questionVO.sheet_no);
-
-                    $("#huawei_no").textbox("setValue", questionVO.huawei_no);
-                    $("#account_manager").textbox("setValue", questionVO.account_manager);
-                    $("#contact_info").textbox("setValue", questionVO.contact_info);
-                    $("#contact_name").textbox("setValue", questionVO.contact_name);
-                    $("#handler").textbox("setValue", questionVO.handler);
-                    $("#priority").combobox("setValue", window.priorityMap[questionVO.priority]);
-                    $("[name='feedback_huawei'][value='" + questionVO.feedback_huawei + "']").prop("checked", true);
-                    $("#huawei_answer").val(questionVO.huawei_answer);
-                    $("#work_order_no").textbox("setValue", questionVO.work_order_no);
-                    $("#question_date").textbox("setValue", questionVO.question_date);
-                    $("#module").combobox("setValue", window.Questions_ModuleMap[questionVO.module]);
-                    $("#type").combobox("setValue", window.Questions_TypeMap[questionVO.type]);
-                    $("#question").val(questionVO.question);
-                    $("#answer").val(questionVO.answer);
-                    $("#create_by").textbox("setValue", questionVO.create_by+" "+questionVO.create_date);
-                    if(questionVO.used_by){
-                        $("#used_by").textbox("setValue", questionVO.used_by+" "+questionVO.used_date);
-					}
-                    $("#remark").textbox("setValue", questionVO.remark);
+                    var dataVO = dataObj.resultDataFull;
+                    $("#sheet_no").textbox("setValue", dataVO.sheet_no);
+                    $("#receive_date").datetimebox("setValue", dataVO.receive_date);
+                    $("#box_num").numberbox("setValue", dataVO.box_num);
+                    $("#box_price").numberbox("setValue", dataVO.box_price);
+                    $("#box_total_price").numberbox("setValue", dataVO.box_total_price);
+                    $("#docking_man").combobox("setValue", dataVO.docking_man);
+                    $("#freight").numberbox("setValue", dataVO.freight);
+                    $("#total_freight").numberbox("setValue", dataVO.total_freight);
+                    $("#remark").textbox("setValue", dataVO.remark);
                     if(requestParam.msg){
                         correctNotification(requestParam.msg);
                     }

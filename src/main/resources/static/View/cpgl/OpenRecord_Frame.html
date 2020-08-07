@@ -11,24 +11,24 @@
 <body>
 <div id="easyui-tabs" class="easyui-tabs" data-options="tabPosition:'top',fit:true,headerWidth:80,tabWidth:80">
 	<div
-			data-locale-title="PURCHASEMANAGER"
+			data-locale-title="OPENRECORD_LIST"
 			style="padding: 0px;"
 			data-options="tabWidth:125">
 		<iframe
 				scrolling="auto"
-				name='PurchaseManager'
+				name='OpenRecord_List'
 				frameborder="0"
 				src=""
 				style="width: 100%; height: calc(100% - 3px);">
 		</iframe>
 	</div>
 	<div
-			data-locale-title="PURCHASEMANAGER_DETAIL"
+			data-locale-title="OPENRECORD_DETAIL"
 			style="padding: 0px"
 			data-options="tabWidth:125">
 		<iframe
 				scrolling="auto"
-				name='PurchaseManager_Detail'
+				name='OpenRecord_Detail'
 				frameborder="0"
 				src=""
 				style="width: 100%; height: calc(100% - 3px);">
@@ -53,7 +53,7 @@
         });
 
         var parms = getUrlParms();
-        $("iframe:eq("+0+")").attr("src", "PurchaseManager.html");
+        $("iframe:eq("+0+")").attr("src", "OpenRecord_List.html");
     });
 
     function onIframeSelect(sheet_no){
@@ -64,13 +64,13 @@
                     sheet_no: sheet_no
                 });
             }else{
-                $("iframe:eq("+1+")").attr("src", "PurchaseManager_Detail.html?sheet_no="+sheet_no);
+                $("iframe:eq("+1+")").attr("src", "OpenRecord_Detail.html?sheet_no="+sheet_no);
             }
         }else{
             if(window.frames[1].add_after){
                 window.frames[1].add_after();
             }else{
-                $("iframe:eq("+1+")").attr("src", "PurchaseManager_Detail.html");
+                $("iframe:eq("+1+")").attr("src", "OpenRecord_Detail.html");
             }
         }
     };

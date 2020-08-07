@@ -9,7 +9,7 @@
     <link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
     <link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
     <link type="text/css" rel="stylesheet" href="../../Resource/js/moment/css/daterangepicker.css" />
-    <title>J进货管理</title>
+    <title>成本管理</title>
 </head>
 <body>
 <div id="toolbar" class="easyui-panel" style="padding:4px;border-width:0;border-bottom-width:1px;">
@@ -23,7 +23,7 @@
             </td>
             <td width="20px;"></td>
             <td class="searchParamesTdTitle">
-                进货时间:
+                使用时间:
             </td>
             <td class="searchParamesTdControl">
                 <input type="text" name="begin_date" id="begin_date" class="easyui-datebox" editable="false" style="width: 90px" />
@@ -59,7 +59,10 @@
 <script type="text/javascript" src="../../Resource/js/moment/js/moment.min.js"></script>
 <script type="text/javascript" src="../../Resource/js/moment/js/jquery.daterangepicker.js"></script>
 <script language="javascript" type="text/javascript">
+    var moduleId = 0;
     $(function() {
+        var parms = getUrlParms();
+        moduleId = parms["moduleId"];
         initScript();
         initData();
         initStyle();
@@ -102,17 +105,18 @@
     // 获取查询URL
     var getSearchGridUrl = function() {
         var customSearchFilters = encodeURI(getSearchFilters());
-        return '../../cpgl/PurchaseManagerController/getListForGrid?' + Math.random() + '&customSearchFilters=' + customSearchFilters;
+        return '../../cpgl/BjCostController/getListForGrid?' + Math.random() + '&customSearchFilters=' + customSearchFilters;
     };
 
     // 获取查询条件
     var getSearchFilters = function() {
         var parmsArray = [
             [
-                { name: 'docking_man', value: $('#common_sheet_title').textbox('getValue'), op: 'cn' }
+                { name: 'used_by', value: $('#common_sheet_title').textbox('getValue'), op: 'cn' },
+                { name: 'sheet_no', value: $('#common_sheet_title').textbox('getValue'), op: 'cn' }
             ],
-            { name: '_d_receive_date', value: $('#begin_date').textbox('getValue'), op: 'ge' },
-            { name: '_d_receive_date', value: $('#end_date').textbox('getValue'), op: 'le' }
+            { name: '_d_used_date', value: $('#begin_date').textbox('getValue'), op: 'ge' },
+            { name: '_d_used_date', value: $('#end_date').textbox('getValue'), op: 'le' }
         ];
         return formatSearchParames(parmsArray);
     };
@@ -126,41 +130,24 @@
             colNames: [
                 $.i18n.prop('ID'),
                 $.i18n.prop('SHEET_NO'),
-                $.i18n.prop('RECEIVE_DATE'),
-                $.i18n.prop('BOX_NUM'),
-                $.i18n.prop('BOX_PRICE'),
-                $.i18n.prop('BOX_TOTAL_PRICE'),
-                $.i18n.prop('FREIGHT'),
-                $.i18n.prop('TOTAL_FREIGHT'),
-                $.i18n.prop('DOCKING_MAN'),
-                $.i18n.prop('REMARK')
+                $.i18n.prop('COST'),
+                $.i18n.prop('COST_REMARK'),
+                $.i18n.prop('USED_BY'),
+                $.i18n.prop('USED_DATE')
             ],
             colModel: [
                 { name: 'id', index: 'id', align: 'center', sorttype: 'int', sortable: false, key: true, width: 40, hidden: true, search: false },
                 { name: 'sheet_no', index: 'sheet_no', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
-                { name: 'receive_date', index: '_d_receive_date', align: 'center', width: 120, search: true, type: 'string',
-                    searchoptions: { sopt: ['ge'], dataEvents: [ { type: 'click', data: {}, fn: function() { WdatePicker(); } } ] } },
-                { name: 'box_num', index: 'box_num', align: 'right', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
-                { name: 'box_price', index: 'box_price', align: 'right', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
+                { name: 'cost', index: 'cost', align: 'right', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
                     ,formatter: function (value, grid, rows) {
-                        return keepTwoPointData(rows.box_total_price);
+                        return keepTwoPointData(rows.cost);
                     }},
-                { name: 'box_total_price', index: 'box_total_price', align: 'right', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
-                    ,formatter: function (value, grid, rows) {
-                        return keepTwoPointData(rows.box_total_price);
-                    }},
-                { name: 'freight', index: 'freight', align: 'right', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
-                    ,formatter: function (value, grid, rows) {
-                        return keepTwoPointData(rows.freight);
-                    }},
-                { name: 'total_freight', index: 'total_freight', align: 'right', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
-                    ,formatter: function (value, grid, rows) {
-                        return keepTwoPointData(rows.total_freight);
-                    }},
-                { name: 'docking_man', index: 'docking_man', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
-                { name: 'remark', index: 'remark', align: 'center', width: 350, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } }
+                { name: 'cost_remark', index: 'cost_remark', align: 'center', width: 350, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'used_by', index: 'used_by', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'used_date', index: '_d_used_date', align: 'center', width: 150, search: true, type: 'string',
+                    searchoptions: { sopt: ['ge'], dataEvents: [ { type: 'click', data: {}, fn: function() { WdatePicker(); } } ] }
 
-
+                }
             ],
             shrinkToFit: false,
             altRows: true,
@@ -245,12 +232,25 @@
             }
         }*/
     }
-    // 双击数据触发的事件
-    var showChildModule = function(rowid) {
-        var rowData = $('#gridTable').jqGrid('getRowData', rowid);
-        showLoading();
-        window.parent.onIframeSelect(rowData.sheet_no);
+
+
+    /**双击打开明细*/
+    function showChildModule(id) {
+        var rowData = $("#gridTable").jqGrid('getRowData',id);
+        openDetail(rowData.id);
     };
+
+    /**新增*/
+    function add() {
+        openDetail("");
+    }
+
+    /**打开明细*/
+    var openDetail = function (id) {
+        showLoading();
+        var href = "../View/cpgl/Cost_Detail.html?moduleId=" + moduleId+"&id=" + id;
+        openDialog({ title: "成本明细", id: 'Cost_Detail', width:500, height: 300, isResize: true, href: href, closable: true });
+    }
 
     function update(){
         var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
@@ -261,12 +261,6 @@
             return;
         }
         showChildModule(selectRowItems[0]);
-    }
-
-    //暂时没有新增功能，看后面需求
-    function add(){
-        showLoading();
-        window.parent.onIframeSelect();
     }
 
     //导出
@@ -291,7 +285,6 @@
         });
     }
 
-
     /**批量删除*/
     function remove() {
         commonFunction();
@@ -299,7 +292,7 @@
 
     //批量使用
     function commonFunction() {
-        var url = "../../cpgl/PurchaseManagerController/delete?t="+Math.random();
+        var url = "../../cpgl/BjCostController/delete?t="+Math.random();
         var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
         if (selectRowItems.length==0) {
             errorNotification({
@@ -333,6 +326,10 @@
                 });
             }
         });
+    }
+
+    function refreshCallerData() {
+        searchData();
     }
 </script>
 </body>

@@ -207,6 +207,18 @@ var Global_DicType = {
 
 	/**发票管理*/
 	Invoice_State:"Invoice_State",
+
+    /**日用百货*/
+    //对接人
+    MeetPeople:"MeetPeople",
+    SellMode:"SellMode",
+    GoodsType:"GoodsType",
+    GoodsState:"GoodsState",
+	SellNo:"SellNo",
+    Kuaidi:"Kuaidi",
+	BoxValue:"BoxValue",
+    BoxSize:"BoxSize",
+	OpenState:"OpenState",
 	/******************************************************************/
 
 	Global_DicType_orderState:"orderState",

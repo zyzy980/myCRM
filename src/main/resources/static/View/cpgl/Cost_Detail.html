@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link id="CustomTheme" type="text/css" rel="stylesheet" href="../../Resource/css/index/customLightBlue.css" />
+<link id="EasyuiTheme" type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/easyuiLightBlue.css" />
+<link id="JqgridTheme" type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/jqgridLightBlue/jquery-ui-1.10.4.custom.css" />
+<link type="text/css" rel="stylesheet" href="../../Resource/js/easyUI/themes/icon.css" />
+<link type="text/css" rel="stylesheet" href="../../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
+<title>成本明细</title>
+</head>
+<body style="overflow:hidden">
+	<div id="toolbar" class="easyui-panel" style="padding: 4px; border-width:0; border-bottom-width:1px;">
+		<a href="javascript:save();" id="save" class="easyui-linkbutton" style="display: inline-block;" plain="true" iconcls="icon-save">保存</a>
+		<a href="javascript:close();" id="close" class="easyui-linkbutton" style="display:inline-block;" plain="true" iconcls="icon-cancel"> 关闭</a>
+	</div>
+    <form id="addForm" class="easyui-form" method="post" enctype="multipart/form-data">
+    <input type="hidden" id="id" name="id" />
+		<table class="editTable">
+			<tr>
+				<td class="editTitle"><label data-locale="SHEET_NO"/></td>
+				<td class="editControl">
+					<input type="text" name="sheet_no" id="sheet_no" class="easyui-textbox"  readonly="readonly"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle"><label data-locale="USED_BY"/></td>
+				<td class="editControl">
+					<input type="text" name="used_by" id="used_by" class="easyui-combobox"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle"><label data-locale="USED_DATE"/></td>
+				<td class="editControl">
+					<input type="text" name="used_date" id="used_date" class="easyui-datetimebox"/>
+				</td>
+			</tr>
+
+			<tr>
+				<td class="editTitle"><label data-locale="COST"/></td>
+				<td class="editControl">
+					<input type="text" name="cost" id="cost" class="easyui-numberbox" data-options="required:false,precision:2" data-options="required:true,precision:2"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="editTitle" align="right"><label data-locale="COST_REMARK"/></td>
+				<td class="editControl">
+					<textarea id="cost_remark" name="cost_remark" style="width:99%"></textarea>
+				</td>
+			</tr>
+		</table>
+</form>
+<input id = "snValue" type="hidden" />
+
+	<div id="gridControl">
+		<table id="gridTable"></table>
+	</div>
+	<div id="gridPager">
+	</div>
+</body>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery.i18n.properties.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/regex/regex.js"></script>
+<script language="javascript" type="text/javascript">
+    var id="";
+    var callerId = "";
+    var callerType = "";
+    var callbackFlag = "";
+    $(function () {
+        var parms = getUrlParms();
+        id = parms["id"];
+        callerId = parms["callerId"];
+        callerType = parms["callerType"];
+        callbackFlag = parms["callbackFlag"];
+        initScript();
+        initData();
+        initStyle();
+    });
+
+    $(window).load(function () {
+        hideLoading();
+    });
+
+    function initStyle() {
+        if (id != "") {
+            $("input", $("#id").next("span")).attr("readonly", "readonly");
+        }
+    }
+
+    function initScript() {
+    }
+
+    function initData() {
+        if (id != "") {
+            loadDetail();
+        }
+        else {
+            $("#id").val("0");
+        }
+        getDictionaryData([{
+            //初始化对接人
+            dicTypeCode : Global_DicType.MeetPeople,
+            ADD_ALL: false,
+            callback : function(callbackData) {
+                $("#used_by").combobox({
+                    valueField: 'dicvalue',
+                    textField: 'dictext',
+                    panelHeight: 100,
+                    //panelWidth: 250,
+                    editable: true
+                });
+                $("#used_by").combobox("loadData", callbackData);
+            }
+        }]);
+    }
+
+   /**关闭*/
+    function close() {
+        closeDialog("Cost_Detail");
+    }
+
+    /**验证*/
+    function validate() {
+        var validated = $("#addForm").form('enableValidation').form('validate');
+        if (!validated) {
+            errorNotification({
+                SimpleMessage: "保存操作中部分数据验证不通过"
+            });
+            return false;
+        }
+        return true;
+    }
+
+    /**保存*/
+    function save() {
+        if (!validate()) {
+            return;
+        }
+        // 判断jqgrid行
+        $.messager.confirm('提示', '确定保存吗?', function (r) {
+            if (r) {
+                showLoading();
+                saveChild();
+            }
+        });
+    }
+
+    function saveChild() {
+        loseGridFocus();
+        var requestParam = FormUtils.toJSONObject('form');
+        $.ajax({
+            url : "../../cpgl/BjCostController/saveDetail?t="+ Math.random(),
+            contentType : 'application/json;charset=utf-8',
+            dataType:"json",
+            type : "POST",
+            data : JSON.stringify(requestParam),
+            success : function(dataObj) {
+                if (isServerResultDataPass(dataObj)) {
+                    correctNotification(dataObj.resultDataFull);
+                    hideLoading();
+                    refreshCallerData();
+                    close();
+                } else {
+                    hideLoading();
+                    FailResultDataToTip(dataObj);
+                }
+            }
+        });
+    }
+
+    function refreshCallerData() {
+        if (callerType == Global_Constant.Global_Constant_CallerType_Dialog) {
+            //此callerId此时为dialog的id
+            getDialog(callerId).refreshCallerData(callbackFlag);
+        }
+        else {
+            //此callerId此时为frame的id
+            getCurrentTab(callerId).refreshCallerData(callbackFlag);
+        }
+    }
+
+    function loadDetail() {
+        showLoading();
+        $.ajax({
+            type : "POST",
+            url : "../../cpgl/BjCostController/getDetail?t="+ Math.random(),
+			data: "id="+id,
+            success : function(dataObj) {
+                if (isServerResultDataPass(dataObj)) {
+                    $("#id").val(dataObj.resultDataFull.id);
+                    $("#sheet_no").textbox("setValue",dataObj.resultDataFull.sheet_no);
+                    $("#used_date").datetimebox("setValue",dataObj.resultDataFull.used_date);
+                    $("#cost").numberbox("setValue", dataObj.resultDataFull.cost);
+                    $("#used_by").combobox("setValue", dataObj.resultDataFull.used_by);
+                    $("#cost_remark").val(dataObj.resultDataFull.cost_remark);
+                } else {
+                    FailResultDataToTip(dataObj);
+                }
+                hideLoading();
+            },
+        });
+    }
+</script>
+</html>

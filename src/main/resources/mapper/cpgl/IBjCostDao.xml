@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>  
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.bba.cpgl.dao.IPurchaseManagerDao">
+<mapper namespace="com.bba.cpgl.dao.IBjCostDao">
 	<sql id="begin_page">
 		<if test="isPage == true">select A.* from (select rownum rn, T.* from (</if>
 	</sql>
@@ -13,11 +13,11 @@
 	<!--字段-->
 	<sql id="sql_data">
 		select d.*
-		from bj_receive_record d
+		from bj_cost d
 	</sql>
 
 	<!-- 查询问题列表 -->
-	<select id="findListForGrid" resultType="com.bba.cpgl.vo.ReceiveRecordVO" parameterType="com.bba.util.JqGridParamModel">
+	<select id="findListForGrid" resultType="com.bba.cpgl.vo.BjCostVO" parameterType="com.bba.util.JqGridParamModel">
 		<include refid="begin_page" />
 		select t.* from (
 		<include refid="sql_data" />
@@ -36,7 +36,7 @@
 
 	<delete id="batchDelete" parameterType="java.util.List">
 		<foreach item="vo" index="index" collection="list" open="begin" close="end;" separator="">
-			delete bj_receive_record where id=#{vo.id} ;
+			delete bj_cost where id=#{vo.id} ;
 		</foreach>
 	</delete>
 </mapper>
