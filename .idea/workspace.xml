@@ -2,36 +2,42 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fb7608ed-92d8-470e-802b-ca88f6c7cb74" name="Default Changelist" comment="fix #501638798 FAQ修改BUG">
-      <change afterPath="$PROJECT_DIR$/logs/niu_debug.2020-07-08-0.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/logs/niu_debug.2020-07-09-0.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/logs/niu_debug.2020-07-10-0.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/logs/niu_debug.2020-07-13-0.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/logs/niu_debug.2020-07-20-0.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/logs/niu_debug.2020-07-21-0.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/logs/niu_debug.2020-07-30-0.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/bba/cpgl/controller/CpController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/bba/cpgl/controller/CpDataGet.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/bba/cpgl/controller/PurchaseManagerController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/bba/cpgl/dao/ICpDao.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/bba/cpgl/dao/IPurchaseManagerDao.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/bba/cpgl/service/api/ICpService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/bba/cpgl/service/api/IPurchaseManagerService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/bba/cpgl/service/impl/CpServiceimpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/bba/cpgl/service/impl/PurchaseManagerServiceimpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/bba/cpgl/vo/CpVO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/bba/cpgl/vo/ReceiveRecordVO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/cpgl/ICpDao.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/cpgl/IPurchaseManagerDao.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/Cpssfx.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/PurchaseManager.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/PurchaseManager_Detail.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/PurchaseManager_Frame.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/View/cpgl/Cpssfx.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/View/cpgl/PurchaseManager.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/View/cpgl/PurchaseManager_Detail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/static/View/cpgl/PurchaseManager_Frame.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/bba/cpgl/controller/BjCostController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/bba/cpgl/controller/BjOpenRecordController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/bba/cpgl/dao/IBjCostDao.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/bba/cpgl/dao/IOpenRecordDao.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/bba/cpgl/service/api/IBjCostService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/bba/cpgl/service/api/IOpenRecordService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/bba/cpgl/service/impl/BjCostServiceimpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/bba/cpgl/service/impl/OpenRecordServiceimpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/bba/cpgl/vo/BjCostVO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/bba/cpgl/vo/OpenRecordVO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/cpgl/IBjCostDao.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/mapper/cpgl/IOpenRecordDao.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/Cost.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/Cost_Detail.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/OpenRecord_Detail.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/OpenRecord_Frame.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/OpenRecord_List.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/View/cpgl/Cost.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/View/cpgl/Cost_Detail.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/View/cpgl/OpenRecord_Detail.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/View/cpgl/OpenRecord_Frame.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/static/View/cpgl/OpenRecord_List.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/niu_debug.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/niu_debug.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bba/common/common/Sys_sheetidUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bba/common/common/Sys_sheetidUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/bba/cpgl/service/impl/PurchaseManagerServiceimpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/bba/cpgl/service/impl/PurchaseManagerServiceimpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/mapper/cpgl/IPurchaseManagerDao.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/mapper/cpgl/IPurchaseManagerDao.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/PurchaseManager.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/PurchaseManager.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/PurchaseManager_Detail.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/PurchaseManager_Detail.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/PurchaseManager_Frame.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/PurchaseManager_Frame.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/Resource/js/base/globalVariable.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/Resource/js/base/globalVariable.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/View/SysInfo/SysDictionary.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/View/SysInfo/SysDictionary.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/View/cpgl/PurchaseManager.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/View/cpgl/PurchaseManager.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/View/cpgl/PurchaseManager_Detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/View/cpgl/PurchaseManager_Detail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/View/cpgl/PurchaseManager_Frame.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/View/cpgl/PurchaseManager_Frame.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/View/wdgl/Questions_Detail.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/View/wdgl/Questions_Detail.html" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -67,78 +73,53 @@
     <favorites_list name="vehicle_js" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/resources/static/View/cpgl/PurchaseManager.html">
+        <entry file="file://$PROJECT_DIR$/src/main/resources/static/View/cpgl/OpenRecord_Detail.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-4822">
-              <caret line="104" column="52" selection-start-line="104" selection-start-column="52" selection-end-line="104" selection-end-column="52" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/resources/static/View/cpgl/PurchaseManager_Frame.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="217">
-              <caret line="72" column="73" selection-start-line="72" selection-start-column="73" selection-end-line="72" selection-end-column="73" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/PurchaseManager_Frame.properties">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="25">
-              <caret line="1" column="20" selection-start-line="1" selection-end-line="1" selection-end-column="20" />
+            <state relative-caret-position="-1760">
+              <caret line="197" selection-start-line="197" selection-end-line="197" />
+              <folding>
+                <element signature="n#style#0;n#td#0;n#tr#0;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#input#0;n#td#1;n#tr#0;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#td#0;n#tr#1;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#input#0;n#td#1;n#tr#1;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#td#0;n#tr#1;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#input#0;n#td#1;n#tr#1;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#td#0;n#tr#2;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#input#0;n#td#1;n#tr#2;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#input#0;n#td#1;n#tr#3;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#td#0;n#tr#4;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#input#0;n#td#1;n#tr#4;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#td#0;n#tr#5;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#input#0;n#td#1;n#tr#5;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#input#0;n#td#1;n#tr#6;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#td#0;n#tr#7;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#input#0;n#td#1;n#tr#10;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#input#0;n#td#1;n#tr#11;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#input#0;n#td#1;n#tr#12;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#input#0;n#td#1;n#tr#14;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#input#0;n#td#1;n#tr#15;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#input#0;n#td#1;n#tr#19;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/resources/static/View/cpgl/PurchaseManager_Detail.html">
+        <entry file="file://$PROJECT_DIR$/src/main/resources/mapper/cpgl/IOpenRecordDao.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="342">
-              <caret line="107" column="20" lean-forward="true" selection-start-line="107" selection-start-column="20" selection-end-line="107" selection-end-column="20" />
-              <folding>
-                <element signature="n#style#0;n#td#0;n#tr#4;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#input#0;n#td#1;n#tr#5;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#input#0;n#td#1;n#tr#6;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#input#0;n#td#1;n#tr#18;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-              </folding>
+            <state relative-caret-position="500">
+              <caret line="38" column="33" selection-start-line="38" selection-start-column="33" selection-end-line="38" selection-end-column="33" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/bba/cpgl/controller/PurchaseManagerController.java">
+        <entry file="file://$PROJECT_DIR$/src/main/resources/static/View/cpgl/OpenRecord_List.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="42">
-              <caret line="27" column="48" selection-start-line="27" selection-start-column="23" selection-end-line="27" selection-end-column="48" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/resources/mapper/cpgl/IPurchaseManagerDao.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="392">
-              <caret line="38" column="36" selection-start-line="38" selection-start-column="36" selection-end-line="38" selection-end-column="36" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/bba/cpgl/service/api/IPurchaseManagerService.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="267">
-              <caret line="19" selection-start-line="19" selection-end-line="19" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state relative-caret-position="508">
+              <caret line="173" column="37" selection-start-line="173" selection-start-column="25" selection-end-line="173" selection-end-column="37" />
             </state>
           </provider>
         </entry>
@@ -155,17 +136,10 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>checkUserLevelDriver</find>
-      <find>within_code</find>
-      <find>lang</find>
-      <find>SysUsersManage_userrole</find>
-      <find>main-tit</find>
-      <find>SysUservo</find>
       <find>优交易</find>
       <find>loadList</find>
       <find>add_after</find>
       <find>create_date</find>
-      <find>loadDetail</find>
       <find>answer</find>
       <find>js_state</find>
       <find>comboChange</find>
@@ -185,6 +159,13 @@
       <find>license_plate_flag</find>
       <find>CommonStateYesNo</find>
       <find>divFeedback_huawei</find>
+      <find>MeetPeople</find>
+      <find>PurchaseManager_Detail.html</find>
+      <find>getDetail</find>
+      <find>Quest</find>
+      <find>loadDetail</find>
+      <find>getListForGridSubordinate</find>
+      <find>openRecordController</find>
     </findStrings>
     <replaceStrings>
       <replace>center</replace>
@@ -201,35 +182,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/com/bba/jsyw/service/impl/InterfaceService.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/static/View/contract/Ht_Cus_Detail.html" />
-        <option value="$PROJECT_DIR$/src/main/java/com/bba/wdgl/service/api/IQuestionsService.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/bba/wdgl/dao/IQuestionsDao.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/bba/wdgl/controller/QuestionsController.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/bba/wdgl/service/impl/QuestionsServiceimpl.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/mapper/wdgl/IQuestionsDao.xml" />
-        <option value="$PROJECT_DIR$/src/main/resources/static/Resource/js/base/commonBusiness.js" />
-        <option value="$PROJECT_DIR$/src/main/resources/static/View/baobiao/vehicletotal.html" />
-        <option value="$PROJECT_DIR$/src/main/resources/static/Index/HomePage.html" />
-        <option value="$PROJECT_DIR$/src/main/resources/static/View/baobiao/ruankaikanban.html" />
-        <option value="$PROJECT_DIR$/src/main/resources/static/Resource/css/index/goodsStyle.css" />
-        <option value="$PROJECT_DIR$/src/main/java/com/bba/xtgl/controller/SystemDictionaryController.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/bba/xtgl/controller/SystemDictionaryDataController.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/bba/wdgl/controller/Zr_FileController.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/static/Index/Login.html" />
-        <option value="$PROJECT_DIR$/src/main/resources/application-onedev.yml" />
-        <option value="$PROJECT_DIR$/src/main/resources/application.yml" />
-        <option value="$PROJECT_DIR$/src/main/resources/application-dev.yml" />
-        <option value="$PROJECT_DIR$/pom.xml" />
-        <option value="$PROJECT_DIR$/src/main/java/com/bba/WebApplication.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/mapper/xtgl/ISysUserDao.xml" />
-        <option value="$PROJECT_DIR$/src/main/java/com/bba/xtgl/vo/SysUserVO.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/static/Index/Main.html" />
-        <option value="$PROJECT_DIR$/src/main/java/com/bba/wdgl/vo/QusetionsVO.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/wdgl/Questions_List.properties" />
-        <option value="$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/wdgl/Questions_Detail.properties" />
-        <option value="$PROJECT_DIR$/src/main/resources/static/Resource/js/base/globalVariable.js" />
-        <option value="$PROJECT_DIR$/src/main/resources/static/View/wdgl/Questions_Detail.html" />
         <option value="$PROJECT_DIR$/src/main/resources/static/View/wdgl/Questions_List.html" />
         <option value="$PROJECT_DIR$/src/main/resources/mapper/cpgl/ICpDao.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/bba/cpgl/controller/CpController.java" />
@@ -241,17 +193,46 @@
         <option value="$PROJECT_DIR$/src/main/java/com/bba/cpgl/controller/CpDataGet.java" />
         <option value="$PROJECT_DIR$/src/main/resources/static/View/cpgl/Cpssfx.html" />
         <option value="$PROJECT_DIR$/src/main/java/com/bba/cpgl/dao/IPurchaseManagerDao.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/bba/cpgl/service/impl/PurchaseManagerServiceimpl.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/bba/cpgl/service/api/IPurchaseManagerService.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/mapper/cpgl/IPurchaseManagerDao.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/bba/cpgl/controller/PurchaseManagerController.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/static/View/cpgl/PurchaseManager.html" />
-        <option value="$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/PurchaseManager_Frame.properties" />
-        <option value="$PROJECT_DIR$/src/main/resources/static/View/cpgl/PurchaseManager_Frame.html" />
-        <option value="$PROJECT_DIR$/src/main/resources/static/View/cpgl/PurchaseManager_Detail.html" />
-        <option value="$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/PurchaseManager_Detail.properties" />
-        <option value="$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/PurchaseManager.properties" />
         <option value="$PROJECT_DIR$/src/main/java/com/bba/cpgl/vo/ReceiveRecordVO.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/PurchaseManager_Detail.properties" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/View/wdgl/Questions_Detail.html" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/View/fpgl/PaymentInvoice_Detail.html" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/View/cpgl/PurchaseManager_Detail.html" />
+        <option value="$PROJECT_DIR$/src/main/resources/mapper/cpgl/IPurchaseManagerDao.xml" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/View/cpgl/PurchaseManager_Frame.html" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/PurchaseManager_Frame.properties" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/View/cpgl/PurchaseManager.html" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bba/cpgl/dao/IBjCostDao.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/mapper/cpgl/IBjCostDao.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bba/cpgl/service/api/IBjCostService.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bba/cpgl/vo/BjCostVO.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bba/cpgl/service/impl/BjCostServiceimpl.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bba/cpgl/service/impl/PurchaseManagerServiceimpl.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/PurchaseManager.properties" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/Cost.properties" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/Cost_Detail.properties" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/View/jcda/Tax_rateDetail.html" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bba/cpgl/controller/BjCostController.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/View/cpgl/Cost.html" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/View/cpgl/Cost_Detail.html" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/View/SysInfo/SysAuthorith.html" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bba/cpgl/service/api/IOpenRecordService.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bba/cpgl/dao/IOpenRecordDao.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bba/common/common/Sys_sheetidUtil.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bba/cpgl/service/impl/OpenRecordServiceimpl.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bba/cpgl/controller/BjOpenRecordController.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/View/cpgl/OpenRecord_Frame.html" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/OpenRecord_Frame.properties" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/OpenRecord_Detail.properties" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/OpenRecord_List.properties" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/View/SysInfo/SysDictionary.html" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/View/cpgl/OpenRecord_List.html" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/Resource/js/base/globalVariable.js" />
+        <option value="$PROJECT_DIR$/src/main/java/com/bba/cpgl/vo/OpenRecordVO.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/View/cpgl/OpenRecord_Detail.html" />
+        <option value="$PROJECT_DIR$/src/main/resources/mapper/cpgl/IOpenRecordDao.xml" />
       </list>
     </option>
   </component>
@@ -289,7 +270,7 @@
   <component name="MavenRunner">
     <option name="skipTests" value="true" />
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-7" />
     <option name="width" value="480" />
     <option name="height" value="520" />
@@ -302,7 +283,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -311,10 +291,61 @@
               <item name="MyCRM" type="b2602c69:ProjectViewProjectNode" />
               <item name="MyCRM" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="MyCRM" type="b2602c69:ProjectViewProjectNode" />
+              <item name="MyCRM" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="MyCRM" type="b2602c69:ProjectViewProjectNode" />
+              <item name="MyCRM" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="MyCRM" type="b2602c69:ProjectViewProjectNode" />
+              <item name="MyCRM" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="MyCRM" type="b2602c69:ProjectViewProjectNode" />
+              <item name="MyCRM" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="bba" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="MyCRM" type="b2602c69:ProjectViewProjectNode" />
+              <item name="MyCRM" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="MyCRM" type="b2602c69:ProjectViewProjectNode" />
+              <item name="MyCRM" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="mapper" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="MyCRM" type="b2602c69:ProjectViewProjectNode" />
+              <item name="MyCRM" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="mapper" type="462c0819:PsiDirectoryNode" />
+              <item name="cpgl" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -325,7 +356,7 @@
     <property name="RequestMappingsPanelWidth1" value="75" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1596453193185" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1596708134786" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -336,10 +367,12 @@
     <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="E:\MyCRM\vehicle_js\src\main\resources" />
-      <recent name="E:\vehicle_js\vehicle_js\src\main\resources\static\Index\images" />
-      <recent name="E:\IdeaWorkspace\vehicle_js\src\main\resources\static\View\tzgl" />
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\MyCRM\src\main\resources\static\Resource\i18n\zh\cpgl" />
+      <recent name="E:\MyCRM\src\main\resources\static\View\cpgl" />
+      <recent name="E:\MyCRM\src\main\resources\mapper\cpgl" />
+      <recent name="E:\MyCRM\vehicle_js\src\main\resources\static" />
+      <recent name="E:\MyCRM\vehicle_js\src\main\resources\static\View\wdgl" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="com.bba.cpgl.dao" />
@@ -348,12 +381,10 @@
       <recent name="com.bba.cpgl.vo" />
       <recent name="com.bba.cpgl.controller" />
     </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="E:\MyCRM\src\main\resources\static\Resource\i18n\zh\cpgl" />
-      <recent name="E:\MyCRM\src\main\resources\static\View\cpgl" />
-      <recent name="E:\MyCRM\src\main\resources\mapper\cpgl" />
-      <recent name="E:\MyCRM\vehicle_js\src\main\resources\static" />
-      <recent name="E:\MyCRM\vehicle_js\src\main\resources\static\View\wdgl" />
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\MyCRM\vehicle_js\src\main\resources" />
+      <recent name="E:\vehicle_js\vehicle_js\src\main\resources\static\Index\images" />
+      <recent name="E:\IdeaWorkspace\vehicle_js\src\main\resources\static\View\tzgl" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -659,14 +690,11 @@
       <workItem from="1595313426187" duration="5044000" />
       <workItem from="1595319488768" duration="4304000" />
       <workItem from="1596079420395" duration="2011000" />
-      <workItem from="1596415329001" duration="13497000" />
-    </task>
-    <task id="LOCAL-00055">
-      <created>1568199221008</created>
-      <option name="number" value="00055" />
-      <option name="presentableId" value="LOCAL-00055" />
-      <option name="project" value="LOCAL" />
-      <updated>1568199221008</updated>
+      <workItem from="1596415329001" duration="13896000" />
+      <workItem from="1596504608419" duration="18699000" />
+      <workItem from="1596615714895" duration="2831000" />
+      <workItem from="1596677197625" duration="16066000" />
+      <workItem from="1596781897285" duration="4066000" />
     </task>
     <task id="LOCAL-00056">
       <created>1568281620561</created>
@@ -1004,11 +1032,18 @@
       <option name="project" value="LOCAL" />
       <updated>1594625172711</updated>
     </task>
-    <option name="localTasksCounter" value="104" />
+    <task id="LOCAL-00104" summary="fix #501638798 FAQ修改BUG">
+      <created>1596453074113</created>
+      <option name="number" value="00104" />
+      <option name="presentableId" value="LOCAL-00104" />
+      <option name="project" value="LOCAL" />
+      <updated>1596453074115</updated>
+    </task>
+    <option name="localTasksCounter" value="105" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2068657000" />
+    <option name="totallyTimeSpent" value="2110718000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1021,9 +1056,8 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.7163743" visible="true" weight="0.2553305" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.7163743" visible="true" weight="0.20415778" />
       <window_info id="Structure" order="1" sideWeight="0.28362572" side_tool="true" weight="0.25053304" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -1035,7 +1069,7 @@
       <window_info anchor="bottom" id="Message" order="1" />
       <window_info anchor="bottom" id="Find" order="2" weight="0.23210412" />
       <window_info anchor="bottom" id="Run" order="3" weight="0.28416485" />
-      <window_info anchor="bottom" id="Debug" order="4" sideWeight="0.49946696" visible="true" weight="0.35791758" />
+      <window_info active="true" anchor="bottom" id="Debug" order="4" sideWeight="0.49946696" visible="true" weight="0.159436" />
       <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="7" weight="0.32936078" />
@@ -1210,126 +1244,301 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/resources/application-wkcytest.yml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/ftp.properties">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/resource.yml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/vehicle_js.iml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bba/xtgl/vo/SysUserVO.java">
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/Resource/js/1.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1590">
-          <caret line="65" column="4" lean-forward="true" selection-start-line="65" selection-start-column="4" selection-end-line="65" selection-end-column="4" />
+        <state relative-caret-position="197">
+          <caret line="7439" selection-start-line="7439" selection-end-line="7439" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bba/xtgl/service/impl/SysUserService.java">
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/View/jcda/Cr_CusDetail.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="361">
-          <caret line="202" selection-start-line="202" selection-end-line="202" />
+        <state relative-caret-position="-600" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/View/jcda/Zd_Carrier.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-375" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/View/fpgl/InvoiceDetail.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1425" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/View/fpgl/PaymentInvoice_Detail.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="123" selection-start-line="123" selection-end-line="138" selection-end-column="5" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bba/xtgl/dao/ISysUserDao.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bba/cpgl/vo/ReceiveRecordVO.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="475">
-          <caret line="26" column="15" selection-start-line="26" selection-start-column="15" selection-end-line="26" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/mapper/xtgl/ISysUserDao.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="7775">
-          <caret line="311" column="69" selection-start-line="311" selection-start-column="69" selection-end-line="311" selection-end-column="69" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pom.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="194">
-          <caret line="213" column="23" lean-forward="true" selection-start-line="213" selection-start-column="23" selection-end-line="213" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/static/Index/Main.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="26" column="23" lean-forward="true" selection-start-line="26" selection-start-column="23" selection-end-line="26" selection-end-column="23" />
+        <state relative-caret-position="-100">
+          <caret line="13" column="13" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
           <folding>
-            <element signature="n#style#0;n#iframe#0;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#img#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/static/View/jsgl/Down_premium_Detail.html">
+    <entry file="file://$PROJECT_DIR$/src/main/resources/mapper/cpgl/IPurchaseManagerDao.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-675" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/static/View/jsgl/Up_AccountDetail.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
-          <caret line="40" column="8" selection-start-line="40" selection-start-column="8" selection-end-line="42" selection-end-column="17" />
+        <state relative-caret-position="475">
+          <caret line="19" column="76" selection-start-line="19" selection-start-column="61" selection-end-line="19" selection-end-column="76" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/wdgl/Questions_Detail.properties">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bba/cpgl/dao/IPurchaseManagerDao.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="508">
-          <caret line="23" column="18" selection-start-line="23" selection-start-column="18" selection-end-line="23" selection-end-column="18" />
+        <state relative-caret-position="225">
+          <caret line="9" column="41" selection-start-line="9" selection-start-column="26" selection-end-line="9" selection-end-column="41" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bba/cpgl/service/api/IPurchaseManagerService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="18" column="13" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/View/wdgl/Questions_Frame.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="825">
+          <caret line="33" column="23" selection-start-line="33" selection-start-column="23" selection-end-line="33" selection-end-column="23" />
+          <folding>
+            <element signature="n#style#0;n#iframe#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/wdgl/Questions_List.properties">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="479">
-          <caret line="25" selection-start-line="25" selection-end-line="25" selection-end-column="18" />
+        <state relative-caret-position="259">
+          <caret line="13" selection-start-line="13" selection-end-line="15" selection-end-column="41" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/static/View/jsyw/Tr_Non_Business_Carrier.html">
+    <entry file="file://$PROJECT_DIR$/src/main/resources/mapper/cpgl/IBjCostDao.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="139">
-          <caret line="450" column="9" selection-start-line="450" selection-start-column="9" selection-end-line="466" selection-end-column="9" />
+        <state relative-caret-position="100">
+          <caret line="4" column="25" lean-forward="true" selection-start-line="4" selection-start-column="25" selection-end-line="4" selection-end-column="25" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/static/View/jsyw/Tr_Business.html">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bba/cpgl/dao/IBjCostDao.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="72" column="15" lean-forward="true" selection-start-line="72" selection-start-column="15" selection-end-line="73" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/static/View/SysInfo/SysUsersDetail.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="422" column="20" selection-start-line="422" selection-start-column="20" selection-end-line="422" selection-end-column="111" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/static/View/wdgl/Questions_List.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="485">
-          <caret line="410" column="9" lean-forward="true" selection-start-line="410" selection-start-column="9" selection-end-line="410" selection-end-column="9" />
+        <state relative-caret-position="325">
+          <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
           <folding>
-            <element signature="n#style#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bba/cpgl/service/impl/PurchaseManagerServiceimpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="17" column="22" selection-start-line="17" selection-start-column="22" selection-end-line="17" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/PurchaseManager.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="25">
+          <caret line="1" column="25" selection-start-line="1" selection-start-column="25" selection-end-line="1" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/Cost.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="50">
+          <caret line="2" selection-start-line="2" selection-end-line="6" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/Cost_Detail.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/View/cpgl/PurchaseManager.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="505">
+          <caret line="155" column="13" lean-forward="true" selection-start-line="155" selection-start-column="13" selection-end-line="158" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bba/cpgl/controller/PurchaseManagerController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="27" column="48" selection-start-line="27" selection-start-column="23" selection-end-line="27" selection-end-column="48" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/View/jcda/Tax_rateDetail.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="12" selection-start-line="12" selection-end-line="15" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bba/cpgl/service/impl/BjCostServiceimpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="37" column="18" selection-start-line="37" selection-start-column="18" selection-end-line="37" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/View/jcda/Tax_rate.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7150">
+          <caret line="286" column="1" selection-start-line="286" selection-start-column="1" selection-end-line="288" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/View/SysInfo/SysAuthorith.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="23" column="116" selection-start-line="23" selection-start-column="116" selection-end-line="23" selection-end-column="116" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/View/cpgl/Cost.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="576">
+          <caret line="146" column="87" selection-start-line="146" selection-start-column="87" selection-end-line="146" selection-end-column="87" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bba/cpgl/vo/BjCostVO.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="125">
+          <caret line="13" column="21" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bba/common/common/Sys_sheetidUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="421">
+          <caret line="31" column="45" selection-start-line="31" selection-start-column="31" selection-end-line="31" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bba/cpgl/dao/IOpenRecordDao.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="275">
+          <caret line="11" column="9" selection-start-line="11" selection-start-column="9" selection-end-line="11" selection-end-column="9" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bba/cpgl/service/api/IBjCostService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="400">
+          <caret line="16" selection-start-line="16" selection-end-line="16" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/View/cpgl/PurchaseManager_Frame.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="125">
+          <caret line="20" selection-start-line="20" selection-end-line="21" />
+          <folding>
+            <element signature="n#style#0;n#iframe#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/PurchaseManager_Frame.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="25">
+          <caret line="1" selection-start-line="1" selection-end-line="2" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/OpenRecord_Frame.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="125">
+          <caret line="5" lean-forward="true" selection-start-line="5" selection-end-line="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/View/cpgl/OpenRecord_Frame.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="625">
+          <caret line="25" column="48" selection-start-line="25" selection-start-column="31" selection-end-line="25" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/OpenRecord_List.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="8" column="20" selection-start-line="8" selection-start-column="20" selection-end-line="8" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/OpenRecord_Detail.properties">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="175">
+          <caret line="7" column="15" lean-forward="true" selection-start-line="7" selection-start-column="15" selection-end-line="7" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/View/tzgl/Ledger_Detail.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="63" column="126" lean-forward="true" selection-start-line="63" selection-start-column="126" selection-end-line="63" selection-end-column="146" />
+          <folding>
+            <element signature="n#style#0;n#input#0;n#td#5;n#tr#1;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/mapper/xtgl/Sys_Dictionary_DataDao.xml">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/mapper/xtgl/SysDictionaryDao.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="185">
+          <caret line="42" column="41" selection-start-line="42" selection-start-column="16" selection-end-line="42" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/View/SysInfo/SysDictionary.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="475">
+          <caret line="513" column="22" selection-start-line="513" selection-start-column="22" selection-end-line="513" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/View/SysInfo/SysDictionaryDetail.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-5123" />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/static/View/wdgl/Questions_Detail.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6625">
-          <caret line="265" column="9" selection-start-line="265" selection-start-column="9" selection-end-line="277" selection-end-column="9" />
+        <state relative-caret-position="427">
+          <caret line="359" column="19" lean-forward="true" selection-start-line="359" selection-start-column="19" selection-end-line="359" selection-end-column="116" />
           <folding>
             <element signature="n#style#0;n#td#0;n#tr#1;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#input#0;n#td#1;n#tr#1;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
@@ -1356,244 +1565,54 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/static/View/jsyw/Tr_Business_Carrier.html">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bba/cpgl/controller/BjCostController.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="13750">
-          <caret line="550" column="20" selection-start-line="550" selection-start-column="20" selection-end-line="550" selection-end-column="91" />
+        <state relative-caret-position="250">
+          <caret line="27" column="39" selection-start-line="27" selection-start-column="23" selection-end-line="27" selection-end-column="39" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bba/cpgl/service/api/IOpenRecordService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="325">
+          <caret line="18" selection-start-line="18" selection-end-line="18" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bba/cpgl/service/impl/OpenRecordServiceimpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="45" column="91" selection-start-line="45" selection-start-column="77" selection-end-line="45" selection-end-column="91" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/static/Resource/js/base/globalVariable.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2000">
-          <caret line="80" column="31" selection-start-line="80" selection-start-column="4" selection-end-line="80" selection-end-column="31" />
+        <state relative-caret-position="308">
+          <caret line="220" column="26" lean-forward="true" selection-start-line="220" selection-start-column="26" selection-end-line="220" selection-end-column="26" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bba/wdgl/vo/QusetionsVO.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bba/cpgl/vo/OpenRecordVO.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1850">
-          <caret line="80" column="36" selection-start-line="80" selection-start-column="23" selection-end-line="80" selection-end-column="36" />
+        <state relative-caret-position="915">
+          <caret line="79" column="36" selection-start-line="79" selection-start-column="36" selection-end-line="79" selection-end-column="36" />
         </state>
       </provider>
     </entry>
-    <entry file="jar://D:/maven/m2/org/springframework/boot/spring-boot-autoconfigure/2.1.0.RELEASE/spring-boot-autoconfigure-2.1.0.RELEASE.jar!/org/springframework/boot/autoconfigure/web/servlet/WebMvcAutoConfiguration.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="127">
-          <caret line="254" column="44" selection-start-line="254" selection-start-column="44" selection-end-line="254" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bba/WebApplication.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/bba/cpgl/controller/BjOpenRecordController.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="250">
-          <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/mapper/cpgl/ICpDao.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="3" column="44" selection-start-line="3" selection-start-column="44" selection-end-line="3" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bba/cpgl/dao/ICpDao.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
-          <caret line="10" column="30" selection-start-line="10" selection-start-column="30" selection-end-line="10" selection-end-column="30" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bba/cpgl/service/api/ICpService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="14" column="27" selection-start-line="14" selection-start-column="17" selection-end-line="14" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bba/cpgl/vo/CpVO.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="350">
-          <caret line="20" column="30" selection-start-line="20" selection-start-column="30" selection-end-line="20" selection-end-column="30" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bba/cpgl/service/impl/CpServiceimpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="325">
-          <caret line="31" column="13" selection-start-line="31" selection-start-column="13" selection-end-line="31" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bba/cpgl/controller/CpDataGet.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="353">
-          <caret line="135" column="1" lean-forward="true" selection-start-line="135" selection-start-column="1" selection-end-line="135" selection-end-column="1" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://D:/java_pro/jdk/src.zip!/java/net/HttpURLConnection.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="188">
-          <caret line="631" column="28" selection-start-line="631" selection-start-column="28" selection-end-line="631" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bba/cpgl/controller/CpController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="24" column="22" selection-start-line="24" selection-start-column="18" selection-end-line="24" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/application-dev.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-177">
-          <caret line="24" column="7" selection-start-line="24" selection-start-column="7" selection-end-line="24" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/application.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="6" column="19" selection-start-line="6" selection-start-column="19" selection-end-line="6" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/static/View/jsgl/carrierList.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="125">
-          <caret line="386" selection-start-line="386" selection-end-line="390" selection-end-column="182" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/Cpssfx.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="516">
-          <caret line="28" column="17" selection-start-line="28" selection-start-column="17" selection-end-line="28" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/static/View/cpgl/Cpssfx.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1128">
-          <caret line="505" selection-start-line="505" selection-end-line="505" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bba/dz/vo/Js_Dz_Sheet_DetailVO.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-875">
-          <caret line="103" column="22" selection-start-line="103" selection-start-column="12" selection-end-line="103" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bba/settlement/vo/Js_Vin_AmountVO.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="150" selection-start-line="150" selection-end-line="152" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bba/cpgl/service/impl/PurchaseManagerServiceimpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
-          <caret line="34" column="61" selection-start-line="34" selection-start-column="61" selection-end-line="34" selection-end-column="61" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bba/cpgl/dao/IPurchaseManagerDao.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="8" column="17" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bba/cpgl/service/api/IPurchaseManagerService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="267">
-          <caret line="19" selection-start-line="19" selection-end-line="19" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/static/View/cpgl/PurchaseManager.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-4822">
-          <caret line="104" column="52" selection-start-line="104" selection-start-column="52" selection-end-line="104" selection-end-column="52" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/static/View/cpgl/PurchaseManager_Frame.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="217">
-          <caret line="72" column="73" selection-start-line="72" selection-start-column="73" selection-end-line="72" selection-end-column="73" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/PurchaseManager_Frame.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="25">
-          <caret line="1" column="20" selection-start-line="1" selection-end-line="1" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/PurchaseManager.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="250">
-          <caret line="10" column="9" selection-start-line="10" selection-start-column="9" selection-end-line="10" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/static/Resource/i18n/zh/cpgl/PurchaseManager_Detail.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="9" selection-start-line="9" selection-end-line="9" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bba/cpgl/vo/ReceiveRecordVO.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="542">
-          <caret line="44" column="29" selection-start-line="44" selection-start-column="29" selection-end-line="44" selection-end-column="29" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/mapper/cpgl/IPurchaseManagerDao.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="392">
-          <caret line="38" column="36" selection-start-line="38" selection-start-column="36" selection-end-line="38" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/bba/cpgl/controller/PurchaseManagerController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="42">
-          <caret line="27" column="48" selection-start-line="27" selection-start-column="23" selection-end-line="27" selection-end-column="48" />
+          <caret line="43" column="52" selection-start-line="43" selection-start-column="52" selection-end-line="43" selection-end-column="52" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1602,14 +1621,78 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/static/View/cpgl/PurchaseManager_Detail.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="107" column="20" lean-forward="true" selection-start-line="107" selection-start-column="20" selection-end-line="107" selection-end-column="20" />
+        <state relative-caret-position="375">
+          <caret line="119" selection-start-line="119" selection-end-line="139" selection-end-column="10" />
           <folding>
+            <element signature="n#style#0;n#td#0;n#tr#0;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#td#1;n#tr#0;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#td#0;n#tr#1;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#td#1;n#tr#1;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#td#0;n#tr#2;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#td#1;n#tr#2;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#td#0;n#tr#3;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#td#1;n#tr#3;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#td#0;n#tr#4;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#td#1;n#tr#4;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#input#0;n#td#1;n#tr#5;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
             <element signature="n#style#0;n#input#0;n#td#1;n#tr#6;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#input#0;n#td#1;n#tr#18;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#td#1;n#tr#7;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#td#1;n#tr#8;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/View/cpgl/Cost_Detail.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2300">
+          <caret line="13" column="8" selection-start-line="13" selection-start-column="8" selection-end-line="13" selection-end-column="143" />
+          <folding>
+            <element signature="n#style#0;n#textarea#0;n#td#1;n#tr#4;n#table#0;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/View/cpgl/OpenRecord_List.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="508">
+          <caret line="173" column="37" selection-start-line="173" selection-start-column="25" selection-end-line="173" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/View/cpgl/OpenRecord_Detail.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1760">
+          <caret line="197" selection-start-line="197" selection-end-line="197" />
+          <folding>
+            <element signature="n#style#0;n#td#0;n#tr#0;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#td#1;n#tr#0;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#td#0;n#tr#1;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#td#1;n#tr#1;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#td#0;n#tr#1;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#td#1;n#tr#1;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#td#0;n#tr#2;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#td#1;n#tr#2;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#td#1;n#tr#3;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#td#0;n#tr#4;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#td#1;n#tr#4;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#td#0;n#tr#5;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#td#1;n#tr#5;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#td#1;n#tr#6;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#td#0;n#tr#7;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#td#1;n#tr#10;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#td#1;n#tr#11;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#td#1;n#tr#12;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#td#1;n#tr#14;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#td#1;n#tr#15;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#0;n#td#1;n#tr#19;n#table#0;n#form#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/mapper/cpgl/IOpenRecordDao.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="500">
+          <caret line="38" column="33" selection-start-line="38" selection-start-column="33" selection-end-line="38" selection-end-column="33" />
         </state>
       </provider>
     </entry>
