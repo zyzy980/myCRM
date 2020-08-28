@@ -21,4 +21,6 @@ public interface IOpenRecordService extends IService<OpenRecordVO> {
     OpenRecordVO getDetail(OpenRecordVO vo);
 
     ResultVO batchDelete(List<OpenRecordVO> vos);
+
+    ResultVO getmoney(List<OpenRecordVO> vos);
 }

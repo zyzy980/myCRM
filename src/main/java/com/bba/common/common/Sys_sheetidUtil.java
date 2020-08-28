@@ -29,6 +29,8 @@ public class Sys_sheetidUtil {
 
     public static final String BJ_COST = "BJ_COST";
 
+    public static final String BJ_INCOME = "BJ_INCOME";
+
     public static final String BJ_OPEN_RECORD = "BJ_OPEN_RECORD";
 
     public static String getSys_sheetid(String key){

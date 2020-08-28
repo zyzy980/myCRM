@@ -10,5 +10,6 @@ public interface IOpenRecordDao extends BaseMapper<OpenRecordVO> {
     List<OpenRecordVO> findListForGrid(JqGridParamModel jqGridParamModel);
     int findListForGridCount(JqGridParamModel jqGridParamModel);
     void batchDelete(List<OpenRecordVO> vos);
+    void insertInCome(Integer id);
 }
 

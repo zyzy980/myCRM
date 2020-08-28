@@ -19,7 +19,7 @@
     <table id="searchParamesTable">
         <tr class="searchParamesTrShow">
             <td class="searchParamesTdControl">
-                <input type="text" id="common_sheet_title" class="easyui-textbox" style="width: 240px" />
+                <input type="text" id="common_sheet_title" class="easyui-textbox" style="width: 120px" />
             </td>
             <td width="20px;"></td>
             <td class="searchParamesTdTitle">
@@ -33,6 +33,48 @@
             </td>
             <td class="searchParamesTdControl">
                 <input type="text" name="end_date" id="end_date" class="easyui-datebox" editable="false" style="width: 90px" />
+            </td>
+            <td width="20px;"></td>
+            <td class="searchParamesTdTitle">
+                状态:
+            </td>
+            <td class="searchParamesTdControl">
+                <input type="text" id="state" class="easyui-combobox"/>
+            </td>
+            <td width="20px;"></td>
+            <td class="searchParamesTdTitle">
+                类型:
+            </td>
+            <td class="searchParamesTdControl">
+                <input type="text" id="goods_type" class="easyui-combobox"/>
+            </td>
+            <td width="20px;"></td>
+            <td class="searchParamesTdTitle">
+                出售方式:
+            </td>
+            <td class="searchParamesTdControl">
+                <input type="text" id="sell_mode" class="easyui-combobox"/>
+            </td>
+            <td width="20px;"></td>
+            <td class="searchParamesTdTitle">
+                出售人:
+            </td>
+            <td class="searchParamesTdControl">
+                <input type="text" id="sold_by" class="easyui-combobox"/>
+            </td>
+            <td width="20px;"></td>
+            <td class="searchParamesTdTitle">
+                是否卖出:
+            </td>
+            <td class="searchParamesTdControl">
+                <div id="divSold"></div>
+            </td>
+            <td width="20px;"></td>
+            <td class="searchParamesTdTitle">
+                是否包邮:
+            </td>
+            <td class="searchParamesTdControl">
+                <div id="divFree_shipping"></div>
             </td>
         </tr>
     </table>
@@ -84,8 +126,152 @@
         });
     };
 
-    // 加载数据
     var initData = function() {
+        getDictionaryData([{
+            //初始化出售方式
+            dicTypeCode : Global_DicType.SellMode,
+            ADD_ALL: true,
+            callback : function(callbackData) {
+                window.docking_manMap = {};
+                $("#sell_mode").combobox({
+                    valueField: 'dicvalue',
+                    textField: 'dictext',
+                    panelHeight: 130,
+                    //panelWidth: 250,
+                    editable: true,
+                    onSelect:function(record){
+                        searchData();
+                    }
+                });
+                $("#sell_mode").combobox("loadData", callbackData);
+            }
+        },{
+            //初始化出售人
+            dicTypeCode : Global_DicType.MeetPeople,
+            ADD_ALL: true,
+            callback : function(callbackData) {
+                window.docking_manMap = {};
+                $("#sold_by").combobox({
+                    valueField: 'dicvalue',
+                    textField: 'dictext',
+                    //panelHeight: 200,
+                    //panelWidth: 250,
+                    editable: true,
+                    onSelect:function(record){
+                        searchData();
+                    }
+                });
+                $("#sold_by").combobox("loadData", callbackData);
+            }
+        },{
+            //初始化货物类型
+            dicTypeCode : Global_DicType.GoodsType,
+            ADD_ALL: true,
+            callback : function(callbackData) {
+                $("#goods_type").combobox({
+                    valueField: 'dicvalue',
+                    textField: 'dictext',
+                    //panelHeight: 200,
+                    //panelWidth: 250,
+                    editable: true,
+                    onSelect:function(record){
+                        searchData();
+                    }
+                });
+                $("#goods_type").combobox("loadData", callbackData);
+            }
+        },{
+            //初始化货物价值
+            dicTypeCode : Global_DicType.BoxValue,
+            ADD_ALL: false,
+            callback : function(callbackData) {
+                $("#box_value").combobox({
+                    valueField: 'dicvalue',
+                    textField: 'dictext',
+                    //panelHeight: 200,
+                    //panelWidth: 250,
+                    editable: true,
+                    onSelect:function(record){
+                        searchData();
+                    }
+                });
+                $("#box_value").combobox("loadData", callbackData);
+            }
+        },{
+            //初始化货物大小
+            dicTypeCode : Global_DicType.BoxSize,
+            ADD_ALL: false,
+            callback : function(callbackData) {
+                $("#box_size").combobox({
+                    valueField: 'dicvalue',
+                    textField: 'dictext',
+                    //panelHeight: 200,
+                    //panelWidth: 250,
+                    editable: true
+                });
+                $("#box_size").combobox("loadData", callbackData);
+            }
+        },{
+            //初始化快递公司
+            dicTypeCode : Global_DicType.Kuaidi,
+            ADD_ALL: false,
+            callback : function(callbackData) {
+                $("#kuaidi_company").combobox({
+                    valueField: 'dicvalue',
+                    textField: 'dictext',
+                    //panelHeight: 200,
+                    //panelWidth: 250,
+                    editable: true
+                });
+                $("#kuaidi_company").combobox("loadData", callbackData);
+            }
+        },{
+            //初始化状态
+            dicTypeCode : Global_DicType.GoodsState,
+            ADD_ALL: true,
+            callback : function(callbackData) {
+                $("#state").combobox({
+                    valueField: 'dicvalue',
+                    textField: 'dictext',
+                    panelHeight: 160,
+                    //panelWidth: 250,
+                    editable: true,
+                    onSelect:function(record){
+                        searchData();
+                    }
+                });
+                $("#state").combobox("loadData", callbackData);
+            }
+        },{
+            //初始化鱼号
+            dicTypeCode : Global_DicType.SellNo,
+            ADD_ALL: false,
+            callback : function(callbackData) {
+                $("#sell_no").combobox({
+                    valueField: 'dicvalue',
+                    textField: 'dictext',
+                    //panelHeight: 200,
+                    //panelWidth: 250,
+                    editable: true
+                });
+                $("#sell_no").combobox("loadData", callbackData);
+            }
+        },{
+            dicTypeCode: Global_DicType.Global_DicType_CommonStateYesNo,
+            ADD_ALL: true,
+            callback: function (callbackData) {
+                var formatData = { data: callbackData, needChooseAll: false, chooseAllValue: "", defaultValue: "",
+                    bindBoxName: "divSold", bindControlPrefix: "sold", onClick:function(){
+                        searchData();
+                    } };
+                var formatData2 = { data: callbackData, needChooseAll: false, chooseAllValue: "", defaultValue: "",
+                    bindBoxName: "divFree_shipping", bindControlPrefix: "free_shipping", onClick:function(){
+                        searchData();
+                    } };
+                formatDefaultRadio_Local(formatData);
+                formatDefaultRadio_Local(formatData2);
+            }
+        }]);
         loadList();// 加载数据列表
     };
 
@@ -113,7 +299,13 @@
                 { name: 'goods_name', value: $('#common_sheet_title').textbox('getValue'), op: 'cn' }
             ],
             { name: '_d_open_date', value: $('#begin_date').textbox('getValue'), op: 'ge' },
-            { name: '_d_open_date', value: $('#end_date').textbox('getValue'), op: 'le' }
+            { name: '_d_open_date', value: $('#end_date').textbox('getValue'), op: 'le' },
+            { name: 'state', value: $('#state').combobox("getValue"), op: 'eq' },
+            { name: 'goods_type', value: $('#goods_type').combobox("getValue"), op: 'eq' },
+            { name: 'sell_mode', value: $('#sell_mode').combobox("getValue"), op: 'eq' },
+            { name: 'sold_by', value: $('#sold_by').combobox("getValue"), op: 'eq' },
+            { name: 'sold', value: $("#divSold [name=sold]:checked").val(), op: "eq" },
+            { name: 'free_shipping', value: $("#divFree_shipping [name=free_shipping]:checked").val(), op: "eq" }
         ];
         return formatSearchParames(parmsArray);
     };
@@ -127,6 +319,7 @@
             colNames: [
                 //基本信息
                 $.i18n.prop('ID'),
+                $.i18n.prop('STATE'),
                 $.i18n.prop('SHEET_NO'),
                 $.i18n.prop('OPEN_DATE'),
                 $.i18n.prop('GOODS_TYPE'),
@@ -137,6 +330,7 @@
                 $.i18n.prop('DAMAGE'),
                 //卖出信息
                 $.i18n.prop('SELL_MODE'),
+                $.i18n.prop('SOLD_BY'),
                 $.i18n.prop('SOLD'),
                 $.i18n.prop('SELL_NO'),
                 $.i18n.prop('SELL_DATE'),
@@ -151,6 +345,7 @@
             ],
             colModel: [
                 { name: 'id', index: 'id', align: 'center', sorttype: 'int', sortable: false, key: true, width: 40, hidden: true, search: false },
+                { name: 'state', index: 'state', align: 'center', width: 80, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
                 { name: 'sheet_no', index: 'sheet_no', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
                 { name: 'open_date', index: '_d_open_date', align: 'center', width: 120, search: true, type: 'string',
                     searchoptions: { sopt: ['ge'], dataEvents: [ { type: 'click', data: {}, fn: function() { WdatePicker(); } } ] } },
@@ -161,6 +356,7 @@
                 { name: 'kuaidi_company', index: 'kuaidi_company', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
                 { name: 'damage', index: 'damage', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
                 { name: 'sell_mode', index: 'sell_mode', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'sold_by', index: 'sold_by', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
                 { name: 'sold', index: 'sold', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
                 { name: 'sell_no', index: 'sell_no', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
                 { name: 'sell_date', index: 'sell_date', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
@@ -188,7 +384,7 @@
             cellLayout: 0,
             scroll: false,
             autowidth: true,
-            sortname: 'id',
+            sortname: 'open_date',
             sortorder: 'desc',
             loadonce: false,
             mtype: 'POST',
@@ -199,6 +395,8 @@
             height: '100%',
             rowList: [15, 20, 30, 50],
             pager: '#gridPager',
+            footerrow: true,
+           // gridComplete: completeMethod,
             jsonReader: {
                 root: 'rows',
                 total: 'total',
@@ -209,6 +407,7 @@
             gridComplete: function() {
                 $('.cbox').shiftSelect();
                 afterRedRow();
+                completeMethod();
             },
             ondblClickRow: showChildModule,
             loadComplete: function(xhr) {
@@ -230,7 +429,7 @@
             title : 'Set Columns',
             onClickButton : toggleGridColumns
         });
-        $('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
+       $('#gridTable').jqGrid('navButtonAdd', '#gridPager', {
             caption : $.i18n.prop('TOGGLE_GRID_SEARCH_TOOLBAR'),
             title : 'Quick Search',
             onClickButton : toggleGridSearchToolbar
@@ -241,17 +440,11 @@
             buttonicon: 'ui-icon-disk',
             onClickButton: function () {
                 ExportToExcel.call(this, {
-                    FiledData: [{
-                        data_dictionary: Global_DicType.Questions_State,
-                        filed: "state"
-                    },{
-                        data_dictionary: Global_DicType.Questions_Type,
-                        filed: "type"
-                    }]
                 });
             }
         });
-        setGridHeightWidth();
+        setGridHeightWidth(0,150);
+        /*setGridHeightWidth();*/
     };
 
     //jqGrid加载
@@ -260,7 +453,13 @@
         for (var i = 0; i < ids.length; i++) {
             var rowData = $("#gridTable").getRowData(ids[i]);
             if (rowData.state == '已售') {
-                $('#gridTable #' + ids[i]).find("td").css('color', "#8b2f2c");
+                $('#gridTable #' + ids[i]).find("td").css('color', "#291e8b");
+            }
+            if (rowData.state == '收款') {
+                $('#gridTable #' + ids[i]).find("td").css('color', "#288b11");
+            }
+            if (rowData.state == '异常') {
+                $('#gridTable #' + ids[i]).find("td").css('color', "#ff1029");
             }
         }
     }
@@ -270,6 +469,13 @@
         showLoading();
         window.parent.onIframeSelect(rowData.sheet_no);
     };
+
+    function completeMethod(){
+        var sum_sell_price=$("#gridTable").getCol('sell_price',false,'sum');
+        var sum_express_fee=$("#gridTable").getCol('express_fee',false,'sum');
+        var sum_goods_profit=$("#gridTable").getCol('goods_profit',false,'sum');
+        $("#gridTable").footerData('set', { "goods_cost": '合计', sell_price: sum_sell_price, express_fee: sum_express_fee,goods_profit: sum_goods_profit });
+    }
 
     function update(){
         var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
@@ -337,6 +543,48 @@
                 showLoading();
                 $.ajax({
                     url : url,
+                    data:JSON.stringify(list),
+                    type:"POST",
+                    contentType:'application/json; charset=utf-8',
+                    success:function(dataObj){
+                        if (isServerResultDataPass(dataObj)) {
+                            correctNotification({ SimpleMessage:dataObj.resultDataFull.simpleMessage });
+                            searchData();
+                        } else {
+                            FailResultDataToTip(dataObj);
+                        }
+                        hideLoading();
+                    }
+                });
+            }
+        });
+    }
+
+    //钱款打入到收入管理
+    function getmoney() {
+        var selectRowItems = $("#gridTable").jqGrid("getGridParam", "selarrrow");
+        if (selectRowItems.length==0) {
+            errorNotification({
+                SimpleMessage : $.i18n.prop("selectLeastOneDataRowOperator")
+            });
+            return;
+        }
+        var list=[];
+        var rowData = null;
+        for (var i = 0; i < selectRowItems.length; i++) {
+            rowData = $("#gridTable").jqGrid('getRowData', selectRowItems[i]);
+            if(rowData.state!='收款')  {
+                list.push({"id":rowData.id});
+             } else {
+                errorNotification({SimpleMessage: '该数据已收账，请勿重复操作'});
+                 return;
+             }
+        }
+        $.messager.confirm($.i18n.prop("prompt"), $.i18n.prop("sureTodo"), function (r) {
+            if (r) {
+                showLoading();
+                $.ajax({
+                    url : "../../cpgl/openRecordController/getmoney",
                     data:JSON.stringify(list),
                     type:"POST",
                     contentType:'application/json; charset=utf-8',

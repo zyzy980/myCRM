@@ -74,7 +74,7 @@ public class BjCostServiceimpl extends ServiceImpl<IBjCostDao, BjCostVO> impleme
     @Override
     public BjCostVO getDetail(BjCostVO bjCostVO) {
         BjCostVO paramBjCostVO = new BjCostVO();
-        paramBjCostVO.setSheet_no(bjCostVO.getSheet_no());
+        paramBjCostVO.setId(bjCostVO.getId());
         BjCostVO dataBjCostVO = iBjCostDao.selectOne(paramBjCostVO);
         if(dataBjCostVO == null){
             return null;

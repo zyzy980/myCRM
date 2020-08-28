@@ -219,6 +219,7 @@ var Global_DicType = {
 	BoxValue:"BoxValue",
     BoxSize:"BoxSize",
 	OpenState:"OpenState",
+	InComeState:"InComeState",
 	/******************************************************************/
 
 	Global_DicType_orderState:"orderState",

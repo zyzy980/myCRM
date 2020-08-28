@@ -117,7 +117,7 @@
 			and moduleid=#{moduleid}
 			and within_code = #{withinCode}
 			)
-			and within_code = #{withinCode}
+			and within_code = #{withinCode} and moduleid=#{moduleid}
 	</delete>
 	
 	<insert id="insertButton"  parameterType="java.util.List">

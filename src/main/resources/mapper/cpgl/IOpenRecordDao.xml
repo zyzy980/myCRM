@@ -39,4 +39,15 @@
 			delete bj_open_record where id=#{vo.id} ;
 		</foreach>
 	</delete>
+
+	<insert id="insertInCome" parameterType="com.bba.cpgl.vo.OpenRecordVO">
+		begin
+		insert into bj_income (amount,handler,state,amount_date,sheet_no,remark)
+		select o.sell_price,o.sold_by,'个人账户',o.sold_date,o.sheet_no,o.goods_name
+		from bj_open_record o
+		where o.id=#{id};
+		update bj_open_record set state='收款' where id=#{id}
+		;
+		end;
+	</insert>
 </mapper>

@@ -17,7 +17,7 @@ public class BjCostVO {
         private Integer id;
 
         @TableId
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        @JsonFormat(pattern = "yyyy-MM-dd")
         private Date used_date;
 
         @TableId

@@ -32,7 +32,7 @@
 			<tr>
 				<td class="editTitle"><label data-locale="USED_DATE"/></td>
 				<td class="editControl">
-					<input type="text" name="used_date" id="used_date" class="easyui-datetimebox"/>
+					<input type="text" name="used_date" id="used_date" class="easyui-datebox"/>
 				</td>
 			</tr>
 
@@ -200,7 +200,7 @@
                 if (isServerResultDataPass(dataObj)) {
                     $("#id").val(dataObj.resultDataFull.id);
                     $("#sheet_no").textbox("setValue",dataObj.resultDataFull.sheet_no);
-                    $("#used_date").datetimebox("setValue",dataObj.resultDataFull.used_date);
+                    $("#used_date").datebox("setValue",dataObj.resultDataFull.used_date);
                     $("#cost").numberbox("setValue", dataObj.resultDataFull.cost);
                     $("#used_by").combobox("setValue", dataObj.resultDataFull.used_by);
                     $("#cost_remark").val(dataObj.resultDataFull.cost_remark);

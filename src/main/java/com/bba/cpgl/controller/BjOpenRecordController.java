@@ -13,9 +13,7 @@ import com.bba.xtgl.vo.SysUserVO;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -67,6 +65,15 @@ public class BjOpenRecordController {
         ResultVO resultVO = ResultVO.successResult();
         resultVO.setResultDataFull(returnOpenRecordVO);
         return resultVO;
+    }
+
+
+    @Log(value = "收入管理-收款")
+    @RequestMapping(value = "getmoney", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultVO check(@RequestBody List<OpenRecordVO> list) {
+        List<OpenRecordVO> vos = new Gson().fromJson(new Gson().toJson(list), new TypeToken<List<OpenRecordVO>>(){}.getType());
+        return openRecordService.getmoney(vos);
     }
 
 }

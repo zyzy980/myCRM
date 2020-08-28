@@ -1,0 +1,1639 @@
+ <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<link rel="stylesheet" type="text/css" href="../../Resource/css/Base/style.css"></link>
+ <link rel="stylesheet" href="http://cache.amap.com/lbs/static/main.css"/>
+	<style>
+    html,
+    body,
+    #container {
+      width: 100%;
+      height: 100%;
+    }
+	
+	.shi, .fou {
+    font-size: 9px;
+    color: #fff;
+    display: block;
+    width: 50px;
+    height: 15px;
+    line-height: 15px;
+    border-radius: 2px;
+	text-align:center;
+}
+
+.shi {
+    background: #d33724;
+}
+
+.fou {
+    background: #ffa836;
+}
+
+.slide-title{
+    color: #fff;
+    height: 34px;
+    line-height: 34px;
+    padding: 0 20px;
+    font-size: 11px;
+	
+}
+.slide-title span{
+    float: left;
+    margin-right: 14px;    
+}
+.slide-title span:nth-child(1),
+.slide-list li span:nth-child(1){
+    width: 80px;
+}
+.slide-title span:nth-child(2),
+.slide-list li span:nth-child(2){
+    width: 45px;
+}
+.slide-title span:nth-child(3),
+.slide-list li span:nth-child(3){
+    width: 45px;
+    margin-right: 0px;
+}
+
+.slide-container{
+  position: relative;
+  overflow: hidden;
+   height: 150px;
+}
+.slide-list{
+  position:absolute;
+  width:100%;
+  left:0;
+  top:0;
+  color:#000;
+   margin:0;
+    padding:0;
+}
+.slide-list li {
+  height:30px;
+  line-height:30px;
+  list-style:none;
+   margin:0;
+   padding:0 20px;
+}
+.slide-list li span {
+  display:inline-block;
+  margin-right:14px;
+  font-size:11px;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+ .slide-list li.odd{
+    background: rgba(51,79,109,.3);
+	color:#ffffff;font-size:10px;
+}
+.slide-list li.even{
+    background: rgba(51,79,109,.1);
+	color:rgb(51,204,204);font-size:10px;
+}
+	</style>
+<title>淳民惠管理看板</title>
+</head>
+
+<body style="overflow:hidden;height:100%">
+ <div id="btnSetting" style="z-index: 888;position:absolute;right:10px;top:10px;width:18px;height:18px;opacity:0.7;cursor:pointer;">
+	<img src="images/optionSet.png" style="width:100%;">
+ </div>
+  <div id="SearchProp_window" style="display:none;left: 0px; right: 0px; top: 0px; bottom: 0px; position: absolute;z-index: 1000001;"> 
+   <div style="width: 400px; height: 230px; position: absolute; z-index: 1000002; left: 50%; margin-left:-200px; top: 50%;margin-top:-115px; background-color: #242640; color: #d6e0dc;">
+    <div style="height: 40px; position: absolute; top: 0px; left: 0px; right: 0px; bottom: initial;background-color: #2F3149;color: #afb7c6;">
+     <div  style="position: absolute; top: 0px; bottom: 0px; left: 0px; right: 56px;">
+      <div style="height: 40px; line-height: 40px; text-align: left; white-space: nowrap; overflow: hidden; left: 20px; right: 0px; top: 0px; bottom: 0px; position: absolute;">
+       Search Filter Condition
+      </div>
+     </div>
+     <div  style="height: 40px; text-align: center; line-height: 40px; position: absolute; top: 0px; bottom: 0px; right: 0px; width: 56px;">
+      <i style="font-style:normal;cursor:pointer;" id="SearchProp_btnClose">X</i>
+     </div>
+    </div>
+    <div  style="position: absolute; top: 40px; bottom: 0px; left: 0px; right: 0px;">
+     <div  style="left: 20px; right: 20px; top: 10px; bottom: 0px; position: absolute;">
+	 <div>
+		 <div style="padding:10px;"><span style="width:120px;display:inline-block;">Plant</span>
+			<select id="select_plant" style="width:200px;">
+			  <option value ="SY58">SY58</option>
+			  <option value ="SY78">SY78</option>
+			  <option value="SY88">SY88</option>
+			</select>
+		</div>
+		<div style="padding:10px;"><span style="width:120px;display:inline-block;">Direction</span>
+			<select id="select_direction" style="width:200px;">
+			  <option value ="I">I</option>
+			  <option value ="O">O</option>
+			</select>
+		</div>
+		<div style="padding:10px;"><span style="width:120px;display:inline-block;">Supply Mode</span>
+			<select id="select_supplyMode" style="width:200px;">
+			  <option value ="STD">STD</option>
+			  <option value ="JIT">JIT</option>
+			  <option value ="JIS50">JIS50</option>
+			  <option value ="JIS53">JIS53</option>
+			</select>
+		</div>
+	</div>
+	<div style="position:relative; margin-top:10px;">
+	<div  id="btnSearch" style="position: absolute;width:100px;background-color:#3c8dbc;padding:3px;left:50%;margin-left:-50px; border-radius:2px;text-align:center; cursor:pointer; ">Search</div>
+	</div>
+     </div>
+    </div>
+   </div> 
+   <div style="z-index: 1000001; left: 0px; right: 0px; top: 0px; bottom: 0px; position: absolute;background-color: rgba(25,27,43,.8)"></div> 
+  </div>
+<div class="box" style="overflow-x:hidden,overflow-y:hidden;height:100%;">
+
+<div class="box-title" style="opacity:0.9;">
+<div class="left-title"><img src="../../Resource/css/Base/title-bg1.png"></div>
+<div class="center-title"><p class="title" style="font-weight:bold;">淳民惠销售看板</p></div>
+<div class="right-title"><img src="../../Resource/css/Base/title-bg2.png"></div>
+</div>
+
+<div class="content" style="height:100%;">
+<div id='container' style='width:100%; height:100%;'>
+</div>
+
+<div style="position:absolute;top:0px;height:calc(100% - 70px - 36px); margin-top:70px;width:calc(100% - 36px);">
+<div style="z-index:999999;width:30%;height:100%;float:left;">
+<div style="float: left;margin:6px; width:100%;height:38%; background: url(images/bg-01.png) 0% 0% / 100% 100% no-repeat;"><p class="example-title">Pick-up</p>
+<div id="TurnoverReceipt" class="table-img" style="height:160px;width:100%"></div>
+  </div>
+  <div  style="float: left;margin:6px;width:100%;height:30%; background: url(images/bg-01.png) 0% 0% / 100% 100% no-repeat;"><p class="example-title">On-Going</p>
+<div id="ztReceipt" class="table-img" style="height:100px;width:100%;"></div>
+  </div>
+<div  style="float: left;margin:6px;width:100%;height:30%; background: url(images/bg-01.png) 0% 0% / 100% 100% no-repeat;"><p class="example-title">Delivery</p>
+<div id="ztjjReceipt" class="table-img" style="height:100px;width:100%;"></div>
+  </div>
+  </div>
+<div style="z-index:999999;width:45%;height:100%;float:left;position:relative">
+<div  style="position:absolute;bottom:-26px;margin:6px 15px;width:100%;height:40%; background: url(images/bg-01.png) 0% 0% / 100% 100% no-repeat;"><p class="example-title">LSP</p>
+<div id="main5" class="table-img" style="height:100%;width:100%;"></div>
+</div>
+<div style="position:absolute;bottom:46%;;right:-10px;height:50px;">
+  <div style="border: 0px solid #e3e3e3;border-radius: 6px;padding: 6px 15px;background-color:rgba(255,255,255,0.1);"> 
+  <div style="font-size: 12px;line-height: 24px;color: #ffffff;"><div style="width:12px;height:12px;float:left;background-color:#00a65a;border-radius:9px;margin-top:6px;margin-right:5px;"></div>On-time Trucks:<span style="color: #ffffff;font-weight:bold;font-size:11px;"> 1</span></div>
+  <div style="font-size: 12px;line-height: 24px;color: #ffffff;"><div style="width:12px;height:12px;float:left;background-color:#ff851b;border-radius:9px;margin-top:6px;margin-right:5px;"></div>ETA Delay Trucks:<span style="color: #ffffff;font-weight:bold;font-size:11px;"> 1</span></div>
+   <div style="font-size: 12px;line-height: 24px;color: #ffffff;"><div style="width:12px;height:12px;float:left;background-color:#d33724;border-radius:9px;margin-top:6px;margin-right:5px;"></div> Delay Trucks:<span style="color: #ffffff;font-weight:bold;font-size:11px;"> 1</span></div>
+  </div>
+</div>
+</div>
+ 
+<div style="z-index:999999;width:25%;height:100%;float:left;">
+<div  style="float: left;margin:6px 25px;width:100%;height:50%; background: url(images/bg-01.png) 0% 0% / 100% 100% no-repeat;"><p class="example-title">Transit Summary</p>
+<div id="SummaryReceipt" class="table-img" style="height:84%;width:100%;"></div>
+</div>
+
+
+
+
+<div  style="float: left;margin:6px 25px;width:100%;height:50%; background: url(images/bg-01.png) 0% 0% / 100% 100% no-repeat;"><p class="example-title">Delay ASN</p>
+<div id="main6" class="table-img" style="height:100%;width:100%;">
+<div class="slide-title">
+            <span>ASN</span>
+            <span>Supplier</span>
+			<span>Delay</span>
+</div>
+<div class="slide-container">
+    <ul class="slide-list js-slide-list">
+        <li class="odd"><span>DAC02213998</span><span>DAC</span><span><p class="shi">Delay</p></span></li>
+        <li class="even"><span>DAC02213001</span><span>DAC</span><span><p class="shi">Delay</p></span></li>
+		<li class="odd"><span>DAC02213002</span><span>DAC</span><span><p class="shi">Delay</p></span></li>
+		<li class="even"><span>DAC02213003</span><span>DAC</span><span><p class="fou">ETA Delay</p></span></li>
+		<li class="odd"><span>DAC02213004</span><span>DAC</span><span><p class="shi">Delay</p></span></li>
+		<li class="even"><span>DAC02213005</span><span>DAC</span><span><p class="fou">ETA Delay</p></span></li>
+    </ul>
+</div>
+</div>
+</div>
+ </div>
+</div>
+</div>
+</div>
+</body>
+
+<script type="text/javascript"  src="../../Resource/js/echarts/echarts.src.js"></script>
+<script type="text/javascript" src="../../Resource/js/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-2.0.0.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="../../Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/globalVariable.js"></script>
+<script type="text/javascript" src="../../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/i18n/grid.locale-cn.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/jquery.jqGrid.min.js"></script>
+<script type="text/javascript" src="../../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/upload.js"></script>
+<script type="text/javascript" src="../../Resource/js/fileUpload/js/file.js"></script>
+<script type="text/javascript" src="../../Resource/js/cookie/jquery.cookie.js"></script>
+<!-- <script type="text/javascript" src="../../Resource/js/echarts/echarts.all.min.js"></script> -->
+<script type="text/javascript"  src="../../Resource/js/keshihuakanban/customed_yhc.js"></script>
+<script type="text/javascript" src='http://webapi.amap.com/maps?v=1.4.6&key=45468422d38b0c9dd1f6a8a11ce6e42c'></script>
+<script src="http://webapi.amap.com/loca?key=45468422d38b0c9dd1f6a8a11ce6e42c&s=0.180925001"></script>
+<script src="http://webapi.amap.com/ui/1.0/main.js"></script>
+<script language="javascript" type="text/javascript">
+$(function() {
+    var parms = getUrlParms();
+    moduleId = parms['moduleId'];
+    initScript();
+    initData();
+    initStyle();
+});
+
+
+var initStyle = function() {
+    enterTriggerEvent('searchParamesTable', 'searchData');
+};
+ 
+var initScript = function() {}
+var initData = function() {};
+
+var map = new AMap.Map('container', {
+    mapStyle: 'amap://styles/dabf5ffccabec923df1c362deb864ffc',
+    features: ['bg', 'road'],
+	center: [109.633351,30.639989],
+    viewMode: '3D',
+	zoom: 4
+});
+
+
+var doscroll = function(){
+    var $parent = $('.js-slide-list');
+    var $first = $parent.find('li:first');
+    var height = $first.height();
+    $first.animate({
+        marginTop: -height + 'px'
+        }, 500, function() {
+        $first.css('marginTop', 0).appendTo($parent);
+    });    
+};
+
+setInterval(function(){doscroll()}, 1500);
+
+$(window).load(function () {  
+ hideLoading();  
+ });  
+ 
+$(function () {
+	
+	$("#SearchProp_btnClose").click(function(){
+		$("#SearchProp_window").hide();
+	});
+	
+	$("#btnSetting").click(function(){
+		$("#SearchProp_window").show();
+	});
+	
+	$("#btnSearch").click(function(){
+		$("#SearchProp_window").hide();
+		loadList();
+	});
+	loadList();
+});
+
+function randomFrom(lowerValue,upperValue)
+{
+    return Math.floor(Math.random() * (upperValue - lowerValue + 1) + lowerValue);
+}
+
+
+var loadMap=function(){
+	
+	AMapUI.loadUI(['overlay/AwesomeMarker'],
+    function(AwesomeMarker) {
+        //icon的取值请见  http://fontawesome.io/icons/
+        var awIcons = [
+            'truck'
+        ];
+
+        //获取一批grid排布的经纬度
+        //var lngLats = getGridLngLats(map.getCenter(), 5, awIcons.length);
+		var lngLats=[{P: 30.639989, O: 109.633351, lng: 109.633351, lat: 30.639989},
+		{P: 39.9, O: 116.39, lng:116.39, lat: 39.9},
+		{P: 41.606366, O: 123.471408, lng:123.471408, lat: 41.606366}
+		];
+            new AwesomeMarker({
+                awesomeIcon: awIcons[0],
+                iconLabel: {
+                    style: {
+                        color: '#00a65a',
+                        fontSize: '18px'
+                    }
+                },
+                iconStyle: 'white',
+                map: map,
+                position: lngLats[0]
+            });
+			new AwesomeMarker({
+                awesomeIcon: awIcons[0],
+                iconLabel: {
+                    style: {
+                        color: '#ff851b',
+                        fontSize: '18px'
+                    }
+                },
+                iconStyle: 'white',
+                map: map,
+                position: lngLats[1]
+            });
+			new AwesomeMarker({
+                awesomeIcon: awIcons[0],
+                iconLabel: {
+                    style: {
+                        color: '#d33724',
+                        fontSize: '18px'
+                    }
+                },
+                iconStyle: 'white',
+                map: map,
+                position: lngLats[2]
+            });
+    });
+var marker = new AMap.Marker({
+position: new AMap.LngLat(116.39, 39.9),   // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
+icon: 
+	new AMap.Icon({            
+        image: 'data:image/png;base64,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',
+        size: new AMap.Size(35, 35),  //图标大小
+        imageSize: new AMap.Size(35,35)
+    }),
+title: '北京',
+size:35
+});
+//map.add(marker);
+
+var marker2 = new AMap.Marker({
+position: new AMap.LngLat(123.471408,41.606366),   // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
+icon: 
+	new AMap.Icon({            
+        image: 'data:image/png;base64,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',
+        size: new AMap.Size(35, 35),  //图标大小
+        imageSize: new AMap.Size(35,35)
+    }),
+title: '南京',
+size:35
+});
+//map.add(marker2);
+}
+
+/* function genTruck(list){
+	var lngLats=[];
+    var numData = [];
+    for (var i = 0; i < list.length; i++) {      
+ 	   lspData=list[i].lsp;
+ 	   numData=list[i].item_qty;       	
+    }
+    lspData.push(lspData);
+    numData.push(numData);
+    return {
+ 	   lspData: lspData,
+ 	   numData: numData
+    };
+}
+ */
+
+
+
+var getRequestParams = function (){
+	var parmsArray = {};
+	parmsArray.werks = $("#select_plant").val();
+	parmsArray.direction = $("#select_direction").val();
+	parmsArray.supply_method = $("#select_supplyMode").val();
+	return parmsArray;
+}
+
+function loadList(){
+	  showLoading(); 
+		$.ajax({
+		url : "../../service/ddgl/SctsOrderAsn/getHomepageKanbanZtzt?"+ Math.random(),
+		type : "POST",
+		contentType : 'application/json;charset=utf-8', //设置请求头信息
+        data : JSON.stringify(getRequestParams()),
+		success:function(dataObj){
+			if(isServerResultDataPass(dataObj)){
+				loadZtbb(dataObj.resultDataFull.Ztbb);//横向柱状图-在途
+				loadZtztB(dataObj.resultDataFull.Ztzt);//饼图-提货
+				loadZtJj(dataObj.resultDataFull.Jjbb);//横向柱状图-交付
+				loadSummary(dataObj.resultDataFull.Summary);//纵向柱状图-汇总
+				loadAsnQty(dataObj.resultDataFull.AsnQty);
+				loadMap();//地图
+				/* loadChart5(); *///纵向柱状图-承运商运量
+				
+				
+				
+				/* loadZtzt(dataObj.resultDataFull.Ztzt);//提货报表柱状图
+				loadZtztB(dataObj.resultDataFull.Ztzt);//提货报表饼图
+				loadZtbb(dataObj.resultDataFull.Ztbb);//在途报表柱状图
+				loadZtbbB(dataObj.resultDataFull.Ztbb);//在途报表饼图
+				loadZtJj(dataObj.resultDataFull.Jjbb);//交付报表柱状图
+				loadZtJjB(dataObj.resultDataFull.Jjbb);//交付报表饼图
+			    loadSummary(dataObj.resultDataFull.Summary);//Summary报表图表(柱状图)
+			    loadSummaryB(dataObj.resultDataFull.Summary); //Summary报表图表(饼图) */
+			 }else{
+    			FailResultDataToTip(dataObj);
+    		  }	
+  			 hideLoading();
+			}
+	    });
+}  
+
+
+function  loadAsnQty(AsnQty){
+	
+	  /* var data;
+		data = genAsnQty(AsnQty);
+		console.log(data);
+		console.log(AsnQty.length);
+			if(AsnQty.length == 0){
+				  $("#main5").html('没有查询到数据');
+				return;
+			}*/
+	var myChart = echarts.init(document.getElementById('main5'),'customed_yhc'); 
+	var option = {
+	    tooltip : {
+	        trigger: 'axis'
+	    },
+		grid: {
+	        left: '4%',
+	        right: '4%',
+			top: '5%',
+			bottom: '20%',
+	        containLabel: true
+	    },
+	    legend: {
+			textStyle:{
+	            fontSize:10
+	        },
+	        itemHeight:10,
+	        itemWidth:10,
+	        data:['Green','Yello','Red']
+	    },
+	    calculable : true,
+	    xAxis : [
+	        {
+	            type : 'category',
+	           /*  data : data.lspData */
+	           data : ['DHL','JIF','SHT','COS','ZCG','SAJ','ULS']
+	        }
+	    ],
+	    yAxis : [
+	        {
+	            type : 'value'
+	        }
+	    ],
+	    series : [
+	        {
+	            name:"Vol",
+	            type:'bar',
+	            data:[110, 200, 20, 40, 10, 150, 40],
+	          /*   data:data.numData, */
+	            markPoint : {
+	                data : [
+	                    {type : 'max', name: '最大值'},
+	                    {type : 'min', name: '最小值'}
+	                ]
+	            }
+	        }
+	    ]
+	};
+	myChart.setOption(option); 
+	}
+
+
+    //在途柱状图
+    function  loadZtzt(Ztzt){
+           var data;
+			data = genData(Ztzt);
+			console.log(data);
+			console.log(Ztzt.length);
+				if(Ztzt.length == 0){
+					  $("#StatisticsReceipt").html('没有查询到数据');
+
+					return;
+				}
+				console.log('------');
+				console.log(Ztzt.length);
+ 	    	// 基于准备好的dom，初始化echarts实例
+     var myChart = echarts.init(document.getElementById('StatisticsReceipt')); 
+    option = {
+    	    tooltip : {
+    	        trigger: 'axis',
+    	        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+    	            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+    	        }
+    	    },
+    	    legend: {
+    	        data:['Normal', 'Emergency']
+    	    },
+    	    toolbox: {
+    	        show : true,
+    	        feature : {
+    	            mark : {show: true},
+    	            dataView : {show: true, readOnly: false},
+    	            magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+    	            restore : {show: true},
+    	            saveAsImage : {show: true}
+    	        }
+    	    },
+    	    calculable : true,
+    	    xAxis : [
+    	        {
+    	            type : 'value'
+    	        }
+    	    ],
+    	    yAxis : [
+    	        {
+    	            type : 'category',
+    	            data : ['NONE APT','APT ON-TIME','APT DELAY']
+    	        }
+    	    ],
+    	    series : [
+    	        {
+    	            name:'Normal',
+    	            type:'bar',
+    	            stack: '总量',
+    	            itemStyle : { normal: {label : {show: true, position: 'insideRight'}}},
+    	            data:data.legendData
+    	        },
+    	        {
+    	            name:'Emergency',
+    	            type:'bar',
+    	            stack: '总量',
+    	            itemStyle : { normal: {label : {show: true, position: 'insideRight'}}},
+    	            data:data.seriesData
+    	        },
+
+    	    ]
+    	};
+     $(window).resize(function () {
+         myChart.resize();
+     }); 
+    myChart.setOption(option); 
+    }	                    
+    
+    
+    
+    
+    
+    //提货报表饼图 饼图
+    function  loadZtztB(Ztzt){
+           var data;
+			data = genData1(Ztzt);
+			console.log(data);
+			console.log(Ztzt.length);
+				if(Ztzt.length == 0){
+					  $("#TurnoverReceipt").html('没有查询到数据');
+
+					return;
+				}
+				console.log('------');
+				console.log(Ztzt.length);
+ 	    	// 基于准备好的dom，初始化echarts实例
+     var myChart = echarts.init(document.getElementById('TurnoverReceipt'),'customed_yhc'); 
+     option = {
+    		    tooltip : {
+    		        trigger: 'item',
+    		        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    		    },
+    		    
+    		    series : [
+    		        {
+    		            name:'',
+    		            type:'pie',
+    		            selectedMode: 'single',
+    		            radius: [0, '30%'],
+
+    		            label: {
+    		                normal: {
+    		                    position: 'inner',
+    							fontSize:12
+    		                }
+    		            },
+    		            labelLine: {
+    		                normal: {
+    		                    show: false,
+    		                }
+    		            },
+
+    		            data:[
+    		                {value:data.NoneNum, name:'None APT', selected:true},
+    		                {value:data.APTNum, name:'APT On-time'},
+    		                {value:data.DELAYNum, name:'APT Delay'}
+    		            ]
+    		        },
+    		        {
+    		            name:'',
+    		            type:'pie',
+    		            radius: ['40%', '55%'],
+
+    		            
+    		            label: {
+    		                normal: {
+    		                    formatter: '{b|{b}：}{c}',
+    		                    rich: {
+    		                        a: {
+    		                            color: '#999',
+    		                            align: 'center'
+    		                        },
+    		                        // abg: {
+    		                        //     backgroundColor: '#333',
+    		                        //     width: '100%',
+    		                        //     align: 'right',
+    		                        //     height: 22,
+    		                        //     borderRadius: [4, 4, 0, 0]
+    		                        // },
+    		                        hr: {
+    		                            borderColor: '#aaa',
+    		                            width: '100%',
+    		                            borderWidth: 0.5,
+    		                            height: 0
+    		                        },
+    		                        b: {
+    		                            fontSize: 12,
+    		                        },
+    		                        per: {
+    		                            color: '#eee',
+    		                            backgroundColor: '#334455',
+    		                            padding: [2, 4],
+    		                            borderRadius: 2
+    		                        }
+    		                    }
+    		                }
+    		            },
+
+    		            data:[
+    		                {value:data.legendData1, name:'None APT Normal'},
+    		                {value:data.legendData2, name:'None APT Emergency'},
+    		                {value:data.legendData3, name:'APT On-time Normal'},
+    		                {value:data.legendData4, name:'APT On-time Emergency'},
+    		                {value:data.legendData5, name:'APT Delay Normal'},
+    		                {value:data.legendData6, name:'APT Delay Emergency'}
+    		            ]
+    		           
+    		        }
+    		    ]
+    		};
+    myChart.setOption(option); 
+    }	
+    
+    
+    
+    //在途报表柱状图
+    function  loadZtbb(Ztbb){
+           var data;
+			data = genZtbbData(Ztbb);
+			console.log(data);
+			console.log(Ztbb.length);
+				if(Ztbb.length == 0){
+					  $("#ztReceipt").html('没有查询到数据');
+
+					return;
+				}
+				console.log('------');
+				console.log(Ztbb.length);
+ 	    	// 基于准备好的dom，初始化echarts实例
+ 	    		var myChart = echarts.init(document.getElementById('ztReceipt'),'customed_yhc');
+    option = {
+    		   tooltip : {
+    		        trigger: 'axis',
+    		        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+    		            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+    		        }
+    		    },
+    		    legend: {
+    				bottom :'0',
+    				textStyle:{
+    		            fontSize:10
+    		        },
+    		        itemHeight:10,
+    		        itemWidth:10,
+    		        data: ['Normal', 'Emergency']
+    		    },
+    		    grid: {
+    		        left: '3%',
+    		        right: '4%',
+    				top: '3%',
+    		        bottom: '3%',
+    		        containLabel: true
+    		    },
+    		    xAxis:  {
+    		        type: 'value',
+    				show: false,
+    				axisLine:{
+    					show:false
+    				}
+    		    },
+    		    yAxis: {
+    		        type: 'category',
+    				show: true,
+    				axisLine:{
+    					show:false
+    				},
+    				axisLabel:{
+    					fontSize:10
+    				},
+    		        data: ['ETA On-time','ETA Delay (System)','ETA Delay (LSP)']
+    		    },
+    	    series: [
+    	        {
+    	            name: 'Normal',
+    	            type: 'bar',
+    	            stack: '总量',
+    	            label: {
+    	                normal: {
+    	                    show: true,
+    	                    position: 'insideRight'
+    	                }
+    	            },
+    	            data:data.legendData
+    	        },
+    	        {
+    	            name: 'Emergency',
+    	            type: 'bar',
+    	            stack: '总量',
+    	            label: {
+    	                normal: {
+    	                    show: true,
+    	                    position: 'insideRight'
+    	                }
+    	            },
+    	            data:data.seriesData
+    	        }
+    	    ]
+    	};
+    	 myChart.setOption(option); 
+    }
+
+    	 
+    
+    // 提货报表图表2(饼图)
+    function loadZtbbB(Ztbb){
+    	  var data;
+			data = genData2(Ztbb);
+			console.log(data);
+			console.log(Ztbb.length);
+				if(Ztbb.length == 0){
+					  $("#ztbtReceipt").html('没有查询到数据');
+
+					return;
+				}
+				console.log('------');
+				console.log(Ztbb.length);
+	    	// 基于准备好的dom，初始化echarts实例
+   var myChart = echarts.init(document.getElementById('ztbtReceipt')); 
+   option = {
+  		    tooltip : {
+  		        trigger: 'item',
+  		        formatter: "{a} <br/>{b} : {c} ({d}%)"
+  		    },
+  		    legend: {
+  		        orient : 'vertical',
+  		        x : 'left',
+  		        data:['ETA ON-TIME','ETA DELAY(SYSTEM)','ETA DELAY(LSP)']
+  		    },
+  		    toolbox: {
+  		        show : true,
+  		        feature : {
+  		            mark : {show: true},
+  		            dataView : {show: true, readOnly: false},
+  		            magicType : {
+  		                show: true, 
+  		                type: ['pie', 'funnel']
+  		            },
+  		            restore : {show: true},
+  		            saveAsImage : {show: true}
+  		        }
+  		    },
+  		    calculable : false,
+  		    series : [
+  		        {
+  		            name:'访问来源',
+  		            type:'pie',
+  		            selectedMode: 'single',
+  		            radius : [0, 70],
+  		            
+  		            // for funnel
+  		            x: '20%',
+  		            width: '40%',
+  		            funnelAlign: 'right',
+  		            max: 1548,
+  		            
+  		            itemStyle : {
+  		                normal : {
+  		                    label : {
+  		                        position : 'inner'
+  		                    },
+  		                    labelLine : {
+  		                        show : false
+  		                    }
+  		                }
+  		            },
+  		            data:[
+  		                {value:data.NoneNum, name:'ETA ON-TIME'},
+  		                {value:data.APTNum, name:'ETA DELAY(SYSTEM)'},
+  		                {value:data.DELAYNum, name:'ETA DELAY(LSP)', selected:true}
+  		            ]
+  		        },
+  		        {
+  		            name:'访问来源',
+  		            type:'pie',
+  		            radius : [100, 140],
+  		            
+  		            // for funnel
+  		            x: '60%',
+  		            width: '35%',
+  		            funnelAlign: 'left',
+  		            max: 1048,
+  		            data:[
+  		                {value:data.legendData1, name:'ETA ON-TIME Normal'},
+  		                {value:data.legendData2, name:'ETA ON-TIME Emergency'},
+  		                {value:data.legendData3, name:'ETA DELAY(SYSTEM) Normal'},
+  		                {value:data.legendData4, name:'ETA DELAY(SYSTEM) Emergency'},
+  		                {value:data.legendData5, name:'ETA DELAY(LSP) Normal'},
+  		                {value:data.legendData6, name:'ETA DELAY(LSP) Emergency'}
+  		            ]
+  		           
+  		        }
+  		    ]
+  		};
+   $(window).resize(function () {
+       myChart.resize();
+   }); 
+  myChart.setOption(option); 
+  }	
+    
+    //交付报表柱状图
+    function loadZtJj(Jjbb){
+    	 var data;
+			data = genZtJjData(Jjbb);
+			console.log(data);
+			console.log(Jjbb.length);
+				if(Jjbb.length == 0){
+					  $("#ztjjReceipt").html('没有查询到数据');
+
+					return;
+				}
+				console.log('------');
+				console.log(Jjbb.length);
+	    	// 基于准备好的dom，初始化echarts实例
+  var myChart = echarts.init(document.getElementById('ztjjReceipt'),'customed_yhc'); 
+ option = {
+ 	    tooltip : {
+ 	        trigger: 'axis',
+ 	        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+ 	            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+ 	        }
+ 	    },
+ 	   legend: {
+ 			bottom :'0',
+ 			textStyle:{
+ 	            fontSize:10
+ 	        },
+ 	        itemHeight:10,
+ 	        itemWidth:10,
+ 	        data: ['Normal', 'Emergency']
+ 	    },
+ 	   grid: {
+ 	        left: '3%',
+ 	        right: '4%',
+ 			top: '3%',
+ 	        bottom: '3%',
+ 	        containLabel: true
+ 	    },
+ 	    xAxis:  {
+ 	        type: 'value',
+ 			show: false,
+ 			axisLine:{
+ 				show:false
+ 			}
+ 	    },
+ 	   yAxis: {
+ 	        type: 'category',
+ 			show: true,
+ 			axisLine:{
+ 				show:false
+ 			},
+ 			axisLabel:{
+ 				fontSize:10
+ 			},
+ 	        data: ['None APT','APT On-time','APT Delay ']
+ 	    },
+
+ 	    
+ 	   series: [
+ 	        {
+ 	            name: 'Normal',
+ 	            type: 'bar',
+ 	            stack: '总量',
+ 	            label: {
+ 	                normal: {
+ 	                    show: true,
+ 	                    position: 'insideRight'
+ 	                }
+ 	            },
+ 	           data:data.legendData
+ 	        },
+ 	        {
+ 	            name: 'Emergency',
+ 	            type: 'bar',
+ 	            stack: '总量',
+ 	            label: {
+ 	                normal: {
+ 	                    show: true,
+ 	                    position: 'insideRight'
+ 	                }
+ 	            },	        
+ 	          data:data.seriesData
+ 	        }
+ 	    ]
+ 	};
+ 	 	myChart.setOption(option); 
+ }
+
+
+ 
+    
+    //交付报表饼图
+   function loadZtJjB(Jjbb){
+		  var data;
+			data = genData3(Jjbb);
+			console.log(data);
+			console.log(Jjbb.length);
+				if(Jjbb.length == 0){
+					  $("#ztjjbtReceipt").html('没有查询到数据');
+
+					return;
+				}
+				console.log('------');
+				console.log(Jjbb.length);
+	    	// 基于准备好的dom，初始化echarts实例
+ var myChart = echarts.init(document.getElementById('ztjjbtReceipt')); 
+ option = {
+		    tooltip : {
+		        trigger: 'item',
+		        formatter: "{a} <br/>{b} : {c} ({d}%)"
+		    },
+		    legend: {
+		        orient : 'vertical',
+		        x : 'left',
+		        data:['NONE ATA','ATA ON-TIME','ATA DELAY']
+		    },
+		    toolbox: {
+		        show : true,
+		        feature : {
+		            mark : {show: true},
+		            dataView : {show: true, readOnly: false},
+		            magicType : {
+		                show: true, 
+		                type: ['pie', 'funnel']
+		            },
+		            restore : {show: true},
+		            saveAsImage : {show: true}
+		        }
+		    },
+		    calculable : false,
+		    series : [
+		        {
+		            name:'访问来源',
+		            type:'pie',
+		            selectedMode: 'single',
+		            radius : [0, 70],
+		            
+		            // for funnel
+		            x: '20%',
+		            width: '40%',
+		            funnelAlign: 'right',
+		            max: 1548,
+		            
+		            itemStyle : {
+		                normal : {
+		                    label : {
+		                        position : 'inner'
+		                    },
+		                    labelLine : {
+		                        show : false
+		                    }
+		                }
+		            },
+		            data:[
+		                {value:data.NoneNum, name:'NONE ATA'},
+		                {value:data.APTNum, name:'ATA ON-TIME'},
+		                {value:data.DELAYNum, name:'ATA DELAY', selected:true}
+		            ]
+		        },
+		        {
+		            name:'访问来源',
+		            type:'pie',
+		            radius : [100, 140],
+		            
+		            // for funnel
+		            x: '60%',
+		            width: '35%',
+		            funnelAlign: 'left',
+		            max: 1048,
+		            data:[
+		                {value:data.legendData1, name:'NONE ATA Normal'},
+		                {value:data.legendData2, name:'NONE ATA Emergency'},
+		                {value:data.legendData3, name:'ATA ON-TIME Normal'},
+		                {value:data.legendData4, name:'ATA ON-TIME Emergency'},
+		                {value:data.legendData5, name:'ATA DELAY Normal'},
+		                {value:data.legendData6, name:'ATA DELAY Emergency'}
+		            ]
+		           
+		        }
+		    ]
+		};
+       $(window).resize(function () {
+     myChart.resize();
+    }); 
+   myChart.setOption(option); 
+   }
+    
+    //Summary报表图表(柱状图)
+     function loadSummary(Summary){
+    	 var data;
+			data = genSummaryData(Summary);
+			console.log(data);
+			console.log(Summary.length);
+				if(Summary.length == 0){
+					  $("#SummaryReceipt").html('没有查询到数据');
+
+					return;
+				}
+				console.log('------');
+				console.log(Summary.length);
+	    	// 基于准备好的dom，初始化echarts实例
+          var myChart = echarts.init(document.getElementById('SummaryReceipt'),'customed_yhc'); 
+          option = {
+        		    tooltip : {
+        		        trigger: 'axis',
+        		        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+        		            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+        		        }
+        		    },
+        		    legend: {
+        				bottom :'0',
+        				textStyle:{
+        		            fontSize:10
+        		        },
+        		        itemHeight:10,
+        		        itemWidth:10,
+        		        data:['Green','Yello','Red']
+        		    },
+        		    grid: {
+        		        left: '4%',
+        		        right: '4%',
+        				top: '5%',
+        		        bottom: '10%',
+        		        containLabel: true
+        		    },
+        		    xAxis : [
+        		        {
+        		            type : 'category',
+        					axisLabel:{
+        						fontSize:10
+        					},
+        		            data : ['Unpick-up','On-going','Arrival']
+        		        }
+        		    ],
+        		    yAxis : [
+        		        {
+        		            type : 'value',
+        					axisLabel:{
+        						fontSize:10
+        					},
+        		        }
+        		    ],
+        		    series : [
+        		        {
+        		            name:'Green',
+        		            type:'bar',
+        		            stack: 'Unpick-up',
+        		            data:data.legendData
+        		        },
+        		        {
+        		            name:'Yello',
+        		            type:'bar',
+        		            stack: 'Unpick-up',
+        		            data:data.seriesData
+        		        },
+        				{
+        		            name:'Red',
+        		            type:'bar',
+        		            stack: 'Unpick-up',
+        		            data:data.thirdData
+        		        }
+        		    ]
+        		};
+        		myChart.setOption(option); 
+      }
+
+    
+    
+        		  
+    
+    //饼图
+     function loadSummaryB(Summary){
+   	  var data;
+		data = genData4(Summary);
+		console.log(data);
+		console.log(Summary.length);
+			if(Summary.length == 0){
+				  $("#SummaryBReceipt").html('没有查询到数据');
+
+				return;
+			}
+			console.log('------');
+			console.log(Summary.length);
+  	// 基于准备好的dom，初始化echarts实例
+   var myChart = echarts.init(document.getElementById('SummaryBReceipt')); 
+    option = {
+	    tooltip : {
+	        trigger: 'item',
+	        formatter: "{a} <br/>{b} : {c} ({d}%)"
+	    },
+	    legend: {
+	        orient : 'vertical',
+	        x : 'left',
+	        data:['Unpick-up','On-going','Arrival']
+	    },
+	    toolbox: {
+	        show : true,
+	        feature : {
+	            mark : {show: true},
+	            dataView : {show: true, readOnly: false},
+	            magicType : {
+	                show: true, 
+	                type: ['pie', 'funnel']
+	            },
+	            restore : {show: true},
+	            saveAsImage : {show: true}
+	        }
+	    },
+	    calculable : false,
+	    series : [
+	        {
+	            name:'访问来源',
+	            type:'pie',
+	            selectedMode: 'single',
+	            radius : [0, 70],
+	            
+	            // for funnel
+	            x: '20%',
+	            width: '40%',
+	            funnelAlign: 'right',
+	            max: 1548,
+	            
+	            itemStyle : {
+	                normal : {
+	                    label : {
+	                        position : 'inner'
+	                    },
+	                    labelLine : {
+	                        show : false
+	                    }
+	                }
+	            },
+	            data:[
+	                {value:data.NoneNum, name:'Unpick-up'},
+	                {value:data.APTNum, name:'On-going'},
+	                {value:data.DELAYNum, name:'Arrival', selected:true}
+	            ]
+	        },
+	        {
+	            name:'访问来源',
+	            type:'pie',
+	            radius : [100, 140],
+	            
+	            // for funnel
+	            x: '60%',
+	            width: '35%',
+	            funnelAlign: 'left',
+	            max: 1048,
+	            data:[
+	                {value:data.legendData1, name:'Unpick-up Green'},
+	                {value:data.legendData2, name:'Unpick-up Yello'},
+	                {value:data.legendData3, name:'Unpick-up Red'},
+	                {value:data.legendData4, name:'On-going Green'},
+	                {value:data.legendData5, name:'On-going Yello'},
+	                {value:data.legendData6, name:'On-going Red'},
+	                {value:data.legendData7, name:'Arrival Green'},
+	                {value:data.legendData8, name:'Arrival Yello'},
+	                {value:data.legendData9, name:'Arrival Red'}
+	            ]
+	           
+	        }
+	    ]
+	};
+         $(window).resize(function () {
+            myChart.resize();
+         }); 
+      myChart.setOption(option); 
+     }
+    
+    
+   function  genAsnQty(list){
+	   var lspData=[];
+       var numData = [];
+       for (var i = 0; i < list.length; i++) {      
+    	   lspData=list[i].lsp;
+    	   numData=list[i].item_qty;       	
+       }
+       lspData.push(lspData);
+       numData.push(numData);
+       return {
+    	   lspData: lspData,
+    	   numData: numData
+       };
+   };
+    
+    
+    //提货报表柱状图
+    function genData(list) {
+        var legendData1 = "";
+        var legendData2 = "";
+        var legendData3 = "";
+        var legendData4 = "";
+        var legendData5 = "";
+        var legendData6 = "";
+        var	legendData=[];
+        var seriesData = [];
+        for (var i = 0; i < list.length; i++) {
+        	if(list[i].zt=='Normal' && list[i].isgq=='NONE APT'){
+        		 legendData1=list[i].num;
+        	}else if(list[i].zt=='Emergency' && list[i].isgq=='NONE APT'){
+        		 legendData2=list[i].num;
+        	}else if(list[i].zt=='Normal' && list[i].isgq=='APT ON-TIME'){
+        		 legendData3=list[i].num;;
+        	}else if(list[i].zt=='Emergency' && list[i].isgq=='APT ON-TIME'){
+        		 legendData4=list[i].num;
+        	}else if(list[i].zt=='Normal' && list[i].isgq=='APT DELAY'){
+        		 legendData5=list[i].num;
+        	}else if(list[i].zt=='Emergency' && list[i].isgq=='APT DELAY'){
+        		 legendData6=list[i].num;
+        	}        	
+        }
+        legendData.push(legendData1,legendData3,legendData5);
+        seriesData.push(legendData2,legendData4,legendData6);
+        return {
+            legendData: legendData,
+            seriesData: seriesData
+        };
+    }
+    //提货报表饼图
+      function genData1(list) {
+        var legendData1 = "";
+        var legendData2 = "";
+        var legendData3 = "";
+        var legendData4 = "";
+        var legendData5 = "";
+        var legendData6 = "";
+        var	legendData=[];
+        var seriesData = [];
+        var NoneNum=0;
+        var APTNum=0;
+        var DELAYNum=0;
+        for (var i = 0; i < list.length; i++) {
+        	if(list[i].zt=='Normal' && list[i].isgq=='NONE APT'){
+        		 legendData1=list[i].num;
+        	}else if(list[i].zt=='Emergency' && list[i].isgq=='NONE APT'){
+        		 legendData2=list[i].num;
+        	}else if(list[i].zt=='Normal' && list[i].isgq=='APT ON-TIME'){
+        		 legendData3=list[i].num;
+        	}else if(list[i].zt=='Emergency' && list[i].isgq=='APT ON-TIME'){
+        		 legendData4=list[i].num;
+        	}else if(list[i].zt=='Normal' && list[i].isgq=='APT DELAY'){
+        		 legendData5=list[i].num;
+        	}else if(list[i].zt=='Emergency' && list[i].isgq=='APT DELAY'){
+        		 legendData6=list[i].num;
+        	}        	
+        }
+        for(var i = 0; i < list.length; i++)
+        	{
+        	if(list[i].isgq=='NONE APT'){
+        		NoneNum=NoneNum+parseInt(list[i].num);
+        	}else if(list[i].isgq=='APT ON-TIME'){
+        		APTNum=APTNum+parseInt(list[i].num);
+        	}else if(list[i].isgq=='APT DELAY'){
+        		DELAYNum=DELAYNum+parseInt(list[i].num)
+        	}
+        }
+        legendData.push(legendData1,legendData3,legendData5);
+        seriesData.push(legendData2,legendData4,legendData6);
+        return {
+            legendData: legendData,
+            seriesData: seriesData,
+            legendData1,
+            legendData2,
+            legendData3,
+            legendData4,
+            legendData5,
+            legendData6,
+            NoneNum,
+            APTNum,
+            DELAYNum
+        };
+    }
+    
+    //在途报表图表（柱状图）
+      function genZtbbData(list){
+    	  var legendData1 = 0;
+          var legendData2 = 0;
+          var legendData3 = 0;
+          var legendData4 = 0;
+          var legendData5 = 0;
+          var legendData6 = 0;
+          var	legendData=[];
+          var seriesData = [];
+          for (var i = 0; i < list.length; i++) {
+          	if(list[i].zt=='Normal' && list[i].isgq=='ETAONTIME'){
+          		 legendData1=list[i].num;
+          	}else if(list[i].zt=='Emergency' && list[i].isgq=='ETAONTIME'){
+          		 legendData2=list[i].num;
+          	}else if(list[i].zt=='Normal' && list[i].isgq=='ETADELAY'){
+          		 legendData3=list[i].num;;
+          	}else if(list[i].zt=='Emergency' && list[i].isgq=='ETADELAY'){
+          		 legendData4=list[i].num;
+          	}else if(list[i].zt=='Normal' && list[i].isgq=='ETADELAYS'){
+          		 legendData5=list[i].num;
+          	}else if(list[i].zt=='Emergency' && list[i].isgq=='ETADELAYS'){
+          		 legendData6=list[i].num;
+          	}        	
+          }
+          legendData.push(legendData1,legendData3,legendData5);
+          seriesData.push(legendData2,legendData4,legendData6);
+          return {
+              legendData: legendData,
+              seriesData: seriesData
+          };
+    	  
+      }
+    
+  
+       //在途报表饼图
+      function genData2(list) {
+        var legendData1 = "";
+        var legendData2 = "";
+        var legendData3 = "";
+        var legendData4 = "";
+        var legendData5 = "";
+        var legendData6 = "";
+        var	legendData=[];
+        var seriesData = [];
+        var NoneNum=0;
+        var APTNum=0;
+        var DELAYNum=0;
+        for (var i = 0; i < list.length; i++) {
+        	if(list[i].zt=='Normal' && list[i].isgq=='ETA ON-TIME'){
+        		 legendData1=list[i].num;
+        	}else if(list[i].zt=='Emergency' && list[i].isgq=='ETA ON-TIME'){
+        		 legendData2=list[i].num;
+        	}else if(list[i].zt=='Normal' && list[i].isgq=='ETA DELAY(SYSTEM)'){
+        		 legendData3=list[i].num;
+        	}else if(list[i].zt=='Emergency' && list[i].isgq=='ETA DELAY(SYSTEM)'){
+        		 legendData4=list[i].num;
+        	}else if(list[i].zt=='Normal' && list[i].isgq=='ETA DELAY(LSP)'){
+        		 legendData5=list[i].num;
+        	}else if(list[i].zt=='Emergency' && list[i].isgq=='ETA DELAY(LSP)'){
+        		 legendData6=list[i].num;
+        	}        	
+        }
+        for(var i = 0; i < list.length; i++)
+        	{
+        	if(list[i].isgq=='ETA ON-TIME'){
+        		NoneNum=NoneNum+parseInt(list[i].num);
+        	}else if(list[i].isgq=='ETA DELAY(SYSTEM)'){
+        		APTNum=APTNum+parseInt(list[i].num);
+        	}else if(list[i].isgq=='ETA DELAY(LSP)'){
+        		DELAYNum=DELAYNum+parseInt(list[i].num)
+        	}
+        }
+        legendData.push(legendData1,legendData3,legendData5);
+        seriesData.push(legendData2,legendData4,legendData6);
+        return {
+            legendData: legendData,
+            seriesData: seriesData,
+            legendData1,
+            legendData2,
+            legendData3,
+            legendData4,
+            legendData5,
+            legendData6,
+            NoneNum,
+            APTNum,
+            DELAYNum
+        };
+    }
+       
+       //交付图表柱状图
+      function genZtJjData(list){
+    	  var legendData1 = 0;
+          var legendData2 = 0;
+          var legendData3 = 0;
+          var legendData4 = 0;
+          var legendData5 = 0;
+          var legendData6 = 0;
+          var	legendData=[];
+          var seriesData = [];
+          for (var i = 0; i < list.length; i++) {
+          	if(list[i].zt=='Normal' && list[i].isgq=='NONEATA'){
+          		 legendData1=parseInt(list[i].num);
+          	}else if(list[i].zt=='Emergency' && list[i].isgq=='NONEATA'){
+          		 legendData2=parseInt(list[i].num);
+          	}else if(list[i].zt=='Normal' && list[i].isgq=='ATAONTIME'){
+          		 legendData3=parseInt(list[i].num);
+          	}else if(list[i].zt=='Emergency' && list[i].isgq=='ATAONTIME'){
+          		 legendData4=parseInt(list[i].num);
+          	}else if(list[i].zt=='Normal' && list[i].isgq=='ATADELAY'){
+          		 legendData5=parseInt(list[i].num);
+          	}else if(list[i].zt=='Emergency' && list[i].isgq=='ATADELAY'){
+          		 legendData6=parseInt(list[i].num);
+          	}        	
+          }
+          legendData.push(legendData1,legendData3,legendData5);
+          seriesData.push(legendData2,legendData4,legendData6);
+          return {
+              legendData: legendData,
+              seriesData: seriesData
+          };  	  
+      }
+       
+       
+      //交付报表饼图
+      function genData3(list) {
+        var legendData1 = "";
+        var legendData2 = "";
+        var legendData3 = "";
+        var legendData4 = "";
+        var legendData5 = "";
+        var legendData6 = "";
+        var	legendData=[];
+        var seriesData = [];
+        var NoneNum=0;
+        var APTNum=0;
+        var DELAYNum=0;
+        for (var i = 0; i < list.length; i++) {
+        	if(list[i].zt=='Normal' && list[i].isgq=='NONE ATA'){
+        		 legendData1=list[i].num;
+        	}else if(list[i].zt=='Emergency' && list[i].isgq=='NONE ATA'){
+        		 legendData2=list[i].num;
+        	}else if(list[i].zt=='Normal' && list[i].isgq=='ATA ON-TIME'){
+        		 legendData3=list[i].num;
+        	}else if(list[i].zt=='Emergency' && list[i].isgq=='ATA ON-TIME'){
+        		 legendData4=list[i].num;
+        	}else if(list[i].zt=='Normal' && list[i].isgq=='ATA DELAY'){
+        		 legendData5=list[i].num;
+        	}else if(list[i].zt=='Emergency' && list[i].isgq=='ATA DELAY'){
+        		 legendData6=list[i].num;
+        	}        	
+        }
+        for(var i = 0; i < list.length; i++)
+        	{
+        	if(list[i].isgq=='NONE ATA'){
+        		NoneNum=NoneNum+parseInt(list[i].num);
+        	}else if(list[i].isgq=='ATA ON-TIME'){
+        		APTNum=APTNum+parseInt(list[i].num);
+        	}else if(list[i].isgq=='ATA DELAY'){
+        		DELAYNum=DELAYNum+parseInt(list[i].num)
+        	}
+        }
+        legendData.push(legendData1,legendData3,legendData5);
+        seriesData.push(legendData2,legendData4,legendData6);
+        return {
+            legendData: legendData,
+            seriesData: seriesData,
+            legendData1,
+            legendData2,
+            legendData3,
+            legendData4,
+            legendData5,
+            legendData6,
+            NoneNum,
+            APTNum,
+            DELAYNum
+        };
+    }
+      
+      //
+      function genSummaryData(list){
+    	  var legendData1 = 0;
+          var legendData2 = 0;
+          var legendData3 = 0;
+          var legendData4 = 0;
+          var legendData5 = 0;
+          var legendData6 = 0;
+          var legendData7 = 0;
+          var legendData8 = 0;
+          var legendData9 = 0;
+          var legendData=[];
+          var seriesData=[];
+          var thirdData=[];
+          for (var i = 0; i < list.length; i++) {
+          	if(list[i].transit=='Unpick-up' && list[i].status=='Green'){
+          		 legendData1=list[i].status_num;
+          	}else if(list[i].transit=='Unpick-up' && list[i].status=='Yello'){
+          		 legendData2=list[i].status_num;
+          	}else if(list[i].transit=='Unpick-up' && list[i].status=='Red'){
+          		 legendData3=list[i].status_num;
+          	}else if(list[i].transit=='On-going' && list[i].status=='Green'){
+          		 legendData4=list[i].status_num;
+          	}else if(list[i].transit=='On-going' && list[i].status=='Yello'){
+          		 legendData5=list[i].status_num;
+          	}else if(list[i].transit=='On-going' && list[i].status=='Red'){
+          		 legendData6=list[i].status_num;
+          	}else if(list[i].transit=='Arrival' && list[i].status=='Green'){
+          		 legendData7=list[i].status_num;
+          	}else if(list[i].transit=='Arrival' && list[i].status=='Yello'){
+          		 legendData8=list[i].status_num;
+          	}else if(list[i].transit=='Arrival' && list[i].status=='Red'){
+          		 legendData9=list[i].status_num;
+          	}          	
+          }
+          legendData.push(legendData1,legendData4,legendData7);
+          seriesData.push(legendData2,legendData5,legendData8);
+          thirdData.push(legendData3,legendData6,legendData9)
+          return {
+              legendData: legendData,
+              seriesData: seriesData,
+              thirdData: thirdData
+          };  	  
+      }
+      
+      function genData4(list){
+    	  var legendData1 = 0;
+          var legendData2 = 0;
+          var legendData3 = 0;
+          var legendData4 = 0;
+          var legendData5 = 0;
+          var legendData6 = 0;
+          var legendData7 = 0;
+          var legendData8 = 0;
+          var legendData9 = 0;
+          var legendData=[];
+          var seriesData = [];
+          var NoneNum=0;
+          var APTNum=0;
+          var DELAYNum=0;
+          for (var i = 0; i < list.length; i++) {
+        	  if(list[i].transit=='Unpick-up' && list[i].status=='Green'){
+           		 legendData1=list[i].status_num;
+           	}else if(list[i].transit=='Unpick-up' && list[i].status=='Yello'){
+           		 legendData2=list[i].status_num;
+           	}else if(list[i].transit=='Unpick-up' && list[i].status=='Red'){
+           		 legendData3=list[i].status_num;
+           	}else if(list[i].transit=='On-going' && list[i].status=='Green'){
+           		 legendData4=list[i].status_num;
+           	}else if(list[i].transit=='On-going' && list[i].status=='Yello'){
+           		 legendData5=list[i].status_num;
+           	}else if(list[i].transit=='On-going' && list[i].status=='Red'){
+           		 legendData6=list[i].status_num;
+           	}else if(list[i].transit=='Arrival' && list[i].status=='Green'){
+           		 legendData7=list[i].status_num;
+           	}else if(list[i].transit=='Arrival' && list[i].status=='Yello'){
+           		 legendData8=list[i].status_num;
+           	}else if(list[i].transit=='Arrival' && list[i].status=='Red'){
+           		 legendData9=list[i].status_num;
+           	}          	
+          }
+          for(var i = 0; i < list.length; i++)
+          	{
+          	if(list[i].transit=='Unpick-up'){
+          		NoneNum=NoneNum+parseInt(list[i].status_num);
+          	}else if(list[i].isgq=='On-going'){
+          		APTNum=APTNum+parseInt(list[i].status_num);
+          	}else if(list[i].isgq=='Arrival'){
+          		DELAYNum=DELAYNum+parseInt(list[i].status_num)
+          	}
+          }
+          legendData.push(legendData1,legendData3,legendData5);
+          seriesData.push(legendData2,legendData4,legendData6);
+          return {
+              legendData: legendData,
+              seriesData: seriesData,
+              legendData1,
+              legendData2,
+              legendData3,
+              legendData4,
+              legendData5,
+              legendData6,
+              legendData7,
+              legendData8,
+              legendData9,
+              NoneNum,
+              APTNum,
+              DELAYNum
+          };
+      }
+
+
+</script>
+</html>
+
+ 
+ 
+ 

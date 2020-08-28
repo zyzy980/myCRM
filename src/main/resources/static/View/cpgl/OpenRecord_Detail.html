@@ -45,7 +45,7 @@
 			<tr>
 				<td class="editTitle" style="width:125px;"><label data-locale="OPEN_DATE"/></td>
 				<td class="editControl">
-					<input type="text" name="open_date" id="open_date" class="easyui-datetimebox" style="width: 15%;"/>
+					<input type="text" name="open_date" id="open_date" class="easyui-datebox" style="width: 15%;"/>
 				</td>
 			</tr>
 			<tr>
@@ -100,15 +100,21 @@
 				</td>
 			</tr>
 			<tr>
+				<td class="editTitle" style="width:125px;">出售人</td>
+				<td class="editControl">
+					<input type="text" name="sold_by" id="sold_by" class="easyui-combobox" style="width: 15%;"/>
+				</td>
+			</tr>
+			<tr>
 				<td class="editTitle" style="width:125px;"><label data-locale="SELL_DATE"/></td>
 				<td class="editControl">
-					<input type="text" name="sell_date" id="sell_date" class="easyui-datetimebox" style="width: 15%;"/>
+					<input type="text" name="sell_date" id="sell_date" class="easyui-datebox" style="width: 15%;"/>
 				</td>
 			</tr>
 			<tr>
 				<td class="editTitle" style="width:125px;"><label data-locale="SOLD_DATE"/></td>
 				<td class="editControl">
-					<input type="text" name="sold_date" id="sold_date" class="easyui-datetimebox" style="width: 15%;"/>
+					<input type="text" name="sold_date" id="sold_date" class="easyui-datebox" style="width: 15%;"/>
 				</td>
 			</tr>
 			<tr>
@@ -120,7 +126,7 @@
 			<tr>
 				<td class="editTitle" style="width:125px;"><label data-locale="GOODS_COST"/></td>
 				<td class="editControl">
-					<input type="text" name="goods_cost" id="goods_cost" class="easyui-numberbox" data-options="required:false,precision:2" style="width: 15%;"/>
+					<input type="text" name="goods_cost" id="goods_cost" class="easyui-numberbox" data-options="required:false,precision:2" value="14" style="width: 15%;"/>
 				</td>
 			</tr>
 			<tr>
@@ -142,7 +148,7 @@
 			<tr>
 				<td class="editTitle" style="width:125px;"><label data-locale="EXPRESS_FEE"/></td>
 				<td class="editControl">
-					<input type="text" name="express_fee" id="express_fee" class="easyui-numberbox" data-options="required:false,precision:2" style="width: 15%;"/>
+					<input type="text" name="express_fee" id="express_fee" class="easyui-numberbox" data-options="required:false,precision:2" value="0" style="width: 15%;"/>
 				</td>
 			</tr>
 			<tr>
@@ -217,6 +223,21 @@
                 $("#sell_mode").combobox("loadData", callbackData);
             }
         },{
+            //初始化出售人
+            dicTypeCode : Global_DicType.MeetPeople,
+            ADD_ALL: false,
+            callback : function(callbackData) {
+                window.docking_manMap = {};
+                $("#sold_by").combobox({
+                    valueField: 'dicvalue',
+                    textField: 'dictext',
+                    //panelHeight: 200,
+                    //panelWidth: 250,
+                    editable: true
+                });
+                $("#sold_by").combobox("loadData", callbackData);
+            }
+        },{
             //初始化货物类型
             dicTypeCode : Global_DicType.GoodsType,
             ADD_ALL: false,
@@ -273,20 +294,6 @@
                 $("#kuaidi_company").combobox("loadData", callbackData);
             }
         },{
-            //初始化状态
-            dicTypeCode : Global_DicType.GoodsState,
-            ADD_ALL: false,
-            callback : function(callbackData) {
-                $("#goods_state").combobox({
-                    valueField: 'dicvalue',
-                    textField: 'dictext',
-                    //panelHeight: 200,
-                    //panelWidth: 250,
-                    editable: true
-                });
-                $("#goods_state").combobox("loadData", callbackData);
-            }
-        },{
             //初始化鱼号
             dicTypeCode : Global_DicType.SellNo,
             ADD_ALL: false,
@@ -302,7 +309,7 @@
             }
         },{
             //初始化状态
-            dicTypeCode : Global_DicType.OpenState,
+            dicTypeCode : Global_DicType.GoodsState,
             ADD_ALL: false,
             callback : function(callbackData) {
                 $("#state").combobox({
@@ -404,7 +411,7 @@
                 if (isServerResultDataPass(dataObj)) {
                     var dataVO = dataObj.resultDataFull;
                     $("#sheet_no").textbox("setValue", dataVO.sheet_no);
-                    $("#open_date").datetimebox("setValue", dataVO.open_date);
+                    $("#open_date").datebox("setValue", dataVO.open_date);
                     $("#goods_type").combobox("setValue", dataVO.goods_type);
                     $("#goods_name").textbox("setValue", dataVO.goods_name);
                     $("#box_size").combobox("setValue", dataVO.box_size);
@@ -413,10 +420,11 @@
                     $("#kuaidi_company").combobox("setValue", dataVO.kuaidi_company);
                     $("[name='damage'][value='" + dataVO.damage + "']").prop("checked", true);
                     $("#sell_mode").combobox("setValue", dataVO.sell_mode);
+                    $("#sold_by").combobox("setValue", dataVO.sold_by);
                     $("[name='sold'][value='" + dataVO.sold + "']").prop("checked", true);
                     $("#sell_no").textbox("setValue", dataVO.sell_no);
-                    $("#sell_date").datetimebox("setValue", dataVO.sell_date);
-                    $("#sold_date").datetimebox("setValue", dataVO.sold_date);
+                    $("#sell_date").datebox("setValue", dataVO.sell_date);
+                    $("#sold_date").datebox("setValue", dataVO.sold_date);
                     $("#out_time").textbox("setValue", dataVO.out_time);
                     $("#goods_cost").textbox("setValue", dataVO.goods_cost);
                     $("[name='free_shipping'][value='" + dataVO.free_shipping + "']").prop("checked", true);
@@ -447,6 +455,18 @@
         loadDetail();
     }
 
+    function add() {
+        $.messager.confirm('提示', '确定打开一个新界面?', function (r) {
+            if (r) {
+                showLoading();
+                add_after();
+            }
+        });
+    };
+
+    function add_after(){
+        location.href = location.pathname;
+    }
 </script>
 </body>
 </html>

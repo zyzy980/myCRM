@@ -17,7 +17,7 @@ public class OpenRecordVO {
         private Integer id;
 
         @TableId
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        @JsonFormat(pattern = "yyyy-MM-dd")
         private Date open_date;
 
         @TableId
@@ -30,11 +30,11 @@ public class OpenRecordVO {
         private String sell_no;
 
         @TableId
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        @JsonFormat(pattern = "yyyy-MM-dd")
         private Date sell_date;
 
         @TableId
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        @JsonFormat(pattern = "yyyy-MM-dd")
         private Date sold_date;
 
         @TableId
@@ -78,6 +78,9 @@ public class OpenRecordVO {
 
         @TableId
         private String free_shipping;
+
+        @TableId
+        private String sold_by;
 
         @TableId
         private BigDecimal express_fee;

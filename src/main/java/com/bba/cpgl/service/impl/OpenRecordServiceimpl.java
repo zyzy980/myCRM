@@ -87,4 +87,18 @@ public class OpenRecordServiceimpl extends ServiceImpl<IOpenRecordDao, OpenRecor
             throw new RuntimeException("操作失败，请联系管理员，"+e.getMessage());
         }
     }
+
+    @Override
+    public ResultVO getmoney(List<OpenRecordVO> vos) {
+        try {
+            for (OpenRecordVO requestVO: vos) {
+                //插入到收款表
+                openRecordDao.insertInCome(requestVO.getId());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
+        return ResultVO.successResult("收款成功！");
+    }
 }
