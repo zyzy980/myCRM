@@ -201,6 +201,7 @@
             colNames: [
                 $.i18n.prop('ID'),
                 $.i18n.prop('SHEET_NO'),
+                $.i18n.prop('BATCH_NO'),
                 $.i18n.prop('STATE'),
                 $.i18n.prop('AMOUNT'),
                 $.i18n.prop('HANDLER'),
@@ -210,6 +211,7 @@
             colModel: [
                 { name: 'id', index: 'id', align: 'center', sorttype: 'int', sortable: false, key: true, width: 40, hidden: true, search: false },
                 { name: 'sheet_no', index: 'sheet_no', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'batch_no', index: 'batch_no', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
                 { name: 'state', index: 'sheet_no', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
                 { name: 'amount', index: 'amount', align: 'right', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
                     ,formatter: function (value, grid, rows) {

@@ -34,5 +34,7 @@ public class BjInComeVO {
         @TableId
         private String state;
 
+        @TableId
+        private String batch_no;
 
 }

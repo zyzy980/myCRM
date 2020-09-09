@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.service.IService;
 import com.bba.common.vo.PageVO;
 import com.bba.common.vo.ResultVO;
 import com.bba.cpgl.vo.BjInComeVO;
+import com.bba.cpgl.vo.OpenRecordVO;
 import com.bba.util.JqGridParamModel;
 import com.bba.xtgl.vo.SysUserVO;
 
@@ -23,4 +24,6 @@ public interface IBjInComeService extends IService<BjInComeVO> {
     ResultVO batchDelete(List<BjInComeVO> vos);
 
     ResultVO toCompany(List<BjInComeVO> vos);
+
+    ResultVO getKanbanreportInfo(OpenRecordVO vo);
 }

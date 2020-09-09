@@ -6,10 +6,12 @@ import com.bba.common.vo.PageVO;
 import com.bba.common.vo.ResultVO;
 import com.bba.cpgl.dao.IBjCostDao;
 import com.bba.cpgl.dao.IBjInComeDao;
+import com.bba.cpgl.dto.BjKanbanDTO;
 import com.bba.cpgl.service.api.IBjCostService;
 import com.bba.cpgl.service.api.IBjInComeService;
 import com.bba.cpgl.vo.BjCostVO;
 import com.bba.cpgl.vo.BjInComeVO;
+import com.bba.cpgl.vo.OpenRecordVO;
 import com.bba.util.JqGridParamModel;
 import com.bba.util.JqGridSearchParamHandler;
 import com.bba.util.StringUtils;
@@ -100,5 +102,32 @@ public class BjInComeServiceimpl extends ServiceImpl<IBjInComeDao, BjInComeVO> i
         } catch (Exception e) {
             throw new RuntimeException("操作失败，请联系管理员，"+e.getMessage());
         }
+    }
+
+    @Override
+    public ResultVO getKanbanreportInfo(OpenRecordVO vo) {
+        //货物分类统计
+        List<OpenRecordVO> goodsTypeList = iBjInComeDao.getGoodsTypeReport();
+        //价值占比
+        List<OpenRecordVO> valueList = iBjInComeDao.getValueReport();
+        //销售方式金额占比
+        List<OpenRecordVO> sellModeList = iBjInComeDao.getSellModeReport();
+        //销售额趋势图
+        List<OpenRecordVO> salesTrendList = iBjInComeDao.getSalesTrendReport();
+        //销售排行榜
+        List<OpenRecordVO> salesRankingList = iBjInComeDao.getSalesRankingReport();
+        //滚动
+        List<OpenRecordVO> rollList = iBjInComeDao.getRollReport();
+
+        BjKanbanDTO kanbanDTO = new BjKanbanDTO();
+        kanbanDTO.setGoodsTypeList(goodsTypeList);
+        kanbanDTO.setValueList(valueList);
+        kanbanDTO.setSellModeList(sellModeList);
+        kanbanDTO.setSalesTrendList(salesTrendList);
+        kanbanDTO.setSalesRankingList(salesRankingList);
+        kanbanDTO.setRollList(rollList);
+        ResultVO resultVO = ResultVO.successResult();
+        resultVO.setResultDataFull(kanbanDTO);
+        return resultVO;
     }
 }

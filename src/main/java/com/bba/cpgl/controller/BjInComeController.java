@@ -5,6 +5,7 @@ import com.bba.common.vo.PageVO;
 import com.bba.common.vo.ResultVO;
 import com.bba.cpgl.service.api.IBjInComeService;
 import com.bba.cpgl.vo.BjInComeVO;
+import com.bba.cpgl.vo.OpenRecordVO;
 import com.bba.util.JqGridParamModel;
 import com.bba.util.MyUtils;
 import com.bba.util.SessionUtils;
@@ -71,4 +72,12 @@ public class BjInComeController {
         List<BjInComeVO> vos = new Gson().fromJson(new Gson().toJson(list), new TypeToken<List<BjInComeVO>>(){}.getType());
         return bjInComeService.toCompany(vos);
     }
+
+    @Log(value = "收入管理-管理看板")
+    @RequestMapping(value = "kanban", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultVO kanban(OpenRecordVO vo) {
+        return bjInComeService.getKanbanreportInfo(vo);
+    }
+
 }

@@ -1,431 +1,1454 @@
-﻿
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link type="text/css" rel="stylesheet" href="../Resource/js/easyUI/themes/icon.css" />
-    <link type="text/css" rel="stylesheet" href="../Resource/js/jqueryUI/theme/ui.jqgrid.css" />
-    <link type="text/css" rel="stylesheet" href="../Resource/js/moment/css/daterangepicker.css" />
-    <link type="text/css" rel="stylesheet" href="../Resource/js/locationChoose/css.css" />
-    <link type="text/css" rel="stylesheet" href="../Resource/css/index/customBlue.css" />
-    <link type="text/css" rel="stylesheet" href="../Resource/js/easyUI/themes/easyuiBlue.css" />
-    <link type="text/css" rel="stylesheet" href="../Resource/js/easyUI/themes/icon.css" />
-    <link type="text/css" rel="stylesheet" href="../Resource/js/jqueryUI/theme/jqgridBlue/jquery-ui-1.10.4.custom.css" />
-    <title>运单轨迹</title>
-    <style type="text/css">
-        html, body
-        {
+    <link rel="stylesheet" type="text/css" href="../Resource/css/Base/style.css"></link>
+    <link rel="stylesheet" href="http://cache.amap.com/lbs/static/main.css"/>
+    <style>
+        html,
+        body,
+        #container {
+            width: 100%;
             height: 100%;
         }
-        .anchorBL{
-        	display: none;
+
+        .shi, .fou {
+            font-size: 9px;
+            color: #fff;
+            display: block;
+            width: 50px;
+            height: 15px;
+            line-height: 15px;
+            border-radius: 2px;
+            text-align:center;
         }
-        .BMap_noprint{
-        	display: none;
+
+        .shi {
+            background: #d33724;
+
+        }
+
+        .shi2 {
+            background: #ffa836;
+        }
+        .shi3 {
+            background: #9c7aff;
+        }
+
+        .slide-title{
+            color: #fff;
+            height: 34px;
+            line-height: 34px;
+            padding: 0 10px;
+            font-size: 11px;
+
+        }
+        .slide-title span{
+            float: left;
+            margin-right: 6px;
+        }
+        .slide-title span:nth-child(1),
+        .slide-list li span:nth-child(1){
+            width: 9%;
+        }
+        .slide-title span:nth-child(2),
+        .slide-list li span:nth-child(2){
+            width: 17%;
+        }
+        .slide-title span:nth-child(3),
+        .slide-list li span:nth-child(3){
+            width: 17%;
+        }
+        .slide-title span:nth-child(4),
+        .slide-list li span:nth-child(4){
+            width: 28%;
+        }
+
+        .slide-title span:nth-child(5),
+        .slide-list li span:nth-child(5){
+            width: 14%;
+            margin-right: 0px;
+        }
+
+        .slide-container{
+            position: relative;
+            overflow: hidden;
+            height: 320px;
+        }
+        .slide-list{
+            position:absolute;
+            width:100%;
+            left:0;
+            top:0;
+            color:#000;
+            margin:0;
+            padding:0;
+        }
+        .slide-list li {
+            height:30px;
+            line-height:30px;
+            list-style:none;
+            margin:0;
+            padding:0 10px;
+        }
+        .slide-list li span {
+            display:inline-block;
+            margin-right:10px;
+            font-size:11px;
+            overflow: hidden;
+            text-overflow:ellipsis;
+            white-space:nowrap;
+        }
+        .slide-list li.odd{
+            background: rgba(51,79,109,.3);
+            color:#ffffff;font-size:10px;
+        }
+        .slide-list li.even{
+            background: rgba(51,79,109,.1);
+            color:rgb(51,204,204);font-size:10px;
         }
     </style>
+    <title>淳民惠管理看板</title>
 </head>
-<body>
-    <!--<div id="DivState" style="z-index: 2000; position: absolute; top: 10px; right: 70px;
-        border: 0px gray solid; padding: 10px; width: 250px; color: white; background-color: black;
-        font-weight: bolder; opacity: 0.5;">
-        <div>
-            <div style="height: 30px; padding: 0 10px; display: flex; flex-direction: row; flex-wrap: nowrap;
-                justify-content: space-around;">
-                <div style="align-items: center; flex-grow: 1">
-                    今日订单：<span>9382</span>
-                </div>
-                <div style="align-items: center; flex-grow: 1; text-align: right; cursor: pointer;"
-                    onclick="refeash()">
-                    刷新
+
+<body style="overflow:hidden;height:100%">
+<div id="btnSetting" style="z-index: 888;position:absolute;right:10px;top:10px;width:18px;height:18px;opacity:0.7;cursor:pointer;">
+    <img src="../Resource/css/Base/refresh.png" style="width:100%;">
+</div>
+<div id="SearchProp_window" style="display:none;left: 0px; right: 0px; top: 0px; bottom: 0px; position: absolute;z-index: 1000001;">
+    <div style="width: 400px; height: 230px; position: absolute; z-index: 1000002; left: 50%; margin-left:-200px; top: 50%;margin-top:-115px; background-color: #242640; color: #d6e0dc;">
+        <div style="height: 40px; position: absolute; top: 0px; left: 0px; right: 0px; bottom: initial;background-color: #2F3149;color: #afb7c6;">
+            <div  style="position: absolute; top: 0px; bottom: 0px; left: 0px; right: 56px;">
+                <div style="height: 40px; line-height: 40px; text-align: left; white-space: nowrap; overflow: hidden; left: 20px; right: 0px; top: 0px; bottom: 0px; position: absolute;">
+                    Search Filter Condition
                 </div>
             </div>
-            <div style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-around;">
-                <div style="align-items: center;">
-                    <div style="width: 50px; height: 50px; border: 2px solid #3c8dbc; border-radius: 50%;">
-                        <div style="height: 100%; width: 100%; line-height: 50px; font-size: 17px; text-align: center;">
-                            7
-                        </div>
-                    </div>
-                    <div style="text-align: center;">
-                        未发运
-                    </div>
-                </div>
-                <div style="align-items: center;">
-                    <div style="width: 50px; height: 50px; border: 2px solid #605ca8; border-radius: 50%;">
-                        <div style="height: 100%; width: 100%; line-height: 50px; font-size: 17px; text-align: center;">
-                            120
-                        </div>
-                    </div>
-                    <div style="text-align: center;">
-                        已发运
-                    </div>
-                </div>
-                <div style="align-items: center;">
-                    <div style="width: 50px; height: 50px; border: 2px solid #00a65a; border-radius: 50%;">
-                        <div style="height: 100%; width: 100%; line-height: 50px; font-size: 17px; text-align: center;">
-                            87
-                        </div>
-                    </div>
-                    <div style="text-align: center;">
-                        已交付
-                    </div>
-                </div>
-            </div>
-            <div style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-around;
-                margin-top: 5px;">
-                <div style="align-items: center;">
-                    <div style="width: 50px; height: 50px; border: 2px solid #f39c12; border-radius: 50%;">
-                        <div style="height: 100%; width: 100%; line-height: 50px; font-size: 17px; text-align: center;">
-                            5
-                        </div>
-                    </div>
-                    <div style="text-align: center;">
-                        有延期风险
-                    </div>
-                </div>
-                <div style="align-items: center;">
-                    <div style="width: 50px; height: 50px; border: 2px solid #f56954; border-radius: 50%;">
-                        <div style="height: 100%; width: 100%; line-height: 50px; font-size: 17px; text-align: center;">
-                            3
-                        </div>
-                    </div>
-                    <div style="text-align: center;">
-                        已延期
-                    </div>
-                </div>
-                <div style="align-items: center;">
-                    <div style="width: 50px; height: 50px; border: 2px solid #ff851b; border-radius: 50%;">
-                        <div style="height: 100%; width: 100%; line-height: 50px; font-size: 17px; text-align: center;">
-                            1
-                        </div>
-                    </div>
-                    <div style="text-align: center;">
-                        在途异常
-                    </div>
-                </div>
+            <div  style="height: 40px; text-align: center; line-height: 40px; position: absolute; top: 0px; bottom: 0px; right: 0px; width: 56px;">
+                <i style="font-style:normal;cursor:pointer;" id="SearchProp_btnClose">X</i>
             </div>
         </div>
-        <div id="aaa">
+        <div  style="position: absolute; top: 40px; bottom: 0px; left: 0px; right: 0px;">
+            <div  style="left: 20px; right: 20px; top: 10px; bottom: 0px; position: absolute;">
+                <div>
+                    <div style="padding:10px;"><span style="width:120px;display:inline-block;">Plant</span>
+                        <select id="select_plant" style="width:200px;">
+                            <option value ="SY58">SY58</option>
+                            <option value ="SY78">SY78</option>
+                            <option value="SY88">SY88</option>
+                        </select>
+                    </div>
+                    <div style="padding:10px;"><span style="width:120px;display:inline-block;">Direction</span>
+                        <select id="select_direction" style="width:200px;">
+                            <option value ="I">I</option>
+                            <option value ="O">O</option>
+                        </select>
+                    </div>
+                    <div style="padding:10px;"><span style="width:120px;display:inline-block;">Supply Mode</span>
+                        <select id="select_supplyMode" style="width:200px;">
+                            <option value ="STD">STD</option>
+                            <option value ="JIT">JIT</option>
+                            <option value ="JIS50">JIS50</option>
+                            <option value ="JIS53">JIS53</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="position:relative; margin-top:10px;">
+                    <div  id="btnSearch" style="position: absolute;width:100px;background-color:#3c8dbc;padding:3px;left:50%;margin-left:-50px; border-radius:2px;text-align:center; cursor:pointer; ">Search</div>
+                </div>
+            </div>
         </div>
     </div>
-    <div style="width: 100%; height: 100%; -webkit-transition: all 0.5s ease-in-out;
-        transition: all 0.5s ease-in-out;" id="trainTrackMap">
+    <div style="z-index: 1000001; left: 0px; right: 0px; top: 0px; bottom: 0px; position: absolute;background-color: rgba(25,27,43,.8)"></div>
+</div>
+<div class="box" style="overflow-x:hidden,overflow-y:hidden;height:100%;">
+
+    <div class="box-title" style="opacity:0.9;">
+        <div class="left-title"><img src="../Resource/css/Base/title-bg1.png"></div>
+        <div class="center-title"><p class="title" style="font-weight:bold;">淳民惠销售看板</p></div>
+        <div class="right-title"><img src="../Resource/css/Base/title-bg2.png"></div>
     </div>
-    <div id="showMode" style="z-index: 2000; position: absolute; top: 10px; left: 70px;
-        border: 0px gray solid; padding: 10px; width: 165px; color: white; background-color: black;
-        font-weight: bolder; opacity: 0.5;">
-        <div class="searchParamesPanel">
-            <input type="radio" checked="true" id="showModeOrderHeatmap" name="showModeOrder" /><label
-                for="showModeOrderHeatmap">订单热力图</label>
-            <input type="radio" id="showModeOrderTrcuk" name="showModeOrder"><label for="showModeOrderTrcuk">在途车辆</label>
+    <div class="order" style="z-index:99999;">
+        <p class="order-title" style="font-size:16px;">淳民惠销售总额</p>
+        <ul id="sell_total">
+            <li>0</li>
+            <li>0</li>
+            <li>0</li>
+            <li>0</li>
+            <li>0</li>
+            <li>0</li>
+            <li>0</li>
+            <li>0</li>
+            <li>元</li>
+        </ul>
+    </div>
+    <div class="content" style="height:100%;">
+        <div id='container' style='width:100%; height:100%;'>
         </div>
-    </div>-->
+
+        <div style="position:absolute;top:0px;height:calc(100% - 70px - 36px); margin-top:70px;width:calc(100% - 36px);">
+            <div style="z-index:-1;width:30%;height:100%;float:left;">
+                <div style="float: left;margin:6px; width:100%;height:38%; background: url(../View/cpgl/images/bg-01.png) 0% 0% / 100% 100% no-repeat;"><p class="example-title">售件分类统计</p>
+                    <div id="goodsType" class="table-img" style="height:250px;width:100%"></div>
+                </div>
+                <div  style="float: left;margin:6px;width:100%;height:30%; background: url(../View/cpgl/images/bg-01.png) 0% 0% / 100% 100% no-repeat;"><p class="example-title">售件价值区间</p>
+                    <div id="valueReport" class="table-img" style="height:250px;width:100%;"></div>
+                </div>
+                <div  style="float: left;margin:6px;width:100%;height:30%; background: url(../View/cpgl/images/bg-01.png) 0% 0% / 100% 100% no-repeat;"><p class="example-title">销售方式金额排行</p>
+                    <div id="sellModeReport" class="table-img" style="height:200px;width:100%;"></div>
+                </div>
+            </div>
+            <div style="z-index:999999;width:45%;height:100%;float:left;position:relative">
+                <div  style="z-index: 9999;position:absolute;bottom:-26px;margin:6px 15px;width:100%;height:40%; background: url(../View/cpgl/images/bg-01.png) 0% 0% / 100% 100% no-repeat;"><p class="example-title">销售额趋势图</p>
+                    <div id="salesTrend" class="table-img" style="height:100%;width:100%;"></div>
+                </div>
+                <div style="width: 100%;height:100%;" id="main5">
+                </div>
+                <div style="position:absolute;bottom:43%;;left:15px;height:50px;">
+                    <div style="border: 0px solid #e3e3e3;border-radius: 6px;padding: 6px 15px;background-color:rgba(255,255,255,0.1);">
+                        <div style="font-size: 12px;line-height: 24px;color: #ffffff;"><div style="width:12px;height:12px;float:left;background-color:#00a65a;border-radius:9px;margin-top:6px;margin-right:5px;"></div>今日销售额:<span id="today_sell" style="color: #ffffff;font-weight:bold;font-size:11px;">0</span></div>
+                        <div style="font-size: 12px;line-height: 24px;color: #ffffff;"><div style="width:12px;height:12px;float:left;background-color:#ff851b;border-radius:9px;margin-top:6px;margin-right:5px;"></div>公账余额:<span id="public_account" style="color: #ffffff;font-weight:bold;font-size:11px;">0</span></div>
+                        <div style="font-size: 12px;line-height: 24px;color: #ffffff;"><div style="width:12px;height:12px;float:left;background-color:#d33724;border-radius:9px;margin-top:6px;margin-right:5px;"></div> 成本支出总额:<span id="total_cost" style="color: #ffffff;font-weight:bold;font-size:11px;">0</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="z-index:999999;width:25%;height:100%;float:left;">
+                <div  style="float: left;margin:6px 25px;width:100%;height:50%; background: url(../View/cpgl/images/bg-01.png) 0% 0% / 100% 100% no-repeat;"><p class="example-title">销售排行总榜</p>
+                    <div id="salesRanking" class="table-img" style="height:84%;width:100%;"></div>
+                </div>
+
+
+
+
+                <div  style="float: left;margin:6px 25px;width:100%;height:50%; background: url(../View/cpgl/images/bg-01.png) 0% 0% / 100% 100% no-repeat;"><p class="example-title">销售时时滚动</p>
+                    <div id="main6" class="table-img" style="height:100%;width:100%;">
+                        <!--<div class="slide-title">
+                                    <span>姓名</span>
+                                    <span>时间</span>
+                                    <span>方式</span>
+                                    <span>商品</span>
+                                    <span>利润</span>
+
+                        </div>-->
+                        <div class="slide-container">
+                            <ul class="slide-list js-slide-list" id="roll">
+                                <!--        <li class="odd"><span>黄子健</span><span>2020年8月1日</span><span>在闲鱼卖了</span><span class="shi">宠物剃毛刀</span><span>赚了49元</span></li>
+                                        <li class="even"><span>俞同新</span><span>2020年8月1日</span><span>在微信卖了</span><span class="shi">女士长裙</span><span>赚了50元</span></li>
+                                        <li class="odd"><span>俞同新</span><span>2020年8月1日</span><span>在闲鱼卖了</span><span class="shi">自行车黑副把</span><span>赚了150元</span></li>
+                                        <li class="even"><span>邢静</span><span>2020年8月1日</span><span>在线下卖了</span><span class="fou">儿童读书</span><span>赚了25元</span></li>
+                                        <li class="odd"><span>周云</span><span>2020年8月1日</span><span>在闲鱼卖了</span><span class="shi">汽车维修检测仪</span><span>赚了2000元</span></li>
+                                        <li class="even"><span>周丽萍</span><span>2020年8月1日</span><span>在闲鱼卖了</span><span class="fou">超人玩具</span><span>赚了99元</span></li>-->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
+
+<script type="text/javascript"  src="../Resource/js/echarts/echarts.src.js"></script>
+<script type="text/javascript" src="../Resource/js/My97DatePicker/WdatePicker.js"></script>
 <script type="text/javascript" src="../Resource/js/jquery-2.0.0.min.js"></script>
-<script type="text/javascript" src="../Resource/js/jquery.i18n.properties.js"></script>
 <script type="text/javascript" src="../Resource/js/jquery-migrate-1.2.1.min.js"></script>
 <script type="text/javascript" src="../Resource/js/easyUI/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="../Resource/js/easyUI/easyui-lang-zh_CN.js"></script>
-<script type="text/javascript" src="../Resource/js/base/commonControl.js?version=20171107"></script>
-<script type="text/javascript" src="../Resource/js/base/globalVariable.js?version=20171106"></script>
-<script type="text/javascript" src="../Resource/js/base/commonBusiness.js?version=20171106"></script>
-<script type="text/javascript" src="../Resource/js/jsLinq/linq.js"></script>
-<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=6eea93095ae93db2c77be9ac910ff311"></script>
-<script type="text/javascript" src="http://api.map.baidu.com/library/Heatmap/2.0/src/Heatmap_min.js"></script>
-<script type="text/javascript" src="../Resource/js/echarts/echarts.min.js"></script>
-<script type="text/javascript">
-    /*var mapStyle = [
-        {
-            "featureType": "all",
-            "elementType": "all",
-            "stylers": {
-                "lightness": 10,
-                "saturation": -100
-            }
-        }
-    ];
-
-    var map;
-    var heatmapOverlay;
-    var showType = "heatmap";
-    $(function () {
+<script type="text/javascript" src="../Resource/js/easyUI/jquery.easyuiExtend.min.js"></script>
+<script type="text/javascript" src="../Resource/js/base/commonControl.js"></script>
+<script type="text/javascript" src="../Resource/js/base/commonBusiness.js"></script>
+<script type="text/javascript" src="../Resource/js/jqueryUI/plugins/grid.setcolumns.js"></script>
+<script type="text/javascript" src="../Resource/js/fileUpload/js/upload.js"></script>
+<script type="text/javascript" src="../Resource/js/fileUpload/js/file.js"></script>
+<script type="text/javascript" src="../Resource/js/cookie/jquery.cookie.js"></script>
+<script type="text/javascript" src='http://webapi.amap.com/maps?v=1.4.6&key=45468422d38b0c9dd1f6a8a11ce6e42c'></script>
+<script src="http://webapi.amap.com/loca?key=45468422d38b0c9dd1f6a8a11ce6e42c"></script>
+<script src="http://webapi.amap.com/ui/1.0/main.js?v=1.0.11"></script>
+<script type="text/javascript"  src="../View/cpgl/kanban/china.js?s=0.180925001"></script>
+<script language="javascript" type="text/javascript">
+    $(function() {
+        var parms = getUrlParms();
+        moduleId = parms['moduleId'];
         initScript();
-        //initData();
-        ReportSUBCONTRACTOR_NAMELoad();
+        initData();
+        initStyle();
     });
 
-    var initScript = function () {
-        if (!isSupportCanvas()) {
-            alert('热力图目前只支持有canvas支持的浏览器,您所使用的浏览器不能使用热力图功能~');
-        }
+    var initStyle = function() {
+        enterTriggerEvent('searchParamesTable', 'searchData');
+    };
 
-        map = new BMap.Map("trainTrackMap");
-//                map.setMapStyle({
-//                    styleJson: mapStyle
-//                });
-        map.centerAndZoom("北京", 5);
-        map.addControl(new BMap.NavigationControl());
-        map.addControl(new BMap.ScaleControl());
-        map.addControl(new BMap.OverviewMapControl());
-        map.addControl(new BMap.MapTypeControl());
-        map.enableScrollWheelZoom();
-        map.addEventListener("load", function (e) {
-            initHeatmap();
+    var initScript = function() {}
+    var initData = function() {};
+
+    var doscroll = function(){
+        var $parent = $('.js-slide-list');
+        var $first = $parent.find('li:first');
+        var height = $first.height();
+        $first.animate({
+            marginTop: -height + 'px'
+        }, 500, function() {
+            $first.css('marginTop', 0).appendTo($parent);
         });
+    };
 
-        /!* $('input:radio[name="showModeOrder"]').change(function () {
-            if ($(this).attr("id") == "showModeOrderHeatmap") {
-                map.centerAndZoom("北京", 5);
-                map.clearOverlays();
-                initHeatmap();
-            } else {
-                showType = "truckmap";
-                closeHeatmap();
-                loadCarList();
-            }
-        }); *!/
+    setInterval(function(){doscroll()}, 1500);
 
+    $(window).load(function () {
         hideLoading();
-    }
+    });
 
-    var refeash = function () {
-        if (showType == "heatmap") {
-            openHeatmap();
-        } else {
-            loadCarList();
-        }
-        ReportSUBCONTRACTOR_NAMELoad();
-    }
+    $(function () {
 
-    //详细的参数,可以查看heatmap.js的文档 https://github.com/pa7/heatmap.js/blob/master/README.md  
-    // http://blog.csdn.net/guang_mang/article/details/71237961
-    // http://blog.csdn.net/zjuwwj/article/details/53374947
-    //参数说明如下:  
-    /!* visible 热力图是否显示,默认为true
-    * opacity 热力的透明度,1-100  
-    * radius 势力图的每个点的半径大小  
-    * gradient  {JSON} 热力图的渐变区间 . gradient如下所示  
-    *  {  
-    .2:'rgb(0, 255, 255)',  
-    .5:'rgb(0, 110, 255)',  
-    .8:'rgb(100, 0, 255)'  
-    }  
-    其中 key 表示插值的位置, 0~1.  
-    value 为颜色值.  
-    *!/
-    var initHeatmap = function () {
-        heatmapOverlay = new BMapLib.HeatmapOverlay({ "radius": 20, "visible": true
+        $("#SearchProp_btnClose").click(function(){
+            $("#SearchProp_window").hide();
         });
-        map.addOverlay(heatmapOverlay);
-        $.post('../ServiceHandler/InTra/OrderTrack.ashx?' + Math.random(), { action: "YwOrder_GetOrdersLocal" }, function (data_) {
-            var data = JSON.parse(data_);
-            if (isServerResultDataPass(data)) {
-                var pointArray = data.ResultDataFull;
-                if (pointArray.length <= 0) {
-                    return;
-                }
-                var points = [];
-                for (var i = 0; i < pointArray.length; i++) {
-                    points.push({ "lng": pointArray[i].LONGITUDE, "lat": pointArray[i].LATITUDE, "count": pointArray[i].COUNT });
-                }
 
-                heatmapOverlay.setDataSet({ data: points, max: 10 });
-                openHeatmap();
+        $("#btnSetting").click(function(){
+            location.reload();
+           /* 1，history.go(0)
+            2，location.reload()
+            3，location=location
+            4，location.assign(location)
+            5，document.execCommand('Refresh')
+            6，window.navigate(location)
+            7，location.replace(location)
+            8，document.URL=location.href*/
+            //$("#SearchProp_window").show();
+        });
+
+        $("#btnSearch").click(function(){
+            $("#SearchProp_window").hide();
+            loadList();
+        });
+        loadList();
+    });
+
+    var getRequestParams = function (){
+        var parmsArray = {};
+        parmsArray.werks = $("#select_plant").val();
+        parmsArray.direction = $("#select_direction").val();
+        parmsArray.supply_method = $("#select_supplyMode").val();
+        return parmsArray;
+    }
+
+    function loadList(){
+        showLoading();
+        $.ajax({
+            url : "../cpgl/BjInComeController/kanban?"+ Math.random(),
+            type : "POST",
+            contentType : 'application/json;charset=utf-8', //设置请求头信息
+            data : '',
+            success:function(dataObj){
+                if(isServerResultDataPass(dataObj)){
+                    var dto = dataObj.resultDataFull;
+                    var goodsTypeList=dto.goodsTypeList;
+                    var valueList=dto.valueList;
+                    var sellModeList=dto.sellModeList;
+                    var salesTrendList=dto.salesTrendList;
+                    var salesRankingList=dto.salesRankingList;
+                    var rollList=dto.rollList;
+                    loadMap();
+                    loadGoodsType(goodsTypeList);//货物分类统计
+                    loadValue(valueList);//价值区间
+                    loadsellMode(sellModeList);//销售类型排行
+                    loadsalesTrend(salesTrendList);//销售趋势
+                    loadsalesRanking(salesRankingList);//销售排行
+                    loadRollList(rollList);
+                }else{
+                    FailResultDataToTip(dataObj);
+                }
+                hideLoading();
             }
         });
     }
 
-    //判断浏览区是否支持canvas  
-    function isSupportCanvas() {
-        var elem = document.createElement('canvas');
-        return !!(elem.getContext && elem.getContext('2d'));
+    //滚动
+    function loadRollList (rollList) {
+        var str='';
+        var index=1;
+        for ( var i = 0; i <rollList.length; i++) {
+            var data=rollList[i];
+            if(index>3) {
+                index=1;
+            }
+            str+='<li class="odd">';
+            str+='<span>';
+            str+=data.sold_by;
+            str+='</span><span>';
+            str+=data.sold_date;
+            str+='</span><span>在';
+            str+=data.sell_mode+"卖了";
+            if (index==1) {
+                str+='</span><span class="shi">';
+            } else if (index==2) {
+                str+='</span><span class="shi shi2">';
+            } else {
+                str+='</span><span class="shi shi3">';
+            }
+            str+=data.goods_name;
+            str+='</span><span style="margin-left: 10px">';
+            str+="赚了"+data.sell_price;
+            str+='</span></li>';
+            index++;
+        }
+        $("#roll").html(str);
     }
-
-    function setGradient() {
-        /!*格式如下所示:
-        {  
-        0:'rgb(102, 255, 0)',  
-        .5:'rgb(255, 170, 0)',  
-        1:'rgb(255, 0, 0)'  
-        }*!/
-        var gradient = {};
-        var colors = document.querySelectorAll("input[type='color']");
-        colors = [].slice.call(colors, 0);
-        colors.forEach(function (ele) {
-            gradient[ele.getAttribute("data-key")] = ele.value;
-        });
-        heatmapOverlay.setOptions({ "gradient": gradient });
-    }
-
-    function openHeatmap() {
-        heatmapOverlay.show();
-    }
-
-    function closeHeatmap() {
-        heatmapOverlay.hide();
-    }
-
-    //6、承运商运量分布
-    var ReportSUBCONTRACTOR_NAMELoad = function () {
-        // create the panel
-        $("#aaa").append('<div><div id="pic6" style="height:370px; "></div></div>');
-        
-        
-        var dataObj = {"CutNumber":300,"ResultCode":0,"ResultDataFull":[{"COUNTNUM":1.0,"SUBCONTRACTOR_NAME":"方通"},{"COUNTNUM":11.0,"SUBCONTRACTOR_NAME":"其他"}],"ResultDataUi":""};
-        
-        //$.getJSON("../ServiceHandler/Chart/IndexChart.ashx", { action: "GetReportSUBCONTRACTOR_NAME" }, function (dataObj) {
-
-            if (isServerResultDataPass(dataObj)) {
-                var stateType = [];
-                var dataList = [];
-                for (var i = 0; i < dataObj.ResultDataFull.length; i++) {
-                    stateType.push(dataObj.ResultDataFull[i].SUBCONTRACTOR_NAME);
-                    dataList.push(dataObj.ResultDataFull[i].COUNTNUM);
+    var loadMap=function(){
+        var myChart = echarts.init(document.getElementById('main5'));
+        var option = {
+            backgroundColor: 'transparent',
+            tooltip: {
+                trigger: 'item',
+                formatter: function(params, ticket, callback) {
+                    console.log(params);
+                    if (params.seriesType == "effectScatter") {
+                        return "线路：" + params.data.name + "" + params.data.value[2];
+                    } else if (params.seriesType == "lines") {
+                        return params.data.fromName + ">" + params.data.toName + "<br />" + params.data.value;
+                    } else {
+                        return params.name;
+                    }
                 }
+            },
+            geo: {
+                map: 'china',
+                label: {
+                    emphasis: {
+                        show: true,
+                        color: '#fff'
+                    }
+                },
+                center:[98.400403,27.381813],
+                roam: true,
+                itemStyle: {
+                    normal: {
+                        areaColor: '#0C2961',
+                        borderColor: '#404a59'
+                    },
+                    emphasis: {
+                        areaColor: '#2a333d'
+                    }
+                }
+            },
+            series: series
+        };
+        myChart.setOption(option);
+    }
 
-                var myCharts1 = echarts.init(document.getElementById('pic6'));
-                var dataMap = {};
-                function dataFormatter(obj) {
-                    var pList = stateType;
-                    var temp = obj[2011];
-                    var max = 0;
-                    var sum = 0;
-                    for (var i = 0, l = temp.length; i < l; i++) {
-                        max = Math.max(max, temp[i]);
-                        sum += temp[i];
-                        obj[2011][i] = {
-                            name: pList[i],
-                            value: temp[i]
+    var geoCoordMap = {
+        '上海': [121.4648, 31.2891],
+        '东莞': [113.8953, 22.901],
+        '东营': [118.7073, 37.5513],
+        '中山': [113.4229, 22.478],
+        '临汾': [111.4783, 36.1615],
+        '临沂': [118.3118, 35.2936],
+        '丹东': [124.541, 40.4242],
+        '丽水': [119.5642, 28.1854],
+        '乌鲁木齐': [87.9236, 43.5883],
+        '佛山': [112.8955, 23.1097],
+        '保定': [115.0488, 39.0948],
+        '兰州': [103.5901, 36.3043],
+        '包头': [110.3467, 41.4899],
+        '北京': [116.4551, 40.2539],
+        '北海': [109.314, 21.6211],
+        '南京': [118.8062, 31.9208],
+        '南宁': [108.479, 23.1152],
+        '南昌': [116.0046, 28.6633],
+        '南通': [121.1023, 32.1625],
+        '厦门': [118.1689, 24.6478],
+        '台州': [121.1353, 28.6688],
+        '合肥': [117.29, 32.0581],
+        '呼和浩特': [111.4124, 40.4901],
+        '咸阳': [108.4131, 34.8706],
+        '哈尔滨': [127.9688, 45.368],
+        '唐山': [118.4766, 39.6826],
+        '嘉兴': [120.9155, 30.6354],
+        '大同': [113.7854, 39.8035],
+        '大连': [122.2229, 39.4409],
+        '天津': [117.4219, 39.4189],
+        '太原': [112.3352, 37.9413],
+        '威海': [121.9482, 37.1393],
+        '宁波': [121.5967, 29.6466],
+        '宝鸡': [107.1826, 34.3433],
+        '宿迁': [118.5535, 33.7775],
+        '常州': [119.4543, 31.5582],
+        '广州': [113.5107, 23.2196],
+        '廊坊': [116.521, 39.0509],
+        '延安': [109.1052, 36.4252],
+        '张家口': [115.1477, 40.8527],
+        '徐州': [117.5208, 34.3268],
+        '德州': [116.6858, 37.2107],
+        '惠州': [114.6204, 23.1647],
+        '成都': [103.9526, 30.7617],
+        '扬州': [119.4653, 32.8162],
+        '承德': [117.5757, 41.4075],
+        '拉萨': [91.1865, 30.1465],
+        '无锡': [120.3442, 31.5527],
+        '日照': [119.2786, 35.5023],
+        '昆明': [102.9199, 25.4663],
+        '杭州': [119.5313, 29.8773],
+        '枣庄': [117.323, 34.8926],
+        '柳州': [109.3799, 24.9774],
+        '株洲': [113.5327, 27.0319],
+        '武汉': [114.3896, 30.6628],
+        '汕头': [117.1692, 23.3405],
+        '江门': [112.6318, 22.1484],
+        '沈阳': [123.1238, 42.1216],
+        '沧州': [116.8286, 38.2104],
+        '河源': [114.917, 23.9722],
+        '泉州': [118.3228, 25.1147],
+        '泰安': [117.0264, 36.0516],
+        '泰州': [120.0586, 32.5525],
+        '济南': [117.1582, 36.8701],
+        '济宁': [116.8286, 35.3375],
+        '海口': [110.3893, 19.8516],
+        '淄博': [118.0371, 36.6064],
+        '淮安': [118.927, 33.4039],
+        '深圳': [114.5435, 22.5439],
+        '清远': [112.9175, 24.3292],
+        '温州': [120.498, 27.8119],
+        '渭南': [109.7864, 35.0299],
+        '湖州': [119.8608, 30.7782],
+        '湘潭': [112.5439, 27.7075],
+        '滨州': [117.8174, 37.4963],
+        '潍坊': [119.0918, 36.524],
+        '烟台': [120.7397, 37.5128],
+        '玉溪': [101.9312, 23.8898],
+        '珠海': [113.7305, 22.1155],
+        '盐城': [120.2234, 33.5577],
+        '盘锦': [121.9482, 41.0449],
+        '石家庄': [114.4995, 38.1006],
+        '福州': [119.4543, 25.9222],
+        '秦皇岛': [119.2126, 40.0232],
+        '绍兴': [120.564, 29.7565],
+        '聊城': [115.9167, 36.4032],
+        '肇庆': [112.1265, 23.5822],
+        '舟山': [122.2559, 30.2234],
+        '苏州': [120.6519, 31.3989],
+        '莱芜': [117.6526, 36.2714],
+        '菏泽': [115.6201, 35.2057],
+        '营口': [122.4316, 40.4297],
+        '葫芦岛': [120.1575, 40.578],
+        '衡水': [115.8838, 37.7161],
+        '衢州': [118.6853, 28.8666],
+        '西宁': [101.4038, 36.8207],
+        '西安': [109.1162, 34.2004],
+        '贵阳': [106.6992, 26.7682],
+        '连云港': [119.1248, 34.552],
+        '邢台': [114.8071, 37.2821],
+        '邯郸': [114.4775, 36.535],
+        '郑州': [113.4668, 34.6234],
+        '鄂尔多斯': [108.9734, 39.2487],
+        '重庆': [107.7539, 30.1904],
+        '金华': [120.0037, 29.1028],
+        '铜川': [109.0393, 35.1947],
+        '银川': [106.3586, 38.1775],
+        '镇江': [119.4763, 31.9702],
+        '长春': [125.8154, 44.2584],
+        '长沙': [113.0823, 28.2568],
+        '长治': [112.8625, 36.4746],
+        '阳泉': [113.4778, 38.0951],
+        '青岛': [120.4651, 36.3373],
+        '韶关': [113.7964, 24.7028],
+        '宣城': [118.7521, 30.9516]
+    };
+
+    var BJData = [
+        [{
+            name: '北京'
+        }, {
+            name: '上海',
+            value: 95
+        }],
+        [{
+            name: '北京'
+        }, {
+            name: '广州',
+            value: 90
+        }],
+        [{
+            name: '北京'
+        }, {
+            name: '大连',
+            value: 80
+        }],
+        [{
+            name: '北京'
+        }, {
+            name: '南宁',
+            value: 70
+        }],
+        [{
+            name: '北京'
+        }, {
+            name: '南昌',
+            value: 60
+        }],
+        [{
+            name: '北京'
+        }, {
+            name: '拉萨',
+            value: 50
+        }],
+        [{
+            name: '北京'
+        }, {
+            name: '长春',
+            value: 40
+        }],
+        [{
+            name: '北京'
+        }, {
+            name: '包头',
+            value: 30
+        }],
+        [{
+            name: '北京'
+        }, {
+            name: '重庆',
+            value: 20
+        }],
+        [{
+            name: '北京'
+        }, {
+            name: '常州',
+            value: 10
+        }]
+    ];
+    var SHData = [
+        [{
+            name: '上海'
+        }, {
+            name: '包头',
+            value: 95
+        }],
+        [{
+            name: '上海'
+        }, {
+            name: '昆明',
+            value: 90
+        }],
+        [{
+            name: '上海'
+        }, {
+            name: '广州',
+            value: 80
+        }],
+        [{
+            name: '上海'
+        }, {
+            name: '郑州',
+            value: 70
+        }],
+        [{
+            name: '上海'
+        }, {
+            name: '长春',
+            value: 60
+        }],
+        [{
+            name: '上海'
+        }, {
+            name: '重庆',
+            value: 50
+        }],
+        [{
+            name: '上海'
+        }, {
+            name: '长沙',
+            value: 40
+        }],
+        [{
+            name: '上海'
+        }, {
+            name: '北京',
+            value: 30
+        }],
+        [{
+            name: '上海'
+        }, {
+            name: '丹东',
+            value: 20
+        }],
+        [{
+            name: '上海'
+        }, {
+            name: '大连',
+            value: 10
+        }]
+    ];
+
+    var GZData = [
+        [{
+            name: '广州'
+        }, {
+            name: '福州',
+            value: 95
+        }],
+        [{
+            name: '广州'
+        }, {
+            name: '太原',
+            value: 90
+        }],
+        [{
+            name: '广州'
+        }, {
+            name: '长春',
+            value: 80
+        }],
+        [{
+            name: '广州'
+        }, {
+            name: '重庆',
+            value: 70
+        }],
+        [{
+            name: '广州'
+        }, {
+            name: '西安',
+            value: 60
+        }],
+        [{
+            name: '广州'
+        }, {
+            name: '成都',
+            value: 50
+        }],
+        [{
+            name: '广州'
+        }, {
+            name: '常州',
+            value: 40
+        }],
+        [{
+            name: '广州'
+        }, {
+            name: '北京',
+            value: 30
+        }],
+        [{
+            name: '广州'
+        }, {
+            name: '北海',
+            value: 20
+        }],
+        [{
+            name: '广州'
+        }, {
+            name: '海口',
+            value: 10
+        }]
+    ];
+
+    var NJData = [
+        [{name: '南京'}, {name: '宣城', value: 01}],
+        [{name: '南京'}, {name: '武汉', value: 02}],
+        [{name: '南京'}, {name: '深圳', value: 03}]];
+    var SZData = [
+        [{name: '深圳'}, {name: '南京', value: 01}],
+        [{name: '深圳'}, {name: '宣城', value: 02 }],
+        [{name: '深圳'}, {name: '武汉', value: 03}]];
+
+    var planePath = 'path://111';
+    var convertData = function(data) {
+        var res = [];
+        for (var i = 0; i < data.length; i++) {
+            var dataItem = data[i];
+            var fromCoord = geoCoordMap[dataItem[0].name];
+            var toCoord = geoCoordMap[dataItem[1].name];
+            if (fromCoord && toCoord) {
+                res.push({
+                    fromName: dataItem[0].name,
+                    toName: dataItem[1].name,
+                    coords: [fromCoord, toCoord],
+                    value: dataItem[1].value
+                });
+            }
+        }
+        return res;
+    };
+
+    var color = ['#a6c84c', '#ffa022', '#46bee9'];
+    var series = [];
+    [
+        /*['北京', BJData],
+        ['上海', SHData],
+        ['广州', GZData]*/
+        ['南京', NJData],
+        ['深圳', SZData]
+
+    ].forEach(function(item, i) {
+        //console.log(item,i);
+        series.push({
+            name: item[0] + ' Top10',
+            type: 'lines',
+            zlevel: 1,
+            effect: {
+                show: true,
+                period: 6,
+                trailLength: 0.7,
+                color: '#fff',
+                symbolSize: 3
+            },
+            lineStyle: {
+                normal: {
+                    color: color[i],
+                    width: 0,
+                    curveness: 0.2
+                }
+            },
+            data: convertData(item[1])
+        }, {
+            name: item[0] + ' Top10',
+            type: 'lines',
+            zlevel: 2,
+            symbol: ['none', 'arrow'],
+            symbolSize: 10,
+            effect: {
+                show: true,
+                period: 6,
+                trailLength: 0,
+                symbol: planePath,
+                symbolSize: 15
+            },
+            lineStyle: {
+                normal: {
+                    color: color[i],
+                    width: 1,
+                    opacity: 0.6,
+                    curveness: 0.2
+                }
+            },
+            data: convertData(item[1])
+        }, {
+            name: item[0] + ' Top10',
+            type: 'effectScatter',
+            coordinateSystem: 'geo',
+            zlevel: 2,
+            rippleEffect: {
+                brushType: 'stroke'
+            },
+            label: {
+                normal: {
+                    show: true,
+                    position: 'right',
+                    formatter: '{b}'
+                }
+            },
+            symbolSize: function(val) {
+                return val[2] / 8;
+            },
+            itemStyle: {
+                normal: {
+                    color: color[i]
+                }
+            },
+            data: item[1].map(function(dataItem) {
+                return {
+                    name: dataItem[1].name,
+                    value: geoCoordMap[dataItem[1].name].concat([dataItem[1].value])
+                };
+            })
+        });
+    });
+
+
+    //货物分类统计
+    function loadGoodsType1 (goodsTypeList) {
+        var typelist=[];
+        var counts=[];
+        for(var i = 0; i < goodsTypeList.length; i++) {
+            typelist.push(goodsTypeList[i].goods_type);
+            counts.push(goodsTypeList[i].counts);
+        }
+        var option = {
+            /*         title : {
+                        text: '分类统计',
+                        subtext: '参考数据',
+                        x:'center'
+                    },*/
+            tooltip : {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            /*        legend: {
+                        orient : 'vertical',
+                        x : 'left',
+                        data:typelist
+                    },*/
+            toolbox: {
+                show : true,
+                feature : {
+                    mark : {show: true},
+                    dataView : {show: true, readOnly: false},
+                    restore : {show: true},
+                    saveAsImage : {show: true}
+                }
+            },
+            calculable : true,
+            series : [
+                {
+                    name:'访问来源',
+                    type:'pie',
+                    radius : '60%',
+                    center: ['50%', '60%'],
+                    data :(function() {
+                        var res = [];
+                        var len = typelist.length;
+                        while(len--) {
+                            res.push({
+                                name : typelist[len],
+                                value : counts[len]
+                            });
+                        }
+                        return res;
+                    })(),
+                    itemStyle: {
+                        normal:{
+                            label:{
+                                show:true,
+                                formatter: '{b} : {c} \n ({d}%)'
+                            },
+                            labelLine:{
+                                show:true
+                            }
+                        },
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
                         }
                     }
-                    obj[2011 + 'max'] = Math.floor(max / 100) * 100;
-                    obj[2011 + 'sum'] = sum;
-
-                    return obj;
                 }
-                dataMap.dataFinancial = dataFormatter({
-                    //max : 3200,
-                    2011: dataList
-
-                });
-                var option = {
-                    baseOption: {
-                        timeline: {
-                            show: false
-                        },
-                        title: { text: '承运商运量分布', x: 'center' },
-                        legend: {
-                            show: false,
-                            x: 'right',
-                            data: ['数量'],
-                            selected: {
-
-                            }
-                        },
-                        tooltip: {
-                            trigger: 'axis',
-                            axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-                                type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-                            },
-                            formatter: function (params) {
-                                var tar = params["0"].data;
-                                return tar.name + '<br/>' + "数量" + ' : ' + tar.value;
-                            }
-                        },
-                        grid: {
-                            top: 80,
-                            bottom: 100,
-                            containLabel: true
-                        },
-                        xAxis: [
-                            {
-                                'type': 'category',
-                                'axisLabel': { 'interval': 0 },
-                                'data': stateType,
-                                splitLine: { show: true }
-                            }
-                        ],
-                        yAxis: [
-                            {
-                                type: 'value',
-                                name: '数量'
-                            }
-                        ],
-                        series: [{
-                            name: '数量',
-                            type: 'bar',
-                            label: {
-                                normal: {
-                                    show: true,
-                                    position: 'inside'
-                                }
-                            },
-                            data: dataMap.dataFinancial['2011']
-                        }]
-                    }
-                };
-
-                myCharts1.setOption(option);
-
-                myCharts1.on('click', function (param) {
-                    var name = param.name;
-                    alert(name);
-                    // window.location.href = " ";
-                });
-            } else { FailResultDataToTip(dataObj); }
-        //});
+            ]
+        };
+        var myChart = echarts.init(document.getElementById('goodsType'));
+        myChart.setOption(option);
     }
 
-    var potionArray = [];
-    var loadCarList = function () {
-        map.clearOverlays();
-        var dataObj = {"CutNumber":300,"ResultCode":4,"ResultDataFull":{"ShowMoreMessage":true,"AutoHide":false,"SimpleMessage":"订单分布查询-获取当前所有在途车辆发生未知异常","MoreMessage":"SELECT v.SN,v.WITHIN_CODE,v.YW_ID,v.SPEED,v.DIRECTION,v.ADDRESS,v.TRAINNO_ID,to_char(v.DATE_TIME,'yyyy-MM-dd hh24:mm:ss') DATE_TIME,v.LO,v.LA,v.TRUCK_NO,v.GPSNO,v.CARRIERCODE,v.AREA,\r\nv.CARONLINE, y.DRIVER_TEL,y.DRIVER_BYNAME from VIEW_TRUCK_ONLINE v LEFT JOIN YW_PLAN_EXEC y ON v.TRAINNO_ID = y.TRAINNO_ID\r\n where v.SN=any(select max(SN) from VIEW_TRUCK_ONLINE WHERE DATE_TIME IS NOT NULL group by TRAINNO_ID ) and v.within_code='YEAR' and v.CarOnLine='Y'  order by v.caronline DESC","OtherMessage":null},"ResultDataUi":""};
-        
-        //$.getJSON("../ServiceHandler/InTra/OrderTrack.ashx", { action: "YwOrder_GetTruckLocal" }, function (dataObj) {
-            if (isServerResultDataPass(dataObj)) {
-                var onlineObj = dataObj.ResultDataFull;
-                potionArray = onlineObj;
-                for (var i = 0; i < dataObj.ResultDataFull.length; i++) {
-                    var truckPosition = dataObj.ResultDataFull[i];
-                    var icon = new BMap.Icon("../Resource/images/truck.png", new BMap.Size(47, 47));
-                    var point = new BMap.Point(truckPosition.LO, truckPosition.LA);
-                    var marker = new BMap.Marker(point, { icon: icon });
-                    marker.addEventListener("click", function () {
-                        getWarningInfo($(this)[0]);
-                    });
-                    map.addOverlay(marker);
-                    map.centerAndZoom(point, 7);
-                }
-            } else {
-                FailResultDataToTip(dataObj);
-            }
-            hideLoading();
-        //});
-    }
-
-    function getWarningInfo(pointDom) {
-        var potion = Enumerable.From(potionArray)
-                        .Where(function (i) { return (i.LA == pointDom.point.lat && i.LO == pointDom.point.lng); })
-                        .ToArray();
-        var content = "";
-        if (potion) {
-            var dataObj = potion[0];
-            content += "<table style='font-size:12px; color:#666666;width:100%;'>";
-            content += "<tr><td> <b>" + dataObj.TRUCK_NO + "-" + dataObj.DRIVER_BYNAME + ":" + dataObj.DRIVER_TEL + "</b></td></tr>";
-            content += "<tr><td> <hr style='color:#f0efef;'/></td></tr>";
-            content += "<tr><td> 时间：" + dataObj.DATE_TIME + "</td></tr>";
-            content += "<tr><td> 地点：" + dataObj.ADDRESS + "</td></tr>";
-            var windowSize = {
-                width: 250,
-                height: 100
-            }
-            content += "</table>";
-            var infowindow = new BMap.InfoWindow(content, windowSize);
-            pointDom.openInfoWindow(infowindow);
+    var loadGoodsType = function (goodsTypeList) {
+        var typelist=[];
+        var counts=[];
+        for(var i = 0; i < goodsTypeList.length; i++) {
+            typelist.push(goodsTypeList[i].goods_type);
+            counts.push(goodsTypeList[i].counts);
         }
-    }*/
+        var option = {
+            color: ['#dbb4b5'],
+            tooltip : {'trigger':'axis'},
+            calculable : true,
+            grid : {'y2':100,left:"15%"},
+            toolbox: {
+                show : true,
+                feature : {
+                    mark : {show: true},
+                    dataView : {show: true, readOnly: false},
+                    magicType : {show: true, type: ['line', 'bar']},
+                    restore : {show: true},
+                    saveAsImage : {show: true}
+                }
+            },
+            xAxis : [{
+                'type':'category',
+                'data':typelist,
+                axisLabel:{
+                    interval:0,
+                    rotate:35,//倾斜度 -90 至 90 默认为0
+                    margin:4,
+                    textStyle:{//隔行变色
+                        color:function (params,index) {
+                            var colorlist=["#fcfffa","#dbb121"];
+                            var a = 0;
+                            if (index%2==0) {
+                                a=1;
+                            }
+                            return colorlist[a];
+                        }
+                    }
+                },
+                axisLine:{
+                    lineStyle:{
+                        color:'#fcfffa',
+                        //width:2,//这里是为了突出显示加上的
+                    }
+                }
+            }],
+            yAxis : [{
+                'type':'value',
+                'name':'件数',
+                axisLabel: {
+                    color: "#fcfffa" //刻度线标签颜色
+                },
+                axisLine:{
+                    lineStyle:{
+                        color:'#fcfffa',
+                        //width:2,//这里是为了突出显示加上的
+                    }
+                }
+            }],
+            series : [
+                {
+                    'name':'件数','type':'bar',
+                    'barWidth' : '15',//柱图宽度
+                    'data': counts
+                } ]
+        };
+        var myChart = echarts.init(document.getElementById('goodsType'));
+        myChart.setOption(option);
+    }
+
+
+    //价值区间
+    function loadValue (valueList) {
+        var valuelist=[];
+        var counts=[];
+        for(var i = 0; i < valueList.length; i++) {
+            valuelist.push(valueList[i].box_value);
+            counts.push(valueList[i].counts);
+        }
+        var option = {
+            /*    title : {
+                    text: '价值统计',
+                    subtext: '参考数据',
+                    x:'center'
+                },*/
+            tooltip : {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            /*        legend: {
+                        orient : 'vertical',
+                        x : 'left',
+                        data:valuelist
+                    },*/
+            toolbox: {
+                show : true,
+                feature : {
+                    mark : {show: true},
+                    dataView : {show: true, readOnly: false},
+                    restore : {show: true},
+                    saveAsImage : {show: true}
+                }
+            },
+            calculable : true,
+            series : [
+                {
+                    name:'访问来源',
+                    type:'pie',
+                    radius : '55%',
+                    center: ['50%', '40%'],
+                    data :(function() {
+                        var res = [];
+                        var len = valuelist.length;
+                        while(len--) {
+                            res.push({
+                                name : valuelist[len],
+                                value : counts[len]
+                            });
+                        }
+                        return res;
+                    })(),
+                    itemStyle: {
+                        normal:{
+                            label:{
+                                show:true,
+                                formatter: '{b} : {c} \n ({d}%)'
+                            },
+                            labelLine:{
+                                show:true
+                            },
+                            color: function(params) {
+                                //首先定义一个数组
+                                var colorList = [
+                                    'rgb(78, 163, 151)','rgb(216, 124, 124)','rgb(113, 102, 158)','#29AAE3','#29AAE3',
+                                    '#B74AE5','#0AAF9F','#E89589'
+                                ];
+                                return colorList[params.dataIndex]
+                            }
+                        },
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+        var myChart = echarts.init(document.getElementById('valueReport'));
+        myChart.setOption(option);
+    }
+
+    //销售方式金额
+    function  loadsellMode(sellModeList){
+        var sellmodelist=[];
+        var sell_priceList=[];
+        for(var i = 0; i < sellModeList.length; i++) {
+            sellmodelist.push(sellModeList[i].sell_mode);
+            sell_priceList.push(sellModeList[i].sell_price);
+        }
+        var option = {
+            color: ['#dbb121'],
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                    type: 'line'        // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            toolbox: {
+                show : true,
+                feature : {
+                    mark : {show: true},
+                    dataView : {show: true, readOnly: false},
+                    restore : {show: true},
+                    saveAsImage : {show: true}
+                }
+            },
+            xAxis: [
+                {
+                    type: 'category',
+                    data: sellmodelist,
+                    axisTick: {
+                        alignWithLabel: true
+                    },
+                    axisLine:{
+                        lineStyle:{
+                            color:'#fcfffa',
+                            //width:2,//这里是为了突出显示加上的
+                        }
+                    },
+                    axisLabel: {
+                        color: "#fcfffa" //刻度线标签颜色
+                    }
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value',
+                    'name':'元',
+                    axisLabel: {
+                        color: "#fcfffa" //刻度线标签颜色
+                    },
+                    axisLine:{
+                        lineStyle:{
+                            color:'#fcfffa',
+                            //width:2,//这里是为了突出显示加上的
+                        }
+                    }
+                }
+            ],
+            series: [
+                {
+                    name: '',
+                    type: 'bar',
+                    barWidth: '30%',
+                    data: sell_priceList
+                }
+            ]
+        };
+        var myChart = echarts.init(document.getElementById('sellModeReport'));
+        myChart.setOption(option);
+    }
+
+    //销售趋势
+    function loadsalesTrend (salesTrendList) {
+        var data=[];
+        var newDate = new Date().Format("yyyy-MM-dd");
+        for(var i = 0; i < salesTrendList.length; i++) {
+            data.push([salesTrendList[i].sold_date_report,salesTrendList[i].sell_price])
+            if (newDate==salesTrendList[i].sold_date_report) {
+                $("#today_sell").html(salesTrendList[i].sell_price)
+            }
+        }
+        var option = {
+            tooltip: {
+                trigger: 'axis'
+            },
+            toolbox: {
+                show : true,
+                x : 'center',
+                feature : {
+                    mark : {show: true},
+                    dataView : {show: true, readOnly: false},
+                    restore : {show: true},
+                    saveAsImage : {show: true}
+                }
+            },
+            xAxis: {
+                data: data.map(function (item) {
+                    return item[0];
+                }),
+                axisLine:{
+                    lineStyle:{
+                        color:'#fcfffa',
+                        //width:2,//这里是为了突出显示加上的
+                    }
+                },
+                axisLabel: {
+                    color: "#fcfffa" //刻度线标签颜色
+                }
+            },
+            yAxis: {
+                'name':'元',
+                splitLine: {
+                    show: false
+                },
+                axisLine:{
+                    lineStyle:{
+                        color:'#fcfffa',
+                        //width:2,//这里是为了突出显示加上的
+                    }
+                },
+                axisLabel: {
+                    color: "#fcfffa" //刻度线标签颜色
+                }
+            },
+            dataZoom: [{
+                startValue: '2020-08-8'
+            }, {
+                type: 'inside'
+            }],
+            visualMap: {
+                top: 10,
+                right: 10,
+                textStyle : {
+                    color:'#fcfffa',
+                },
+                pieces: [{
+                    gt: 0,
+                    lte: 100,
+                    color: '#096'
+                }, {
+                    gt: 100,
+                    lte: 500,
+                    color: '#ffde33'
+                }, {
+                    gt: 500,
+                    lte: 1000,
+                    color: '#ff9933'
+                }, {
+                    gt: 1000,
+                    lte: 2000,
+                    color: '#cc0033'
+                }, {
+                    gt: 2000,
+                    lte: 5000,
+                    color: '#660099'
+                }, {
+                    gt: 5000,
+                    color: '#7e0023'
+                }],
+                outOfRange: {
+                    color: '#999'
+                }
+            },
+            series: {
+                name: '金额',
+                type: 'line',
+                data: data.map(function (item) {
+                    return item[1];
+                }),
+                /*       markLine: {
+                           silent: true,
+                           data: [{
+                               yAxis: 100
+                           }, {
+                               yAxis: 500
+                           }, {
+                               yAxis: 1000
+                           }, {
+                               yAxis: 2000
+                           }, {
+                               yAxis: 5000
+                           }]
+                       }*/
+            }
+        };
+        var myChart = echarts.init(document.getElementById('salesTrend'));
+        myChart.setOption(option);
+    }
+
+    //销售方式排行榜
+    function  loadsellMode(sellModeList){
+        var sellmodelist=[];
+        var sell_priceList=[];
+        for(var i = 0; i < sellModeList.length; i++) {
+            sellmodelist.push(sellModeList[i].sell_mode);
+            sell_priceList.push(sellModeList[i].sell_price);
+        }
+        var option = {
+            color: ['#dbb121'],
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                    type: 'line'        // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            toolbox: {
+                show : true,
+                x : 'center',
+                feature : {
+                    mark : {show: true},
+                    dataView : {show: true, readOnly: false},
+                    restore : {show: true},
+                    saveAsImage : {show: true}
+                }
+            },
+            xAxis: [
+                {
+                    type: 'category',
+                    data: sellmodelist,
+                    axisTick: {
+                        alignWithLabel: true
+                    },
+                    axisLine:{
+                        lineStyle:{
+                            color:'#fcfffa',
+                            //width:2,//这里是为了突出显示加上的
+                        }
+                    },
+                    axisLabel: {
+                        color: "#fcfffa" //刻度线标签颜色
+                    }
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value',
+                    'name':'元',
+                    axisLabel: {
+                        color: "#fcfffa" //刻度线标签颜色
+                    },
+                    axisLine:{
+                        lineStyle:{
+                            color:'#fcfffa',
+                            //width:2,//这里是为了突出显示加上的
+                        }
+                    }
+                }
+            ],
+            series: [
+                {
+                    name: '',
+                    type: 'bar',
+                    barWidth: '30%',
+                    data: sell_priceList
+                }
+            ]
+        };
+        var myChart = echarts.init(document.getElementById('sellModeReport'));
+        myChart.setOption(option);
+    }
+    function getSellTotal(sell_total) {
+        //填充销售总金额
+        var new_sell_total=sell_total.toString().split("").reverse().join("");//反向输出5029
+        var index=0;
+        var arr = new_sell_total.split("");
+        for(var i = 7; i > 7-new_sell_total.length; i--) {
+            var text = arr[index];
+            var tt = document.getElementById('sell_total').getElementsByTagName('li').item(i);
+            tt.innerText=text;
+            index++;
+        }
+    }
+    //销售排行
+    function  loadsalesRanking(salesRankingList){
+        var salesrankingList=[];
+        var sell_priceList=[];
+        var sell_total=0;
+        for(var i = 0; i < salesRankingList.length; i++) {
+            salesrankingList.push(salesRankingList[i].sold_by);
+            sell_priceList.push(salesRankingList[i].sell_price);
+            sell_total+=salesRankingList[i].sell_price;
+        }
+        getSellTotal(sell_total);//填充销售总金额
+        var	option = {
+            tooltip : {
+                trigger: 'axis',
+                axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                    type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                top: '3%',
+                bottom: '0%',
+                containLabel: true
+            },
+            xAxis:  {
+                type: 'value',
+                show: false,
+                axisLine:{
+                    show:false
+                },
+                splitLine:{show: false},//去除网格线
+                splitArea : {show : false}//保留网格区域
+            },
+            yAxis: {
+                splitLine:{show: false},//去除网格线
+                splitArea : {show : false},//保留网格区域
+                type: 'category',
+                show: true,
+                axisLabel: {
+                    color: "#fcfffa" //刻度线标签颜色
+                },
+                axisLine:{
+                    lineStyle:{
+                        color:'#fcfffa',
+                        //width:2,//这里是为了突出显示加上的
+                    }
+                },
+                data: salesrankingList
+            },
+            series: [
+                {
+                    name: '金额',
+                    type: 'bar',
+                    stack: '总量',
+                    barCategoryGap:'50%',
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'right'
+                        }
+                    },
+                    itemStyle:{
+                        normal:{
+                            color: function(params) {
+                                //首先定义一个数组
+                                var colorList = [
+                                    'rgb(78, 163, 151)','rgb(216, 124, 124)','rgb(113, 102, 158)','#29AAE3','#e30c08',
+                                    '#B74AE5','#0AAF9F','#E89589'
+                                ];
+                                return colorList[params.dataIndex]
+                            }
+                        }
+                    },
+                    data: sell_priceList
+                }
+            ]
+        };
+        var myChart = echarts.init(document.getElementById('salesRanking'));
+        myChart.setOption(option);
+    }
+
 </script>
 </html>
+
+
+
+

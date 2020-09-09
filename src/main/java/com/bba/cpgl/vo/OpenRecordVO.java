@@ -1,4 +1,5 @@
 package com.bba.cpgl.vo;
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
@@ -85,4 +86,11 @@ public class OpenRecordVO {
         @TableId
         private BigDecimal express_fee;
 
+        /**数量*/
+        @TableField(exist = false)
+        private Integer counts;
+
+        /**数量*/
+        @TableField(exist = false)
+        private String sold_date_report;
 }
