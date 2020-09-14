@@ -338,6 +338,7 @@
                 $.i18n.prop('OUT_TIME'),
                 $.i18n.prop('GOODS_COST'),
                 $.i18n.prop('SELL_PRICE'),
+                $.i18n.prop('NUMBER'),
                 $.i18n.prop('GOODS_PROFIT'),
                 $.i18n.prop('FREE_SHIPPING'),
                 $.i18n.prop('EXPRESS_FEE'),
@@ -367,6 +368,7 @@
                     ,formatter: function (value, grid, rows) {
                         return keepTwoPointData(rows.sell_price);
                     }},
+                { name: 'numbers', index: 'numbers', align: 'center', width: 80, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
                 { name: 'goods_profit', index: 'goods_profit', align: 'right', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
                     ,formatter: function (value, grid, rows) {
                         return keepTwoPointData(rows.goods_profit);

@@ -16,7 +16,7 @@
 		from bj_income d
 	</sql>
 
-	<!-- 查询问题列表 -->
+	<!-- 查询列表 -->
 	<select id="findListForGrid" resultType="com.bba.cpgl.vo.BjInComeVO" parameterType="com.bba.util.JqGridParamModel">
 		<include refid="begin_page" />
 		select t.* from (
@@ -26,7 +26,7 @@
 		<include refid="end_page" />
 	</select>
 
-	<!-- 查询问题数量 -->
+	<!-- 数量 -->
 	<select id="findListForGridCount" resultType="int" parameterType="com.bba.util.JqGridParamModel">
 		select count(*) from (
 		<include refid="sql_data" />
@@ -49,11 +49,11 @@
 	<!-- 管理看板 -->
 	<!-- 货物分类统计 -->
 	<select id="getGoodsTypeReport" resultType="com.bba.cpgl.vo.OpenRecordVO">
-		select goods_type,count(goods_type) counts from bj_open_record where goods_type is not null group by goods_type
+		select goods_type,sum(numbers) counts,sum(sell_price) sell_price from bj_open_record where goods_type is not null group by goods_type
 	</select>
 	<!-- 货物价值区间统计 -->
 	<select id="getValueReport" resultType="com.bba.cpgl.vo.OpenRecordVO">
-		select box_value,count(box_value) counts from bj_open_record where box_value is not null group by box_value
+		select box_value,sum(numbers) counts from bj_open_record where box_value is not null group by box_value
 	</select>
 
 	<!-- 销售方式金额占比 -->

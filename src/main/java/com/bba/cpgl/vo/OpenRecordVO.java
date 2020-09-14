@@ -93,4 +93,10 @@ public class OpenRecordVO {
         /**数量*/
         @TableField(exist = false)
         private String sold_date_report;
+
+
+        /**件数*/
+        @TableId
+        private Integer numbers;
+
 }

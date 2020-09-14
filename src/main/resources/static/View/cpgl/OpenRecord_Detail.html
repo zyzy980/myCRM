@@ -136,6 +136,12 @@
 				</td>
 			</tr>
 			<tr>
+				<td class="editTitle" style="width:125px;"><label data-locale="NUMBER"/></td>
+				<td class="editControl">
+					<input type="text" name="numbers" id="numbers" class="easyui-numberbox" data-options="required:false,precision:0" value="1" style="width: 15%;"/>
+				</td>
+			</tr>
+			<tr>
 				<td class="editTitle" style="width:125px;"><label data-locale="GOODS_PROFIT"/></td>
 				<td class="editControl">
 					<input type="text" name="goods_profit" id="goods_profit" class="easyui-numberbox" data-options="required:false,precision:2" style="width: 15%;"/>
@@ -324,7 +330,7 @@
         },{
             dicTypeCode: Global_DicType.Global_DicType_CommonStateYesNo,
             callback: function (callbackData) {
-                var formatData = { data: callbackData, needChooseAll: false, defaultValue: "N",
+                var formatData = { data: callbackData, needChooseAll: false, defaultValue: "Y",
                     bindBoxName: "divSold", bindControlPrefix: "sold", onClick:function(){
                     } };
                 var formatData2 = { data: callbackData, needChooseAll: false, defaultValue: "N",
@@ -429,6 +435,7 @@
                     $("#goods_cost").textbox("setValue", dataVO.goods_cost);
                     $("[name='free_shipping'][value='" + dataVO.free_shipping + "']").prop("checked", true);
                     $("#express_fee").numberbox("setValue", dataVO.express_fee);
+                    $("#numbers").numberbox("setValue", dataVO.numbers);
                     $("#goods_profit").numberbox("setValue", dataVO.goods_profit);
                     $("#sell_price").numberbox("setValue", dataVO.sell_price);
                     $("#remark").textbox("setValue", dataVO.remark);
