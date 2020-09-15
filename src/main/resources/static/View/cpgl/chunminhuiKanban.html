@@ -166,20 +166,6 @@
 <div class="center-title"><p class="title" style="font-weight:bold;">淳民惠销售看板</p></div>
 <div class="right-title"><img src="../../Resource/css/Base/title-bg2.png"></div>
 </div>
-    <div class="order" style="z-index:99999;">
-        <p class="order-title" style="font-size:16px;">淳民惠销售总额</p>
-        <ul id="sell_total">
-            <li>0</li>
-            <li>0</li>
-            <li>0</li>
-            <li>0</li>
-            <li>0</li>
-            <li>0</li>
-            <li>0</li>
-            <li>0</li>
-            <li>元</li>
-        </ul>
-    </div>
 <div class="content" style="height:100%;">
 <div id='container' style='width:100%; height:100%;'>
 </div>
@@ -202,41 +188,38 @@
 </div>
 <div style="width: 100%;height:100%;" id="main5">
 </div>
-<div style="position:absolute;bottom:43%;;left:15px;height:50px;">
-  <div style="border: 0px solid #e3e3e3;border-radius: 6px;padding: 6px 15px;background-color:rgba(255,255,255,0.1);">
-   <div style="font-size: 12px;line-height: 24px;color: #ffffff;"><div style="width:12px;height:12px;float:left;background-color:#00a65a;border-radius:9px;margin-top:6px;margin-right:5px;"></div>今日销售额:<span id="today_sell" style="color: #ffffff;font-weight:bold;font-size:11px;">0</span></div>
-   <div style="font-size: 12px;line-height: 24px;color: #ffffff;"><div style="width:12px;height:12px;float:left;background-color:#ff851b;border-radius:9px;margin-top:6px;margin-right:5px;"></div>交易总次数:<span id="public_account" style="color: #ffffff;font-weight:bold;font-size:11px;">0</span></div>
-   <div style="font-size: 12px;line-height: 24px;color: #ffffff;"><div style="width:12px;height:12px;float:left;background-color:#d33724;border-radius:9px;margin-top:6px;margin-right:5px;"></div> 成本支出总额:<span id="total_cost" style="color: #ffffff;font-weight:bold;font-size:11px;">0</span></div>
-  </div>
+<div class="order">
+    <p class="order-title" style="font-size:16px;">销售总额</p>
+    <ul id="sell_total">
+        <li>0</li><li>0</li><li>0</li><li>0</li><li>0</li><li>0</li><li>0</li><li>0</li><li>元</li>
+    </ul>
 </div>
+<div style="position:absolute;bottom:73%;;left:35px;height:70px;width:70px;border-radius:100%;border: 1px solid #9c7aff;">
+    <span id="highest_record" style="display:block;color: #FFFFFF;height: 70px;line-height: 70px;text-align:center;font-weight: bold">0</span>
 </div>
- 
+<div style="position:absolute;bottom:70%;;left:35px;text-align:center;color:#fff;margin-top:5px;font-size:9px;">单件金额记录</div>
+<div style="position:absolute;bottom:58%;;left:35px;height:70px;width:70px;border-radius:100%;border: 1px solid #0eff29;">
+    <span id="history_total" style="display:block;color: #FFFFFF;height: 70px;line-height: 70px;text-align:center;font-weight: bold">0</span>
+</div>
+<div style="position:absolute;bottom:55%;;left:35px;text-align:center;color:#fff;margin-top:5px;font-size:9px;">历史销售件数</div>
+<div style="position:absolute;bottom:43%;;left:35px;height:70px;width:70px;border-radius:100%;border: 1px solid #ff9a1f;">
+    <span id="today_sell" style="display:block;color: #FFFFFF;height: 70px;line-height: 70px;text-align:center;font-weight: bold">0</span>
+</div>
+<div style="position:absolute;bottom:40%;;left:35px;text-align:center;color:#fff;margin-top:5px;font-size:9px;">今日销售金额</div>
+  <!--<div style="border: 1px solid #9c7aff;height:50px;width:50px;border-radius:100%;padding: 6px 15px;">-->
+   <!--<div style="font-size: 12px;line-height: 24px;color: #ffffff;"><div style="width:12px;height:12px;float:left;background-color:#00a65a;border-radius:9px;margin-top:6px;margin-right:5px;"></div>:<span id="today_sell" style="color: #ffffff;font-weight:bold;font-size:11px;">0</span></div>-->
+  <!-- <div style="font-size: 12px;line-height: 24px;color: #ffffff;"><div style="width:12px;height:12px;float:left;background-color:#ff851b;border-radius:9px;margin-top:6px;margin-right:5px;"></div>交易总次数:<span id="public_account" style="color: #ffffff;font-weight:bold;font-size:11px;">0</span></div>
+   <div style="font-size: 12px;line-height: 24px;color: #ffffff;"><div style="width:12px;height:12px;float:left;background-color:#d33724;border-radius:9px;margin-top:6px;margin-right:5px;"></div> 成本支出总额:<span id="total_cost" style="color: #ffffff;font-weight:bold;font-size:11px;">0</span></div>-->
+ <!-- </div>-->
+</div>
 <div style="z-index:999999;width:25%;height:100%;float:left;">
 <div  style="float: left;margin:6px 25px;width:100%;height:50%; background: url(images/bg-01.png) 0% 0% / 100% 100% no-repeat;"><p class="example-title">销售排行总榜</p>
 <div id="salesRanking" class="table-img" style="height:84%;width:100%;"></div>
 </div>
-
-
-
-
-<div  style="float: left;margin:6px 25px;width:100%;height:50%; background: url(images/bg-01.png) 0% 0% / 100% 100% no-repeat;"><p class="example-title">销售时时滚动</p>
+<div  style="float: left;margin:6px 25px;width:100%;height:50%; background: url(images/bg-01.png) 0% 0% / 100% 100% no-repeat;"><p class="example-title">Top100滚动排行</p>
 <div id="main6" class="table-img" style="height:100%;width:100%;margin-top: 8px;">
-<!--<div class="slide-title">
-            <span>姓名</span>
-            <span>时间</span>
-            <span>方式</span>
-			<span>商品</span>
-            <span>利润</span>
-
-</div>-->
 <div class="slide-container">
     <ul class="slide-list js-slide-list" id="roll">
-<!--        <li class="odd"><span>黄子健</span><span>2020年8月1日</span><span>在闲鱼卖了</span><span class="shi">宠物剃毛刀</span><span>赚了49元</span></li>
-        <li class="even"><span>俞同新</span><span>2020年8月1日</span><span>在微信卖了</span><span class="shi">女士长裙</span><span>赚了50元</span></li>
-		<li class="odd"><span>俞同新</span><span>2020年8月1日</span><span>在闲鱼卖了</span><span class="shi">自行车黑副把</span><span>赚了150元</span></li>
-		<li class="even"><span>邢静</span><span>2020年8月1日</span><span>在线下卖了</span><span class="fou">儿童读书</span><span>赚了25元</span></li>
-		<li class="odd"><span>周云</span><span>2020年8月1日</span><span>在闲鱼卖了</span><span class="shi">汽车维修检测仪</span><span>赚了2000元</span></li>
-		<li class="even"><span>周丽萍</span><span>2020年8月1日</span><span>在闲鱼卖了</span><span class="fou">超人玩具</span><span>赚了99元</span></li>-->
     </ul>
 </div>
 </div>
@@ -358,6 +341,8 @@ function loadList(){
 
 //滚动
 function loadRollList (rollList) {
+    var topPrice=rollList[0].sell_price;//最高价
+    $("#highest_record").html(topPrice)
     var str='';
     var index=1;
     for ( var i = 0; i <rollList.length; i++) {
@@ -849,87 +834,18 @@ var series = [];
 
 
 //货物分类统计
-function loadGoodsType1 (goodsTypeList) {
-    var typelist=[];
-    var counts=[];
-    for(var i = 0; i < goodsTypeList.length; i++) {
-        typelist.push(goodsTypeList[i].goods_type);
-        counts.push(goodsTypeList[i].counts);
-    }
-    var option = {
-/*         title : {
-            text: '分类统计',
-            subtext: '参考数据',
-            x:'center'
-        },*/
-        tooltip : {
-            trigger: 'item',
-            formatter: "{a} <br/>{b} : {c} ({d}%)"
-        },
-/*        legend: {
-            orient : 'vertical',
-            x : 'left',
-            data:typelist
-        },*/
-        toolbox: {
-            show : true,
-            feature : {
-                mark : {show: true},
-                dataView : {show: true, readOnly: false},
-                restore : {show: true},
-                saveAsImage : {show: true}
-            }
-        },
-        calculable : true,
-        series : [
-            {
-                name:'访问来源',
-                type:'pie',
-                radius : '60%',
-                center: ['50%', '60%'],
-                data :(function() {
-                    var res = [];
-                    var len = typelist.length;
-                    while(len--) {
-                        res.push({
-                            name : typelist[len],
-                            value : counts[len]
-                        });
-                    }
-                    return res;
-                })(),
-                itemStyle: {
-                    normal:{
-                        label:{
-                            show:true,
-                            formatter: '{b} : {c} \n ({d}%)'
-                        },
-                        labelLine:{
-                            show:true
-                        }
-                    },
-                    emphasis: {
-                        shadowBlur: 10,
-                        shadowOffsetX: 0,
-                        shadowColor: 'rgba(0, 0, 0, 0.5)'
-                    }
-                }
-            }
-        ]
-    };
-    var myChart = echarts.init(document.getElementById('goodsType'));
-    myChart.setOption(option);
-}
-
 var loadGoodsType = function (goodsTypeList) {
     var typelist=[];
     var counts=[];
     var sell_price_list=[];
+    var goods_counts=0;
     for(var i = 0; i < goodsTypeList.length; i++) {
         typelist.push(goodsTypeList[i].goods_type);
         counts.push(goodsTypeList[i].counts);
         sell_price_list.push(goodsTypeList[i].sell_price);
+        goods_counts+=goodsTypeList[i].counts;
     }
+    $("#history_total").html(goods_counts)
     var option = {
         color: ['#dbb121',"#db6a09"],
         //tooltip : {'trigger':'axis'},
@@ -946,7 +862,20 @@ var loadGoodsType = function (goodsTypeList) {
         //grid : {'y2':100,left:"15%"},
         grid : {'y2':65,left:"10%"},//y2可以控制 X轴跟Zoom控件之间的间隔，避免以为倾斜后造成 label重叠到zoom上
         legend: {
-            data:['件数','金额']
+            data:[{
+                name:'件数',
+                textStyle: {
+                    color: '#fcfffa'
+                }
+            },
+                {
+                    name:'金额',
+                    textStyle: {
+                        color: '#fcfffa'
+                    }
+                }
+            ],
+
         },
         toolbox: {
             show : true,
@@ -1126,85 +1055,6 @@ function loadValue (valueList) {
     myChart.setOption(option);
 }
 
-//销售方式金额
-function  loadsellMode(sellModeList){
-    var sellmodelist=[];
-    var sell_priceList=[];
-    for(var i = 0; i < sellModeList.length; i++) {
-        sellmodelist.push(sellModeList[i].sell_mode);
-        sell_priceList.push(sellModeList[i].sell_price);
-    }
-    var option = {
-        color: ['#dbb121'],
-        tooltip: {
-            trigger: 'axis',
-        /*    axisPointer: {            // 坐标轴指示器，坐标轴触发有效
-                type: 'line'        // 默认为直线，可选为：'line' | 'shadow'
-            }*/
-        },
-  /*      grid: {
-            left: '3%',
-            right: '4%',
-            bottom: '3%',
-            containLabel: true
-        },*/
-        toolbox: {
-            show : true,
-            feature : {
-                mark : {show: true},
-                dataView : {show: true, readOnly: false},
-                restore : {show: true},
-                saveAsImage : {show: true}
-            }
-        },
-        xAxis: [
-            {
-                type: 'category',
-                data: sellmodelist,
-                axisTick: {
-                    alignWithLabel: true
-                },
-                axisLine:{
-                    lineStyle:{
-                        color:'#fcfffa',
-                        //width:2,//这里是为了突出显示加上的
-                    }
-                },
-                axisLabel: {
-                    color: "#fcfffa" //刻度线标签颜色
-                }
-            }
-        ],
-        yAxis: [
-            {
-                type: 'value',
-                'name':'元',
-                splitLine:{
-                    show:false
-                },
-                axisLabel: {
-                    color: "#fcfffa" //刻度线标签颜色
-                },
-                axisLine:{
-                    lineStyle:{
-                        color:'#fcfffa',
-                        //width:2,//这里是为了突出显示加上的
-                    }
-                }
-            }
-        ],
-        series: [
-            {
-                name: '',
-                type: 'bar',
-                barWidth: '30%',
-                data: sell_priceList
-            }
-        ]
-    };
-    var myChart = echarts.init(document.getElementById('sellModeReport'));
-    myChart.setOption(option);
-}
 
 //销售趋势
 function loadsalesTrend (salesTrendList) {
@@ -1378,6 +1228,9 @@ function  loadsellMode(sellModeList){
             {
                 type: 'value',
                 'name':'元',
+                splitLine: {
+                    show: false
+                },
                 axisLabel: {
                     color: "#fcfffa" //刻度线标签颜色
                 },

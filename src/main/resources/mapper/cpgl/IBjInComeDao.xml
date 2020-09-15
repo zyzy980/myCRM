@@ -73,7 +73,7 @@
 
 	<!-- 滚动 -->
 	<select id="getRollReport" resultType="com.bba.cpgl.vo.OpenRecordVO">
-		select * from bj_open_record where sell_price>0 order by sold_date desc
+		select * from bj_open_record where sell_price>0 and <![CDATA[ rownum<=100 ]]> order by sell_price desc
 	</select>
 
 </mapper>
