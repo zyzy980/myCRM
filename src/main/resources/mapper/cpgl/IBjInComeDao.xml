@@ -49,11 +49,11 @@
 	<!-- 管理看板 -->
 	<!-- 货物分类统计 -->
 	<select id="getGoodsTypeReport" resultType="com.bba.cpgl.vo.OpenRecordVO">
-		select goods_type,sum(numbers) counts,sum(sell_price) sell_price from bj_open_record where goods_type is not null group by goods_type
+		select goods_type,sum(numbers) counts,sum(sell_price) sell_price from bj_open_record where goods_type is not null and sell_price>0 group by goods_type
 	</select>
 	<!-- 货物价值区间统计 -->
 	<select id="getValueReport" resultType="com.bba.cpgl.vo.OpenRecordVO">
-		select box_value,sum(numbers) counts from bj_open_record where box_value is not null group by box_value
+		select box_value,sum(numbers) counts from bj_open_record where box_value is not null and sell_price>0 group by box_value
 	</select>
 
 	<!-- 销售方式金额占比 -->
@@ -63,7 +63,7 @@
 
 	<!-- 销售额趋势图 -->
 	<select id="getSalesTrendReport" resultType="com.bba.cpgl.vo.OpenRecordVO">
-		select sum(sell_price) sell_price,to_char(sold_date,'YYYY-MM-DD') sold_date_report from bj_open_record where sold_date is not null group by sold_date order by sold_date
+		select sum(sell_price) sell_price,to_char(sold_date,'YYYY-MM-DD') sold_date_report from bj_open_record where sold_date is not null and sell_price>0 group by sold_date order by sold_date
 	</select>
 
 	<!-- 销售排行榜 -->

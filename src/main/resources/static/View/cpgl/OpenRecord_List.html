@@ -347,22 +347,22 @@
             colModel: [
                 { name: 'id', index: 'id', align: 'center', sorttype: 'int', sortable: false, key: true, width: 40, hidden: true, search: false },
                 { name: 'state', index: 'state', align: 'center', width: 80, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
-                { name: 'sheet_no', index: 'sheet_no', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'sheet_no', index: 'sheet_no', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] },hidden:true},
                 { name: 'open_date', index: '_d_open_date', align: 'center', width: 120, search: true, type: 'string',
                     searchoptions: { sopt: ['ge'], dataEvents: [ { type: 'click', data: {}, fn: function() { WdatePicker(); } } ] } },
                 { name: 'goods_type', index: 'goods_type', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
                 { name: 'goods_name', index: 'goods_name', align: 'center', width: 180, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
-                { name: 'box_size', index: 'box_size', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
-                { name: 'box_value', index: 'box_value', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
-                { name: 'kuaidi_company', index: 'kuaidi_company', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
-                { name: 'damage', index: 'damage', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'box_size', index: 'box_size', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] },hidden:true },
+                { name: 'box_value', index: 'box_value', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] },hidden:true },
+                { name: 'kuaidi_company', index: 'kuaidi_company', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] },hidden:true },
+                { name: 'damage', index: 'damage', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] },hidden:true },
                 { name: 'sell_mode', index: 'sell_mode', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
                 { name: 'sold_by', index: 'sold_by', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
-                { name: 'sold', index: 'sold', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'sold', index: 'sold', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] },hidden:true },
                 { name: 'sell_no', index: 'sell_no', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
-                { name: 'sell_date', index: 'sell_date', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'sell_date', index: 'sell_date', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] },hidden:true },
                 { name: 'sold_date', index: 'sold_date', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
-                { name: 'out_time', index: 'out_time', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'out_time', index: 'out_time', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] },hidden:true },
                 { name: 'goods_cost', index: 'goods_cost', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
                 { name: 'sell_price', index: 'sell_price', align: 'right', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] }
                     ,formatter: function (value, grid, rows) {
@@ -373,8 +373,8 @@
                     ,formatter: function (value, grid, rows) {
                         return keepTwoPointData(rows.goods_profit);
                     }},
-                { name: 'free_shipping', index: 'free_shipping', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
-                { name: 'express_fee', index: 'express_fee', align: 'center', width: 100, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'free_shipping', index: 'free_shipping', align: 'center', width: 50, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
+                { name: 'express_fee', index: 'express_fee', align: 'center', width: 50, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } },
                 { name: 'remark', index: 'remark', align: 'center', width: 350, type: 'string', search: true, searchoptions: { sopt: ['cn', 'eq', 'ne'] } }
 
 

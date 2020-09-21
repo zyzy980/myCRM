@@ -86,36 +86,48 @@ h2 {
 
 .topBox {
 	width: 100%;
-	background-color: #46709B;
+	background-color:#20222a;
 	height: 60px;
 }
 
 .topBox .logo{
-	background-color:#345476;
+	background-color:#20222a;
+	width: 10.35%;
+	height: 60px;
+	float: left;
+	border-left: 1px solid #0f0f0f;
+}
+
+.topBox .logo span{
+	text-align: center;
+	font-size: 18px;
+	line-height: 60px;
+	color: #ffd435;
+	margin-left: 20px;
 }
 
 
-.topleft {
+/*.topleft {
 	float: left;
 	width: 735px;
 	height: 60px;
-}
+}*/
 
-.topleft a {
+/*.topleft a {
 	display: table-cell;
 	width: 40px;
 	height: 44px;
 	text-align: left;
 	vertical-align: middle;
-}
+}*/
 
-.topleft a img {
+/*.topleft a img {
 	width: auto;
 	height: 40px;
 	margin-left: 8px;
-}
+}*/
 
-.topleft span {
+/*.topleft span {
 	display: table-cell;
 	font-size: 18px;
 	color: #EBF3F7;
@@ -123,8 +135,7 @@ h2 {
 	text-align: left;
 	padding-left: 8px;
 	vertical-align: middle;
-}
-
+}*/
 .topright {
 	height: 44px;
 	float: right;
@@ -632,8 +643,8 @@ h2 {
 .itab {
 	width: 100%;
 	height: 30px;
-	background-color: #EBEFF3;
-	border-bottom: solid 1px #D0DEE5;
+	background-color: #fafafa;
+	border-bottom: solid 1px #EBEEF5;
 	position: relative; /*border-left:solid 1px #d3dbde;*/
 	overflow: visible;
 }
@@ -642,8 +653,8 @@ h2 {
 	float: left;
 	height: 30px;
 	line-height: 30px;
-	background-color: #EBEFF3;
-	border-right: solid 1px #D3DBDE;
+	background-color: #fafafa;
+	border-right: solid 1px #EBEEF5;
 }
 
 .itab ul li.liselected {
@@ -666,7 +677,7 @@ h2 {
 	padding-left: 25px;
 	padding-right: 25px;
 	display: block;
-	border-top: 4px solid #FF9900;
+	border-bottom: 4px solid #FF9900;
 	font-weight: bold;
 }
 
@@ -677,7 +688,7 @@ h2 {
 	padding-left: 25px;
 	padding-right: 25px;
 	display: block;
-	border-top: 4px solid #FF9900;
+	border-bottom: 4px solid #FF9900;
 	font-weight: bold;
 }
 
