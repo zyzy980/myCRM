@@ -109,7 +109,7 @@
             success:function(dataObj){
                 if(isServerResultDataPass(dataObj)){
                     var data = dataObj.resultDataFull;
-                    var all=['CITY_ARCHIVE','TRANS_MODE','CAR_TYPE','TRANS_FANGAN','DZ_CAR_TYPE']
+                    var all=['Kuaidi','InComeState','MeetPeople','SellMode','GoodsType','GoodsState','SellNo','BoxValue','BoxSize']
                     var tree_data = [{sn:1,typeName:'全部数据',typeCode:'dataall',parentSn:0}];
                     for (var i = 0; i < data.length; i++) {
                         if (all.indexOf(data[i].typeCode)>-1) {
@@ -214,24 +214,22 @@
         var gridAllData = $("#gridTable").jqGrid("getRowData");
         for (var i = 0; i < gridAllData.length; i++) {
             if (gridAllData[i]["dictext"] == "") {
-                errorMessage += "<p>#{SysDictionary_di}" + (i + 1) + "#{SysDictionary_name_noempty}</p>";
+                errorMessage += "<p>第" + (i + 1) + "行字典名称不能为空</p>";
             }
 
             if (gridAllData[i]["dicvalue"] == "") {
-                errorMessage += "<p>#{SysDictionary_di}" + (i + 1) + "#{SysDictionary_val_noempty}</p>";
+                errorMessage += "<p>第" + (i + 1) + "行字典值不能为空</p>";
             }
 
             if (gridAllData[i]["dicorder"] == "") {
-                errorMessage += "<p>#{SysDictionary_di}" + (i + 1) + "#{SysDictionary_order_noempty}</p>";
+                errorMessage += "<p>第" + (i + 1) + "行排序不能为空}</p>";
             }
         }
 
         if (errorMessage.length != "") {
             errorNotification({
-                SimpleMessage: $.i18n.prop('SysDictionary_invalid'),
-                MoreMessage: errorMessage
+                SimpleMessage : errorMessage
             });
-
             return false;
         }
 
@@ -270,7 +268,6 @@
             errorNotification({
                 SimpleMessage: $.i18n.prop('SysDictionary_selectoneitem')
             });
-
             return;
         }
        

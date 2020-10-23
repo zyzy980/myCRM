@@ -211,10 +211,8 @@
 
         if (errorMessage.length != "") {
             errorNotification({
-                SimpleMessage: $.i18n.prop('SysDictionary_invalid'),
-                MoreMessage: errorMessage
+                SimpleMessage : errorMessage
             });
-
             return false;
         }
 
