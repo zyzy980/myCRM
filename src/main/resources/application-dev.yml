@@ -35,7 +35,7 @@ spring:
                 master :
                      #开发数据库
                     driver-class-name: oracle.jdbc.driver.OracleDriver
-                    url: jdbc:oracle:thin:@122.51.192.87:1521:ORCL
+                    url: jdbc:oracle:thin:@123.56.128.86:1521:ORCL
                     username: NJ_CMSCL_SETTLEMENT
                     password: NJ_CMSCL_SETTLEMENT
 #                    druid:
